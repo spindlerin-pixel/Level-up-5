@@ -1,0 +1,12 @@
+{
+  "name": "Level Up 5",
+  "short_name": "Level Up 5",
+  "start_url": "./",
+  "display": "browser",
+  "background_color": "#FFFDF6",
+  "theme_color": "#2554C7",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
