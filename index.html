@@ -315,6 +315,20 @@ b.w { color: var(--echt); }
 .name-row { display: flex; gap: 8px; }
 .name-row input { flex: 1; min-width: 0; font: inherit; font-size: 1.1rem; padding: 10px 12px; min-height: 48px; border: 2px solid var(--line); border-radius: 12px; background: var(--surface); color: var(--ink); }
 #helloName { cursor: pointer; }
+.rate-box { align-self: stretch; display: flex; flex-direction: column; gap: 10px; padding: 14px; border-radius: 18px; background: var(--paper); text-align: center; }
+.rate-q { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: 1.1rem; }
+.rate-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.rate-btn { display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 76px; padding: 10px 6px; border: 2px solid var(--edge); border-radius: 16px; box-shadow: 0 3px 0 var(--edge); background: var(--surface); color: var(--ink); font-family: var(--font-display); font-weight: 700; font-size: 0.95rem; line-height: 1.15; cursor: pointer; }
+.rate-btn span { font-size: 1.7rem; line-height: 1; }
+.rate-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--edge); }
+.rate-btn:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+.rate-lv { margin: 0; font-size: 0.88rem; color: var(--ink-soft); }
+.rate-done { margin: 0; font-weight: 700; }
+.end .btn.primary { flex: 0 0 auto; }
+.stufe-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; font-size: 0.95rem; }
+.stufe-list li { display: flex; justify-content: space-between; gap: 10px; padding: 4px 0; border-top: 1.5px solid var(--muted-fill); }
+.stufe-list li:first-child { border-top: 0; }
+
 .ka { display: flex; align-items: center; gap: 14px; padding: 12px 16px; border: 2.5px solid var(--line); border-radius: 18px; background: var(--post-fill); box-shadow: 3px 3px 0 var(--shadow); }
 .ka.mka { background: var(--karte-fill); }
 .ka.mka .ka-num { color: var(--karte); }
@@ -709,6 +723,12 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
       <label class="lv-setting" for="goalMin">Tagesziel pro Fach:
         <select id="goalMin"><option value="15">15 Minuten</option><option value="20">20 Minuten</option></select>
       </label>
+      <div class="voice-box" id="stufeBox">
+        <label>Schwierigkeitsstufen</label>
+        <p>Nach jeder Runde sagt dein Kind, ob es zu leicht oder zu schwer war. Zusammen mit den Ergebnissen passt die App die Stufe pro Thema an.</p>
+        <ul class="stufe-list" id="stufeList"></ul>
+        <div class="voice-row"><button type="button" class="btn small" id="stufeReset">Alle auf „Normal“ setzen</button></div>
+      </div>
       <p class="lv-legend">Gezählt wird nur aktive Zeit: Die Uhr hält an, wenn eine Minute lang nichts angetippt wird oder die App im Hintergrund ist.</p>
       <div style="overflow-x:auto"><table id="logTable"><thead><tr><th>Tag</th><th>Mathe</th><th>Englisch</th></tr></thead><tbody></tbody></table></div>
     </div>
@@ -897,6 +917,7 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
       <p class="end-msg" id="endMsg"></p>
       <p class="record" id="record"></p>
       <ul class="end-news" id="endNews" hidden></ul>
+      <div id="rateHost"></div>
       <button type="button" class="btn primary" id="againBtn">Neue Runde</button>
     </section>
   </main>
@@ -942,10 +963,70 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
 </div>
 
 <script>
+/* Schwierigkeitsstufen pro Fach und Thema: 1 = Warm-up, 2 = Normal, 3 = Profi. Gespeichert nur auf diesem Gerät. */
+window.LU5 = (function () {
+  var KEY = 'lern-stufe', NAMES = { 1: 'Warm-up', 2: 'Normal', 3: 'Profi' };
+  var labels = { m: {}, e: {} };
+  function load() { try { var r = localStorage.getItem(KEY); var d = r ? JSON.parse(r) : {}; return d && typeof d === 'object' ? d : {}; } catch (e) { return {}; } }
+  function save(d) { try { localStorage.setItem(KEY, JSON.stringify(d)); } catch (e) {} }
+  function get(subj, topic) { var d = load(), v = d[subj] && d[subj][topic]; return v === 1 || v === 3 ? v : 2; }
+  function set(subj, topic, lv) { var d = load(); d[subj] = d[subj] || {}; lv = Math.max(1, Math.min(3, lv)); if (lv === 2) delete d[subj][topic]; else d[subj][topic] = lv; save(d); }
+  function decide(lv, feel, pct) {
+    if (feel === 'easy') {
+      if (pct < 0.8) return { lv: lv, msg: 'Ein paar Fehler waren noch dabei. Wir bleiben erst mal auf dieser Stufe. Schaffst du die nächste Runde fast fehlerfrei, geht es hoch.' };
+      if (lv >= 3) return { lv: 3, msg: 'Stark! Du bist schon auf der höchsten Stufe „Profi“.' };
+      return { lv: lv + 1, msg: 'Level up! Ab der nächsten Runde übst du auf Stufe „' + NAMES[lv + 1] + '“.' };
+    }
+    if (feel === 'hard') {
+      if (pct >= 0.9) return { lv: lv, msg: 'Du hast fast alles richtig gemacht! Wir bleiben auf dieser Stufe. Du schaffst das.' };
+      if (lv <= 1) return { lv: 1, msg: 'Kein Problem. Du übst schon auf der leichtesten Stufe. Nutze ruhig die Tipps und „Kurz erklärt“.' };
+      return { lv: lv - 1, msg: 'Okay! Die nächste Runde wird etwas leichter (Stufe „' + NAMES[lv - 1] + '“).' };
+    }
+    return { lv: lv, msg: 'Super, dann bleibt es so.' };
+  }
+  function boxHtml(subj, topic, done) {
+    if (done) return '<div class="rate-box"><p class="rate-done">' + done + '</p></div>';
+    return '<div class="rate-box"><p class="rate-q">Wie war diese Runde für dich?</p><div class="rate-row">' +
+      '<button type="button" class="rate-btn" data-feel="easy"><span aria-hidden="true">😌</span>Zu leicht</button>' +
+      '<button type="button" class="rate-btn" data-feel="ok"><span aria-hidden="true">👍</span>Genau richtig</button>' +
+      '<button type="button" class="rate-btn" data-feel="hard"><span aria-hidden="true">😅</span>Zu schwer</button>' +
+      '</div><p class="rate-lv">Deine Stufe hier: <b>' + NAMES[get(subj, topic)] + '</b></p></div>';
+  }
+  /* host: element that contains the box; onDone(msg) is called once */
+  function bind(host, subj, topic, pct, onDone) {
+    if (!host) return;
+    host.querySelectorAll('[data-feel]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var r = decide(get(subj, topic), b.getAttribute('data-feel'), pct);
+        set(subj, topic, r.lv);
+        onDone(r.msg);
+      });
+    });
+  }
+  function renderParents() {
+    var box = document.getElementById('stufeList'); if (!box) return;
+    var d = load(), rows = [];
+    [['m', 'Mathe'], ['e', 'Englisch']].forEach(function (s) {
+      var m = d[s[0]] || {};
+      Object.keys(m).forEach(function (t) { rows.push('<li><span>' + s[1] + ': ' + (labels[s[0]][t] || t) + '</span><b>' + NAMES[m[t]] + '</b></li>'); });
+    });
+    box.innerHTML = rows.length ? rows.join('') : '<li><span>Alle Themen auf Stufe „Normal“.</span></li>';
+  }
+  document.addEventListener('DOMContentLoaded', function () {
+    var p = document.getElementById('parents'); if (p) p.addEventListener('toggle', renderParents);
+    var r = document.getElementById('stufeReset');
+    if (r) r.addEventListener('click', function () { save({}); renderParents(); r.textContent = 'Zurückgesetzt'; setTimeout(function () { r.textContent = 'Alle auf „Normal“ setzen'; }, 2000); });
+    renderParents();
+  });
+  return { get: get, set: set, decide: decide, boxHtml: boxHtml, bind: bind, labels: labels, NAMES: NAMES, renderParents: renderParents };
+})();
+</script>
+<script>
 (function () {
   'use strict';
 
   /* GEN-START */
+  var LV = 2; /* Stufe der aktuellen Runde */
   var NB = ' ';
   function fmt(n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, NB); }
   function rnd(a, b) { return a + Math.floor(Math.random() * (b - a + 1)); }
@@ -977,8 +1058,8 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
       { name: 'Eine Autokarte', auf: 'auf der Autokarte' } ] }
   };
   function bandPick() {
-    var b = BANDS[pick(['small', 'mid', 'mid', 'large'])];
-    return { s: pick(b.scales), L: rnd(b.L[0], b.L[1]), ctx: pick(b.ctx) };
+    var b = BANDS[pick(LV === 1 ? ['small', 'small', 'mid'] : LV === 3 ? ['mid', 'large', 'large'] : ['small', 'mid', 'mid', 'large'])];
+    return { s: pick(b.scales), L: rnd(b.L[0], LV === 1 ? Math.min(b.L[1], 6) : b.L[1]), ctx: pick(b.ctx) };
   }
 
   function genK2W() {
@@ -1477,15 +1558,15 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
       sol: ['Die Ziffer rechts neben der ' + lv[1] + '-Stelle ist <b>' + nextDig + '</b> → ' + (nextDig >= 5 ? 'aufrunden' : 'abrunden') + '.', fmt(n) + ' ≈ <b>' + fmt(ans) + '</b>'], vis: null };
   }
   function genAdd() {
-    var three = Math.random() < 0.35, a = rnd(1200, 89999), b = rnd(800, 49999), c = three ? rnd(100, 9999) : 0, s = a + b + c;
+    var three = LV === 1 ? false : Math.random() < (LV === 3 ? 0.5 : 0.35), a = LV === 1 ? rnd(120, 9999) : LV === 3 ? rnd(12000, 899999) : rnd(1200, 89999), b = LV === 1 ? rnd(80, 4999) : LV === 3 ? rnd(5000, 499999) : rnd(800, 49999), c = three ? rnd(100, LV === 3 ? 99999 : 9999) : 0, s = a + b + c;
     return { type: 'add', key: 'a-' + a + b + c, ans: s, unit: '',
       q: 'Rechne schriftlich: <b>' + fmt(a) + ' + ' + fmt(b) + (three ? ' + ' + fmt(c) : '') + '</b>',
       hint: 'Schreibe die Zahlen genau untereinander: Einer unter Einer. Fang rechts an und vergiss den Übertrag nicht.',
       sol: [fmt(a) + ' + ' + fmt(b) + (three ? ' + ' + fmt(c) : '') + ' = <b>' + fmt(s) + '</b>', 'Überschlag: ' + fmt(Math.round(a / 1000) * 1000) + ' + ' + fmt(Math.round(b / 1000) * 1000) + (three ? ' + ' + fmt(Math.round(c / 1000) * 1000) : '') + ' ≈ ' + fmt(Math.round(a / 1000) * 1000 + Math.round(b / 1000) * 1000 + (three ? Math.round(c / 1000) * 1000 : 0))], vis: null };
   }
   function genSub() {
-    var a = rnd(5000, 99999), b = rnd(1000, a - 500), d;
-    if (Math.random() < 0.4) { a = rnd(2, 9) * 10000 + rnd(0, 9) * 10; b = rnd(1000, a - 100); }
+    var a = LV === 1 ? rnd(1000, 9999) : LV === 3 ? rnd(20000, 999999) : rnd(5000, 99999), b = rnd(LV === 1 ? 100 : 1000, a - 500), d;
+    if (LV !== 1 && Math.random() < 0.4) { a = rnd(2, 9) * (LV === 3 ? 100000 : 10000) + rnd(0, 9) * 10; b = rnd(1000, a - 100); }
     d = a - b;
     return { type: 'sub', key: 's-' + a + b, ans: d, unit: '', p: { a: a, b: b },
       q: 'Rechne schriftlich: <b>' + fmt(a) + ' − ' + fmt(b) + '</b>',
@@ -1494,8 +1575,9 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
   }
   function genMul() {
     var r = Math.random(), a, b;
-    if (r < 0.35) { a = rnd(120, 9999); b = rnd(3, 9); }
-    else if (r < 0.75) { a = rnd(102, 999); b = rnd(12, 98); }
+    if (LV === 1) r = r < 0.6 ? 0 : 0.9;
+    if (r < 0.35) { a = LV === 1 ? rnd(12, 999) : rnd(120, 9999); b = rnd(3, 9); }
+    else if (r < 0.75) { a = LV === 3 ? rnd(1002, 9999) : rnd(102, 999); b = rnd(12, 98); }
     else { a = rnd(23, 999); b = pick([10, 100, 1000, 20, 300, 40]); }
     var p = a * b;
     return { type: 'mul', key: 'm-' + a + 'x' + b, ans: p, unit: '',
@@ -1504,7 +1586,7 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
       sol: b > 9 && b % 10 !== 0 ? [fmt(a) + ' · ' + (Math.floor(b / 10) * 10) + ' = ' + fmt(a * Math.floor(b / 10) * 10), fmt(a) + ' · ' + (b % 10) + ' = ' + fmt(a * (b % 10)), fmt(a * Math.floor(b / 10) * 10) + ' + ' + fmt(a * (b % 10)) + ' = <b>' + fmt(p) + '</b>'] : [fmt(a) + ' · ' + fmt(b) + ' = <b>' + fmt(p) + '</b>'], vis: null };
   }
   function genDiv() {
-    var d = pick([2, 3, 4, 5, 6, 7, 8, 9, 9, 7, 6, 12, 15, 25]), q = rnd(d > 9 ? 21 : 105, d > 9 ? 399 : 2999), n = d * q;
+    var d = pick(LV === 1 ? [2, 3, 4, 5, 6, 7, 8, 9] : LV === 3 ? [6, 7, 8, 9, 12, 15, 25, 12, 15] : [2, 3, 4, 5, 6, 7, 8, 9, 9, 7, 6, 12, 15, 25]), q = rnd(d > 9 ? 21 : (LV === 1 ? 12 : 105), d > 9 ? (LV === 3 ? 999 : 399) : (LV === 1 ? 999 : LV === 3 ? 9999 : 2999)), n = d * q;
     if (Math.random() < 0.2) { d = pick([10, 100]); q = rnd(12, 999); n = d * q; }
     return { type: 'div', key: 'd-' + n + ':' + d, ans: q, unit: '',
       q: 'Rechne: <b>' + fmt(n) + ' : ' + d + '</b>',
@@ -1538,12 +1620,19 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
   var KAMIX = ['add', 'sub', 'mul', 'div', 'regel', 'rund', 'k2w', 'w2k', 'find', 'tab'];
   function buildRound(topic, stats) {
     var types = (topic === 'mix' ? MIX : topic === 'profi' ? PROFI : topic === 'heft' ? HEFT : topic === 'nat' ? NATR : topic === 'mka' ? KAMIX : [topic, topic, topic, topic, topic, topic, topic, topic, topic, topic]).slice();
+    LV = window.LU5 ? LU5.get('m', topic) : 2;
     var focus = (topic === 'mix' || topic === 'profi' || topic === 'heft' || topic === 'nat' || topic === 'mka') ? adapt(types, stats || {}) : [];
+    if (LV === 3 && (topic === 'mix' || topic === 'heft' || topic === 'nat' || topic === 'mka')) {
+      var extra = topic === 'nat' ? ['regel', 'gesch'] : topic === 'mka' ? ['regel', 'mixed'] : ['bar', 'mixed'];
+      var slots = shuffle(types.map(function (x, i) { return i; }).filter(function (i) { return focus.indexOf(types[i]) === -1; })).slice(0, 2);
+      slots.forEach(function (i, k) { types[i] = extra[k]; });
+    }
     var seen = {}, tasks = [];
     types.forEach(function (t) {
       var task, tries = 0;
       do { task = GEN[t](); tries++; } while (seen[task.key] && tries < 40);
       seen[task.key] = true;
+      if (LV === 1 && task.opts && task.opts.length >= 3) { var wr = task.opts.filter(function (o) { return !o.ok; }); if (wr.length >= 2) task.opts.splice(task.opts.indexOf(pick(wr)), 1); }
       tasks.push(task);
     });
     tasks.focus = focus;
@@ -1746,6 +1835,7 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
 
   /* ---------- State ---------- */
   var TOPIC_LABEL = { mix: 'Gemischt', concept: 'Verstehen', k2w: 'Karte → echt', w2k: 'echt → Karte', find: 'Maßstab finden', zoom: 'Vergrößern', units: 'Einheiten', heft: 'Bild & Original', profi: 'Profi', nat: 'Natürliche Zahlen', mka: 'Klassenarbeit-Mix' };
+  if (window.LU5) LU5.labels.m = TOPIC_LABEL;
   var TYPE_LABEL = { stelle: 'Stellenwerte', rund: 'Runden', add: 'Schriftlich addieren', sub: 'Schriftlich subtrahieren', mul: 'Multiplizieren', div: 'Dividieren', regel: 'Klammer & Punkt vor Strich', gesch: 'Geschickt rechnen', pic: 'Bild & Original vergleichen', ratio: 'Maßstab aus Bild und Original', tab: 'Bild ↔ Wirklichkeit (Einheiten)', model: 'Modelle', fit: 'Passt aufs Blatt?', concept: 'Verstehen', k2w: 'Karte → Wirklichkeit', w2k: 'Wirklichkeit → Karte', find: 'Maßstab finden', zoom: 'Vergrößerung', units: 'Einheiten umrechnen', bar: 'Profi: Maßstabsleiste', time: 'Profi: Wie lange?', sum: 'Profi: Wegstrecken', compare: 'Profi: Karten vergleichen', mixed: 'Profi: km und m', reason: 'Profi: Stimmt das?' };
   var PRAISE = ['Super!', 'Richtig!', 'Klasse!', 'Genau!', 'Stark gemacht!', 'Prima!'];
   var state = null;
@@ -1825,6 +1915,11 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
   function renderEnd() {
     var right = countRight();
     var second = state.results.filter(function (r) { return r === 'second'; }).length;
+    var rh = document.getElementById('rateHost');
+    if (rh && window.LU5) {
+      rh.innerHTML = LU5.boxHtml('m', state.topic, state.rateMsg);
+      if (!state.rateMsg) LU5.bind(rh, 'm', state.topic, (right + 0.5 * second) / 10, function (msg) { state.rateMsg = msg; saveRound(); rh.innerHTML = LU5.boxHtml('m', state.topic, msg); });
+    }
     var stars = right >= 9 ? 3 : right >= 6 ? 2 : right >= 3 ? 1 : 0;
     el.endStars.innerHTML = starSvg(stars >= 1) + starSvg(stars >= 2) + starSvg(stars >= 3);
     el.endScore.textContent = right + ' von 10 beim ersten Versuch richtig · +' + right + ' Sterne';
@@ -3262,10 +3357,30 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
     ['Unit 1', [['aan', 'a / an'], ['poss', 'my, your, his …'], ['can', 'can / can’t'], ['gen', '’s / s’'], ['there', 'there is / are']]],
     ['Wörter', [['num', 'Zahlen'], ['words', 'Wörter']]]
   ];
+  if (window.LU5) TOPICS.forEach(function (g) { g[1].forEach(function (x) { LU5.labels.e[x[0]] = x[1]; }); });
   function topicName(t) { var n = t === 'welmix' ? 'Welcome-Mix' : t === 'ka' ? 'KA-Training' : t; TOPICS.forEach(function (g) { g[1].forEach(function (x) { if (x[0] === t) n = x[1]; }); }); return n; }
   function weights(stats) { var w = {}; ORDER.forEach(function (s) { var a = avg(stats[s]); w[s] = (a === null ? 2.2 : 1 + 3 * (1 - a)) * (s === 'listen' || s === 'phr' ? 1.3 : 1) * (s === 'words' ? 0.6 : 1) * (WEL_SET.indexOf(s) !== -1 ? 1.8 : 1) * (['aan', 'can', 'gen', 'there'].indexOf(s) !== -1 ? 0.35 : 1) * (KA_SET.indexOf(s) !== -1 ? 2 : 1); }); return w; }
   function wpick(w) { var tot = 0, k; for (k in w) tot += w[k]; var r = Math.random() * tot; for (k in w) { r -= w[k]; if (r <= 0) return k; } return ORDER[0]; }
   function buildRound(topic) {
+    var lv = window.LU5 ? LU5.get('e', topic) : 2, tasks = buildRound0(topic);
+    if (topic === 'probe' || lv === 2) return tasks;
+    if (lv === 1) {
+      tasks = tasks.filter(function (t) { return t.again; }).concat(tasks.filter(function (t) { return !t.again; })).slice(0, 8);
+      tasks.forEach(function (t) {
+        if (t.mode === 'choice' && t.options && t.options.length >= 3) { var wr = t.options.filter(function (o) { return o !== t.answer[0]; }); if (wr.length >= 2) t.options.splice(t.options.indexOf(pick(wr)), 1); }
+      });
+      return shuffle(tasks);
+    }
+    var used = {}; tasks.forEach(function (t) { if (t.ref) used[t.ref] = 1; });
+    var pool = ['gapd', 'obj', 'chunk'].filter(function (s) { return G[s] && SIZE[s]; });
+    var single = !!G[topic] && ['mix', 'ka', 'welmix'].indexOf(topic) === -1;
+    for (var k = 0, guard = 0; k < 2 && guard < 40; guard++) {
+      var s = single ? topic : pool.length ? pick(pool) : null; if (!s) break;
+      var x = make(s); if (x.ref && used[x.ref]) continue; if (x.ref) used[x.ref] = 1; tasks.push(x); k++;
+    }
+    return single ? tasks : shuffle(tasks);
+  }
+  function buildRound0(topic) {
     var tasks = [], used = {}, stats = enStats(), missed = store(EMISS) || [], okRecent = recentOk();
     /* Aufgaben, die in den letzten 3 Tagen beim ersten Versuch richtig waren, kommen erst später wieder dran */
     function add(t, again) { if (t.ref && used[t.ref]) return false; if (!again && t.ref && okRecent[t.ref]) return false; if (t.ref) used[t.ref] = 1; if (again) t.again = true; tasks.push(t); return true; }
@@ -3314,7 +3429,7 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
     return { topic: 'mix', text: 'Alles läuft gut! Heute eine <b>gemischte Runde</b> und ein Text bei „Schreiben & Sprechen“.', btn: 'Gemischt üben' };
   }
   function newEnRound(topic) {
-    enState = { v: 2, mSel: null, mL: [], mR: [], mErr: 0, mBad: null, topic: topic, tasks: buildRound(topic), i: 0, results: [], attempts: 0, hint: false, done: false, resolved: false, fb: null, chosen: null, built: [], input: '' };
+    enState = { v: 2, mSel: null, mL: [], mR: [], mErr: 0, mBad: null, topic: topic, tasks: buildRound(topic), i: 0, results: [], attempts: 0, hint: false, done: false, resolved: false, fb: null, chosen: null, built: [], input: '', lessonOpen: !!(window.LU5 && topic !== 'probe' && LU5.get('e', topic) === 1) };
     saveEn();
   }
   function saveEn() { if (enState && enState.topic !== 'write') store(ERUN, enState); }
@@ -3502,9 +3617,12 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
     var wl = Object.keys(weak).map(function (s) { return '<li>' + esc(SKILLS[s].name) + '</li>'; }).join('');
     var msg = pct >= 90 ? 'Fantastic! Das sitzt richtig gut.' : pct >= 70 ? 'Great job! Nur noch ein paar Kleinigkeiten.' : pct >= 50 ? 'Gut gemacht! Mit Üben wird es jeden Tag besser.' : 'Dranbleiben! Lies dir den Merkzettel durch und probier es nochmal.';
     var probe = enState.topic === 'probe' ? '<p class="record">In der Probe-Klassenarbeit: ' + pct + ' Prozent der Punkte.</p>' : '';
-    return '<section class="end"><svg class="lina" viewBox="0 0 110 140" aria-hidden="true"><use href="#pennyArt"></use></svg><h2>Geschafft!</h2><p class="end-score">' + right + ' von ' + n + ' beim ersten Mal richtig</p>' + probe + '<p class="end-msg">' + msg + '</p>' + (wl ? '<div><p class="record">Das übst du noch:</p><ul class="weak-list">' + wl + '</ul></div>' : '') + '<button type="button" class="btn primary" id="enAgain">Neue Runde</button></section>';
+    return '<section class="end"><svg class="lina" viewBox="0 0 110 140" aria-hidden="true"><use href="#pennyArt"></use></svg><h2>Geschafft!</h2><p class="end-score">' + right + ' von ' + n + ' beim ersten Mal richtig</p>' + probe + '<p class="end-msg">' + msg + '</p>' + (wl ? '<div><p class="record">Das übst du noch:</p><ul class="weak-list">' + wl + '</ul></div>' : '') + (enState.topic === 'probe' || !window.LU5 ? '' : '<div id="enRateHost">' + LU5.boxHtml('e', enState.topic, enState.rateMsg) + '</div>') + '<button type="button" class="btn primary" id="enAgain">Neue Runde</button></section>';
   }
-  function bindEnd() { $('enAgain').onclick = function () { newEnRound(enState.topic); renderEn(); window.scrollTo(0, 0); }; }
+  function bindEnd() {
+    var rh = $('enRateHost');
+    if (rh && !enState.rateMsg) { var r = enState.results, pts = r.reduce(function (a, b) { return a + b; }, 0); LU5.bind(rh, 'e', enState.topic, r.length ? pts / r.length : 0, function (msg) { enState.rateMsg = msg; saveEn(); rh.innerHTML = LU5.boxHtml('e', enState.topic, msg); }); }
+    $('enAgain').onclick = function () { newEnRound(enState.topic); renderEn(); window.scrollTo(0, 0); }; }
   function renderRules() {
     if ($('enRules').childElementCount) return;
     $('enRules').innerHTML = ['hisher', 'qw', 'plur', 'voc', 'be', 'beneg', 'beq', 'pron', 'likes', 'wwords', 'wel', 'gapd', 'obj', 'chunk', 'aan', 'poss', 'can', 'gen', 'there', 'order', 'num', 'phr', 'listen'].map(function (s) { return '<div class="rule"><h3>' + esc(SKILLS[s].name) + '</h3><p>' + RULES[s] + '</p></div>'; }).join('');
