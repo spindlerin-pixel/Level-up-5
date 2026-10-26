@@ -2499,7 +2499,7 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
     'Anne and Luna are my sisters. ___ are nice.|They', 'Alex and I are friends. ___ are in Year 7.|We', 'The balloons are blue. ___ are big.|They',
     'The guitar is black. ___ is new.|It', 'Jayden is happy. ___ likes singing.|He', 'Lucas, you and Alex are cool. ___ are my friends!|You',
     'The two parrots are colourful. ___ are loud.|They', 'Ella is eleven. ___ lives in Brighton.|She', 'My books are on the desk. ___ are blue.|They',
-    'My sister and I like dogs. ___ have a dog.|We', 'The ruler is yellow. ___ is long.|It', 'Hi, my name is Giuli. ___ am ten.|I', 'Grandpa Steve is from England. ___ is old.|He'
+    'My sister and I like dogs. ___ have a dog.|We', 'The ruler is yellow. ___ is long.|It', 'Hi, my name is Lena. ___ am ten.|I', 'Grandpa Steve is from England. ___ is old.|He'
   ];
   var AAN = ['awesome stepmum|an', 'fun brother|a', 'nice cousin|a', 'aunt in Finland|an', 'cool uncle from London|a', 'interesting uncle|an', 'English grandpa|an', 'Irish grandma|an', 'lucky boy|a', 'orange pencil case|an', 'yellow ruler|a', 'old house|an', 'big flat|a', 'eraser|an', 'armchair|an', 'exercise book|an', 'apple|an', 'umbrella|an', 'elephant|an', 'pen|a', 'red balloon|a', 'ugly spider|an', 'idea|an', 'new friend|a', 'eleven-year-old girl|an', 'owl|an', 'dog|a', 'happy family|a', 'awful film|an'];
   var POSS = [
@@ -2682,7 +2682,7 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
     'Ella is my best friend. I sit next to ___.|her', 'Anne and Luna are new. Let\'s say hello to ___.|them', 'Alex and I are late. Mr Fernandes looks at ___.|us',
     'Where is Holly? I can\'t see ___.|her', 'My brother is funny. I play football with ___.|him', 'The twins are in Year 7. ___ are eleven.|They',
     'Look at ___! I can do a cartwheel.|me', 'Joanna and I are friends. ___ walk to school together.|We', 'This is my friend Lucas. Do you know ___?|him',
-    'Isabelle is nice. ___ helps me with Maths.|She', 'The new students are shy. Can you show ___ the school?|them', 'My name is Giulia, but my friends call ___ Giuli.|me',
+    'Isabelle is nice. ___ helps me with Maths.|She', 'The new students are shy. Can you show ___ the school?|them', 'My name is Magdalena, but my friends call ___ Lena.|me',
     'Mum and Dad are at home. I phone ___ after school.|them', '___ am in class 5b.|I', 'My sister and I have a cat. ___ love it.|We',
     'Mrs Brown is our English teacher. ___ is from Bristol.|She', 'We are in the playground. Come and play with ___!|us', 'Ben has my ruler. Please ask ___ for it.|him'
   ];
@@ -2770,7 +2770,7 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
   };
   /* ===== Welcome-Schwerpunkt: to be, Personalpronomen, positiv / negativ ===== */
   var WEL_SET = ['be', 'beneg', 'beq', 'pron', 'likes', 'wwords', 'match', 'fix', 'order', 'wel'];
-  BE = BE.concat(['Hello, I ___ Giuli.|am', 'This ___ my friend Joanna.|is', '___ you from Mainz? – Yes, I am.|Are', 'My pencil case ___ purple.|is', 'Jayden and Lucas ___ (nicht) in Year 7.|aren\'t', 'We ___ in room 12 today.|are', 'You ___ (nicht) late. That\'s OK!|aren\'t', 'It ___ Monday today.|is', '___ Joanna your sister? – No, she isn\'t.|Is', 'I ___ ten and my brother ___ nine.|am']);
+  BE = BE.concat(['Hello, I ___ Lena.|am', 'This ___ my friend Joanna.|is', '___ you from Mainz? – Yes, I am.|Are', 'My pencil case ___ purple.|is', 'Jayden and Lucas ___ (nicht) in Year 7.|aren\'t', 'We ___ in room 12 today.|are', 'You ___ (nicht) late. That\'s OK!|aren\'t', 'It ___ Monday today.|is', '___ Joanna your sister? – No, she isn\'t.|Is', 'I ___ ten and my brother ___ nine.|am']);
   BE = BE.filter(function (x) { return x.split('___').length === 2; });
   PRON = PRON.concat(['Joanna is in my class. ___ is eleven.|She', 'My pencil case is red. ___ is new.|It', 'Jayden and Lucas are from Brighton. ___ are nice.|They', 'Hello! ___ am new here.|I', 'Joanna and I are friends. ___ are in Year 7.|We', 'Mr Fernandes is from Brighton. ___ is our teacher.|He']);
   var PRON_DE = [['ich', 'I'], ['du', 'you'], ['er', 'he'], ['sie (ein Mädchen)', 'she'], ['es (ein Ding)', 'it'], ['wir', 'we'], ['ihr', 'you'], ['sie (mehrere)', 'they']];
@@ -2838,7 +2838,7 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
   /* Fehler-Detektiv: [Satz, Korrektur oder '' wenn richtig, Erklärung] */
   var FIX = [
     ['She are my friend.', 'She is my friend.', 'she → <b>is</b>'], ['I is ten years old.', 'I am ten years old.', 'I → <b>am</b>'], ['They is from Brighton.', 'They are from Brighton.', 'they → <b>are</b>'],
-    ['He not is my brother.', 'He isn\'t my brother.', '<b>not</b> kommt hinter is: he isn’t'], ['i am Giuli.', 'I am Giuli.', '<b>I</b> schreibt man immer groß.'], ['Joanna and Jayden is in my class.', 'Joanna and Jayden are in my class.', 'Zwei Personen → <b>are</b>'],
+    ['He not is my brother.', 'He isn\'t my brother.', '<b>not</b> kommt hinter is: he isn’t'], ['i am Lena.', 'I am Lena.', '<b>I</b> schreibt man immer groß.'], ['Joanna and Jayden is in my class.', 'Joanna and Jayden are in my class.', 'Zwei Personen → <b>are</b>'],
     ['Me is eleven.', 'I am eleven.', 'Vor dem Verb steht <b>I</b>, nicht me.'], ['My bag are blue.', 'My bag is blue.', 'Eine Tasche → <b>is</b>'], ['Are she your sister?', 'Is she your sister?', 'she → <b>Is</b> she …?'],
     ['We isn\'t late.', 'We aren\'t late.', 'we → <b>aren’t</b>'], ['It am a pencil.', 'It is a pencil.', 'it → <b>is</b>'], ['Mr Fernandes are our teacher.', 'Mr Fernandes is our teacher.', 'Ein Mann → he → <b>is</b>'],
     ['You is my best friend.', 'You are my best friend.', 'you → <b>are</b>'], ['I amn\'t from London.', 'I\'m not from London.', 'Es gibt kein amn’t. Richtig: <b>I’m not</b>'],
@@ -2858,7 +2858,7 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
     { q: 'Paare finden: Deutsch und Englisch', lesson: 'pron', pairs: [['ich', 'I'], ['du', 'you'], ['er', 'he'], ['sie (Mädchen)', 'she'], ['es (Ding)', 'it'], ['wir', 'we'], ['sie (mehrere)', 'they']] },
     { q: 'Paare finden: Langform und Kurzform', lesson: 'be', pairs: [['I am', 'I’m'], ['you are', 'you’re'], ['he is', 'he’s'], ['she is', 'she’s'], ['it is', 'it’s'], ['we are', 'we’re'], ['they are', 'they’re'], ['is not', 'isn’t'], ['are not', 'aren’t']] },
     { q: 'Paare finden: Wer ist das? Ersetze durch ein Pronomen.', lesson: 'pron', pairs: [['Joanna', 'she'], ['Mr Fernandes', 'he'], ['my pencil case', 'it'], ['Jayden and I', 'we'], ['Joanna and Isabelle', 'they'], ['my mum', 'she'], ['my dad', 'he'], ['the books', 'they'], ['the dog', 'it']] },
-    { q: 'Paare finden: Welche Antwort passt zur Frage?', lesson: 'wel', pairs: [['What’s your name?', 'I’m Giuli.'], ['How old are you?', 'I’m ten.'], ['Where are you from?', 'I’m from Mainz.'], ['How are you?', 'I’m fine, thanks.'], ['What’s your favourite colour?', 'It’s blue.'], ['Are you ten?', 'Yes, I am.'], ['Is Joanna your friend?', 'Yes, she is.']] },
+    { q: 'Paare finden: Welche Antwort passt zur Frage?', lesson: 'wel', pairs: [['What’s your name?', 'I’m Lena.'], ['How old are you?', 'I’m ten.'], ['Where are you from?', 'I’m from Mainz.'], ['How are you?', 'I’m fine, thanks.'], ['What’s your favourite colour?', 'It’s blue.'], ['Are you ten?', 'Yes, I am.'], ['Is Joanna your friend?', 'Yes, she is.']] },
     { q: 'Paare finden: positiv und negativ', lesson: 'beneg', pairs: [['I am', 'I’m not'], ['he is', 'he isn’t'], ['we are', 'we aren’t'], ['she is', 'she isn’t'], ['they are', 'they aren’t'], ['it is', 'it isn’t'], ['you are', 'you aren’t']] }
   ];
   G.match = function (i) {
@@ -2868,14 +2868,14 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
 
   /* Welcome-Sätze: kleine Dialoge wie „Introducing yourself“ und „Hobbies and pets“ (auch zum Hören) */
   var DLG = [
-    ['Hello, my name is Joanna. What\'s your name?', 'Hi Joanna, nice to meet you. My name is Giuli.', 'I\'m ten years old.', 'I\'m fine, thanks.'],
+    ['Hello, my name is Joanna. What\'s your name?', 'Hi Joanna, nice to meet you. My name is Lena.', 'I\'m ten years old.', 'I\'m fine, thanks.'],
     ['How old are you?', 'I\'m ten years old.', 'I have ten years.', 'I\'m from Mainz.'],
     ['Where are you from?', 'I\'m from Germany.', 'I\'m Germany from.', 'I\'m eleven.'],
     ['Where do you live?', 'I live in Mainz.', 'I am live in Mainz.', 'I\'m ten.'],
     ['How are you?', 'I\'m fine, thanks.', 'I\'m ten, thanks.', 'My name is fine.'],
     ['Nice to meet you!', 'Nice to meet you, too!', 'Yes, I am.', 'Goodbye, too!'],
-    ['Can you spell it, please?', 'Yes. G – I – U – L – I.', 'Yes, I can\'t.', 'No, I\'m Giuli.'],
-    ['My friends call me Izzy. What about you?', 'My friends call me Giuli.', 'I call me Giuli.', 'Yes, I am.'],
+    ['Can you spell it, please?', 'Yes. L – E – N – A.', 'Yes, I can\'t.', 'No, I\'m Lena.'],
+    ['My friends call me Izzy. What about you?', 'My friends call me Lena.', 'I call me Lena.', 'Yes, I am.'],
     ['What are your hobbies?', 'I like reading and swimming.', 'I am reading and swimming hobbies.', 'Yes, I have hobbies.'],
     ['Do you like animals?', 'Yes, I do. I have a rabbit.', 'Yes, I am a rabbit.', 'Yes, I like a rabbit have.'],
     ['I think snakes are cool. How about you?', 'I think snakes are scary!', 'I think snakes is scary!', 'I am snakes scary!'],
@@ -2960,7 +2960,7 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
 
   /* Sätze bauen: Varianten mit || trennen, deutsche Bedeutung nach ## */
   ORD = [
-    'my name is Giuli || Giuli is my name ## Ich heiße Giuli.', 'I am ten years old ## Ich bin zehn Jahre alt.', 'I am not from London ## Ich komme nicht aus London.',
+    'my name is Lena || Lena is my name ## Ich heiße Lena.', 'I am ten years old ## Ich bin zehn Jahre alt.', 'I am not from London ## Ich komme nicht aus London.',
     'my friends call me Jo ## Meine Freunde nennen mich Jo.', 'where do you live ? ## Wo wohnst du?', 'I live in Brighton ## Ich wohne in Brighton.',
     'Alex is new in Year 7 ## Alex ist neu in der 7. Klasse.', 'Mr Fernandes is our class teacher || our class teacher is Mr Fernandes ## Mr Fernandes ist unser Klassenlehrer.',
     'what are your hobbies ? ## Was sind deine Hobbys?', 'I think snakes are scary ## Ich finde Schlangen gruselig.', 'I don\'t like seagulls ## Ich mag keine Möwen.',
@@ -2976,14 +2976,14 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
   function sayBtn(s) { return '<button type="button" class="say" data-say="' + esc(s) + '" aria-label="' + esc(s) + ' anhören">' + SPK + '</button>'; }
   function exLine(en, de) { return '<li>' + sayBtn(en) + '<span><b>' + esc(en) + '</b>' + (de ? ' <span class="de">' + esc(de) + '</span>' : '') + '</span></li>'; }
   function lessonHtml(k) {
-    if (k === 'be') return '<h3>Das Verb <i>to be</i> (sein)</h3><table><tr><th>Langform</th><th>Kurzform</th><th></th></tr><tr><td>I am</td><td>I’m</td><td class="de">ich bin</td></tr><tr><td>you are</td><td>you’re</td><td class="de">du bist</td></tr><tr><td>he / she / it is</td><td>he’s / she’s / it’s</td><td class="de">er / sie / es ist</td></tr><tr><td>we are</td><td>we’re</td><td class="de">wir sind</td></tr><tr><td>you are</td><td>you’re</td><td class="de">ihr seid</td></tr><tr><td>they are</td><td>they’re</td><td class="de">sie sind</td></tr></table><p class="trick"><b>Merk-Trick:</b> <b>I</b> ist allein → <b>am</b>. he, she, it → <b>is</b>. Alle anderen → <b>are</b>.</p><ul class="exl">' + exLine('I am Giuli.', 'Ich bin Giuli.') + exLine('Joanna is my friend.', 'Joanna → she → is') + exLine('We are in Year 5.', 'wir → are') + '</ul>';
+    if (k === 'be') return '<h3>Das Verb <i>to be</i> (sein)</h3><table><tr><th>Langform</th><th>Kurzform</th><th></th></tr><tr><td>I am</td><td>I’m</td><td class="de">ich bin</td></tr><tr><td>you are</td><td>you’re</td><td class="de">du bist</td></tr><tr><td>he / she / it is</td><td>he’s / she’s / it’s</td><td class="de">er / sie / es ist</td></tr><tr><td>we are</td><td>we’re</td><td class="de">wir sind</td></tr><tr><td>you are</td><td>you’re</td><td class="de">ihr seid</td></tr><tr><td>they are</td><td>they’re</td><td class="de">sie sind</td></tr></table><p class="trick"><b>Merk-Trick:</b> <b>I</b> ist allein → <b>am</b>. he, she, it → <b>is</b>. Alle anderen → <b>are</b>.</p><ul class="exl">' + exLine('I am Lena.', 'Ich bin Lena.') + exLine('Joanna is my friend.', 'Joanna → she → is') + exLine('We are in Year 5.', 'wir → are') + '</ul>';
     if (k === 'beneg') return '<h3>Verneinen: <i>not</i> hinter am / is / are</h3><table><tr><th>positiv</th><th>negativ</th></tr><tr><td>I am</td><td>I’m not</td></tr><tr><td>he / she / it is</td><td>he / she / it isn’t</td></tr><tr><td>you / we / they are</td><td>you / we / they aren’t</td></tr></table><p class="trick"><b>Kurzform oder Langform – beides ist richtig:</b> isn’t = is not, aren’t = are not.<br>Falsch: <s>I not am</s> · <s>I amn’t</s> · <s>She not is</s></p><ul class="exl">' + exLine('I\'m not from London.', 'Ich komme nicht aus London.') + exLine('Joanna isn\'t eleven.', 'Joanna ist nicht elf.') + exLine('They aren\'t in the classroom.', 'Sie sind nicht im Klassenzimmer.') + '</ul>';
     if (k === 'beq') return '<h3>Fragen und Kurzantworten</h3><p>Bei Fragen rutscht <b>am / is / are</b> nach vorne:</p><ul class="exl">' + exLine('She is ten. Is she ten?', 'Sie ist zehn. → Ist sie zehn?') + exLine('Are you from Mainz? Yes, I am.', '') + exLine('Is your bag red? No, it isn\'t.', '') + '</ul><p class="trick"><b>Achtung:</b> Bei <b>Yes</b> nie die Kurzform: <b>Yes, I am.</b> (nicht: <s>Yes, I’m.</s>)<br>Aus <b>you</b> in der Frage wird <b>I</b> in der Antwort.</p>';
     if (k === 'pron') return '<h3>Personalpronomen</h3><table><tr><td class="de">ich</td><td><b>I</b></td><td class="de">wir</td><td><b>we</b></td></tr><tr><td class="de">du</td><td><b>you</b></td><td class="de">ihr</td><td><b>you</b></td></tr><tr><td class="de">er</td><td><b>he</b></td><td class="de">sie (mehrere)</td><td><b>they</b></td></tr><tr><td class="de">sie</td><td><b>she</b></td><td></td><td></td></tr><tr><td class="de">es</td><td><b>it</b></td><td></td><td></td></tr></table><p class="trick">Junge / Mann → <b>he</b> · Mädchen / Frau → <b>she</b> · Ding oder Tier → <b>it</b> · mehrere → <b>they</b> · ich + andere → <b>we</b>.<br><b>I</b> schreibt man immer groß!</p><ul class="exl">' + exLine('Mr Fernandes is nice. He is our teacher.', '') + exLine('My pencil case is red. It is new.', '') + exLine('Joanna and I are friends. We are in Year 5.', '') + '</ul>';
     if (k === 'order') return '<h3>Sätze bauen</h3><p>Ein englischer Satz hat eine feste Reihenfolge: <b>Wer?</b> – <b>Verb</b> – <b>Rest</b>.</p><ul class="exl">' + exLine('I am ten years old.', 'Wer? I – Verb: am – Rest') + exLine('Are you from Mainz?', 'Frage: am / is / are nach vorne') + '</ul><p class="trick">Tipp: Hör dir den Satz mehrmals an, auch langsam. Manche Sätze kann man auf zwei Arten bauen – dann zählen beide!</p>';
     if (k === 'likes') return '<h3>Things I like</h3><table><tr><th>Ich mag / tue gern</th><th>Ich mag nicht</th></tr><tr><td>I like dogs.</td><td>I don’t like rats.</td></tr><tr><td>I like reading.</td><td>I don’t like swimming.</td></tr></table><p class="trick"><b>Gern tun:</b> I like + Verb mit <b>-ing</b>: I like sing<b>ing</b>. (Auch richtig: I like to sing.)<br><b>Nicht mögen:</b> <b>don’t</b> vor like. Falsch: <s>I not like</s></p><p><b>Meinung:</b> I think … <b>is</b> (eins) / <b>are</b> (mehrere)</p><ul class="exl">' + exLine('I think swimming is boring.', 'eins → is') + exLine('I think snakes are scary.', 'mehrere → are') + exLine('I don\'t like seagulls.', 'Ich mag keine Möwen.') + '</ul>';
     if (k === 'wwords') return '<h3>Welcome-Wörter</h3><p><b>Wochentage</b> schreibt man groß:</p><p>Monday · Tuesday · Wednesday · Thursday · Friday · Saturday · Sunday</p><p class="trick">Meine Woche: <b>On Monday, I</b> meet my teacher. · On Friday, I read a book.</p><p><b>Zahlen:</b> one, two, three, four, five, six, seven, eight, nine, ten, eleven, twelve …</p><p><b>Farben:</b> red, blue, yellow, green, purple, orange, pink, black, white, brown, grey</p><ul class="exl">' + exLine('I can see four balloons.', 'Ich sehe vier Luftballons.') + exLine('The pencil case is red.', '') + exLine('Wednesday', 'Achtung: das d hört man nicht!') + '</ul>';
-    if (k === 'wel') return '<h3>Welcome: wichtige Sätze</h3><ul class="exl">' + exLine('Hello! What\'s your name?', 'Hallo! Wie heißt du?') + exLine('My name is Giuli. / I\'m Giuli.', 'Ich heiße Giuli.') + exLine('How old are you? I\'m ten.', 'Wie alt bist du? Ich bin zehn.') + exLine('Where are you from? I\'m from Mainz.', 'Woher kommst du?') + exLine('How are you? I\'m fine, thanks.', 'Wie geht es dir?') + exLine('Nice to meet you!', 'Schön, dich kennenzulernen!') + exLine('Can you spell it, please?', 'Kannst du es buchstabieren?') + exLine('Where do you live? I live in Mainz.', 'Wo wohnst du?') + exLine('My friends call me Giuli.', 'Meine Freunde nennen mich Giuli.') + exLine('What are your hobbies? I like reading.', 'Was sind deine Hobbys?') + exLine('That sounds great!', 'Das klingt toll!') + '</ul>';
+    if (k === 'wel') return '<h3>Welcome: wichtige Sätze</h3><ul class="exl">' + exLine('Hello! What\'s your name?', 'Hallo! Wie heißt du?') + exLine('My name is Lena. / I\'m Lena.', 'Ich heiße Lena.') + exLine('How old are you? I\'m ten.', 'Wie alt bist du? Ich bin zehn.') + exLine('Where are you from? I\'m from Mainz.', 'Woher kommst du?') + exLine('How are you? I\'m fine, thanks.', 'Wie geht es dir?') + exLine('Nice to meet you!', 'Schön, dich kennenzulernen!') + exLine('Can you spell it, please?', 'Kannst du es buchstabieren?') + exLine('Where do you live? I live in Mainz.', 'Wo wohnst du?') + exLine('My friends call me Lena.', 'Meine Freunde nennen mich Lena.') + exLine('What are your hobbies? I like reading.', 'Was sind deine Hobbys?') + exLine('That sounds great!', 'Das klingt toll!') + '</ul>';
     return '<p>' + (RULES[k] || '') + '</p>';
   }
 
@@ -2996,7 +2996,7 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
   }
 
 
-  /* ================= Klassenarbeit 5.11.: Welcome + Unit 1 + Familientext (nach Giulis Heften) ================= */
+  /* ================= Klassenarbeit 5.11.: Welcome + Unit 1 + Familientext (nach Heften aus der Klasse) ================= */
   /* Heft-Vokabeln: 'deutsch|englisch|weitere richtige Antworten' */
   var VOC = [
     ['Welcome', [
@@ -3047,7 +3047,7 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
       'der Spielstein, das Spiel|game', 'die Stifte (Filzstifte)|markers|felt tips', 'die Schülerinnen und Schüler|students', 'der Rock|skirt', 'das T-Shirt|T-shirt', 'das Café|café|cafe', 'das Getränk|drink'
     ]]
   ];
-  /* Falsche Schreibweisen aus Giulis Heften und typische Stolperstellen */
+  /* Falsche Schreibweisen aus Heften aus der Klasse und typische Stolperstellen */
   var TRAPS = { years: ['yers', 'yeares'], black: ['blac', 'blak'], bike: ['bige', 'baik'], balloon: ['ballown', 'ballon'], flower: ['fallowe', 'flawer'], know: ['now', 'wheit'], parents: ['parends', 'perents'],
     parcels: ['parsels', 'parcles'], please: ['pleas', 'plees'], rabbit: ['rubbert', 'rabbid'], spider: ['spieder', 'spaider'], ball: ['boll', 'bol'], blazer: ['blaze', 'bleiser'], new: ['now', 'nju'],
     our: ['us', 'are'], bananas: ['banana', 'bananes'], families: ['familys', 'family'], budgie: ['budgy', 'badgie'], snake: ['snak', 'sneik'], purple: ['purpel', 'perple'], grey: ['grai', 'gray'],
@@ -3139,7 +3139,7 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
     return { q: 'Schreibe die Mehrzahl.<br><span class="anagram">one ' + esc(sg) + ' → ' + n + ' ___</span>', mode: 'type', answer: [pl], explain: RULES.plur, lesson: 'plur', hint: special ? 'Achtung, das ist eine Ausnahme! Schau in „Kurz erklärt“.' : 'Meistens hängst du nur ein -s an.' };
   };
 
-  /* Typische Fehler aus Giulis Heften: welcher Satz ist richtig? */
+  /* Typische Fehler aus Heften aus der Klasse: welcher Satz ist richtig? */
   var HEFT = [
     ['Willkommen in Brighton.', 'Welcome to Brighton.', ['Welcome in Brighton.', 'Welcome at Brighton.'], 'Willkommen in … = Welcome <b>to</b> …'],
     ['Ich bin in der 5. Klasse.', 'I\'m in Year 5.', ['I\'m in class 5.', 'I\'m in the class 5.'], 'In England sagt man <b>Year 5</b>, nicht class 5.'],
@@ -3189,7 +3189,7 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
 
   /* Sätze für den Familientext bauen (Satzanfänge vom Blatt der Lehrerin) */
   var FAMS = [
-    'my name is Giuli ## Ich heiße Giuli.', 'I am from Böhl-Iggelheim ## Ich komme aus Böhl-Iggelheim.', 'this is my family ## Das ist meine Familie.', 'I have a brother and a sister ## Ich habe einen Bruder und eine Schwester.',
+    'my name is Lena ## Ich heiße Lena.', 'I am from Speyer ## Ich komme aus Speyer.', 'this is my family ## Das ist meine Familie.', 'I have a brother and a sister ## Ich habe einen Bruder und eine Schwester.',
     'I have two sisters ## Ich habe zwei Schwestern.', 'I am an only child ## Ich bin ein Einzelkind.', 'her name is Emilia ## Ihr Name ist Emilia.', 'his name is Leo ## Sein Name ist Leo.',
     'their names are Rosa and Kurt ## Ihre Namen sind Rosa und Kurt.', 'my mum and dad are Anna and Jan ## Meine Mama und mein Papa sind Anna und Jan.', 'her favourite colour is purple ## Ihre Lieblingsfarbe ist Lila.',
     'his favourite animal is the dog ## Sein Lieblingstier ist der Hund.', 'their hobbies are reading and swimming ## Ihre Hobbys sind Lesen und Schwimmen.', 'they are very nice ## Sie sind sehr nett.',
@@ -3221,7 +3221,7 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
   var KA_SET = ['voc', 'hisher', 'qw', 'plur', 'heft', 'famsent', 'be', 'beneg', 'beq', 'pron', 'poss', 'wel', 'wwords'];
   var lessonBase = lessonHtml;
   lessonHtml = function (k) {
-    if (k === 'hisher') return '<h3>he oder his? she oder her?</h3><table><tr><th>Wer tut etwas?</th><th>Wem gehört es?</th></tr><tr><td><b>I</b> am Giuli.</td><td><b>My</b> name is Giuli.</td></tr><tr><td><b>He</b> is my brother.</td><td><b>His</b> name is Leo.</td></tr><tr><td><b>She</b> is my sister.</td><td><b>Her</b> name is Emilia.</td></tr><tr><td><b>They</b> are my grandparents.</td><td><b>Their</b> names are Rosa and Kurt.</td></tr><tr><td><b>We</b> are a family.</td><td><b>Our</b> dog is Zuri.</td></tr></table><p class="trick"><b>Detektiv-Trick:</b> Kommt nach der Lücke ein <b>Verb</b> (is, are, likes, live)? → he / she / they.<br>Kommt ein <b>Nomen</b> (name, hobby, dog, favourite colour)? → his / her / their.<br>Falsch: <s>She name</s> · <s>He\'s name</s> · <s>There names</s></p><ul class="exl">' + exLine('She is my sister. Her name is Emilia.', 'Sie ist meine Schwester. Ihr Name ist Emilia.') + exLine('They are my grandparents. Their names are Rosa and Kurt.', '') + '</ul>';
+    if (k === 'hisher') return '<h3>he oder his? she oder her?</h3><table><tr><th>Wer tut etwas?</th><th>Wem gehört es?</th></tr><tr><td><b>I</b> am Lena.</td><td><b>My</b> name is Lena.</td></tr><tr><td><b>He</b> is my brother.</td><td><b>His</b> name is Leo.</td></tr><tr><td><b>She</b> is my sister.</td><td><b>Her</b> name is Emilia.</td></tr><tr><td><b>They</b> are my grandparents.</td><td><b>Their</b> names are Rosa and Kurt.</td></tr><tr><td><b>We</b> are a family.</td><td><b>Our</b> dog is Zuri.</td></tr></table><p class="trick"><b>Detektiv-Trick:</b> Kommt nach der Lücke ein <b>Verb</b> (is, are, likes, live)? → he / she / they.<br>Kommt ein <b>Nomen</b> (name, hobby, dog, favourite colour)? → his / her / their.<br>Falsch: <s>She name</s> · <s>He\'s name</s> · <s>There names</s></p><ul class="exl">' + exLine('She is my sister. Her name is Emilia.', 'Sie ist meine Schwester. Ihr Name ist Emilia.') + exLine('They are my grandparents. Their names are Rosa and Kurt.', '') + '</ul>';
     if (k === 'qw') return '<h3>Fragewörter</h3><table><tr><td><b>Who</b></td><td class="de">wer</td><td>Who is your teacher?</td></tr><tr><td><b>What</b></td><td class="de">was</td><td>What are your hobbies?</td></tr><tr><td><b>Where</b></td><td class="de">wo, woher</td><td>Where are you from?</td></tr><tr><td><b>How</b></td><td class="de">wie</td><td>How are you?</td></tr><tr><td><b>How old</b></td><td class="de">wie alt</td><td>How old are you?</td></tr><tr><td><b>Why</b></td><td class="de">warum</td><td>Why are you here?</td></tr></table><p class="trick"><b>Trick:</b> Lies zuerst die Antwort. Ist es eine Person → Who. Ein Ort → Where. Eine Zahl beim Alter → How old.<br>Achtung: Wie heißt du? → <b>What</b>’s your name? (nicht How)</p>';
     if (k === 'plur') return '<h3>Mehrzahl (Plural)</h3><table><tr><td>meistens + s</td><td>dog → dog<b>s</b>, sister → sister<b>s</b></td></tr><tr><td>nach ch, sh, s, x + es</td><td>sandwich → sandwich<b>es</b></td></tr><tr><td>Konsonant + y → ies</td><td>family → famil<b>ies</b>, hobby → hobb<b>ies</b></td></tr><tr><td>Vokal + y → s</td><td>day → day<b>s</b></td></tr><tr><td>Ausnahmen</td><td>person → <b>people</b>, fish → <b>fish</b></td></tr></table><p class="trick">Mehrzahl hat <b>keinen Apostroph</b>: two brothers (nicht <s>brother\'s</s>). Und danach kommt <b>are</b>: My cousins are nice.</p>';
     return lessonBase(k);
