@@ -588,6 +588,34 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .tb-ch { color: var(--primary); } }
 :root[data-theme="dark"] .tb-ch { color: var(--primary); }
 
+
+/* Themen-Auswahlfeld (aufklappbar) */
+.pick { display: flex; flex-direction: column; gap: 8px; }
+.pick-title { margin: 2px 0 0; font-family: var(--font-display); font-weight: 800; font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); }
+.pick-field { all: unset; box-sizing: border-box; cursor: pointer; display: flex; align-items: center; gap: 12px; min-height: 58px; padding: 10px 12px 10px 16px; border: 2px solid var(--edge); border-radius: 16px; background: var(--surface); box-shadow: 0 3px 0 var(--edge); color: var(--ink); }
+.pick-field:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+.pick-field[aria-expanded="true"] { border-color: var(--primary); box-shadow: 0 0 0 4px var(--primary-fill); }
+.pf-v { flex: 1; min-width: 0; font-family: var(--font-display); font-weight: 800; font-size: 1.1rem; line-height: 1.25; overflow-wrap: anywhere; }
+.pf-ch { flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%; background: var(--primary-fill); display: flex; align-items: center; justify-content: center; }
+.pf-ch svg { width: 22px; height: 22px; fill: none; stroke: var(--primary-dark); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.2s ease; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .pf-ch svg { stroke: var(--primary); } }
+:root[data-theme="dark"] .pf-ch svg { stroke: var(--primary); }
+.pick-field[aria-expanded="true"] .pf-ch svg { transform: rotate(180deg); }
+.pick > nav[hidden] { display: none !important; }
+.pick > nav:not([hidden]) { animation: pickOpen 0.18s ease-out; }
+@keyframes pickOpen { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .pick > nav:not([hidden]) { animation: none; } .pf-ch svg { transition: none; } }
+.pick .chip-group { gap: 14px; }
+.pick .chip-group .chip-group { gap: 8px; }
+.pick .chip-group h3 { font-size: 0.78rem; letter-spacing: 0.08em; }
+.pick .topics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+@media (min-width: 560px) { .pick .topics { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.pick .chip { text-align: left; min-height: 50px; padding: 10px 12px; border-radius: 16px; border: 2px solid var(--edge); background: var(--surface); color: var(--ink); box-shadow: 0 3px 0 var(--edge); font-weight: 700; font-size: 0.95rem; line-height: 1.2; overflow-wrap: anywhere; }
+.pick .chip:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--edge); }
+.pick .chip.en-probe, .pick .chip.pro { background: var(--primary-fill); border-style: solid; border-color: var(--primary-fill); box-shadow: 0 3px 0 var(--edge); }
+.pick .chip[aria-pressed="true"], .pick .chip.en-probe[aria-pressed="true"], .pick .chip.pro[aria-pressed="true"] { background: var(--primary); border-color: var(--primary); color: var(--on-primary); box-shadow: 0 3px 0 var(--primary-dark); }
+.pick .chip[aria-pressed="true"]::before { content: "✓ "; }
+
 /* Auswahlfenster */
 .sheet { position: fixed; inset: 0; z-index: 30; background: rgba(15, 20, 40, 0.45); display: flex; align-items: flex-end; justify-content: center; }
 .sheet-panel { width: 100%; max-width: 620px; max-height: 86vh; overflow-y: auto; overscroll-behavior: contain; background: var(--paper); border-radius: 26px 26px 0 0; padding: 0 max(16px, env(safe-area-inset-right, 0px)) calc(24px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); display: flex; flex-direction: column; gap: 14px; animation: sheetUp 0.22s ease-out; }
@@ -772,13 +800,11 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
     </div>
   </header>
 
-  <button type="button" class="topic-btn" data-sheet="enSheet" aria-haspopup="dialog"><span class="tb-txt"><span class="tb-k">Thema</span><span class="tb-v" id="enTopicBtnLabel">Alles gemischt</span></span><span class="tb-ch">Ändern</span></button>
-  <div class="sheet" id="enSheet" hidden>
-    <div class="sheet-panel" role="dialog" aria-modal="true" aria-labelledby="enSheetTitle">
-      <div class="sheet-head"><h2 id="enSheetTitle">Was möchtest du üben?</h2><button type="button" class="sheet-x" aria-label="Schließen">✕</button></div>
-      <nav id="enTopics" aria-label="Thema wählen" class="chip-group"></nav>
-    </div>
-  </div>
+  <section class="pick" aria-labelledby="enPickTitle">
+    <h2 class="pick-title" id="enPickTitle">Was möchtest du üben?</h2>
+    <button type="button" class="pick-field" aria-expanded="false" aria-controls="enTopics"><span class="pf-v" id="enTopicBtnLabel">Alles gemischt</span><span class="pf-ch" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></button>
+    <nav id="enTopics" aria-label="Thema wählen" class="chip-group" hidden></nav>
+  </section>
 
   <div class="progress" id="enProg">
     <div class="progress-text"><span id="enProgLabel">Aufgabe 1 von 10</span><span id="enTopicLabel">Gemischt</span></div>
@@ -846,11 +872,10 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
 
   <div class="break-info" id="breakInfo"><p id="breakText"></p><button type="button" class="btn small primary" id="breakStart" hidden>Pause starten</button></div>
 
-  <button type="button" class="topic-btn" data-sheet="mathSheet" aria-haspopup="dialog"><span class="tb-txt"><span class="tb-k">Thema</span><span class="tb-v" id="mathTopicBtnLabel">Maßstab gemischt</span></span><span class="tb-ch">Ändern</span></button>
-  <div class="sheet" id="mathSheet" hidden>
-    <div class="sheet-panel" role="dialog" aria-modal="true" aria-labelledby="mathSheetTitle">
-      <div class="sheet-head"><h2 id="mathSheetTitle">Was möchtest du üben?</h2><button type="button" class="sheet-x" aria-label="Schließen">✕</button></div>
-  <nav class="topics" aria-label="Thema wählen">
+  <section class="pick" aria-labelledby="mathPickTitle">
+    <h2 class="pick-title" id="mathPickTitle">Was möchtest du üben?</h2>
+    <button type="button" class="pick-field" aria-expanded="false" aria-controls="mathTopics"><span class="pf-v" id="mathTopicBtnLabel">Maßstab gemischt</span><span class="pf-ch" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></button>
+  <nav class="topics" id="mathTopics" aria-label="Thema wählen" hidden>
     <button type="button" class="chip pro" data-topic="mka" aria-pressed="false">Klassenarbeit-Mix</button>
     <button type="button" class="chip" data-topic="nat" aria-pressed="false">Natürliche Zahlen</button>
     <button type="button" class="chip" data-topic="mix" aria-pressed="true">Maßstab gemischt</button>
@@ -863,8 +888,7 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
     <button type="button" class="chip" data-topic="heft" aria-pressed="false">Bild &amp; Original</button>
     <button type="button" class="chip pro" data-topic="profi" aria-pressed="false">Profi</button>
   </nav>
-    </div>
-  </div>
+  </section>
 
   <div class="progress">
     <div class="progress-text"><span id="progLabel">Aufgabe 1 von 10</span> <span class="streak" id="streakPill" hidden></span><span id="topicLabel">Gemischt</span></div>
@@ -3802,44 +3826,41 @@ window.LU5 = (function () {
 
 
 <script>
-/* Themen-Auswahlfenster für Mathe und Englisch */
+/* Themen-Auswahlfeld für Mathe und Englisch: antippen klappt die Themen auf, Auswahl klappt wieder zu */
 (function () {
-  var lastBtn = null;
+  var PAIRS = [['enTopics', 'enTopicBtnLabel'], ['mathTopics', 'mathTopicBtnLabel']];
   function label() {
-    [['#enTopics', 'enTopicBtnLabel'], ['#mathView .topics', 'mathTopicBtnLabel']].forEach(function (p) {
-      var c = document.querySelector(p[0] + ' .chip[aria-pressed="true"]');
-      var out = document.getElementById(p[1]);
+    PAIRS.forEach(function (p) {
+      var list = document.getElementById(p[0]), out = document.getElementById(p[1]);
+      var c = list && list.querySelector('.chip[aria-pressed="true"]');
       if (out && c) out.textContent = c.textContent;
     });
   }
-  function openSheet(id, btn) {
-    var s = document.getElementById(id); if (!s) return;
-    label(); lastBtn = btn; s.hidden = false; document.body.style.overflow = 'hidden';
-    var cur = s.querySelector('.chip[aria-pressed="true"]') || s.querySelector('.chip');
-    if (cur) { try { cur.focus({ preventScroll: true }); } catch (e) { cur.focus(); } cur.scrollIntoView({ block: 'center' }); }
-  }
-  function closeSheet(s) {
-    s.hidden = true; document.body.style.overflow = '';
-    if (lastBtn) { try { lastBtn.focus({ preventScroll: true }); } catch (e) {} }
+  function fieldFor(list) { return document.querySelector('.pick-field[aria-controls="' + list.id + '"]'); }
+  function setOpen(list, o) {
+    list.hidden = !o; var f = fieldFor(list); if (f) f.setAttribute('aria-expanded', o ? 'true' : 'false');
   }
   document.addEventListener('click', function (e) {
-    var b = e.target.closest('[data-sheet]');
-    if (b) { openSheet(b.getAttribute('data-sheet'), b); return; }
-    var s = e.target.closest('.sheet'); if (!s) return;
-    if (e.target === s || e.target.closest('.sheet-x')) { closeSheet(s); return; }
-    if (e.target.closest('.chip')) {
-      setTimeout(function () { closeSheet(s); label(); window.scrollTo(0, 0); }, 0);
+    var f = e.target.closest('.pick-field');
+    if (f) {
+      var list = document.getElementById(f.getAttribute('aria-controls')); if (!list) return;
+      var open = list.hidden; label(); setOpen(list, open);
+      if (open) { var cur = list.querySelector('.chip[aria-pressed="true"]'); if (cur) cur.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }
+      return;
+    }
+    var chip = e.target.closest('.pick .chip');
+    if (chip) {
+      var l = chip.closest('.pick').querySelector('nav');
+      setTimeout(function () { setOpen(l, false); label(); var ff = fieldFor(l); if (ff) ff.scrollIntoView({ block: 'nearest' }); window.scrollTo(0, 0); }, 0);
     }
   }, true);
   document.addEventListener('keydown', function (e) {
     if (e.key !== 'Escape') return;
-    var open = document.querySelector('.sheet:not([hidden])');
-    if (open) closeSheet(open);
+    PAIRS.forEach(function (p) { var l = document.getElementById(p[0]); if (l && !l.hidden) { setOpen(l, false); var f = fieldFor(l); if (f) f.focus(); } });
   });
   try {
     var mo = new MutationObserver(label);
-    var en = document.getElementById('enTopics'); if (en) mo.observe(en, { childList: true, subtree: true, attributes: true, attributeFilter: ['aria-pressed'] });
-    var ma = document.querySelector('#mathView .topics'); if (ma) mo.observe(ma, { subtree: true, attributes: true, attributeFilter: ['aria-pressed'] });
+    PAIRS.forEach(function (p) { var l = document.getElementById(p[0]); if (l) mo.observe(l, { childList: true, subtree: true, attributes: true, attributeFilter: ['aria-pressed'] }); });
   } catch (e) {}
   label();
 })();
