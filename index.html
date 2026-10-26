@@ -875,7 +875,8 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
   <main class="card" id="card">
     <section id="taskView" aria-labelledby="question">
       <div style="display: flex; flex-direction: column; gap: 14px;">
-        <span class="tag" id="tag">Verstehen</span>
+        <div class="card-head"><span class="tag" id="tag">Verstehen</span><button type="button" class="btn small lesson-btn" id="mLessonBtn" aria-expanded="false" aria-controls="mLesson">? Kurz erklärt</button></div>
+        <div class="lesson" id="mLesson" hidden></div>
         <p class="question" id="question">Was bedeutet der Maßstab 1&nbsp;:&nbsp;100?</p>
         <div class="visual" id="visual"></div>
         <form id="answerForm" novalidate autocomplete="off" hidden>
@@ -891,6 +892,7 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
           </div>
         </form>
         <div class="options" id="options"></div>
+        <div class="actions" id="mcTipRow" hidden><button type="button" class="btn tip" id="mcHintBtn">Tipp</button></div>
         <div class="feedback" id="feedback" role="status" aria-live="polite" hidden></div>
         <button type="button" class="btn primary" id="nextBtn" hidden>Weiter</button>
       </div>
@@ -1836,6 +1838,7 @@ window.LU5 = (function () {
   /* ---------- State ---------- */
   var TOPIC_LABEL = { mix: 'Gemischt', concept: 'Verstehen', k2w: 'Karte → echt', w2k: 'echt → Karte', find: 'Maßstab finden', zoom: 'Vergrößern', units: 'Einheiten', heft: 'Bild & Original', profi: 'Profi', nat: 'Natürliche Zahlen', mka: 'Klassenarbeit-Mix' };
   if (window.LU5) LU5.labels.m = TOPIC_LABEL;
+  var MLESSON = {"stelle": "<p>Jede Ziffer hat einen Platz in der Stellenwerttafel. Von rechts: Einer, Zehner, Hunderter, Tausender …</p><table><tr><th>Mio</th><th>HT</th><th>ZT</th><th>T</th><th>H</th><th>Z</th><th>E</th></tr><tr><td>3</td><td>4</td><td>8</td><td>2</td><td>1</td><td>0</td><td>5</td></tr></table><p>Das ist die Zahl <b>3&nbsp;482&nbsp;105</b>. An der Tausender-Stelle (T) steht die <b>2</b>.</p><p class=\"trick\"><b>Merke:</b> Wo nichts steht, schreibst du eine <b>0</b>.</p>", "rund": "<p>Beispiel: Runde <b>34&nbsp;768</b> auf <b>Tausender</b>.</p><p>1. Finde die Tausender-Stelle: 3<b>4</b> 768.<br>2. Schau auf die Ziffer <b>rechts daneben</b>: 34 <b>7</b>68.<br>3. Die 7 ist 5 oder mehr → aufrunden: <b>35&nbsp;000</b>.</p><p class=\"trick\"><b>Merke:</b> 0, 1, 2, 3, 4 → abrunden. 5, 6, 7, 8, 9 → aufrunden. Alles rechts davon wird zu 0.</p>", "add": "<p>Beispiel: <b>4&nbsp;568&nbsp;+&nbsp;2&nbsp;375</b></p><p>Schreibe die Zahlen genau untereinander, Einer unter Einer. Fang rechts an:</p><p>E: 8 + 5 = 13 → schreibe 3, Übertrag 1<br>Z: 6 + 7 + 1 = 14 → schreibe 4, Übertrag 1<br>H: 5 + 3 + 1 = 9<br>T: 4 + 2 = 6</p><p>Ergebnis: <b>6&nbsp;943</b>. Überschlag: 5&nbsp;000&nbsp;+&nbsp;2&nbsp;000&nbsp;=&nbsp;7&nbsp;000, passt!</p><p class=\"trick\"><b>Merke:</b> Den Übertrag klein über die nächste Stelle schreiben, dann vergisst du ihn nicht.</p>", "sub": "<p>Beispiel: <b>7&nbsp;302&nbsp;−&nbsp;2&nbsp;458</b>. Wir rechnen mit Ergänzen, von rechts:</p><p>E: 8 + ? = 12 → <b>4</b>, Übertrag 1<br>Z: 5 + 1 = 6, 6 + ? = 10 → <b>4</b>, Übertrag 1<br>H: 4 + 1 = 5, 5 + ? = 13 → <b>8</b>, Übertrag 1<br>T: 2 + 1 = 3, 3 + ? = 7 → <b>4</b></p><p>Ergebnis: <b>4&nbsp;844</b>. Probe: 4&nbsp;844&nbsp;+&nbsp;2&nbsp;458&nbsp;=&nbsp;7&nbsp;302 ✓</p><p class=\"trick\"><b>Merke:</b> Mit der Probe (Ergebnis + abgezogene Zahl) findest du jeden Fehler.</p>", "mul": "<p>Beispiel: <b>324&nbsp;·&nbsp;23</b></p><p>Zerlege die 23 in 20 und 3:<br>324&nbsp;·&nbsp;20&nbsp;=&nbsp;6&nbsp;480<br>324&nbsp;·&nbsp;3&nbsp;=&nbsp;972<br>Zusammen: 6&nbsp;480&nbsp;+&nbsp;972&nbsp;=&nbsp;<b>7&nbsp;452</b></p><p>Mit Nullen: 45&nbsp;·&nbsp;300 → rechne 45&nbsp;·&nbsp;3&nbsp;=&nbsp;135 und hänge die zwei Nullen an: <b>13&nbsp;500</b>.</p><p class=\"trick\"><b>Merke:</b> Beim schriftlichen Rechnen rückt die zweite Zeile eine Stelle nach links.</p>", "div": "<p>Beispiel: <b>2&nbsp;736&nbsp;:&nbsp;4</b>, von links:</p><p>27 : 4 = <b>6</b>, Rest 3 → hole die 3 runter: 33<br>33 : 4 = <b>8</b>, Rest 1 → hole die 6 runter: 16<br>16 : 4 = <b>4</b>, Rest 0</p><p>Ergebnis: <b>684</b>. Probe: 684&nbsp;·&nbsp;4&nbsp;=&nbsp;2&nbsp;736 ✓</p><p class=\"trick\"><b>Merke:</b> Passt die Zahl nicht einmal hinein, schreibst du eine <b>0</b> ins Ergebnis und holst die nächste Ziffer.</p>", "regel": "<p>Die Reihenfolge ist fest:</p><p>1. <b>Klammern</b> zuerst<br>2. <b>Punkt vor Strich</b>: erst · und :, dann + und −<br>3. Sonst von links nach rechts</p><p><b>5 + 3 · 4</b> = 5 + 12 = <b>17</b> (nicht 32!)<br><b>(5 + 3) · 4</b> = 8 · 4 = <b>32</b></p><p class=\"trick\"><b>Merke:</b> Klammer – Punkt – Strich.</p>", "gesch": "<p>Bei + und · darfst du die Reihenfolge tauschen. Suche Partner, die eine runde Zahl ergeben.</p><p><b>25 · 17 · 4</b> → 25 · 4 = 100 → 100 · 17 = <b>1&nbsp;700</b><br><b>37 + 58 + 63</b> → 37 + 63 = 100 → 100 + 58 = <b>158</b></p><p class=\"trick\"><b>Merke:</b> Gute Partner: 25 · 4 = 100, 2 · 50 = 100, 20 · 5 = 100.</p>", "concept": "<p>Der Maßstab <b>1&nbsp;:&nbsp;100</b> heißt: <b class=\"k\">1&nbsp;cm&nbsp;auf&nbsp;der&nbsp;Karte</b> ist <b class=\"w\">100&nbsp;cm&nbsp;=&nbsp;1&nbsp;m&nbsp;in&nbsp;echt</b>.</p><p>Steht die große Zahl <b>hinten</b> (1 : 100), ist es eine <b>Verkleinerung</b>.<br>Steht sie <b>vorne</b> (10 : 1), ist es eine <b>Vergrößerung</b>.</p><p>Je <b>kleiner</b> die Zahl hinten, desto größer ist alles gezeichnet. Je <b>größer</b> die Zahl hinten, desto mehr Gebiet passt auf die Karte.</p><p class=\"trick\"><b>Merke:</b> Vorne Karte/Bild, hinten echt.</p>", "k2w": "<p>Beispiel: Maßstab <b>1&nbsp;:&nbsp;25&nbsp;000</b>, auf der Karte <b class=\"k\">4&nbsp;cm</b>.</p><p>1. Rechne <b>mal</b>: 4&nbsp;cm&nbsp;·&nbsp;25&nbsp;000&nbsp;=&nbsp;100&nbsp;000&nbsp;cm<br>2. Umwandeln: 100&nbsp;000&nbsp;cm&nbsp;=&nbsp;1&nbsp;000&nbsp;m = <b class=\"w\">1&nbsp;km</b></p><p class=\"trick\"><b>Merke:</b> Karte → echt: <b>mal</b> die Zahl hinten. Das Ergebnis ist zuerst in cm.</p>", "w2k": "<p>Beispiel: Maßstab <b>1&nbsp;:&nbsp;50&nbsp;000</b>, in echt <b class=\"w\">3&nbsp;km</b>.</p><p>1. Erst in cm umwandeln: 3&nbsp;km&nbsp;=&nbsp;3&nbsp;000&nbsp;m&nbsp;=&nbsp;300&nbsp;000&nbsp;cm<br>2. Rechne <b>geteilt</b>: 300&nbsp;000&nbsp;:&nbsp;50&nbsp;000 = <b class=\"k\">6&nbsp;cm</b></p><p class=\"trick\"><b>Merke:</b> Echt → Karte: erst in cm, dann <b>geteilt</b> durch die Zahl hinten.</p>", "find": "<p>Beispiel: Karte <b class=\"k\">5&nbsp;cm</b>, in echt <b class=\"w\">1&nbsp;km</b>.</p><p>1. Beide Längen in cm: 1&nbsp;km&nbsp;=&nbsp;100&nbsp;000&nbsp;cm<br>2. Echt geteilt durch Karte: 100&nbsp;000&nbsp;:&nbsp;5&nbsp;=&nbsp;20&nbsp;000<br>3. Maßstab: <b>1&nbsp;:&nbsp;20&nbsp;000</b></p><p class=\"trick\"><b>Merke:</b> Maßstab finden: echte Länge (in cm) <b>geteilt</b> durch die Länge auf der Karte.</p>", "zoom": "<p>Bei einer Vergrößerung steht die große Zahl vorne, z. B. <b>5 : 1</b>: Das Bild ist 5-mal so groß wie in echt.</p><p>Eine Ameise ist in echt <b class=\"w\">4&nbsp;mm</b> → im Bild 4&nbsp;·&nbsp;5 = <b class=\"k\">20&nbsp;mm</b>.<br>Im Bild <b class=\"k\">30&nbsp;mm</b> → in echt 30&nbsp;:&nbsp;5 = <b class=\"w\">6&nbsp;mm</b>.</p><p class=\"trick\"><b>Merke:</b> Echt → Bild: <b>mal</b>. Bild → echt: <b>geteilt</b>.</p>", "units": "<p>Stell dir eine Treppe vor:</p><p><b>km</b> →(· 1&nbsp;000)→ <b>m</b> →(· 10)→ <b>dm</b> →(· 10)→ <b>cm</b> →(· 10)→ <b>mm</b></p><p>Runter zu kleineren Einheiten: <b>mal</b>. Rauf zu größeren: <b>geteilt</b>.<br>3&nbsp;m&nbsp;=&nbsp;300&nbsp;cm · 7&nbsp;000&nbsp;m&nbsp;=&nbsp;7&nbsp;km · 50&nbsp;mm&nbsp;=&nbsp;5&nbsp;cm</p><p class=\"trick\"><b>Merke:</b> 1 m = 100 cm, 1&nbsp;km&nbsp;=&nbsp;1&nbsp;000&nbsp;m&nbsp;=&nbsp;100&nbsp;000&nbsp;cm.</p>", "pic": "<p>Zähle beim <b class=\"w\">Original</b> und beim <b class=\"k\">Bild</b> die Kästchen einer Seite.</p><p>Original 2 Kästchen, Bild 6 Kästchen → das Bild ist 3-mal so groß → <b>Vergrößerung 3 : 1</b>.<br>Original 8 Kästchen, Bild 2 Kästchen → das Bild ist 4-mal so klein → <b>Verkleinerung 1 : 4</b>.</p><p class=\"trick\"><b>Merke:</b> Beim Maßstab steht das Bild immer vorne: <b>Bild : Original</b>.</p>", "ratio": "<p>Bringe zuerst beide Längen in <b>dieselbe Einheit</b>.</p><p>Bild <b class=\"k\">2&nbsp;cm</b>, Original <b class=\"w\">10&nbsp;m&nbsp;=&nbsp;1&nbsp;000&nbsp;cm</b> → 1&nbsp;000&nbsp;:&nbsp;2&nbsp;=&nbsp;500 → <b>1&nbsp;:&nbsp;500</b><br>Bild <b class=\"k\">30&nbsp;mm</b>, Original <b class=\"w\">5&nbsp;mm</b> → 30&nbsp;:&nbsp;5&nbsp;=&nbsp;6 → <b>6 : 1</b></p><p class=\"trick\"><b>Merke:</b> Ist das Bild kleiner: <b>1 : …</b>. Ist das Bild größer: <b>… : 1</b>.</p>", "tab": "<p>Beispiel: Maßstab <b>1&nbsp;:&nbsp;200</b>. Im <b class=\"k\">Bild&nbsp;3&nbsp;cm</b>.</p><p>Bild → Wirklichkeit: <b>mal</b> 200 → 3&nbsp;cm&nbsp;·&nbsp;200&nbsp;=&nbsp;600&nbsp;cm = <b class=\"w\">6&nbsp;m</b><br>Wirklichkeit → Bild: <b>geteilt</b> durch 200.</p><p class=\"trick\"><b>Merke:</b> Achte auf die Einheit, in der das Ergebnis stehen soll. Wandle am Ende um.</p>", "model": "<p>Ein Modell ist eine Verkleinerung, z. B. <b>1&nbsp;:&nbsp;50</b>.</p><p>Ein Haus ist in echt <b class=\"w\">10&nbsp;m</b> hoch. 10&nbsp;m&nbsp;=&nbsp;1&nbsp;000&nbsp;cm → 1&nbsp;000&nbsp;:&nbsp;50 = <b class=\"k\">20&nbsp;cm</b> am Modell.<br>Am Modell <b class=\"k\">20&nbsp;cm</b> → 20&nbsp;·&nbsp;50&nbsp;=&nbsp;1&nbsp;000&nbsp;cm = <b class=\"w\">10&nbsp;m</b> in echt.</p><p class=\"trick\"><b>Merke:</b> Echt → Modell: <b>geteilt</b>. Modell → echt: <b>mal</b>.</p>", "fit": "<p>Ein DIN-A4-Blatt ist etwa 29&nbsp;cm&nbsp;×&nbsp;21&nbsp;cm. Rechne für jeden Maßstab aus, wie groß die Zeichnung wird.</p><p>Ein Fußballfeld ist etwa <b class=\"w\">100&nbsp;m&nbsp;=&nbsp;10&nbsp;000&nbsp;cm</b> lang.<br>Mit 1&nbsp;:&nbsp;100: 10&nbsp;000&nbsp;:&nbsp;100&nbsp;=&nbsp;100&nbsp;cm → passt <b>nicht</b>.<br>Mit 1&nbsp;:&nbsp;500: 10&nbsp;000&nbsp;:&nbsp;500&nbsp;=&nbsp;20&nbsp;cm → <b>passt</b>.</p><p class=\"trick\"><b>Merke:</b> Wähle den Maßstab, bei dem die Zeichnung möglichst groß ist, aber noch aufs Blatt passt.</p>", "bar": "<p>Eine Maßstabsleiste zeigt: ein Stück auf der Karte steht für eine echte Länge.</p><p>Ein Stück ist <b class=\"k\">1&nbsp;cm</b> und steht für <b class=\"w\">500&nbsp;m</b>.<br>Maßstab: 500&nbsp;m&nbsp;=&nbsp;50&nbsp;000&nbsp;cm → <b>1&nbsp;:&nbsp;50&nbsp;000</b><br><b class=\"w\">2&nbsp;km</b> sind 4 Stücke → <b class=\"k\">4&nbsp;cm</b> auf der Karte.</p><p class=\"trick\"><b>Merke:</b> Wandle die Länge eines Stücks in cm um, dann hast du den Maßstab.</p>", "time": "<p>Beispiel: Karte 1&nbsp;:&nbsp;25&nbsp;000, Weg <b class=\"k\">8&nbsp;cm</b>, 1 km dauert 15 Minuten.</p><p>1. Echte Länge: 8&nbsp;cm&nbsp;·&nbsp;25&nbsp;000&nbsp;=&nbsp;200&nbsp;000&nbsp;cm = <b class=\"w\">2&nbsp;km</b><br>2. Zeit: 2 · 15 Minuten = <b>30 Minuten</b></p><p class=\"trick\"><b>Merke:</b> Erst die echte Länge in km, dann die Zeit pro km.</p>", "sum": "<p>Beispiel: Stadtplan 1&nbsp;:&nbsp;10&nbsp;000, Teile <b class=\"k\">2&nbsp;cm</b>, <b class=\"k\">3&nbsp;cm</b> und <b class=\"k\">1&nbsp;cm</b>.</p><p>1. Zusammenzählen: 2 + 3 + 1 = <b class=\"k\">6&nbsp;cm</b><br>2. Mal den Maßstab: 6&nbsp;cm&nbsp;·&nbsp;10&nbsp;000&nbsp;=&nbsp;60&nbsp;000&nbsp;cm = <b class=\"w\">600&nbsp;m</b></p><p class=\"trick\"><b>Merke:</b> Hin und zurück heißt: den Weg <b>zweimal</b> rechnen.</p>", "compare": "<p>Beispiel: Auf Karte A (1&nbsp;:&nbsp;25&nbsp;000) ist ein Weg <b class=\"k\">4&nbsp;cm</b>. Wie lang auf Karte B (1&nbsp;:&nbsp;50&nbsp;000)?</p><p>1. Echte Länge: 4&nbsp;·&nbsp;25&nbsp;000&nbsp;=&nbsp;100&nbsp;000&nbsp;cm<br>2. Auf Karte B: 100&nbsp;000&nbsp;:&nbsp;50&nbsp;000 = <b class=\"k\">2&nbsp;cm</b></p><p class=\"trick\"><b>Merke:</b> Immer über die echte Länge gehen: erst mal, dann geteilt.</p>", "mixed": "<p>Bei Angaben wie <b>3 km 500 m</b> machst du zuerst <b>eine</b> Einheit daraus.</p><p>3&nbsp;km&nbsp;500&nbsp;m&nbsp;=&nbsp;3&nbsp;500&nbsp;m&nbsp;=&nbsp;350&nbsp;000&nbsp;cm<br>Mit 1&nbsp;:&nbsp;50&nbsp;000: 350&nbsp;000&nbsp;:&nbsp;50&nbsp;000 = <b class=\"k\">7&nbsp;cm</b></p><p class=\"trick\"><b>Merke:</b> Erst alles in m, dann in cm, dann rechnen.</p>", "reason": "<p>Prüfe die Aussage wie ein Detektiv: Rechne selbst nach, bevor du antwortest.</p><p>Typische Fehler: <b>mal und geteilt vertauscht</b>, <b>Einheit vergessen</b> (cm statt m) oder gedacht, eine größere Zahl hinten bedeutet „größer gezeichnet“.</p><p>Beispiel: „Bei 1&nbsp;:&nbsp;1&nbsp;000 ist alles größer gezeichnet als bei 1&nbsp;:&nbsp;100.“ → <b>Stimmt nicht</b>, bei 1 : 100 ist alles größer.</p><p class=\"trick\"><b>Merke:</b> Bei Profi-Aufgaben lohnt es sich, kurz auf einem Zettel mitzurechnen.</p>"};
   var TYPE_LABEL = { stelle: 'Stellenwerte', rund: 'Runden', add: 'Schriftlich addieren', sub: 'Schriftlich subtrahieren', mul: 'Multiplizieren', div: 'Dividieren', regel: 'Klammer & Punkt vor Strich', gesch: 'Geschickt rechnen', pic: 'Bild & Original vergleichen', ratio: 'Maßstab aus Bild und Original', tab: 'Bild ↔ Wirklichkeit (Einheiten)', model: 'Modelle', fit: 'Passt aufs Blatt?', concept: 'Verstehen', k2w: 'Karte → Wirklichkeit', w2k: 'Wirklichkeit → Karte', find: 'Maßstab finden', zoom: 'Vergrößerung', units: 'Einheiten umrechnen', bar: 'Profi: Maßstabsleiste', time: 'Profi: Wie lange?', sum: 'Profi: Wegstrecken', compare: 'Profi: Karten vergleichen', mixed: 'Profi: km und m', reason: 'Profi: Stimmt das?' };
   var PRAISE = ['Super!', 'Richtig!', 'Klasse!', 'Genau!', 'Stark gemacht!', 'Prima!'];
   var state = null;
@@ -1909,6 +1912,17 @@ window.LU5 = (function () {
     }
     el.nextBtn.hidden = !state.resolved;
     el.nextBtn.textContent = state.i === 9 ? 'Zum Ergebnis' : 'Weiter';
+    var mlb = document.getElementById('mLessonBtn'), mlz = document.getElementById('mLesson'), lh = MLESSON[t.type];
+    if (state.lessonOpen === undefined || state.lessonOpen === null) state.lessonOpen = !!(window.LU5 && LU5.get('m', state.topic) === 1);
+    if (mlb && mlz) {
+      mlb.hidden = !lh;
+      mlz.innerHTML = lh ? '<h3>' + TYPE_LABEL[t.type] + '</h3>' + lh : '';
+      mlz.hidden = !lh || !state.lessonOpen;
+      mlb.textContent = state.lessonOpen ? 'Erklärung zu' : '? Kurz erklärt';
+      mlb.setAttribute('aria-expanded', state.lessonOpen ? 'true' : 'false');
+    }
+    var mtr = document.getElementById('mcTipRow');
+    if (mtr) mtr.hidden = !(t.opts && !state.resolved && !state.hintUsed && (t.hint || lh));
     renderFeedback();
   }
 
@@ -2207,7 +2221,7 @@ window.LU5 = (function () {
       return;
     }
     if (v === t.ans) {
-      var first = state.attempts === 0 && !state.hintUsed;
+      var first = state.attempts === 0; /* Tipp oder Erklärung nutzen bleibt grün */
       el.card.classList.remove('pop'); void el.card.offsetWidth; el.card.classList.add('pop');
       resolve(first ? 'right' : 'second', { tone: 'good', title: pick(PRAISE), text: first ? 'Beim ersten Versuch richtig.' : 'Geschafft! So geht der Rechenweg:', steps: t.sol });
       return;
@@ -2248,7 +2262,7 @@ window.LU5 = (function () {
     state.resumed = false;
     if (state.i >= 9) { state.done = true; state.endNews = newsHtml(award(null, true)); render(); el.againBtn.focus({ preventScroll: true }); return; }
     state.i++;
-    state.attempts = 0; state.hintUsed = false; state.resolved = false; state.feedback = null; state.chosen = null; state.input = '';
+    state.attempts = 0; state.hintUsed = false; state.resolved = false; state.feedback = null; state.chosen = null; state.input = ''; state.lessonOpen = undefined;
     render();
     var t = state.tasks[state.i];
     if (t.opts) { var first = el.options.querySelector('.opt'); if (first) first.focus({ preventScroll: true }); }
@@ -2267,6 +2281,14 @@ window.LU5 = (function () {
     el.card = document.getElementById('card');
     el.answerForm.addEventListener('submit', function (e) { e.preventDefault(); check(); });
     el.hintBtn.addEventListener('click', hint);
+    document.getElementById('mLessonBtn').addEventListener('click', function () { state.lessonOpen = !state.lessonOpen; saveRound(); renderTask(); });
+    document.getElementById('mcHintBtn').addEventListener('click', function () {
+      var t = state.tasks[state.i]; if (state.resolved) return;
+      state.hintUsed = true;
+      if (t.hint) state.feedback = { tone: 'tip', title: 'Linas Tipp', text: t.hint };
+      else state.lessonOpen = true;
+      saveRound(); renderTask();
+    });
     el.nextBtn.addEventListener('click', next);
     el.againBtn.addEventListener('click', function () { newRound(state.topic); render(); });
     el.answer.addEventListener('input', function () { state.input = el.answer.value; saveRound(); });
@@ -3551,7 +3573,7 @@ window.LU5 = (function () {
   function chooseOpt(t, o) {
     if (enState.resolved) return;
     enState.chosen = o;
-    if (o === t.answer[0]) { finish(t, enState.hint || enState.attempts ? 0.5 : 1, rightFb(t, enState.attempts ? 'Super, im zweiten Versuch geschafft!' : '')); return; }
+    if (o === t.answer[0]) { finish(t, enState.attempts ? 0.5 : 1, rightFb(t, enState.attempts ? 'Super, im zweiten Versuch geschafft!' : '')); return; }
     if (!enState.attempts && t.options.length >= 3) {
       enState.attempts = 1; enState.tried = [o];
       var nh = t.hints && (enState.hintN || 0) < t.hints.length ? t.hints[enState.hintN || 0] : '';
@@ -3566,7 +3588,7 @@ window.LU5 = (function () {
     var j = judge(t, val);
     if (j === 'ok' || j === 'nohyphen' || j === 'case') {
       var note = j === 'nohyphen' ? 'Fast perfekt: Mit Bindestrich schreibt man <b>' + esc(t.answer[0]) + '</b>.' : j === 'case' ? 'Richtig! Achte auf den großen Anfangsbuchstaben: <b>' + esc(t.answer[0]) + '</b>.' : '';
-      var score = (enState.attempts > 0 || enState.hint || j !== 'ok') ? 0.5 : 1;
+      var score = (enState.attempts > 0 || j !== 'ok') ? 0.5 : 1;
       enState.input = val; finish(t, score, rightFb(t, note)); return;
     }
     enState.attempts++;
@@ -3597,7 +3619,7 @@ window.LU5 = (function () {
     var nb = norm(built, { noExpand: true }), hit = t.answer.filter(function (a) { return norm(a, { noExpand: true }) === nb; })[0];
     if (hit) {
       var others = t.answer.filter(function (a) { return a !== hit; });
-      finish(t, enState.attempts || enState.hint ? 0.5 : 1, { cls: 'good', title: pick(PRAISE), body: '<b>' + esc(hit) + '</b>' + (others.length ? '<br>Auch richtig: ' + others.map(function (a) { return '<b>' + esc(a) + '</b>'; }).join(' oder ') : '') + (t.audio ? '<br>Tippe auf „Anhören“ und sprich den Satz nach.' : '') });
+      finish(t, enState.attempts ? 0.5 : 1, { cls: 'good', title: pick(PRAISE), body: '<b>' + esc(hit) + '</b>' + (others.length ? '<br>Auch richtig: ' + others.map(function (a) { return '<b>' + esc(a) + '</b>'; }).join(' oder ') : '') + (t.audio ? '<br>Tippe auf „Anhören“ und sprich den Satz nach.' : '') });
       return;
     }
     enState.attempts++;
