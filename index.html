@@ -2697,7 +2697,7 @@ window.LU5 = (function () {
       setTimeout(function () { speechSynthesis.speak(u); }, 60);
     } catch (e) {}
   }
-  window.LU5 = { speak: speak };
+  window.LU5 = window.LU5 || {}; window.LU5.speak = speak;
   function renderVoiceBox() {
     var box = document.getElementById('voiceBox'); if (!box) return;
     if (!hasTTS) { box.innerHTML = '<p>Dieses Gerät kann leider nicht vorlesen.</p>'; return; }
