@@ -676,6 +676,45 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
 
 @media (prefers-reduced-motion: reduce) { .sheet-panel { animation: none; } }
 
+/* ===== Vokabel-Trainer ===== */
+.subj.voc { grid-column: 1 / -1; }
+.btn.voc-jump { background: var(--lina); color: #1F2A44; align-self: stretch; }
+.subj.voc .subj-go { background: var(--lina); color: #1F2A44; }
+.voc-card { gap: 12px; }
+.voc-card h2 { margin: 0; font-family: var(--font-display); font-weight: 600; font-size: 1.4rem; line-height: 1.15; }
+.voc-eyebrow { margin: 0; font-family: var(--font-display); font-weight: 600; font-size: 0.9rem; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.04em; }
+.voc-pages { font-size: 0.95rem; color: var(--ink-soft); font-weight: 500; }
+.voc-count, .voc-due, .voc-help { margin: 0; }
+.voc-bar { height: 14px; }
+.voc-bar i { background: var(--good) !important; }
+.voc-how { margin: 0; font-size: 0.95rem; color: var(--ink-soft); }
+.voc-tools { display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; align-items: center; }
+.voc-prog { display: flex; align-items: center; gap: 10px; font-family: var(--font-display); font-weight: 600; font-variant-numeric: tabular-nums; }
+.voc-prog .goalbar { flex: 1; }
+.voc-de { margin: 0; font-family: var(--font-display); font-weight: 600; font-size: 1.6rem; line-height: 1.2; text-wrap: balance; }
+.voc-form { display: flex; gap: 8px; flex-wrap: wrap; }
+.voc-form input { flex: 1 1 200px; min-width: 0; min-height: 52px; font-family: var(--font-body); font-size: 1.3rem; font-weight: 700; padding: 8px 12px; border: 2.5px solid var(--line); border-radius: 14px; background: var(--paper); color: var(--ink); }
+.voc-pattern { margin: 0; font-family: ui-monospace, Menlo, monospace; font-size: 1.4rem; font-weight: 700; letter-spacing: 0.08em; }
+.voc-fb { margin: 0; min-height: 1.4em; }
+.voc-fb.soft { color: var(--ink); background: var(--tip-fill); padding: 8px 12px; border-radius: 12px; }
+.voc-fb.good { color: var(--good); font-weight: 700; }
+.voc-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.voc-row .btn.small { align-self: auto; }
+.voc-show { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 12px 14px; border: 2.5px dashed var(--line); border-radius: 16px; background: var(--karte-fill); }
+.voc-show.ok { background: var(--good-fill); border-style: solid; }
+.voc-show b { font-family: var(--font-body); font-size: 1.6rem; line-height: 1.2; overflow-wrap: anywhere; }
+.say.big { width: 52px; height: 52px; }
+.say.big svg { width: 26px; height: 26px; }
+.voc-list .lv-body { display: flex; flex-direction: column; gap: 10px; }
+.voc-words { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.voc-words li { display: flex; align-items: center; gap: 10px; }
+.voc-words .de { color: var(--ink-soft); }
+.vdot { flex-shrink: 0; width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--line); background: var(--surface); }
+.vdot.learn { background: var(--karte-fill); }
+.vdot.green { background: var(--good); }
+#vocEnd { align-items: center; text-align: center; }
+.voc-grade { margin: 0; display: flex; flex-direction: column; align-items: center; font-family: var(--font-display); font-weight: 600; font-size: 1.1rem; }
+.voc-grade span { font-size: 3.4rem; line-height: 1; width: 88px; height: 88px; display: grid; place-items: center; border: 3px solid var(--line); border-radius: 50%; background: var(--tip-fill); box-shadow: 3px 3px 0 var(--shadow); margin-bottom: 6px; }
 </style>
 
 <div class="app view-wrap" id="homeView">
@@ -717,6 +756,15 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
       <span class="goalbar" id="enBar"><i></i><span class="mark" id="enMark"></span></span>
       <span class="subj-status"><b id="enMin">0 Min</b><span id="enState">noch nicht geübt</span></span>
       <span class="subj-go">Englisch üben</span>
+    </button>
+    <button type="button" class="subj voc" data-go="voc" id="vocTile">
+      <span class="subj-top">
+        <svg viewBox="0 0 110 140" aria-hidden="true"><use href="#pennyArt"></use></svg>
+        <span><span class="subj-name">Vokabel-Check</span><br><span class="subj-what" id="vocTileWhat">Deutsch sehen, Englisch schreiben</span></span>
+      </span>
+      <span class="goalbar voc-bar" id="vocTileBar"><i></i></span>
+      <span class="subj-status"><b id="vocTileNum">0 grün</b><span id="vocTileState"></span></span>
+      <span class="subj-go">Vokabel-Check starten</span>
     </button>
   </section>
 
@@ -805,6 +853,7 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
     </div>
   </header>
 
+  <button type="button" class="btn voc-jump" data-go="voc">✏️ Vokabel-Check: Wörter schreiben</button>
   <section class="pick" aria-labelledby="enPickTitle">
     <h2 class="pick-title" id="enPickTitle">Was möchtest du üben?</h2>
     <button type="button" class="pick-field" aria-expanded="false" aria-controls="enTopics"><span class="pf-v" id="enTopicBtnLabel">Alles gemischt</span><span class="pf-ch" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></button>
@@ -833,6 +882,29 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
     </div>
   </details>
   <p class="note">Hören-Aufgaben brauchen Ton: Lautstärke am Tablet aufdrehen.</p>
+</div>
+
+<div class="app view-wrap" id="vocView" hidden>
+  <div class="backbar"><button type="button" class="btn small" data-go="home">← Start</button><span class="timepill" id="vocTime"></span></div>
+  <header class="top">
+    <svg class="lina" viewBox="0 0 110 140" aria-hidden="true"><use href="#pennyArt"></use></svg>
+    <div class="brand">
+      <h1>Vokabel-Trainer</h1>
+      <p>Deutsch sehen, Englisch schreiben. Zählt als Englisch-Zeit.</p>
+    </div>
+  </header>
+  <div id="vocHome" class="view-wrap">
+    <section class="card voc-card">
+      <div id="vocWeek"></div>
+      <p class="voc-due" id="vocDue"></p>
+      <button type="button" class="btn primary" id="vocStart">Los geht’s</button>
+      <div class="voc-tools"><p class="voc-how">Weißt du ein Wort nicht? Kein Problem: Lass es dir zeigen und vorlesen, dann schreibst du es selbst. Es kommt gleich nochmal und morgen wieder. <b>Grün</b> wird ein Wort, wenn du es an zwei verschiedenen Tagen ohne Hilfe richtig schreibst.</p><button type="button" class="btn small" id="vocTon">🔊 Ton an</button></div>
+    </section>
+    <div id="vocLists" class="view-wrap"></div>
+  </div>
+  <section class="card voc-card" id="vocRun" aria-live="polite" hidden></section>
+  <section class="card end" id="vocEnd" hidden></section>
+  <p class="note">Tipp: Schreib jedes Wort, das du mit Hilfe gelernt hast, einmal zusätzlich ins Heft.</p>
 </div>
 
 <div class="view-wrap" id="mathView" hidden>
@@ -2426,7 +2498,7 @@ window.LU5 = (function () {
     if (document.visibilityState !== 'visible') return;
     if (Date.now() - lastAct > 60000) return;
     if (view === 'math' && document.getElementById('breakView') && !document.getElementById('breakView').hidden) return;
-    addSec(view);
+    addSec(view === 'voc' ? 'en' : view);
   }, 1000);
   document.addEventListener('visibilitychange', function () { if (document.visibilityState !== 'visible') flushLog(); });
   window.addEventListener('pagehide', flushLog);
@@ -2442,7 +2514,7 @@ window.LU5 = (function () {
   function minText(s) { return Math.floor(s / 60) + ' Min'; }
   function renderTimePills() {
     var k = dayKey(), goal = settings().goal;
-    [['math', 'mathTime'], ['en', 'enTime']].forEach(function (p) {
+    [['math', 'mathTime'], ['en', 'enTime'], ['en', 'vocTime']].forEach(function (p) {
       var el = $(p[1]); if (!el) return;
       var s = (logCache[k] && logCache[k][p[0]]) || 0;
       el.innerHTML = CLOCK + '<span>' + Math.floor(s / 60) + ' / ' + goal + ' Min heute</span>';
@@ -2510,6 +2582,7 @@ window.LU5 = (function () {
       rows += '<tr><td>' + WD[d3.getDay()] + ', ' + d3.getDate() + '.' + (d3.getMonth() + 1) + '.</td><td>' + minText(secs(k3, 'math')) + '</td><td>' + minText(secs(k3, 'en')) + '</td></tr>';
     }
     $('logTable').querySelector('tbody').innerHTML = rows;
+    if (window.LU5Voc) window.LU5Voc.home();
   }
   $('mkaDate').addEventListener('change', function () { var s = settings(); s.mkaDate = this.value || null; store(SET_KEY, s); renderHome(); });
   $('kaDate').addEventListener('change', function () { var s = settings(); s.kaDate = this.value || null; store(SET_KEY, s); renderHome(); });
@@ -2521,7 +2594,9 @@ window.LU5 = (function () {
     $('homeView').hidden = v !== 'home';
     $('mathView').hidden = v !== 'math';
     $('enView').hidden = v !== 'en';
+    $('vocView').hidden = v !== 'voc';
     if (v === 'home') renderHome();
+    if (v === 'voc' && window.LU5Voc) window.LU5Voc.open();
     if (v === 'en') { if (!enState) enStart(); renderEn(); }
     lastAct = Date.now();
     renderTimePills();
@@ -2565,6 +2640,7 @@ window.LU5 = (function () {
       setTimeout(function () { speechSynthesis.speak(u); }, 60);
     } catch (e) {}
   }
+  window.LU5 = { speak: speak };
   function renderVoiceBox() {
     var box = document.getElementById('voiceBox'); if (!box) return;
     if (!hasTTS) { box.innerHTML = '<p>Dieses Gerät kann leider nicht vorlesen.</p>'; return; }
@@ -3870,6 +3946,388 @@ window.LU5 = (function () {
   label();
 })();
 
+</script>
+<script>
+/* ================= Vokabel-Trainer =================
+   Deutsch sehen → Englisch schreiben. „Weiß ich nicht“ ist kein Fehler:
+   Wort ansehen + anhören, selbst schreiben, kommt gleich nochmal und morgen wieder.
+   Grün = an zwei verschiedenen Tagen ohne Hilfe richtig geschrieben.
+   NEUE LISTE: unten in LISTS ergänzen und WEEK auf ihre id setzen. */
+(function () {
+  'use strict';
+  var WEEK = 'u1a2';
+  var LISTS = [
+    { id: 'wel', name: 'Welcome', pages: 'S. 225–230', words: [
+      'Welcome to Brighton.|Willkommen in Brighton.',
+      'My name is Alice.|Ich heiße Alice.|My name\'s Alice.',
+      'I\'m from Brighton.|Ich bin aus Brighton. / Ich komme aus Brighton.|I am from Brighton.',
+      'I\'m eleven years old.|Ich bin elf Jahre alt.|I am eleven years old.',
+      'one|eins (1)', 'two|zwei (2)', 'three|drei (3)', 'four|vier (4)', 'five|fünf (5)', 'six|sechs (6)',
+      'seven|sieben (7)', 'eight|acht (8)', 'nine|neun (9)', 'ten|zehn (10)', 'eleven|elf (11)', 'twelve|zwölf (12)',
+      'city|die Großstadt, die Stadt', 'cities|die Städte (Plural von city)',
+      'in England|in England (Ländername)', 'my friend|mein Freund / meine Freundin', 'too|auch', 'by the sea|am Meer',
+      'the|der, die, das; die', 'sea|das Meer', 'boy|der Junge', 'girl|das Mädchen', 'beach|der Strand', 'sand|der Sand',
+      'seagull|die Möwe', 'sky|der Himmel', 'stone|der Stein', 'see|sehen; besuchen', 'like|mögen', 'picture|das Bild',
+      'think|denken, glauben; meinen', 'nice|nett, schön', 'cool|cool', 'big|groß', 'small|klein', 'great|großartig',
+      'hot|heiß', 'cold|kalt', 'Nice to meet you.|Freut mich, dich/euch/Sie kennenzulernen.',
+      'How old are you?|Wie alt bist du?', 'Are you …?|Bist du …?', 'Where are you from?|Woher kommst du?',
+      'where|wo? woher? wohin?', 'hometown|die Heimatstadt', 'town|die Stadt', 'Hello.|Hallo. / Guten Tag.', 'today|heute',
+      'How are you?|Wie geht\'s? / Wie geht es dir/euch/Ihnen?',
+      'I\'m fine, thanks.|Gut, danke.|I\'m fine;I am fine;I am fine, thanks;Fine, thanks',
+      'live|wohnen; leben', 'can|können', 'fly|fliegen',
+      'a tour of Brighton|ein Rundgang / eine Rundfahrt / eine Reise durch Brighton', 'Germany|Deutschland',
+      'Bye.|Tschüs. / Auf Wiedersehen.|Goodbye.', 'garden|der Garten', 'palace|der Palast, das Schloss',
+      'the gardens are great|die Gärten sind großartig', 'park|der Park', 'game|das Spiel', 'bag|die Tasche, der Beutel, die Tüte',
+      'ball|der Ball', 'balloon|der Luftballon', 'bee|die Biene', 'bike|das Fahrrad', 'dog|der Hund', 'grass|das Gras; der Rasen',
+      'flower|die Blume; die Blüte', 'sandwich|das Sandwich, belegtes Brot', 'tree|der Baum', 'something|etwas',
+      'No, that\'s wrong.|Nein, das ist falsch. / Nein, das stimmt nicht.|No, that is wrong.',
+      'Yes, that\'s right.|Ja, das ist richtig. / Ja, das stimmt.|Yes, that is right.',
+      'now|nun, jetzt', 'It\'s your turn.|Du bist dran. / Du bist an der Reihe.|Your turn.;It is your turn.',
+      'your|dein/e; euer/eure; Ihr/e', 'spell|buchstabieren', 'spelling|die Rechtschreibung', 'colour|die Farbe',
+      'red|rot', 'yellow|gelb', 'blue|blau', 'green|grün', 'brown|braun', 'orange|orange (Farbe)', 'grey|grau',
+      'pink|pink, rosa', 'purple|violett, lila', 'white|weiß', 'black|schwarz',
+      'find|finden', 'banana|die Banane', 'have|haben', 'wrong|falsch, verkehrt', 'school|die Schule', 'new|neu',
+      'at|an, bei, in (bei Ortsangaben)', 'year|das Jahr; der Jahrgang (die Jahrgangsstufe)', 'please|bitte',
+      'uniform|die (Schul-)Uniform', 'awesome|klasse, großartig', 'class|die (Schul-)Klasse',
+      'Let me show you …|Lass mich dir … zeigen.', 'me|mich; mir', 'show|zeigen', 'our|unser/e',
+      'classroom|das Klassenzimmer', 'we|wir', 'family|die Familie', 'families|die Familien (Plural von family)',
+      'Let us sing.|Lass uns singen. / Lasst uns singen.|Let\'s sing.', 'us|uns', 'blazer|der Blazer, die Sportjacke',
+      'tie|der Schlips, die Krawatte', 'thing|die Sache, das Ding', 'know|wissen', 'Thanks.|Danke.|Thank you.',
+      'with|mit, bei', 'dot|der Punkt, das Pünktchen', 'double|Doppel-', 'sit|sitzen; sich setzen', 'together|zusammen',
+      'Mr Lee|Herr Lee|Mr. Lee', 'Mrs Lee|Frau Lee|Mrs. Lee', 'teach|unterrichten', 'art|die Kunst',
+      'history|die Geschichte', 'class teacher|der Klassenlehrer / die Klassenlehrerin', 'poem|das Gedicht',
+      'day|der Tag', 'week|die Woche', 'Monday|Montag', 'Tuesday|Dienstag', 'Wednesday|Mittwoch', 'Thursday|Donnerstag',
+      'Friday|Freitag', 'Saturday|Samstag, Sonnabend', 'Sunday|Sonntag',
+      'book|das Buch; das Heft', 'song|das Lied, der Song', 'go|gehen', 'speak|sprechen', 'French|Französisch',
+      'read|lesen', 'watch a film|sich einen Film anschauen', 'but|aber',
+      'I don\'t have …|Ich habe kein/keine/keinen …|I do not have', 'so hot|so heiß', 'board|die (Wand-)Tafel',
+      'chair|der Stuhl', 'desk|der Schreibtisch', 'exercise book|das Schulheft, das Übungsheft',
+      'pencil case|das Federmäppchen', 'pencil|der Bleistift', 'schoolbag|die Schultasche',
+      'student|der Schüler / die Schülerin', 'marker|der Textmarker', 'pen|der Kugelschreiber, der Stift, der Füller',
+      'rubber|der/das Radiergummi', 'ruler|das Lineal', 'sharpener|der Anspitzer', 'no …|kein …, keine …',
+      'problem|das Problem', 'Here you are.|Hier, bitte.', 'Simon says …|Simon sagt …', 'world|die Welt',
+      'pet|das Haustier', 'cute|niedlich, süß', 'scary|unheimlich, gruselig', 'boring|langweilig',
+      'budgie|der Wellensittich', 'cat|die Katze', 'fish|der Fisch', 'guinea pig|das Meerschweinchen',
+      'parrot|der Papagei', 'rabbit|das Kaninchen', 'rat|die Ratte', 'snake|die Schlange', 'spider|die Spinne',
+      'under|unter', 'I don\'t like …|Ich mag … nicht. / Ich mag kein/keine/keinen …|I do not like',
+      'more|mehr', 'animal|das Tier', 'hobby|das Hobby', 'hobbies|die Hobbys (Plural von hobby)',
+      'football|der Fußball', 'run|rennen, laufen', 'music|die Musik', 'swim|schwimmen', 'dance|tanzen',
+      'what|was', 'What about you?|Und du? / Und was ist mit dir?', 'if|wenn, falls', 'need|brauchen, benötigen'
+    ] },
+    { id: 'u1a1', name: 'Unit 1 · Start & Part A (1)', pages: 'S. 231–233', words: [
+      'at home|daheim, zu Hause', 'everyone|jeder; alle', 'This is …|Dies ist … / Das ist …',
+      'street|die Straße (in der Stadt)', 'It\'s called …|Er/Sie/Es heißt …|It is called',
+      'road|die Straße (Landstraße zwischen Orten)', 'car|das Auto', 'house|das Haus',
+      'a lot of|viel …, viele …|lots of',
+      'postman|der Briefträger, der Postbote', 'morning|der Morgen, der Vormittag',
+      'doorbell|die Türklingel, die Türglocke', 'bell|die Klingel, die Glocke', 'maybe|vielleicht',
+      'dad|der Papa, der Vati', 'mum|die Mama, die Mutti', 'come|kommen', 'so|also; deshalb, daher',
+      'you\'re|du bist|you are', 'her class|ihre Klasse',
+      'upstairs|oben; nach oben (im Haus)', 'downstairs|unten; nach unten (im Haus)', 'room|das Zimmer, der Raum',
+      'why|warum?', 'an hour|eine Stunde', 'for|für', 'It isn\'t here.|Es ist nicht hier.|It is not here.',
+      'here|hier; hierher', 'Sorry.|Verzeihung. / Entschuldigung.', 'who|wer?', 'brother|der Bruder',
+      'sister|die Schwester', 'Yes, I am.|Ja, das bin ich.', 'See you.|Bis gleich. / Bis bald.',
+      'You\'re lucky.|Du hast Glück.|You are lucky.', 'sure|sicher', 'smile|das Lächeln', 'sometimes|manchmal',
+      'weird|seltsam, komisch', 'at school|in der Schule', 'she\'s|sie ist …|she is', 'they aren\'t|sie sind nicht|they are not',
+      'they\'re|sie sind|they are', 'divorced|geschieden', 'parents|die Eltern', 'listen|zuhören, horchen',
+      'phone|das (Mobil-)Telefon, das Handy|mobile;mobile phone',
+      'message|die Nachricht, die SMS|text message;text', 'free|frei', 'hang out|abhängen, rumhängen',
+      'at my place|bei mir', 'place|der Ort, der Platz, die Stelle', 'know|kennen', 'primary school|die Grundschule',
+      'again|wieder; noch einmal', 'Good morning.|Guten Morgen.', 'Here\'s …|Hier ist …|Here is',
+      'Here are …|Hier sind …', 'parcel|das Paket, das Päckchen', 'very big|sehr groß', 'understand|verstehen',
+      'father|der Vater', 'mother|die Mutter', 'useful|nützlich', 'phrase|der Satz, der Ausdruck, die Redewendung',
+      'grandma|die Oma; die Großmutter|grandmother', 'grandpa|der Opa; der Großvater|grandfather',
+      'aunt|die Tante', 'uncle|der Onkel', 'cousin|der Cousin, die Cousine', 'some|einige, ein paar; etwas',
+      'English|Englisch; englisch', 'word|das Wort', 'like words in other languages|wie Wörter in anderen Sprachen',
+      'other|andere(r, s)', 'language|die Sprache'
+    ] },
+    { id: 'u1a2', name: 'Unit 1 · Part A (2)', pages: 'S. 234–235', words: [
+      'e.g.|z. B. (zum Beispiel)', 'help|helfen', 'help|die Hilfe', 'when|wenn (sobald)', 'learn|lernen',
+      'talk to|reden mit, sich unterhalten mit|talk;talk with', 'people|die Leute, die Menschen',
+      'umbrella|der Schirm, der Regenschirm', 'type|tippen', 'pronounce|aussprechen', 'then|dann', 'hear|hören',
+      'say|sagen', 'question|die Frage', 'answer|die Antwort', 'your favourite book|dein Lieblingsbuch',
+      'use|benutzen, verwenden', 'or|oder', 'before|vor', 'letter|der Buchstabe', 'careful|vorsichtig',
+      'conversation|das Gespräch, die Unterhaltung', 'There are …|Es sind … / Es gibt … (mehrere)',
+      'There\'s …|Es ist … / Es gibt … (eins)|There is', 'its|sein(e); ihr(e) – bei Dingen und Tieren',
+      'Lily\'s letter|Lilys Brief', 'full stop|der Punkt (Satzzeichen)', 'in English|auf Englisch',
+      'in German|auf Deutsch', 'the first word|das erste Wort', 'sentence|der Satz',
+      'country|das Land (Staat)', 'countries|die Länder (Plural von country)', 'missing|fehlend',
+      'order|die Reihenfolge', 'step|der Schritt', 'draw|zeichnen', 'write|schreiben',
+      'this classroom|dieses Klassenzimmer', 'look at|etwas / jemanden anschauen, ansehen',
+      'look up|etwas nachschlagen', 'check|(über)prüfen, kontrollieren'
+    ] }
+  ];
+
+  var KEY = 'en-vokabeln', ROUND = 12, INT = [0, 1, 3, 7, 14, 30, 60];
+  var PROPER = /^(I|I'm|Mr|Mrs|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday|Germany|England|English|French|German|Brighton|Alice|Lily's|Simon|Lee)$/;
+  var STOP = { der: 1, die: 1, das: 1, ein: 1, eine: 1, dich: 1, euch: 1, sie: 1, mit: 1, und: 1, oder: 1, auf: 1, von: 1, sich: 1, bei: 1, den: 1, dem: 1, plural: 1 };
+  var SPK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"></path><path d="M16 8.5a4.5 4.5 0 0 1 0 7M18.5 6a8 8 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg>';
+
+  function $(id) { return document.getElementById(id); }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function shuffle(a) { a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)), t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function today() { var d = new Date(); return Math.round(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 864e5); }
+  function speak(t, slow) { if (window.LU5 && window.LU5.speak && tonOn()) window.LU5.speak(t.replace(/…/g, ''), slow); }
+  function sayNow(t, slow) { if (window.LU5 && window.LU5.speak) window.LU5.speak(t.replace(/…/g, ''), slow); }
+
+  function norm(s) {
+    return String(s).toLowerCase().replace(/[’‘`´]/g, '\'').replace(/\.(?=[a-z])/g, '').replace(/…|\.\.\./g, ' ').replace(/[.,!?;:"]/g, ' ').replace(/\s+/g, ' ').trim();
+  }
+  function lev(a, b) {
+    if (Math.abs(a.length - b.length) > 1) return 9;
+    var p = [], pp = [], i, j; for (j = 0; j <= b.length; j++) p[j] = j;
+    for (i = 1; i <= a.length; i++) { var c = [i]; for (j = 1; j <= b.length; j++) c[j] = Math.min(p[j] + 1, c[j - 1] + 1, p[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)); if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) c[j] = Math.min(c[j], pp[j - 2] + 1); pp = p; p = c; }
+    return p[b.length];
+  }
+  function deTok(de) { return norm(de).split(/[^a-zäöüß]+/).filter(function (t) { return t.length >= 3 && !STOP[t]; }); }
+
+  /* Wörter aufbauen */
+  var WORDS = {}, BYLIST = {};
+  LISTS.forEach(function (L) {
+    BYLIST[L.id] = [];
+    L.words.forEach(function (raw) {
+      var p = raw.split('|'), en = p[0], de = p[1];
+      var id = L.id + ':' + norm(en) + ':' + norm(de).slice(0, 14);
+      if (WORDS[id]) return;
+      var acc = [en].concat(p[2] ? p[2].split(';') : []);
+      WORDS[id] = { id: id, list: L.id, en: en, de: de, acc: acc, tok: deTok(de) };
+      BYLIST[L.id].push(id);
+    });
+  });
+  var ORDER = LISTS.map(function (L) { return L.id; });
+  function listOf(id) { for (var i = 0; i < LISTS.length; i++) if (LISTS[i].id === id) return LISTS[i]; return null; }
+
+  /* Speicher */
+  function load() { try { var r = localStorage.getItem(KEY), d = r ? JSON.parse(r) : {}; if (!d || typeof d !== 'object') d = {}; d.w = d.w || {}; return d; } catch (e) { return { w: {} }; } }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(db)); } catch (e) {} }
+  var db = load();
+  function tonOn() { return db.ton !== false; }
+  function st(id) { return db.w[id] || null; }
+  function isGreen(id) { var s = st(id); return !!(s && s.l >= 2); }
+  function isDue(id) { var s = st(id); return !s || s.d <= today(); }
+  function countGreen(lid) { return BYLIST[lid].filter(isGreen).length; }
+
+  /* Ergebnis eintragen: 'clean' = ohne Hilfe richtig, 'near' = fast, 'help' = mit Hilfe */
+  function record(id, kind, practice) {
+    var s = st(id) || { l: 0, d: today(), n: 0 }, t = today(), due = s.d <= t;
+    if (kind === 'clean') {
+      if (!practice && due && s.last !== t) {
+        if (s.l === 0 && s.n === 0) { s.l = 1; s.d = t + 3; }
+        else { s.l = Math.min(6, s.l + 1); s.d = t + INT[s.l]; }
+      }
+    } else if (kind === 'near') {
+      if (due || s.n === 0) s.d = t + 1;
+    } else {
+      s.l = Math.min(s.l, 1); s.d = t + 1;
+    }
+    s.n++; s.last = t;
+    db.w[id] = s; save();
+  }
+
+  /* Runde zusammenstellen */
+  function dueList(lid) {
+    var ids = BYLIST[lid].filter(isDue);
+    var seen = ids.filter(function (id) { return st(id); }).sort(function (a, b) { return st(a).d - st(b).d; });
+    var fresh = ids.filter(function (id) { return !st(id); });
+    return { seen: seen, fresh: fresh };
+  }
+  function dueCount() {
+    var n = 0; ORDER.forEach(function (lid) { var d = dueList(lid); n += d.seen.length + (lid === WEEK ? d.fresh.length : 0); });
+    return n;
+  }
+  function buildRound() {
+    var out = [], w = dueList(WEEK);
+    function add(arr) { arr.forEach(function (id) { if (out.length < ROUND && out.indexOf(id) === -1) out.push(id); }); }
+    add(w.seen); add(w.fresh);
+    var rev = []; ORDER.forEach(function (lid) { if (lid !== WEEK) rev = rev.concat(dueList(lid).seen); });
+    rev.sort(function (a, b) { return st(a).d - st(b).d; }); add(rev);
+    ORDER.forEach(function (lid) { if (lid !== WEEK) add(dueList(lid).fresh); });
+    return shuffle(out);
+  }
+  function buildPractice(lid) {
+    var ids = BYLIST[lid].slice().sort(function (a, b) {
+      var sa = st(a), sb = st(b), la = sa ? sa.l : -1, lb = sb ? sb.l : -1;
+      return la - lb || (sa ? sa.d : 0) - (sb ? sb.d : 0);
+    });
+    return shuffle(ids.slice(0, 15));
+  }
+
+  /* Prüfen */
+  function caseOk(input, model) {
+    var a = model.replace(/[.,!?…]/g, ' ').trim().split(/\s+/), b = input.replace(/[.,!?…]/g, ' ').trim().split(/\s+/);
+    if (a.length !== b.length) return true;
+    for (var i = 0; i < a.length; i++) {
+      var need = /^[A-Z]/.test(a[i]) && (i > 0 || PROPER.test(a[i]));
+      if (need && !/^[A-Z]/.test(b[i])) return false;
+    }
+    return true;
+  }
+  function stripArt(inp, model) {
+    var m = norm(model);
+    ['the ', 'a ', 'an ', 'to '].forEach(function (art) { if (m.indexOf(art) !== 0 && inp.indexOf(art) === 0) inp = inp.slice(art.length); });
+    return inp;
+  }
+  function judge(w, raw) {
+    var inp = norm(raw), best = null;
+    if (!inp) return { r: 'empty' };
+    for (var i = 0; i < w.acc.length; i++) {
+      var m = norm(w.acc[i]), x = stripArt(inp, w.acc[i]);
+      if (x === m) return caseOk(raw.trim(), w.acc[i]) ? { r: 'ok' } : { r: 'case' };
+      if (m.length >= 4 && lev(x, m) === 1) best = { r: 'near' };
+      else if (x.length >= 3 && m.length > x.length && m.slice(-x.length - 1) === ' ' + x) best = best || { r: 'part' };
+    }
+    /* anderes richtiges Wort mit ähnlicher Bedeutung? */
+    for (var id in WORDS) {
+      var o = WORDS[id]; if (o === w || norm(o.en) === norm(w.en)) continue;
+      var hit = o.acc.some(function (a) { return norm(a) === stripArt(inp, a); });
+      if (hit && o.tok.some(function (t) { return w.tok.indexOf(t) !== -1; })) return { r: 'other', other: o.en };
+    }
+    return best || { r: 'wrong' };
+  }
+  function pattern(en) { return esc(en.replace(/[A-Za-z]/g, function (c, i) { return i === 0 ? c : '_'; }).replace(/_/g, '_ ')); }
+
+  /* ================= Ansicht ================= */
+  var run = null;
+  function view() { return $('vocView'); }
+  function show(part) { ['vocHome', 'vocRun', 'vocEnd'].forEach(function (p) { $(p).hidden = p !== part; }); }
+
+  function renderOverview() {
+    var wl = listOf(WEEK), g = countGreen(WEEK), tot = BYLIST[WEEK].length, due = dueCount();
+    $('vocWeek').innerHTML = '<p class="voc-eyebrow">Diese Woche zuerst</p><h2>' + esc(wl.name) + ' <span class="voc-pages">' + esc(wl.pages) + '</span></h2>' +
+      bar(g, tot) + '<p class="voc-count"><b>' + g + '</b> von ' + tot + ' Wörtern grün</p>';
+    var n = buildRound().length;
+    $('vocStart').textContent = due > 0 ? 'Los geht’s: ' + n + ' Wörter' : 'Extra-Runde üben';
+    $('vocDue').innerHTML = due > 0 ? 'Heute sind <b>' + due + '</b> Wörter dran. Eine Runde hat höchstens ' + ROUND + ' Wörter.' : '<b>Für heute ist alles geschafft!</b> Du kannst aufhören – oder eine Extra-Runde machen.';
+    var h = '';
+    LISTS.slice().reverse().forEach(function (L) {
+      var gg = countGreen(L.id), tt = BYLIST[L.id].length;
+      h += '<details class="levels voc-list"><summary><span class="lv-title">' + esc(L.name) + (L.id === WEEK ? ' ★' : '') + '</span><span class="lv-sum">' + esc(L.pages) + ' · ' + gg + '/' + tt + ' grün</span></summary><div class="lv-body">' +
+        bar(gg, tt) + '<button type="button" class="btn small" data-vprac="' + L.id + '">Generalprobe mit Note (15 Wörter)</button><ul class="voc-words">' +
+        BYLIST[L.id].map(function (id) { var w = WORDS[id], s = st(id), cls = !s ? 'new' : s.l >= 2 ? 'green' : 'learn';
+          return '<li><i class="vdot ' + cls + '" title="' + (cls === 'green' ? 'sitzt' : cls === 'learn' ? 'wird geübt' : 'neu') + '"></i><button type="button" class="say" data-vsay="' + esc(w.en) + '" aria-label="' + esc(w.en) + ' anhören">' + SPK + '</button><span><b>' + esc(w.en) + '</b> <span class="de">' + esc(w.de) + '</span></span></li>'; }).join('') +
+        '</ul></div></details>';
+    });
+    $('vocLists').innerHTML = h;
+    $('vocTon').textContent = tonOn() ? '🔊 Ton an' : '🔇 Ton aus';
+    show('vocHome');
+  }
+  function bar(g, t) { return '<span class="goalbar voc-bar' + (g >= t ? ' done' : '') + '"><i style="width:' + (t ? g / t * 100 : 0) + '%"></i></span>'; }
+
+  function startRun(ids, practice, label) {
+    if (!ids.length) { renderOverview(); return; }
+    run = { q: ids.slice(), total: ids.length, done: 0, practice: !!practice, label: label, flags: {}, clean: 0, helped: {}, rep: {} };
+    show('vocRun'); next();
+  }
+  function next() {
+    if (!run.q.length) { end(); return; }
+    run.cur = run.q.shift(); run.tries = 0; run.mode = 'ask';
+    var f = run.flags[run.cur]; if (!f) run.flags[run.cur] = { help: false, near: false, again: false };
+    renderAsk();
+  }
+  function segs() {
+    var pct = Math.round(run.done / run.total * 100);
+    return '<span class="goalbar voc-bar"><i style="width:' + pct + '%"></i></span>';
+  }
+  function tagFor(id) {
+    var s = st(id), f = run.flags[id];
+    if (f.again) return '<span class="tag again-tag">Nochmal – jetzt schaffst du es!</span>';
+    return '<span class="tag">' + esc(listOf(WORDS[id].list).name) + ' · ' + (!s ? 'neu' : s.l >= 2 ? 'Wiederholung' : 'üben') + '</span>';
+  }
+  function renderAsk(msg, cls) {
+    var w = WORDS[run.cur];
+    $('vocRun').innerHTML = '<div class="voc-prog">' + segs() + '<span>' + (run.done + 1 > run.total ? run.total : run.done + 1) + ' / ' + run.total + '</span></div>' +
+      tagFor(run.cur) +
+      '<p class="voc-de">' + esc(w.de) + '</p>' +
+      (run.mode === 'reveal' ? '<div class="voc-show"><button type="button" class="say big" data-vsay="' + esc(w.en) + '" aria-label="Nochmal anhören">' + SPK + '</button><b>' + esc(w.en) + '</b><button type="button" class="btn small" data-vslow="1">Langsam</button></div><p class="voc-help">Schau es dir genau an, hör zu und sprich es laut nach. Dann tipp auf „Jetzt selbst schreiben“.</p><button type="button" class="btn primary" id="vocWrite">Jetzt selbst schreiben</button>'
+        : (run.hint ? '<p class="voc-pattern" aria-label="Tipp">' + pattern(w.en) + '</p>' : '') +
+        '<form id="vocForm" class="voc-form" autocomplete="off"><input id="vocIn" type="text" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" enterkeyhint="done" aria-label="Englisches Wort" placeholder="auf Englisch …"><button type="submit" class="btn primary">Prüfen</button></form>' +
+        '<p class="voc-fb ' + (cls || '') + '" role="status">' + (msg || '') + '</p>' +
+        '<div class="voc-row">' + (run.hint || run.mode === 'retype' ? '' : '<button type="button" class="btn tip small" id="vocHint">Tipp: Anfangsbuchstabe</button>') +
+        (run.mode === 'retype' ? '' : '<button type="button" class="btn small" id="vocShow">Weiß ich nicht – zeig’s mir</button>') + '</div>');
+    var inp = $('vocIn');
+    if (inp) { setTimeout(function () { try { inp.focus(); } catch (e) {} }, 30); }
+    if (run.mode === 'reveal') $('vocWrite').onclick = function () { run.mode = 'retype'; renderAsk('Schreib es jetzt aus dem Kopf.', ''); };
+    var fm = $('vocForm'); if (fm) fm.onsubmit = function (e) { e.preventDefault(); check($('vocIn').value); };
+    var hb = $('vocHint'); if (hb) hb.onclick = function () { run.flags[run.cur].help = true; run.hint = true; renderAsk('Der erste Buchstabe ist da. Jeder Strich ist ein Buchstabe.', ''); };
+    var sb = $('vocShow'); if (sb) sb.onclick = reveal;
+  }
+  function reveal() { run.flags[run.cur].help = true; run.mode = 'reveal'; run.hint = false; renderAsk(); sayNow(WORDS[run.cur].en); }
+  function check(val) {
+    var w = WORDS[run.cur], j = judge(w, val), f = run.flags[run.cur];
+    if (j.r === 'empty') { renderAsk('Schreib zuerst etwas – oder tipp auf „Weiß ich nicht“.', ''); return; }
+    if (j.r === 'ok') { success(); return; }
+    run.tries++;
+    if (j.r === 'other') { renderAsk('„' + esc(j.other) + '“ passt auch – gesucht ist aber ein anderes Wort. Es fängt mit „' + esc(w.en.charAt(0)) + '“ an.', 'soft'); keep(val); return; }
+    if (j.r === 'case') { f.near = true; renderAsk('Fast! Achte auf die <b>Großschreibung</b>.', 'soft'); keep(val); return; }
+    if (j.r === 'part') { f.near = true; renderAsk('Fast! Da fehlt noch ein Wort davor.', 'soft'); keep(val); return; }
+    if (j.r === 'near') { f.near = true; renderAsk('Fast! Ein Buchstabe stimmt noch nicht. Schau genau hin.', 'soft'); keep(val); return; }
+    if (run.mode === 'retype' || run.tries >= 2) { reveal(); return; }
+    renderAsk('Noch nicht ganz. Probier’s nochmal – oder lass es dir zeigen.', 'soft'); keep(val);
+  }
+  function keep(val) { var i = $('vocIn'); if (i) { i.value = val; try { i.setSelectionRange(0, val.length); } catch (e) {} } }
+  function success() {
+    var id = run.cur, w = WORDS[id], f = run.flags[id], kind = f.help ? 'help' : f.near ? 'near' : 'clean';
+    if (!f.again) { record(id, kind, run.practice); if (kind === 'clean') run.clean++; }
+    var requeue = (f.help || f.near) && !f.again && (run.rep[id] || 0) < 2;
+    if (f.help) run.helped[id] = 1;
+    if (requeue) { run.rep[id] = (run.rep[id] || 0) + 1; f.again = true; f.help = false; f.near = false; run.q.splice(Math.min(3, run.q.length), 0, id); }
+    else run.done++;
+    run.hint = false;
+    var txt = kind === 'clean' || f.again && !requeue ? pick(['Super!', 'Richtig!', 'Well done!', 'Klasse!', 'Genau!']) : 'Richtig! Das Wort kommt gleich nochmal.';
+    $('vocRun').innerHTML = '<div class="voc-prog">' + segs() + '<span>' + Math.min(run.done, run.total) + ' / ' + run.total + '</span></div>' +
+      '<p class="voc-de">' + esc(w.de) + '</p><div class="voc-show ok pop"><button type="button" class="say big" data-vsay="' + esc(w.en) + '" aria-label="Anhören">' + SPK + '</button><b>' + esc(w.en) + '</b></div>' +
+      '<p class="voc-fb good" role="status">' + txt + ' Sprich es einmal laut nach.</p><button type="button" class="btn primary" id="vocNext">Weiter</button>';
+    speak(w.en);
+    var nb = $('vocNext'); nb.onclick = next; setTimeout(function () { try { nb.focus(); } catch (e) {} }, 30);
+  }
+  function pick(a) { return a[Math.floor(Math.random() * a.length)]; }
+  function grade(p) { return p >= 0.92 ? ['1', 'sehr gut'] : p >= 0.81 ? ['2', 'gut'] : p >= 0.67 ? ['3', 'befriedigend'] : p >= 0.5 ? ['4', 'ausreichend'] : p >= 0.3 ? ['5', 'mangelhaft'] : ['6', 'ungenügend']; }
+  function praise(p) { return p >= 0.92 ? 'Hervorragend! Das sitzt richtig gut.' : p >= 0.75 ? 'Sehr stark! Fast alles ohne Hilfe.' : p >= 0.5 ? 'Gut gemacht! Die Hälfte sitzt schon, der Rest kommt mit Üben.' : 'Super, dass du drangeblieben bist! Genau so lernt man neue Wörter.'; }
+  function end() {
+    if (run.practice) {
+      var gr = grade(run.clean / run.total);
+      $('vocEnd').innerHTML = '<svg class="lina" viewBox="0 0 110 140" aria-hidden="true"><use href="#pennyArt"></use></svg><h2>Generalprobe geschafft!</h2>' +
+        '<p class="voc-grade"><span>' + gr[0] + '</span>' + gr[1] + '</p>' +
+        '<p class="end-score">' + run.clean + ' von ' + run.total + ' ohne Hilfe richtig</p>' +
+        '<p class="end-msg">' + praise(run.clean / run.total) + (gr[0] > '2' ? ' Die Wörter mit Hilfe kommen morgen im Vokabel-Check wieder – danach klappt die nächste Probe besser.' : '') + '</p>' +
+        '<p class="record">Gezählt wird nur, was du ganz ohne Tipp geschrieben hast – wie in der Klassenarbeit.</p>' +
+        '<button type="button" class="btn primary" id="vocBack">Zur Übersicht</button>';
+      show('vocEnd'); $('vocBack').onclick = renderOverview; run = null; return;
+    }
+    var helped = Object.keys(run.helped).length, g = countGreen(WEEK), tot = BYLIST[WEEK].length, more = dueCount();
+    $('vocEnd').innerHTML = '<svg class="lina" viewBox="0 0 110 140" aria-hidden="true"><use href="#pennyArt"></use></svg><h2>' + (more ? 'Runde geschafft!' : 'Fertig für heute!') + '</h2>' +
+      '<p class="end-score">' + run.clean + ' von ' + run.total + ' ohne Hilfe</p><p class="end-msg"><b>' + praise(run.clean / run.total) + '</b></p>' +
+      (helped ? '<p class="end-msg">' + helped + (helped === 1 ? ' Wort hast du' : ' Wörter hast du') + ' mit Hilfe geschrieben – ' + (helped === 1 ? 'es kommt' : 'sie kommen') + ' morgen nochmal. So lernt man!</p>' : '<p class="end-msg">Alles ohne Hilfe – stark!</p>') +
+      '<p class="record">' + esc(listOf(WEEK).name) + ': ' + g + ' von ' + tot + ' grün</p>' +
+      (more ? '<button type="button" class="btn primary" id="vocMore">Noch eine Runde</button>' : '<p class="end-msg"><b>Du darfst jetzt aufhören.</b></p>') +
+      '<button type="button" class="btn" id="vocBack">Zur Übersicht</button>';
+    show('vocEnd');
+    var m = $('vocMore'); if (m) m.onclick = function () { startRun(buildRound(), false); };
+    $('vocBack').onclick = renderOverview;
+    run = null;
+  }
+
+  document.addEventListener('click', function (e) {
+    if (!view() || view().hidden) return;
+    var b = e.target.closest('[data-vsay]'); if (b) { sayNow(b.getAttribute('data-vsay')); return; }
+    if (e.target.closest('[data-vslow]') && run) { sayNow(WORDS[run.cur].en, true); return; }
+    var p = e.target.closest('[data-vprac]'); if (p) { startRun(buildPractice(p.getAttribute('data-vprac')), true); return; }
+  });
+  $('vocStart').onclick = function () { var ids = buildRound(); if (!ids.length) ids = buildPractice(WEEK); startRun(ids, false); };
+  $('vocTon').onclick = function () { db.ton = !tonOn(); save(); this.textContent = tonOn() ? '🔊 Ton an' : '🔇 Ton aus'; };
+
+  function homeTile() {
+    var wl = listOf(WEEK), g = countGreen(WEEK), tot = BYLIST[WEEK].length, due = dueCount();
+    var el = $('vocTile'); if (!el) return;
+    $('vocTileWhat').textContent = 'Diese Woche: ' + wl.name + ' (' + wl.pages + ')';
+    $('vocTileBar').querySelector('i').style.width = (tot ? g / tot * 100 : 0) + '%';
+    $('vocTileBar').classList.toggle('done', g >= tot);
+    $('vocTileNum').textContent = g + ' / ' + tot + ' grün';
+    $('vocTileState').textContent = due > 0 ? 'heute ' + due + ' Wörter dran' : 'für heute geschafft ✓';
+  }
+  window.LU5Voc = { open: function () { if (!run) renderOverview(); }, home: homeTile };
+  homeTile();
+})();
 </script>
 <script>
 /* Lernstand übertragen: alle Lern-Daten dieses Geräts als Code (ohne die gerätespezifische Stimme) */
