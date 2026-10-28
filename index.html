@@ -1063,7 +1063,7 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
     </svg>
     <div class="brand">
       <h1>Mathe mit Lina</h1>
-      <p>Klassenarbeit am 25. November: natürliche Zahlen + Maßstab</p>
+      <p>Klassenarbeit am 25. November: alles ab Maßstab – Maßstab, Kopfrechnen, schriftlich rechnen</p>
     </div>
     <div class="stars" title="Alle gesammelten Sterne">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path class="star-fill" d="M12 2.5l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.3l-5.8 3.1 1.1-6.5L2.6 9.3l6.5-.9z"></path></svg>
@@ -2009,9 +2009,12 @@ window.LU5 = (function () {
   GEN.stelle = genStelle; GEN.rund = genRund; GEN.add = genAdd; GEN.sub = genSub; GEN.mul = genMul; GEN.div = genDiv; GEN.regel = genRegel; GEN.gesch = genGesch;
   var NATR = ['kopf', 'kopf', 'platz', 'wort', 'begriff', 'probe', 'zeichen', 'schlange', 'sach', 'zahlwort'];
   var NATPLUS = ['stelle', 'rund', 'add', 'sub', 'mul', 'mul', 'div', 'div', 'regel', 'gesch'];
-  var KAMIX = ['kopf', 'platz', 'wort', 'probe', 'sach', 'rund', 'k2w', 'w2k', 'find', 'tab'];
+  /* Klassenarbeit 25.11.: alles seit der letzten Arbeit (ab Maßstab). Jede Runde: 4 × Maßstab, 3 × Kopfrechnen wie im Buch, 3 × schriftlich / Regeln / große Zahlen */
+  var KA_MASS = ['k2w', 'w2k', 'find', 'tab', 'units', 'concept', 'zoom'], KA_KOPF = ['kopf', 'platz', 'wort', 'probe', 'sach', 'begriff', 'zeichen', 'schlange', 'zahlwort'], KA_SCHR = ['add', 'sub', 'mul', 'div', 'regel', 'rund', 'stelle', 'gesch'];
+  var KAMIX = KA_MASS.concat(KA_KOPF).concat(KA_SCHR);
+  function kaMix() { return shuffle(shuffle(KA_MASS).slice(0, 4).concat(shuffle(KA_KOPF).slice(0, 3)).concat(shuffle(KA_SCHR).slice(0, 3))); }
   function buildRound(topic, stats) {
-    var types = (topic === 'mix' ? MIX : topic === 'profi' ? PROFI : topic === 'heft' ? HEFT : topic === 'nat' ? NATR : topic === 'natplus' ? NATPLUS : topic === 'mka' ? KAMIX : [topic, topic, topic, topic, topic, topic, topic, topic, topic, topic]).slice();
+    var types = (topic === 'mix' ? MIX : topic === 'profi' ? PROFI : topic === 'heft' ? HEFT : topic === 'nat' ? NATR : topic === 'natplus' ? NATPLUS : topic === 'mka' ? kaMix() : [topic, topic, topic, topic, topic, topic, topic, topic, topic, topic]).slice();
     LV = window.LU5 ? LU5.get('m', topic) : 2;
     var focus = (topic === 'mix' || topic === 'profi' || topic === 'heft' || topic === 'nat' || topic === 'natplus' || topic === 'mka') ? adapt(types, stats || {}) : [];
     if (LV === 3 && (topic === 'mix' || topic === 'heft' || topic === 'nat' || topic === 'natplus' || topic === 'mka')) {
@@ -2832,7 +2835,7 @@ window.LU5 = (function () {
       var box = $('mkaBox'); box.hidden = !st.mkaDate; if (!st.mkaDate) return;
       var d = new Date(st.mkaDate + 'T00:00:00'), t0 = new Date(now.getFullYear(), now.getMonth(), now.getDate()), days = Math.round((d - t0) / 86400000);
       var when = d.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' });
-      if (days > 1) { $('mkaNum').textContent = days; $('mkaText').innerHTML = '<b>Tage bis zur Mathe-Klassenarbeit</b> am ' + when + '. Natürliche Zahlen und Maßstab.' + (days <= 7 ? ' Jetzt jeden Tag den „Klassenarbeit-Mix“ rechnen!' : ''); }
+      if (days > 1) { $('mkaNum').textContent = days; $('mkaText').innerHTML = '<b>Tage bis zur Mathe-Klassenarbeit</b> am ' + when + '. Alles ab Maßstab: Maßstab, Kopfrechnen und schriftliches Rechnen.' + (days <= 7 ? ' Jetzt jeden Tag den „Klassenarbeit-Mix“ rechnen!' : ''); }
       else if (days === 1) { $('mkaNum').textContent = '1'; $('mkaText').innerHTML = '<b>Morgen ist die Mathe-Klassenarbeit!</b> Heute nur eine ruhige Runde. Du schaffst das!'; }
       else if (days === 0) { $('mkaNum').textContent = '★'; $('mkaText').innerHTML = '<b>Heute ist die Mathe-Klassenarbeit.</b> Viel Glück' + esc(kidName(', ')) + '! Überschlag machen und Probe rechnen.'; }
       else { $('mkaNum').textContent = '✓'; $('mkaText').innerHTML = '<b>Die Mathe-Klassenarbeit ist vorbei.</b> Neues Datum unten eintragen.'; }
