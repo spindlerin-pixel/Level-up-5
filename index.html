@@ -841,6 +841,11 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
         <div class="voice-row"><button type="button" class="btn small" id="syncLoad">Lernstand übernehmen</button></div>
         <p id="syncMsg" role="status"></p>
       </div>
+      <div class="voice-box" id="updBox">
+        <label>App aktualisieren</label>
+        <p>Holt die neueste Version der App. Der Lernstand bleibt dabei erhalten.</p>
+        <div class="voice-row"><button type="button" class="btn small" id="updBtn" onclick="this.textContent='Wird geladen …';location.replace(location.pathname+'?v='+Date.now())">↻ App aktualisieren</button></div>
+      </div>
       <label class="lv-setting" for="kaDate">Datum der Englisch-Klassenarbeit:
         <input type="date" id="kaDate">
       </label>
