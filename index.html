@@ -1087,6 +1087,7 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
   <nav class="topics" id="mathTopics" aria-label="Thema wählen" hidden>
     <button type="button" class="chip pro" data-topic="mka" aria-pressed="false">Klassenarbeit-Mix</button>
     <button type="button" class="chip" data-topic="nat" aria-pressed="false">Natürliche Zahlen</button>
+    <button type="button" class="chip" data-topic="natplus" aria-pressed="false">Große Zahlen &amp; schriftlich</button>
     <button type="button" class="chip" data-topic="mix" aria-pressed="true">Maßstab gemischt</button>
     <button type="button" class="chip" data-topic="concept" aria-pressed="false">Verstehen</button>
     <button type="button" class="chip" data-topic="k2w" aria-pressed="false">Karte → echt</button>
@@ -1850,15 +1851,171 @@ window.LU5 = (function () {
       q: 'Rechne geschickt im Kopf:<br><b style="font-size:1.3em">' + expr + '</b>',
       hint: 'Such zwei Zahlen, die zusammen eine runde Zahl ergeben (10, 100). Du darfst bei + und · die Reihenfolge tauschen.', sol: sol, vis: null };
   }
+
+  /* ---------- Natürliche Zahlen wie im Buch (S. 44–51): Kopfrechnen, Platzhalter, Fachbegriffe, Probe ---------- */
+  var DE1 = ['', 'ein', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'sieben', 'acht', 'neun', 'zehn', 'elf', 'zwölf', 'dreizehn', 'vierzehn', 'fünfzehn', 'sechzehn', 'siebzehn', 'achtzehn', 'neunzehn'];
+  var DE10 = ['', '', 'zwanzig', 'dreißig', 'vierzig', 'fünfzig', 'sechzig', 'siebzig', 'achtzig', 'neunzig'];
+  function de99(n) { if (n < 20) return DE1[n]; var u = n % 10, t = Math.floor(n / 10); return (u ? DE1[u] + 'und' : '') + DE10[t]; }
+  function de999(n) { var h = Math.floor(n / 100), r = n % 100; return (h ? DE1[h] + 'hundert' : '') + (r ? de99(r) : ''); }
+  function deWord(n) {
+    if (n === 0) return 'null';
+    var mio = Math.floor(n / 1000000), tsd = Math.floor(n / 1000) % 1000, rest = n % 1000, out = '';
+    if (mio) out += (mio === 1 ? 'eine Million' : de999(mio) + ' Millionen') + (tsd || rest ? ' ' : '');
+    if (tsd) out += de999(tsd) + 'tausend';
+    if (rest) out += de999(rest) + (rest % 100 === 1 ? 's' : '');
+    return out;
+  }
+  function genKopf() {
+    var k = rnd(0, 3), a, b, ans, q, sol;
+    if (k === 0) {
+      a = LV === 1 ? rnd(23, 89) : rnd(124, 599); b = pick(LV === 1 ? [19, 29, 39, 48, 59] : [99, 98, 198, 199, 297, 49, 305]);
+      ans = a + b; var rb = Math.round(b / 10) * 10, dz = rb - b;
+      q = 'Rechne im Kopf: <b>' + a + ' + ' + b + '</b>';
+      sol = ['Vereinfachen: Rechne + ' + rb + ' und danach ' + (dz > 0 ? '− ' + dz : '+ ' + (-dz)) + '.', a + ' + ' + rb + ' = ' + (a + rb) + (dz > 0 ? ' − ' : ' + ') + Math.abs(dz) + ' = <b>' + ans + '</b>'];
+    } else if (k === 1) {
+      b = pick(LV === 1 ? [19, 28, 29, 39, 48] : [98, 99, 197, 198, 291, 49, 36]); a = rnd(b + (LV === 1 ? 12 : 40), LV === 1 ? 99 : 599);
+      ans = a - b; var rs = Math.round(b / 10) * 10, ds = rs - b;
+      q = 'Rechne im Kopf: <b>' + a + ' − ' + b + '</b>';
+      sol = ['Vereinfachen: Rechne − ' + rs + '. Du hast ' + (ds > 0 ? ds + ' zu viel abgezogen, also danach + ' + ds : (-ds) + ' zu wenig abgezogen, also danach − ' + (-ds)) + '.', a + ' − ' + rs + ' = ' + (a - rs) + (ds > 0 ? ' + ' : ' − ') + Math.abs(ds) + ' = <b>' + ans + '</b>'];
+    } else if (k === 2) {
+      if (Math.random() < 0.5) { a = rnd(2, 9); b = LV === 1 ? rnd(12, 49) : rnd(13, 99); var zz = Math.floor(b / 10) * 10, ee = b % 10; ans = a * b;
+        q = 'Rechne im Kopf: <b>' + a + ' · ' + b + '</b>'; sol = ['Zerlegen in Zehner und Einer: ' + a + ' · ' + zz + ' + ' + a + ' · ' + ee, (a * zz) + ' + ' + (a * ee) + ' = <b>' + ans + '</b>']; }
+      else { a = rnd(3, 8); var nh = pick(LV === 1 ? [20, 30, 50, 100] : [100, 200, 300, 120, 50]); var off = pick([1, 2, 3]); b = nh - off; ans = a * b;
+        q = 'Rechne im Kopf: <b>' + a + ' · ' + b + '</b>'; sol = ['Vereinfachen: Statt ' + b + ' rechnest du ' + nh + ' und ziehst ' + a + ' · ' + off + ' ab.', a + ' · ' + nh + ' − ' + a + ' · ' + off + ' = ' + (a * nh) + ' − ' + (a * off) + ' = <b>' + ans + '</b>']; }
+    } else {
+      var d = pick(LV === 1 ? [2, 3, 4, 5, 6] : [3, 4, 6, 7, 8, 9, 12, 14]), qq = LV === 1 ? pick([11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23]) : pick([12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 29]), n = d * qq, big = Math.floor(qq / 10) * 10, rest2 = qq - big;
+      ans = qq; q = 'Rechne im Kopf: <b>' + n + ' : ' + d + '</b>';
+      sol = ['Zerlegen in zwei Summanden, die sich gut teilen lassen: ' + n + ' = ' + (big * d) + ' + ' + (rest2 * d), (big * d) + ' : ' + d + ' + ' + (rest2 * d) + ' : ' + d + ' = ' + big + ' + ' + rest2 + ' = <b>' + ans + '</b>', 'Probe: ' + ans + ' · ' + d + ' = ' + n];
+    }
+    return { type: 'kopf', key: 'kp-' + q, ans: ans, unit: '', q: q, hint: 'Zerlege eine Zahl (Zehner und Einer) oder rechne mit einer runden Zahl und gleiche danach aus.', sol: sol, vis: null, p: {} };
+  }
+  function genPlatz() {
+    var k = rnd(0, 5), a, b, c, q, ans, um;
+    var BOX = '<span style="display:inline-block;width:1.1em;height:1.1em;background:#7d8fd1;border-radius:3px;vertical-align:-0.15em"></span>';
+    if (k === 0) { a = rnd(12, 480); ans = rnd(8, 300); c = a + ans; q = a + ' + ' + BOX + ' = ' + c; um = c + ' − ' + a + ' = ' + ans; }
+    else if (k === 1) { b = rnd(8, 99); ans = rnd(10, 300); c = ans - b; q = BOX + ' − ' + b + ' = ' + c; um = c + ' + ' + b + ' = ' + ans; }
+    else if (k === 2) { a = pick([100, 250, 480, 1000, 452, 1399, 65]); ans = rnd(5, a - 5); c = a - ans; q = a + ' − ' + BOX + ' = ' + c; um = a + ' − ' + c + ' = ' + ans; }
+    else if (k === 3) { a = rnd(2, 9); ans = rnd(3, 15); c = a * ans; q = a + ' · ' + BOX + ' = ' + c; um = c + ' : ' + a + ' = ' + ans; }
+    else if (k === 4) { b = rnd(2, 10); c = rnd(3, 45); ans = b * c; q = BOX + ' : ' + b + ' = ' + c; um = c + ' · ' + b + ' = ' + ans; }
+    else { ans = rnd(2, 12); c = rnd(3, 12); a = ans * c; q = a + ' : ' + BOX + ' = ' + c; um = a + ' : ' + c + ' = ' + ans; }
+    return { type: 'platz', key: 'pl-' + q, ans: ans, unit: '', q: 'Welche Zahl gehört in das Kästchen?<br><b style="font-size:1.3em">' + q + '</b>',
+      hint: 'Mach die Umkehraufgabe: Plus wird zu Minus, Mal wird zu Geteilt. Bei „Zahl − ■“ und „Zahl : ■“ bleibt die Rechenart gleich!', sol: ['Umkehraufgabe: ' + um, 'In das Kästchen gehört die <b>' + ans + '</b>.'], vis: null, p: {} };
+  }
+  function genWort() {
+    var k = rnd(0, 10), a, b, q, ans, sol;
+    if (k === 0) { a = rnd(40, 120); b = rnd(12, a - 5); q = 'Vermindere die Zahl ' + a + ' um ' + b + '.'; ans = a - b; sol = ['vermindern = minus', a + ' − ' + b + ' = <b>' + ans + '</b>']; }
+    else if (k === 1) { a = rnd(12, 90); b = rnd(12, 60); q = 'Vermehre die Zahl ' + a + ' um ' + b + '.'; ans = a + b; sol = ['vermehren = plus', a + ' + ' + b + ' = <b>' + ans + '</b>']; }
+    else if (k === 2) { a = rnd(60, 199); b = rnd(20, a - 2); q = 'Bilde die Differenz aus ' + a + ' und ' + b + '.'; ans = a - b; sol = ['Differenz = Ergebnis von Minus', a + ' − ' + b + ' = <b>' + ans + '</b>']; }
+    else if (k === 3) { a = rnd(25, 149); b = rnd(25, 99); q = 'Bilde die Summe aus ' + a + ' und ' + b + '.'; ans = a + b; sol = ['Summe = Ergebnis von Plus', a + ' + ' + b + ' = <b>' + ans + '</b>']; }
+    else if (k === 4) { a = rnd(3, 12); b = rnd(6, 15); q = 'Berechne das Produkt aus ' + a + ' und ' + b + '.'; ans = a * b; sol = ['Produkt = Ergebnis von Mal', a + ' · ' + b + ' = <b>' + ans + '</b>']; }
+    else if (k === 5) { b = rnd(3, 9); ans = rnd(6, 25); a = ans * b; q = 'Berechne den Quotienten aus ' + a + ' und ' + b + '.'; sol = ['Quotient = Ergebnis von Geteilt', a + ' : ' + b + ' = <b>' + ans + '</b>']; }
+    else if (k === 6) { a = rnd(40, 99); b = rnd(11, 39); q = 'Ziehe von ' + a + ' die Zahl ' + b + ' ab.'; ans = a - b; sol = ['abziehen = minus', a + ' − ' + b + ' = <b>' + ans + '</b>']; }
+    else if (k === 7) { a = rnd(40, 99); b = rnd(11, a - 5); q = 'Die Summe zweier Zahlen ist ' + a + '. Eine der Zahlen ist ' + b + '. Wie heißt die andere Zahl?'; ans = a - b; sol = [b + ' + ■ = ' + a, 'Umkehraufgabe: ' + a + ' − ' + b + ' = <b>' + ans + '</b>']; }
+    else if (k === 8) { a = rnd(45, 99); b = rnd(12, a - 10); q = 'Wie viel musst du von ' + a + ' subtrahieren, um ' + b + ' zu erhalten?'; ans = a - b; sol = [a + ' − ■ = ' + b, a + ' − ' + b + ' = <b>' + ans + '</b>']; }
+    else if (k === 9) { b = rnd(12, 60); var e = rnd(15, 80); q = 'Ich denke mir eine Zahl, subtrahiere ' + b + ' und erhalte ' + e + '. Wie heißt meine Zahl?'; ans = e + b; sol = ['■ − ' + b + ' = ' + e, 'Rückwärts rechnen: ' + e + ' + ' + b + ' = <b>' + ans + '</b>']; }
+    else { b = rnd(3, 9); var e2 = rnd(4, 12); q = 'Ich denke mir eine Zahl, multipliziere sie mit ' + b + ' und erhalte ' + (b * e2) + '. Wie heißt meine Zahl?'; ans = e2; sol = ['■ · ' + b + ' = ' + (b * e2), 'Rückwärts rechnen: ' + (b * e2) + ' : ' + b + ' = <b>' + ans + '</b>']; }
+    return { type: 'wort', key: 'w-' + q, ans: ans, unit: '', q: q, hint: 'Übersetze erst in eine Rechnung: vermindern/abziehen/Differenz → −, vermehren/hinzufügen/Summe → +, Produkt → ·, Quotient → :', sol: sol, vis: null, p: {} };
+  }
+  function genBegriff() {
+    var k = rnd(0, 6), a = rnd(12, 48), b = rnd(3, 9), q, ok, bad, ex;
+    if (k === 0) { q = 'In <b>' + (a + b) + ' − ' + b + ' = ' + a + '</b>: Wie heißt die Zahl <b>' + b + '</b>?'; ok = 'Subtrahend'; bad = ['Minuend', 'Summand', 'Differenz']; ex = 'Minuend minus <b>Subtrahend</b> = Differenz. Die Zahl, die abgezogen wird, ist der Subtrahend.'; }
+    else if (k === 1) { q = 'In <b>' + (a * b) + ' : ' + b + ' = ' + a + '</b>: Wie heißt die Zahl <b>' + b + '</b>?'; ok = 'Divisor'; bad = ['Dividend', 'Quotient', 'Faktor']; ex = 'Dividend durch <b>Divisor</b> = Quotient. Durch den Divisor wird geteilt.'; }
+    else if (k === 2) { q = 'Wie nennt man einen Ausdruck wie <b>' + a + ' · ' + b + '</b>?'; ok = 'Produkt'; bad = ['Summe', 'Quotient', 'Differenz']; ex = 'Faktor mal Faktor = <b>Produkt</b>.'; }
+    else if (k === 3) { q = 'Wie nennt man einen Ausdruck wie <b>' + (a + b) + ' − ' + b + '</b>?'; ok = 'Differenz'; bad = ['Summe', 'Produkt', 'Quotient']; ex = 'Ein Ausdruck mit Minus ist eine <b>Differenz</b>.'; }
+    else if (k === 4) { q = 'In <b>' + (a * b) + ' : ' + b + ' = ' + a + '</b>: Wie heißt die Zahl <b>' + (a * b) + '</b>?'; ok = 'Dividend'; bad = ['Divisor', 'Quotient', 'Minuend']; ex = '<b>Dividend</b> durch Divisor = Quotient. Der Dividend wird geteilt.'; }
+    else if (k === 5) { var z = pick([[a + ' : 0', 'geht nicht', ['0', String(a)], 'Durch 0 kann man nicht dividieren: Es gibt keine Zahl ■ mit 0 · ■ = ' + a + '.'], [a + ' · 0', '0', [String(a), 'geht nicht'], 'Mal null ergibt null.'], ['0 : ' + b, '0', [String(b), 'geht nicht'], '0 geteilt durch eine andere Zahl als 0 ist immer 0.']]);
+      q = 'Was ist <b>' + z[0] + '</b>?'; ok = z[1]; bad = z[2]; ex = z[3]; }
+    else { var v = pick([['100 − 20', 'der Subtrahend um 5 vergrößert wird', 'Das Ergebnis wird um 5 kleiner.', ['Das Ergebnis wird um 5 größer.', 'Das Ergebnis bleibt gleich.'], '100 − 25 = 75 statt 80: Wer mehr abzieht, hat weniger übrig.'], ['45 − 12', 'der Minuend um 8 verkleinert wird', 'Das Ergebnis wird um 8 kleiner.', ['Das Ergebnis wird um 8 größer.', 'Das Ergebnis bleibt gleich.'], '37 − 12 = 25 statt 33.'], ['55 + 27', 'beide Summanden um 6 vergrößert werden', 'Das Ergebnis wird um 12 größer.', ['Das Ergebnis wird um 6 größer.', 'Das Ergebnis bleibt gleich.'], '61 + 33 = 94 statt 82: zweimal 6 dazu = 12.'], ['50 − 20', 'Minuend und Subtrahend um 5 vergrößert werden', 'Das Ergebnis bleibt gleich.', ['Das Ergebnis wird um 5 größer.', 'Das Ergebnis wird um 10 größer.'], '55 − 25 = 30, genau wie 50 − 20.']]);
+      q = 'Wie ändert sich das Ergebnis von <b>' + v[0] + '</b>, wenn ' + v[1] + '?'; ok = v[2]; bad = v[3]; ex = v[4]; }
+    return { type: 'begriff', key: 'b-' + q, q: q, opts: opts(ok, bad), ex: ex };
+  }
+  function genProbe() {
+    var k = rnd(0, 3), a, b, r, claim, q, sol, isOk = Math.random() < 0.45;
+    if (k === 0) { a = rnd(150, 799); b = rnd(40, a - 40); r = a - b; claim = isOk ? r : r + pick([-10, 10, -100, 100, 2, -2]); q = a + ' − ' + b + ' = ' + claim; sol = ['Probe mit Plus: ' + claim + ' + ' + b + ' = ' + (claim + b) + (claim === r ? ' ✓' : ' ≠ ' + a), 'Richtig ist: ' + a + ' − ' + b + ' = <b>' + r + '</b>']; }
+    else if (k === 1) { a = rnd(40, 400); b = rnd(40, 400); r = a + b; claim = isOk ? r : r + pick([-10, 10, -100, 100]); q = a + ' + ' + b + ' = ' + claim; sol = ['Probe mit Minus: ' + claim + ' − ' + b + ' = ' + (claim - b) + (claim === r ? ' ✓' : ' ≠ ' + a), 'Richtig ist: ' + a + ' + ' + b + ' = <b>' + r + '</b>']; }
+    else { b = pick([3, 4, 6, 7, 8, 9, 12, 13, 17, 25]); r = rnd(4, 22); a = b * r; claim = isOk ? r : r + pick([-1, 1, 2]); q = a + ' : ' + b + ' = ' + claim; sol = ['Probe mit Mal: ' + claim + ' · ' + b + ' = ' + (claim * b) + (claim === r ? ' ✓' : ' ≠ ' + a), 'Richtig ist: ' + a + ' : ' + b + ' = <b>' + r + '</b>']; }
+    return { type: 'probe', key: 'pr-' + q, ans: r, unit: '', q: 'Prüfe mit der Probe: <b style="font-size:1.2em">' + q + '</b><br>Schreib das <b>richtige</b> Ergebnis auf. (Wenn es stimmt, schreibst du es einfach ab.)',
+      hint: 'Probe: Bei Minus rechnest du Ergebnis + abgezogene Zahl. Bei Geteilt rechnest du Ergebnis · Divisor. Kommt die Ausgangszahl heraus?', sol: sol, vis: null, p: {} };
+  }
+  function genZeichen() {
+    var ops = ['+', '−', '·', ':'];
+    function calc(a, o, b) { return o === '+' ? a + b : o === '−' ? a - b : o === '·' ? a * b : (b && a % b === 0 ? a / b : null); }
+    for (var t = 0; t < 60; t++) {
+      var o = pick(ops), a, b;
+      if (o === '·') { a = rnd(2, 12); b = rnd(2, 9); } else if (o === ':') { b = rnd(2, 9); a = b * rnd(2, 15); } else if (o === '+') { a = rnd(10, 150); b = rnd(2, 60); } else { a = rnd(20, 150); b = rnd(2, a - 3); }
+      var c = calc(a, o, b), clash = ops.filter(function (x) { return x !== o && calc(a, x, b) === c; });
+      if (!clash.length && c !== null && c >= 0) {
+        return { type: 'zeichen', key: 'z-' + a + o + b, q: 'Welches Rechenzeichen gehört in das Kästchen?<br><b style="font-size:1.3em">' + a + ' ■ ' + b + ' = ' + c + '</b>',
+          opts: ops.map(function (x) { return { t: '<b style="font-size:1.3em">' + x + '</b>', ok: x === o }; }), ex: a + ' ' + o + ' ' + b + ' = ' + c };
+      }
+    }
+    return { type: 'zeichen', key: 'z-7·8', q: 'Welches Rechenzeichen gehört in das Kästchen?<br><b style="font-size:1.3em">7 ■ 8 = 56</b>', opts: ops.map(function (x) { return { t: '<b style="font-size:1.3em">' + x + '</b>', ok: x === '·' }; }), ex: '7 · 8 = 56' };
+  }
+  function genSchlange() {
+    if (Math.random() < 0.55) {
+      var start = rnd(2, 12), steps = [], v = start, list = [['+', rnd(2, 9)], ['·', rnd(2, 5)], ['−', rnd(2, 9)], [':', 0]];
+      list = shuffle(list).slice(0, LV === 1 ? 2 : 3);
+      list.forEach(function (st) {
+        if (st[0] === '+') v += st[1]; else if (st[0] === '·') v *= st[1];
+        else if (st[0] === '−') { if (v - st[1] < 1) st[1] = 1; v -= st[1]; }
+        else { var dv = [2, 3, 4, 5].filter(function (x) { return v % x === 0; }); if (dv.length) { st[1] = pick(dv); v /= st[1]; } else { st[0] = '+'; st[1] = rnd(2, 9); v += st[1]; } }
+        steps.push(st);
+      });
+      var chain = '<b style="font-size:1.15em">■ ' + steps.map(function (st) { return '→ ' + st[0] + ' ' + st[1] + ' '; }).join('') + '→ ' + v + '</b>';
+      var back = steps.slice().reverse().map(function (st) { return (st[0] === '+' ? '−' : st[0] === '−' ? '+' : st[0] === '·' ? ':' : '·') + ' ' + st[1]; });
+      return { type: 'schlange', key: 'sl-' + chain, ans: start, unit: '', q: 'Rechenschlange: Mit welcher Zahl ging es los?<br>' + chain,
+        hint: 'Rechne rückwärts vom Ende aus und nimm immer die Umkehraufgabe: + wird −, · wird :.', sol: ['Rückwärts von ' + v + ': ' + back.join(', '), 'Die Startzahl ist <b>' + start + '</b>.'], vis: null, p: {} };
+    }
+    var x = rnd(LV === 1 ? 1 : 2, LV === 1 ? 9 : 40), y = rnd(1, LV === 1 ? 9 : 40), z = rnd(1, LV === 1 ? 9 : 40), top = x + 2 * y + z;
+    return { type: 'schlange', key: 'm-' + x + '-' + y + '-' + z, ans: top, unit: '', q: 'Additionsmauer: Unten stehen die Steine <b>' + x + ' | ' + y + ' | ' + z + '</b>. Die Summe zweier Steine steht im Stein darüber. Welche Zahl steht ganz oben?',
+      hint: 'Erst die mittlere Reihe: ' + x + ' + ' + y + ' und ' + y + ' + ' + z + '. Dann diese beiden addieren.', sol: ['Mitte: ' + x + ' + ' + y + ' = ' + (x + y) + ' und ' + y + ' + ' + z + ' = ' + (y + z), 'Oben: ' + (x + y) + ' + ' + (y + z) + ' = <b>' + top + '</b>'], vis: null, p: {} };
+  }
+  function genSach() {
+    var k = rnd(0, 6), nm = pick(NAMES), q, ans, unit = '', sol;
+    if (k === 0) { var sch = rnd(22, 30), erw = rnd(2, 6), pl = pick([6, 8, 10]), tot = sch + erw; if (tot % pl === 0) erw++; tot = sch + erw; ans = Math.ceil(tot / pl); unit = 'Boote';
+      q = 'Am Wandertag machen ' + sch + ' Kinder mit ' + erw + ' Erwachsenen einen Bootsausflug. In ein Boot passen ' + pl + ' Personen. Wie viele Boote brauchen sie mindestens?';
+      sol = [sch + ' + ' + erw + ' = ' + tot + ' Personen', tot + ' : ' + pl + ' = ' + Math.floor(tot / pl) + ' Rest ' + (tot % pl), 'Für den Rest braucht man noch ein Boot: <b>' + ans + ' Boote</b>']; }
+    else if (k === 1) { var g1 = rnd(24, 38), g2 = rnd(18, g1 - 1), diff = Math.random() < 0.5; ans = diff ? g1 - g2 : g1 + g2; unit = 'Tore';
+      q = 'Das Handballspiel ging ' + g1 + ' zu ' + g2 + ' aus. ' + (diff ? 'Wie groß ist die Tordifferenz?' : 'Wie viele Tore sind insgesamt gefallen?');
+      sol = [diff ? g1 + ' − ' + g2 + ' = <b>' + ans + '</b>' : g1 + ' + ' + g2 + ' = <b>' + ans + '</b>']; }
+    else if (k === 2) { var kl = rnd(22, 30), sw = rnd(12, kl - 3); ans = kl - sw; unit = 'Kinder';
+      q = 'Von den ' + kl + ' Kindern der Klasse 5a können ' + sw + ' Kinder schwimmen. Wie viele Kinder können nicht schwimmen?'; sol = [kl + ' − ' + sw + ' = <b>' + ans + '</b>']; }
+    else if (k === 3) { var st = rnd(600, 900), zu = rnd(60, 99), ab = rnd(60, 99); ans = st + zu - ab; unit = 'Schüler';
+      q = 'An einer Schule sind ' + st + ' Schüler. Am Ende des Schuljahres kommen ' + zu + ' dazu und ' + ab + ' verlassen die Schule. Wie viele Schüler sind es danach?'; sol = [st + ' + ' + zu + ' = ' + (st + zu), (st + zu) + ' − ' + ab + ' = <b>' + ans + '</b>']; }
+    else if (k === 4) { var n = pick([4, 5, 6, 8]), pr = pick([25, 30, 35, 40, 45]); ans = pr; unit = 'Cent';
+      q = n + ' Brötchen kosten zusammen ' + (n * pr) + ' Cent. Wie viel kostet ein Brötchen?'; sol = [(n * pr) + ' : ' + n + ' = <b>' + pr + ' Cent</b>', 'Probe: ' + pr + ' · ' + n + ' = ' + (n * pr)]; }
+    else if (k === 5) { var h1 = rnd(115, 130), w = [rnd(5, 9), rnd(5, 9), rnd(4, 8)], h2 = h1 + w[0] + w[1] + w[2]; ans = h2 - h1; unit = 'cm';
+      q = nm + ' war mit 8 Jahren ' + h1 + ' cm groß und mit 11 Jahren ' + h2 + ' cm. Um wie viel cm ist ' + nm + ' in dieser Zeit gewachsen?'; sol = [h2 + ' − ' + h1 + ' = <b>' + ans + ' cm</b>']; }
+    else { var er = pick([6, 7, 8]), ki = pick([3, 4]), nk = rnd(2, 4), ne = pick([1, 2]); ans = ne * er + nk * ki; unit = '€';
+      q = 'Im Zoo kostet der Eintritt ' + er + ' € für Erwachsene und ' + ki + ' € für Kinder. ' + nm + ' geht mit der Familie hin: ' + (ne === 1 ? 'ein Erwachsener' : 'zwei Erwachsene') + ' und ' + nk + ' Kinder (' + nm + ' mitgezählt). Wie viel kostet der Eintritt zusammen?';
+      sol = [ne + ' · ' + er + ' € = ' + (ne * er) + ' €', nk + ' · ' + ki + ' € = ' + (nk * ki) + ' €', 'Zusammen: <b>' + ans + ' €</b>']; }
+    return { type: 'sach', key: 'sa-' + q, ans: ans, unit: unit, q: q, hint: 'Lies genau: Was ist gegeben, was ist gefragt? Schreib erst die Rechnung auf, dann rechne.', sol: sol, vis: null, p: {} };
+  }
+  function genZahlwort() {
+    var k = rnd(0, 3), q, ans, sol;
+    if (k === 0) { var n = pick([rnd(1001, 9999), rnd(10001, 99999), rnd(100001, 999999), rnd(1, 9) * 100000 + rnd(1, 9) * 1000 + rnd(0, 9) * 100, rnd(1, 15) * 1000000 + rnd(0, 9) * 100000]);
+      q = 'Schreib als Zahl:<br><b>' + deWord(n) + '</b>'; ans = n; sol = ['<b>' + fmt(n) + '</b>', 'Tipp: Erst die Millionen, dann die Tausender, dann der Rest. Leere Stellen bekommen eine 0.']; }
+    else if (k === 1) { var dbl = Math.random() < 0.5, base = dbl ? pick([25, 100, 3000, 125, 40]) : pick([1600, 800, 4800, 32000, 160]), times = 4; ans = dbl ? base * 16 : base / 16;
+      var path = [base], cur = base; for (var i = 0; i < times; i++) { cur = dbl ? cur * 2 : cur / 2; path.push(cur); }
+      q = (dbl ? 'Verdopple' : 'Halbiere') + ' die Zahl <b>' + fmt(base) + '</b> viermal hintereinander. Welche Zahl kommt am Ende heraus?'; sol = [path.map(fmt).join(' → '), 'Am Ende: <b>' + fmt(ans) + '</b>']; }
+    else if (k === 2) { var stp = pick([25, 200, 1000, 500, 300]), st = stp * rnd(1, 8), seq = [st, st + stp, st + 2 * stp]; ans = st + 3 * stp;
+      q = 'Zähle weiter in ' + fmt(stp) + 'er-Schritten:<br><b>' + seq.map(fmt).join(', ') + ', ■</b>'; sol = ['Immer + ' + fmt(stp) + ': ' + fmt(seq[2]) + ' + ' + fmt(stp) + ' = <b>' + fmt(ans) + '</b>']; }
+    else { var m = pick([rnd(10001, 99999), rnd(100001, 999999)]), wrong1 = m + pick([1000, 10000, 100]), wrong2 = Math.floor(m / 10);
+      return { type: 'zahlwort', key: 'zw-mc-' + m, q: 'Welches Zahlwort gehört zu <b>' + fmt(m) + '</b>?', opts: opts(deWord(m), [deWord(wrong1), deWord(wrong2)]), ex: fmt(m) + ' = ' + deWord(m) };
+    }
+    return { type: 'zahlwort', key: 'zw-' + q, ans: ans, unit: '', q: q, hint: 'Nutze die Stellenwerttafel: Mio | HT ZT T | H Z E.', sol: sol, vis: null, p: {} };
+  }
+  GEN.kopf = genKopf; GEN.platz = genPlatz; GEN.wort = genWort; GEN.begriff = genBegriff; GEN.probe = genProbe; GEN.zeichen = genZeichen; GEN.schlange = genSchlange; GEN.sach = genSach; GEN.zahlwort = genZahlwort;
   GEN.stelle = genStelle; GEN.rund = genRund; GEN.add = genAdd; GEN.sub = genSub; GEN.mul = genMul; GEN.div = genDiv; GEN.regel = genRegel; GEN.gesch = genGesch;
-  var NATR = ['stelle', 'rund', 'add', 'sub', 'mul', 'mul', 'div', 'div', 'regel', 'gesch'];
-  var KAMIX = ['add', 'sub', 'mul', 'div', 'regel', 'rund', 'k2w', 'w2k', 'find', 'tab'];
+  var NATR = ['kopf', 'kopf', 'platz', 'wort', 'begriff', 'probe', 'zeichen', 'schlange', 'sach', 'zahlwort'];
+  var NATPLUS = ['stelle', 'rund', 'add', 'sub', 'mul', 'mul', 'div', 'div', 'regel', 'gesch'];
+  var KAMIX = ['kopf', 'platz', 'wort', 'probe', 'sach', 'rund', 'k2w', 'w2k', 'find', 'tab'];
   function buildRound(topic, stats) {
-    var types = (topic === 'mix' ? MIX : topic === 'profi' ? PROFI : topic === 'heft' ? HEFT : topic === 'nat' ? NATR : topic === 'mka' ? KAMIX : [topic, topic, topic, topic, topic, topic, topic, topic, topic, topic]).slice();
+    var types = (topic === 'mix' ? MIX : topic === 'profi' ? PROFI : topic === 'heft' ? HEFT : topic === 'nat' ? NATR : topic === 'natplus' ? NATPLUS : topic === 'mka' ? KAMIX : [topic, topic, topic, topic, topic, topic, topic, topic, topic, topic]).slice();
     LV = window.LU5 ? LU5.get('m', topic) : 2;
-    var focus = (topic === 'mix' || topic === 'profi' || topic === 'heft' || topic === 'nat' || topic === 'mka') ? adapt(types, stats || {}) : [];
-    if (LV === 3 && (topic === 'mix' || topic === 'heft' || topic === 'nat' || topic === 'mka')) {
-      var extra = topic === 'nat' ? ['regel', 'gesch'] : topic === 'mka' ? ['regel', 'mixed'] : ['bar', 'mixed'];
+    var focus = (topic === 'mix' || topic === 'profi' || topic === 'heft' || topic === 'nat' || topic === 'natplus' || topic === 'mka') ? adapt(types, stats || {}) : [];
+    if (LV === 3 && (topic === 'mix' || topic === 'heft' || topic === 'nat' || topic === 'natplus' || topic === 'mka')) {
+      var extra = topic === 'nat' ? ['sach', 'schlange'] : topic === 'natplus' ? ['regel', 'gesch'] : topic === 'mka' ? ['regel', 'mixed'] : ['bar', 'mixed'];
       var slots = shuffle(types.map(function (x, i) { return i; }).filter(function (i) { return focus.indexOf(types[i]) === -1; })).slice(0, 2);
       slots.forEach(function (i, k) { types[i] = extra[k]; });
     }
@@ -2069,10 +2226,20 @@ window.LU5 = (function () {
   }
 
   /* ---------- State ---------- */
-  var TOPIC_LABEL = { mix: 'Gemischt', concept: 'Verstehen', k2w: 'Karte → echt', w2k: 'echt → Karte', find: 'Maßstab finden', zoom: 'Vergrößern', units: 'Einheiten', heft: 'Bild & Original', profi: 'Profi', nat: 'Natürliche Zahlen', mka: 'Klassenarbeit-Mix' };
+  var TOPIC_LABEL = { mix: 'Gemischt', concept: 'Verstehen', k2w: 'Karte → echt', w2k: 'echt → Karte', find: 'Maßstab finden', zoom: 'Vergrößern', units: 'Einheiten', heft: 'Bild & Original', profi: 'Profi', nat: 'Natürliche Zahlen', natplus: 'Große Zahlen & schriftlich', mka: 'Klassenarbeit-Mix' };
   if (window.LU5) LU5.labels.m = TOPIC_LABEL;
   var MLESSON = {"stelle": "<p>Jede Ziffer hat einen Platz in der Stellenwerttafel. Von rechts: Einer, Zehner, Hunderter, Tausender …</p><table><tr><th>Mio</th><th>HT</th><th>ZT</th><th>T</th><th>H</th><th>Z</th><th>E</th></tr><tr><td>3</td><td>4</td><td>8</td><td>2</td><td>1</td><td>0</td><td>5</td></tr></table><p>Das ist die Zahl <b>3&nbsp;482&nbsp;105</b>. An der Tausender-Stelle (T) steht die <b>2</b>.</p><p class=\"trick\"><b>Merke:</b> Wo nichts steht, schreibst du eine <b>0</b>.</p>", "rund": "<p>Beispiel: Runde <b>34&nbsp;768</b> auf <b>Tausender</b>.</p><p>1. Finde die Tausender-Stelle: 3<b>4</b> 768.<br>2. Schau auf die Ziffer <b>rechts daneben</b>: 34 <b>7</b>68.<br>3. Die 7 ist 5 oder mehr → aufrunden: <b>35&nbsp;000</b>.</p><p class=\"trick\"><b>Merke:</b> 0, 1, 2, 3, 4 → abrunden. 5, 6, 7, 8, 9 → aufrunden. Alles rechts davon wird zu 0.</p>", "add": "<p>Beispiel: <b>4&nbsp;568&nbsp;+&nbsp;2&nbsp;375</b></p><p>Schreibe die Zahlen genau untereinander, Einer unter Einer. Fang rechts an:</p><p>E: 8 + 5 = 13 → schreibe 3, Übertrag 1<br>Z: 6 + 7 + 1 = 14 → schreibe 4, Übertrag 1<br>H: 5 + 3 + 1 = 9<br>T: 4 + 2 = 6</p><p>Ergebnis: <b>6&nbsp;943</b>. Überschlag: 5&nbsp;000&nbsp;+&nbsp;2&nbsp;000&nbsp;=&nbsp;7&nbsp;000, passt!</p><p class=\"trick\"><b>Merke:</b> Den Übertrag klein über die nächste Stelle schreiben, dann vergisst du ihn nicht.</p>", "sub": "<p>Beispiel: <b>7&nbsp;302&nbsp;−&nbsp;2&nbsp;458</b>. Wir rechnen mit Ergänzen, von rechts:</p><p>E: 8 + ? = 12 → <b>4</b>, Übertrag 1<br>Z: 5 + 1 = 6, 6 + ? = 10 → <b>4</b>, Übertrag 1<br>H: 4 + 1 = 5, 5 + ? = 13 → <b>8</b>, Übertrag 1<br>T: 2 + 1 = 3, 3 + ? = 7 → <b>4</b></p><p>Ergebnis: <b>4&nbsp;844</b>. Probe: 4&nbsp;844&nbsp;+&nbsp;2&nbsp;458&nbsp;=&nbsp;7&nbsp;302 ✓</p><p class=\"trick\"><b>Merke:</b> Mit der Probe (Ergebnis + abgezogene Zahl) findest du jeden Fehler.</p>", "mul": "<p>Beispiel: <b>324&nbsp;·&nbsp;23</b></p><p>Zerlege die 23 in 20 und 3:<br>324&nbsp;·&nbsp;20&nbsp;=&nbsp;6&nbsp;480<br>324&nbsp;·&nbsp;3&nbsp;=&nbsp;972<br>Zusammen: 6&nbsp;480&nbsp;+&nbsp;972&nbsp;=&nbsp;<b>7&nbsp;452</b></p><p>Mit Nullen: 45&nbsp;·&nbsp;300 → rechne 45&nbsp;·&nbsp;3&nbsp;=&nbsp;135 und hänge die zwei Nullen an: <b>13&nbsp;500</b>.</p><p class=\"trick\"><b>Merke:</b> Beim schriftlichen Rechnen rückt die zweite Zeile eine Stelle nach links.</p>", "div": "<p>Beispiel: <b>2&nbsp;736&nbsp;:&nbsp;4</b>, von links:</p><p>27 : 4 = <b>6</b>, Rest 3 → hole die 3 runter: 33<br>33 : 4 = <b>8</b>, Rest 1 → hole die 6 runter: 16<br>16 : 4 = <b>4</b>, Rest 0</p><p>Ergebnis: <b>684</b>. Probe: 684&nbsp;·&nbsp;4&nbsp;=&nbsp;2&nbsp;736 ✓</p><p class=\"trick\"><b>Merke:</b> Passt die Zahl nicht einmal hinein, schreibst du eine <b>0</b> ins Ergebnis und holst die nächste Ziffer.</p>", "regel": "<p>Die Reihenfolge ist fest:</p><p>1. <b>Klammern</b> zuerst<br>2. <b>Punkt vor Strich</b>: erst · und :, dann + und −<br>3. Sonst von links nach rechts</p><p><b>5 + 3 · 4</b> = 5 + 12 = <b>17</b> (nicht 32!)<br><b>(5 + 3) · 4</b> = 8 · 4 = <b>32</b></p><p class=\"trick\"><b>Merke:</b> Klammer – Punkt – Strich.</p>", "gesch": "<p>Bei + und · darfst du die Reihenfolge tauschen. Suche Partner, die eine runde Zahl ergeben.</p><p><b>25 · 17 · 4</b> → 25 · 4 = 100 → 100 · 17 = <b>1&nbsp;700</b><br><b>37 + 58 + 63</b> → 37 + 63 = 100 → 100 + 58 = <b>158</b></p><p class=\"trick\"><b>Merke:</b> Gute Partner: 25 · 4 = 100, 2 · 50 = 100, 20 · 5 = 100.</p>", "concept": "<p>Der Maßstab <b>1&nbsp;:&nbsp;100</b> heißt: <b class=\"k\">1&nbsp;cm&nbsp;auf&nbsp;der&nbsp;Karte</b> ist <b class=\"w\">100&nbsp;cm&nbsp;=&nbsp;1&nbsp;m&nbsp;in&nbsp;echt</b>.</p><p>Steht die große Zahl <b>hinten</b> (1 : 100), ist es eine <b>Verkleinerung</b>.<br>Steht sie <b>vorne</b> (10 : 1), ist es eine <b>Vergrößerung</b>.</p><p>Je <b>kleiner</b> die Zahl hinten, desto größer ist alles gezeichnet. Je <b>größer</b> die Zahl hinten, desto mehr Gebiet passt auf die Karte.</p><p class=\"trick\"><b>Merke:</b> Vorne Karte/Bild, hinten echt.</p>", "k2w": "<p>Beispiel: Maßstab <b>1&nbsp;:&nbsp;25&nbsp;000</b>, auf der Karte <b class=\"k\">4&nbsp;cm</b>.</p><p>1. Rechne <b>mal</b>: 4&nbsp;cm&nbsp;·&nbsp;25&nbsp;000&nbsp;=&nbsp;100&nbsp;000&nbsp;cm<br>2. Umwandeln: 100&nbsp;000&nbsp;cm&nbsp;=&nbsp;1&nbsp;000&nbsp;m = <b class=\"w\">1&nbsp;km</b></p><p class=\"trick\"><b>Merke:</b> Karte → echt: <b>mal</b> die Zahl hinten. Das Ergebnis ist zuerst in cm.</p>", "w2k": "<p>Beispiel: Maßstab <b>1&nbsp;:&nbsp;50&nbsp;000</b>, in echt <b class=\"w\">3&nbsp;km</b>.</p><p>1. Erst in cm umwandeln: 3&nbsp;km&nbsp;=&nbsp;3&nbsp;000&nbsp;m&nbsp;=&nbsp;300&nbsp;000&nbsp;cm<br>2. Rechne <b>geteilt</b>: 300&nbsp;000&nbsp;:&nbsp;50&nbsp;000 = <b class=\"k\">6&nbsp;cm</b></p><p class=\"trick\"><b>Merke:</b> Echt → Karte: erst in cm, dann <b>geteilt</b> durch die Zahl hinten.</p>", "find": "<p>Beispiel: Karte <b class=\"k\">5&nbsp;cm</b>, in echt <b class=\"w\">1&nbsp;km</b>.</p><p>1. Beide Längen in cm: 1&nbsp;km&nbsp;=&nbsp;100&nbsp;000&nbsp;cm<br>2. Echt geteilt durch Karte: 100&nbsp;000&nbsp;:&nbsp;5&nbsp;=&nbsp;20&nbsp;000<br>3. Maßstab: <b>1&nbsp;:&nbsp;20&nbsp;000</b></p><p class=\"trick\"><b>Merke:</b> Maßstab finden: echte Länge (in cm) <b>geteilt</b> durch die Länge auf der Karte.</p>", "zoom": "<p>Bei einer Vergrößerung steht die große Zahl vorne, z. B. <b>5 : 1</b>: Das Bild ist 5-mal so groß wie in echt.</p><p>Eine Ameise ist in echt <b class=\"w\">4&nbsp;mm</b> → im Bild 4&nbsp;·&nbsp;5 = <b class=\"k\">20&nbsp;mm</b>.<br>Im Bild <b class=\"k\">30&nbsp;mm</b> → in echt 30&nbsp;:&nbsp;5 = <b class=\"w\">6&nbsp;mm</b>.</p><p class=\"trick\"><b>Merke:</b> Echt → Bild: <b>mal</b>. Bild → echt: <b>geteilt</b>.</p>", "units": "<p>Stell dir eine Treppe vor:</p><p><b>km</b> →(· 1&nbsp;000)→ <b>m</b> →(· 10)→ <b>dm</b> →(· 10)→ <b>cm</b> →(· 10)→ <b>mm</b></p><p>Runter zu kleineren Einheiten: <b>mal</b>. Rauf zu größeren: <b>geteilt</b>.<br>3&nbsp;m&nbsp;=&nbsp;300&nbsp;cm · 7&nbsp;000&nbsp;m&nbsp;=&nbsp;7&nbsp;km · 50&nbsp;mm&nbsp;=&nbsp;5&nbsp;cm</p><p class=\"trick\"><b>Merke:</b> 1 m = 100 cm, 1&nbsp;km&nbsp;=&nbsp;1&nbsp;000&nbsp;m&nbsp;=&nbsp;100&nbsp;000&nbsp;cm.</p>", "pic": "<p>Zähle beim <b class=\"w\">Original</b> und beim <b class=\"k\">Bild</b> die Kästchen einer Seite.</p><p>Original 2 Kästchen, Bild 6 Kästchen → das Bild ist 3-mal so groß → <b>Vergrößerung 3 : 1</b>.<br>Original 8 Kästchen, Bild 2 Kästchen → das Bild ist 4-mal so klein → <b>Verkleinerung 1 : 4</b>.</p><p class=\"trick\"><b>Merke:</b> Beim Maßstab steht das Bild immer vorne: <b>Bild : Original</b>.</p>", "ratio": "<p>Bringe zuerst beide Längen in <b>dieselbe Einheit</b>.</p><p>Bild <b class=\"k\">2&nbsp;cm</b>, Original <b class=\"w\">10&nbsp;m&nbsp;=&nbsp;1&nbsp;000&nbsp;cm</b> → 1&nbsp;000&nbsp;:&nbsp;2&nbsp;=&nbsp;500 → <b>1&nbsp;:&nbsp;500</b><br>Bild <b class=\"k\">30&nbsp;mm</b>, Original <b class=\"w\">5&nbsp;mm</b> → 30&nbsp;:&nbsp;5&nbsp;=&nbsp;6 → <b>6 : 1</b></p><p class=\"trick\"><b>Merke:</b> Ist das Bild kleiner: <b>1 : …</b>. Ist das Bild größer: <b>… : 1</b>.</p>", "tab": "<p>Beispiel: Maßstab <b>1&nbsp;:&nbsp;200</b>. Im <b class=\"k\">Bild&nbsp;3&nbsp;cm</b>.</p><p>Bild → Wirklichkeit: <b>mal</b> 200 → 3&nbsp;cm&nbsp;·&nbsp;200&nbsp;=&nbsp;600&nbsp;cm = <b class=\"w\">6&nbsp;m</b><br>Wirklichkeit → Bild: <b>geteilt</b> durch 200.</p><p class=\"trick\"><b>Merke:</b> Achte auf die Einheit, in der das Ergebnis stehen soll. Wandle am Ende um.</p>", "model": "<p>Ein Modell ist eine Verkleinerung, z. B. <b>1&nbsp;:&nbsp;50</b>.</p><p>Ein Haus ist in echt <b class=\"w\">10&nbsp;m</b> hoch. 10&nbsp;m&nbsp;=&nbsp;1&nbsp;000&nbsp;cm → 1&nbsp;000&nbsp;:&nbsp;50 = <b class=\"k\">20&nbsp;cm</b> am Modell.<br>Am Modell <b class=\"k\">20&nbsp;cm</b> → 20&nbsp;·&nbsp;50&nbsp;=&nbsp;1&nbsp;000&nbsp;cm = <b class=\"w\">10&nbsp;m</b> in echt.</p><p class=\"trick\"><b>Merke:</b> Echt → Modell: <b>geteilt</b>. Modell → echt: <b>mal</b>.</p>", "fit": "<p>Ein DIN-A4-Blatt ist etwa 29&nbsp;cm&nbsp;×&nbsp;21&nbsp;cm. Rechne für jeden Maßstab aus, wie groß die Zeichnung wird.</p><p>Ein Fußballfeld ist etwa <b class=\"w\">100&nbsp;m&nbsp;=&nbsp;10&nbsp;000&nbsp;cm</b> lang.<br>Mit 1&nbsp;:&nbsp;100: 10&nbsp;000&nbsp;:&nbsp;100&nbsp;=&nbsp;100&nbsp;cm → passt <b>nicht</b>.<br>Mit 1&nbsp;:&nbsp;500: 10&nbsp;000&nbsp;:&nbsp;500&nbsp;=&nbsp;20&nbsp;cm → <b>passt</b>.</p><p class=\"trick\"><b>Merke:</b> Wähle den Maßstab, bei dem die Zeichnung möglichst groß ist, aber noch aufs Blatt passt.</p>", "bar": "<p>Eine Maßstabsleiste zeigt: ein Stück auf der Karte steht für eine echte Länge.</p><p>Ein Stück ist <b class=\"k\">1&nbsp;cm</b> und steht für <b class=\"w\">500&nbsp;m</b>.<br>Maßstab: 500&nbsp;m&nbsp;=&nbsp;50&nbsp;000&nbsp;cm → <b>1&nbsp;:&nbsp;50&nbsp;000</b><br><b class=\"w\">2&nbsp;km</b> sind 4 Stücke → <b class=\"k\">4&nbsp;cm</b> auf der Karte.</p><p class=\"trick\"><b>Merke:</b> Wandle die Länge eines Stücks in cm um, dann hast du den Maßstab.</p>", "time": "<p>Beispiel: Karte 1&nbsp;:&nbsp;25&nbsp;000, Weg <b class=\"k\">8&nbsp;cm</b>, 1 km dauert 15 Minuten.</p><p>1. Echte Länge: 8&nbsp;cm&nbsp;·&nbsp;25&nbsp;000&nbsp;=&nbsp;200&nbsp;000&nbsp;cm = <b class=\"w\">2&nbsp;km</b><br>2. Zeit: 2 · 15 Minuten = <b>30 Minuten</b></p><p class=\"trick\"><b>Merke:</b> Erst die echte Länge in km, dann die Zeit pro km.</p>", "sum": "<p>Beispiel: Stadtplan 1&nbsp;:&nbsp;10&nbsp;000, Teile <b class=\"k\">2&nbsp;cm</b>, <b class=\"k\">3&nbsp;cm</b> und <b class=\"k\">1&nbsp;cm</b>.</p><p>1. Zusammenzählen: 2 + 3 + 1 = <b class=\"k\">6&nbsp;cm</b><br>2. Mal den Maßstab: 6&nbsp;cm&nbsp;·&nbsp;10&nbsp;000&nbsp;=&nbsp;60&nbsp;000&nbsp;cm = <b class=\"w\">600&nbsp;m</b></p><p class=\"trick\"><b>Merke:</b> Hin und zurück heißt: den Weg <b>zweimal</b> rechnen.</p>", "compare": "<p>Beispiel: Auf Karte A (1&nbsp;:&nbsp;25&nbsp;000) ist ein Weg <b class=\"k\">4&nbsp;cm</b>. Wie lang auf Karte B (1&nbsp;:&nbsp;50&nbsp;000)?</p><p>1. Echte Länge: 4&nbsp;·&nbsp;25&nbsp;000&nbsp;=&nbsp;100&nbsp;000&nbsp;cm<br>2. Auf Karte B: 100&nbsp;000&nbsp;:&nbsp;50&nbsp;000 = <b class=\"k\">2&nbsp;cm</b></p><p class=\"trick\"><b>Merke:</b> Immer über die echte Länge gehen: erst mal, dann geteilt.</p>", "mixed": "<p>Bei Angaben wie <b>3 km 500 m</b> machst du zuerst <b>eine</b> Einheit daraus.</p><p>3&nbsp;km&nbsp;500&nbsp;m&nbsp;=&nbsp;3&nbsp;500&nbsp;m&nbsp;=&nbsp;350&nbsp;000&nbsp;cm<br>Mit 1&nbsp;:&nbsp;50&nbsp;000: 350&nbsp;000&nbsp;:&nbsp;50&nbsp;000 = <b class=\"k\">7&nbsp;cm</b></p><p class=\"trick\"><b>Merke:</b> Erst alles in m, dann in cm, dann rechnen.</p>", "reason": "<p>Prüfe die Aussage wie ein Detektiv: Rechne selbst nach, bevor du antwortest.</p><p>Typische Fehler: <b>mal und geteilt vertauscht</b>, <b>Einheit vergessen</b> (cm statt m) oder gedacht, eine größere Zahl hinten bedeutet „größer gezeichnet“.</p><p>Beispiel: „Bei 1&nbsp;:&nbsp;1&nbsp;000 ist alles größer gezeichnet als bei 1&nbsp;:&nbsp;100.“ → <b>Stimmt nicht</b>, bei 1 : 100 ist alles größer.</p><p class=\"trick\"><b>Merke:</b> Bei Profi-Aufgaben lohnt es sich, kurz auf einem Zettel mitzurechnen.</p>"};
-  var TYPE_LABEL = { stelle: 'Stellenwerte', rund: 'Runden', add: 'Schriftlich addieren', sub: 'Schriftlich subtrahieren', mul: 'Multiplizieren', div: 'Dividieren', regel: 'Klammer & Punkt vor Strich', gesch: 'Geschickt rechnen', pic: 'Bild & Original vergleichen', ratio: 'Maßstab aus Bild und Original', tab: 'Bild ↔ Wirklichkeit (Einheiten)', model: 'Modelle', fit: 'Passt aufs Blatt?', concept: 'Verstehen', k2w: 'Karte → Wirklichkeit', w2k: 'Wirklichkeit → Karte', find: 'Maßstab finden', zoom: 'Vergrößerung', units: 'Einheiten umrechnen', bar: 'Profi: Maßstabsleiste', time: 'Profi: Wie lange?', sum: 'Profi: Wegstrecken', compare: 'Profi: Karten vergleichen', mixed: 'Profi: km und m', reason: 'Profi: Stimmt das?' };
+
+  MLESSON.kopf = '<p><b>Zerlegen:</b> 4 · 16 = 4 · 10 + 4 · 6 = 40 + 24 = <b>64</b><br><b>Vereinfachen:</b> 27 + 19 = 27 + 20 − 1 = <b>46</b> · 52 − 28 = 52 − 30 + 2 = <b>24</b><br>29 · 13 = 30 · 13 − 1 · 13 = 390 − 13 = <b>377</b><br><b>Geteilt zerlegen:</b> 91 : 7 = 70 : 7 + 21 : 7 = 10 + 3 = <b>13</b></p><p class="trick"><b>Merke:</b> Was du zu viel addiert hast, ziehst du wieder ab. Was du zu viel abgezogen hast, addierst du wieder.</p>';
+  MLESSON.platz = '<p>Mit der <b>Umkehraufgabe</b> findest du die Zahl im Kästchen:</p><p>63 − ■ = 13 → 13 + ■ = 63 → ■ = <b>50</b><br>■ − 8 = 18 → 18 + 8 = <b>26</b><br>7 · ■ = 63 → 63 : 7 = <b>9</b><br>■ : 6 = 12 → 12 · 6 = <b>72</b></p><p class="trick"><b>Merke:</b> + und − machen sich gegenseitig rückgängig, genauso · und :.</p>';
+  MLESSON.wort = '<table><tr><th>bedeutet „plus“</th><th>bedeutet „minus“</th></tr><tr><td>addieren, hinzufügen, vermehren, Summe bilden</td><td>subtrahieren, abziehen, vermindern, wegnehmen, Differenz bilden</td></tr><tr><th>bedeutet „mal“</th><th>bedeutet „geteilt“</th></tr><tr><td>multiplizieren, Produkt</td><td>dividieren, Quotient</td></tr></table><p class="trick"><b>Beispiel:</b> Vermindere 96 um 56 → 96 − 56 = 40.</p>';
+  MLESSON.begriff = '<p>8 + 7 = 15: <b>Summand</b> plus <b>Summand</b>, 8 + 7 ist eine <b>Summe</b>.<br>15 − 7 = 8: <b>Minuend</b> minus <b>Subtrahend</b>, 15 − 7 ist eine <b>Differenz</b>.<br>4 · 12 = 48: <b>Faktor</b> mal <b>Faktor</b>, 4 · 12 ist ein <b>Produkt</b>.<br>48 : 12 = 4: <b>Dividend</b> durch <b>Divisor</b>, 48 : 12 ist ein <b>Quotient</b>.</p><p class="trick"><b>Null:</b> Mal null ergibt null. Durch null geht nicht. 0 : 3 = 0.</p>';
+  MLESSON.probe = '<p>Mit der Probe prüfst du dein Ergebnis mit der Umkehraufgabe:</p><p>181 − 79 = 102 → Probe: 102 + 79 = <b>181</b> ✓<br>104 : 8 = 13 → Probe: 13 · 8 = <b>104</b> ✓</p><p class="trick"><b>Merke:</b> Kommt bei der Probe die Ausgangszahl heraus, hast du richtig gerechnet.</p>';
+  MLESSON.zeichen = '<p>Probiere die vier Rechenzeichen der Reihe nach aus:</p><p>49 ■ 7 = 7 → 49 + 7 = 56, 49 − 7 = 42, 49 · 7 = 343, <b>49 : 7 = 7</b> ✓</p><p class="trick"><b>Tipp:</b> Ist das Ergebnis viel größer → wahrscheinlich ·. Viel kleiner → wahrscheinlich :.</p>';
+  MLESSON.schlange = '<p><b>Rechenschlange rückwärts:</b> ■ → + 3 → · 2 → − 7 → 11<br>Von hinten: 11 + 7 = 18, 18 : 2 = 9, 9 − 3 = <b>6</b></p><p><b>Additionsmauer:</b> Unten 2 | 3 | 4 → Mitte 5 | 7 → oben <b>12</b></p><p class="trick"><b>Merke:</b> Rückwärts immer die Umkehraufgabe nehmen.</p>';
+  MLESSON.sach = '<p>1. Was ist <b>gegeben</b>? 2. Was ist <b>gefragt</b>? 3. <b>Rechnung</b> aufschreiben. 4. <b>Antwortsatz</b>.</p><p>31 Personen, 8 pro Boot: 31 : 8 = 3 Rest 7 → für die 7 braucht man noch ein Boot → <b>4 Boote</b>.</p><p class="trick"><b>Merke:</b> Bei Booten, Bussen, Tischen musst du bei einem Rest aufrunden.</p>';
+  MLESSON.zahlwort = '<p>25 407 = <b>fünfundzwanzigtausendvierhundertsieben</b><br>201 500 = <b>zweihunderteintausendfünfhundert</b></p><p>Verdoppeln: 25 → 50 → 100 → 200 → 400<br>Halbieren: 1 600 → 800 → 400 → 200 → 100</p><p class="trick"><b>Merke:</b> Bis eine Million schreibt man das Zahlwort zusammen. Ab Million kommt ein Leerzeichen: zwei Millionen.</p>';
+  var TYPE_LABEL = { kopf: 'Kopfrechnen', platz: 'Kästchen-Aufgaben', wort: 'Rechnen mit Worten', begriff: 'Fachbegriffe & Null', probe: 'Probe', zeichen: 'Rechenzeichen einsetzen', schlange: 'Rechenschlange & Mauer', sach: 'Sachaufgaben', zahlwort: 'Zahlwörter & Zählen', stelle: 'Stellenwerte', rund: 'Runden', add: 'Schriftlich addieren', sub: 'Schriftlich subtrahieren', mul: 'Multiplizieren', div: 'Dividieren', regel: 'Klammer & Punkt vor Strich', gesch: 'Geschickt rechnen', pic: 'Bild & Original vergleichen', ratio: 'Maßstab aus Bild und Original', tab: 'Bild ↔ Wirklichkeit (Einheiten)', model: 'Modelle', fit: 'Passt aufs Blatt?', concept: 'Verstehen', k2w: 'Karte → Wirklichkeit', w2k: 'Wirklichkeit → Karte', find: 'Maßstab finden', zoom: 'Vergrößerung', units: 'Einheiten umrechnen', bar: 'Profi: Maßstabsleiste', time: 'Profi: Wie lange?', sum: 'Profi: Wegstrecken', compare: 'Profi: Karten vergleichen', mixed: 'Profi: km und m', reason: 'Profi: Stimmt das?' };
   var PRAISE = ['Super!', 'Richtig!', 'Klasse!', 'Genau!', 'Stark gemacht!', 'Prima!'];
   var state = null;
 
@@ -2178,7 +2345,7 @@ window.LU5 = (function () {
       : 'Dranbleiben! Schau dir die Tipps an und probier es gleich nochmal.';
     if (second > 0) msg += ' ' + second + (second === 1 ? ' Aufgabe hast du' : ' Aufgaben hast du') + ' mit Tipp geschafft.';
     var weakNow = weakLabels();
-    if (weakNow.length && (state.topic === 'mix' || state.topic === 'profi' || state.topic === 'heft' || state.topic === 'nat' || state.topic === 'mka')) msg += ' Nächstes Mal üben wir extra: ' + weakNow.slice(0, 3).join(', ') + '.';
+    if (weakNow.length && (state.topic === 'mix' || state.topic === 'profi' || state.topic === 'heft' || state.topic === 'nat' || state.topic === 'natplus' || state.topic === 'mka')) msg += ' Nächstes Mal üben wir extra: ' + weakNow.slice(0, 3).join(', ') + '.';
     el.endMsg.textContent = msg;
     var records = store('massstab-rekorde') || {};
     var best = records[state.topic];
@@ -2374,7 +2541,7 @@ window.LU5 = (function () {
 
   function shortLabel(t) { return TYPE_LABEL[t].replace(/^Profi: /, ''); }
   var BASIC = ['concept', 'k2w', 'w2k', 'find', 'zoom', 'units', 'pic', 'ratio', 'tab'];
-  var NAT = ['stelle', 'rund', 'add', 'sub', 'mul', 'div', 'regel', 'gesch'];
+  var NAT = ['kopf', 'platz', 'wort', 'begriff', 'probe', 'zeichen', 'schlange', 'sach', 'zahlwort', 'stelle', 'rund', 'add', 'sub', 'mul', 'div', 'regel', 'gesch'];
   var PRO = ['bar', 'mixed', 'compare', 'time', 'sum', 'reason', 'model', 'fit'];
   var PILL = { good: 'kann ich schon', mid: 'fast sicher', weak: 'üben wir noch', 'new': 'noch wenig geübt' };
   function weakLabels() {
