@@ -770,6 +770,43 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
 .vopt .voc-bar { height: 10px; }
 .voc-grade { margin: 0; display: flex; flex-direction: column; align-items: center; font-family: var(--font-display); font-weight: 600; font-size: 1.1rem; }
 .voc-grade span { font-size: 3.4rem; line-height: 1; width: 88px; height: 88px; display: grid; place-items: center; border: 3px solid var(--line); border-radius: 50%; background: var(--tip-fill); box-shadow: 3px 3px 0 var(--shadow); margin-bottom: 6px; }
+/* ===== Deutsch: Rechtschreib-Detektiv ===== */
+.subj.deu .subj-top { background: #FFF1C9; }
+.subj.deu .subj-go { background: #E8A317; color: #1F2A44; box-shadow: 0 4px 0 #B97F0B; }
+.subj.deu .subj-top svg, .top .de-bee { width: 52px; height: 52px; flex-shrink: 0; }
+.de-topics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+@media (max-width: 340px) { .de-topics { grid-template-columns: 1fr; } }
+#deHome .btn, #deEnd .btn { flex: none; }
+.de-topic { padding: 10px 12px; }
+.de-topic { all: unset; box-sizing: border-box; cursor: pointer; display: flex; flex-direction: column; gap: 4px; padding: 12px 14px; border: 2px solid var(--edge, var(--line)); border-radius: 16px; background: var(--surface); color: var(--ink); box-shadow: 0 3px 0 var(--edge, var(--line)); }
+.de-topic:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+.de-topic:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--edge, var(--line)); }
+.de-tn { font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; line-height: 1.2; }
+.de-tp { font-size: 0.85rem; color: var(--ink-soft); }
+.de-l { align-self: flex-start; font-size: 0.78rem; font-weight: 700; padding: 2px 10px; border-radius: 999px; background: var(--line); color: var(--ink); }
+.de-l.good { background: var(--good); color: #fff; } .de-l.ok { background: var(--good-fill); color: var(--ink); } .de-l.weak { background: #FFE0CC; color: #7A3410; }
+.de-info { margin: 0; font-size: 0.95rem; color: var(--ink-soft); }
+.de-q { margin: 0; font-size: 1.08rem; line-height: 1.4; }
+.de-big { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: 2.2rem; line-height: 1.2; text-align: center; letter-spacing: 0.02em; overflow-wrap: anywhere; }
+.de-sent { margin: 0; font-size: 1.35rem; line-height: 1.5; font-weight: 600; }
+.de-gap { display: inline-block; min-width: 1.4em; padding: 0 4px; border-bottom: 4px solid #E8A317; color: #B97F0B; text-align: center; }
+.de-gap.filled { color: var(--good); border-color: var(--good); }
+.de-opts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.de-opts.three { grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); }
+.de-opts .opt { text-align: center; font-size: 1.35rem; font-weight: 700; }
+.de-tapline { margin: 0; font-size: 1.3rem; line-height: 2.3; }
+.de-w { font: inherit; font-weight: 600; padding: 2px 8px; border: 2px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--ink); cursor: pointer; }
+.de-w.bad { border-color: #E0794F; background: #FFE6DA; text-decoration: line-through; }
+.de-w.ok { border-color: var(--good); background: var(--good-fill); }
+.de-punct { margin-left: -6px; }
+.de-dikt { display: flex; justify-content: center; min-height: 64px; align-items: center; }
+.de-hidden { font-size: 1rem; color: var(--ink-soft); font-weight: 500; }
+.de-rule { padding: 12px 14px; border-radius: 16px; background: #FFF6DC; line-height: 1.5; font-size: 0.98rem; }
+:root[data-theme="dark"] .de-rule { background: #3A3218; }
+.de-rt { font-family: var(--font-display); font-size: 1.05rem; }
+.de-quit { margin-left: auto; }
+#deEnd { align-items: center; text-align: center; }
+#deRulesBody { display: flex; flex-direction: column; gap: 10px; }
 </style>
 
 <div class="app view-wrap" id="homeView">
@@ -780,7 +817,7 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
       <label for="nameIn">Wie heißt du? Dann begrüßt dich die App mit deinem Namen.</label>
       <div class="name-row"><input id="nameIn" maxlength="20" autocomplete="off" placeholder="Dein Vorname"><button type="submit" class="btn small">Los geht's</button></div>
     </form>
-    <p class="sub">Jeden Tag 15 bis 20 Minuten Mathe und 15 bis 20 Minuten Englisch. Die Uhr läuft nur, während du übst.</p>
+    <p class="sub">Jeden Tag 15 bis 20 Minuten Mathe und 15 bis 20 Minuten Englisch, Deutsch zwischendurch. Die Uhr läuft nur, während du übst.</p>
   </header>
 
   <section class="ka-wrap" aria-label="Countdown Klassenarbeiten">
@@ -827,6 +864,14 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
       <span class="goalbar voc-bar" id="vocTileBar"><i></i></span>
       <span class="subj-status"><b id="vocTileNum">0 grün</b><span id="vocTileState"></span></span>
       <span class="subj-go">Vokabel-Check starten</span>
+    </button>
+    <button type="button" class="subj deu" data-go="de" id="deTile">
+      <span class="subj-top">
+        <svg viewBox="0 0 64 64" aria-hidden="true"><ellipse cx="22" cy="20" rx="11" ry="8" fill="#DFF1FF" stroke="#1F2A44" stroke-width="2.5" transform="rotate(-25 22 20)"/><ellipse cx="40" cy="18" rx="11" ry="8" fill="#DFF1FF" stroke="#1F2A44" stroke-width="2.5" transform="rotate(20 40 18)"/><ellipse cx="32" cy="38" rx="20" ry="16" fill="#FFC928" stroke="#1F2A44" stroke-width="2.5"/><path d="M26 23.5 Q24 38 26 53 M36 23 Q38 38 36 53.5" stroke="#1F2A44" stroke-width="5" fill="none"/><circle cx="45" cy="35" r="2.6" fill="#1F2A44"/><path d="M42 43 Q46 46 49 42" stroke="#1F2A44" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M48 25 Q52 18 56 17 M44 24 Q46 16 50 14" stroke="#1F2A44" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+        <span><span class="subj-name">Deutsch</span><br><span class="subj-what">Rechtschreibung: kurze und lange Vokale</span></span>
+      </span>
+      <span class="subj-status"><b id="deMin">0 Min</b><span id="deTileState"></span></span>
+      <span class="subj-go">Deutsch üben</span>
     </button>
     <button type="button" class="subj print" data-go="print" id="printTile">
       <span class="subj-top">
@@ -886,7 +931,7 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
         <div class="voice-row"><button type="button" class="btn small" id="stufeReset">Alle auf „Normal“ setzen</button></div>
       </div>
       <p class="lv-legend">Gezählt wird nur aktive Zeit: Die Uhr hält an, wenn eine Minute lang nichts angetippt wird oder die App im Hintergrund ist.</p>
-      <div style="overflow-x:auto"><table id="logTable"><thead><tr><th>Tag</th><th>Mathe</th><th>Englisch</th></tr></thead><tbody></tbody></table></div>
+      <div style="overflow-x:auto"><table id="logTable"><thead><tr><th>Tag</th><th>Mathe</th><th>Englisch</th><th>Deutsch</th></tr></thead><tbody></tbody></table></div>
     </div>
   </details>
   <p class="note">Alles wird nur auf diesem Gerät gespeichert.</p>
@@ -986,6 +1031,32 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
   <section class="card voc-card" id="vocRun" aria-live="polite" hidden></section>
   <section class="card end" id="vocEnd" hidden></section>
   <p class="note">Tipp: Schreib jedes Wort, das du mit Hilfe gelernt hast, einmal zusätzlich ins Heft.</p>
+</div>
+
+<div class="app view-wrap" id="deView" hidden>
+  <div class="backbar"><button type="button" class="btn small" data-go="home">← Start</button><span class="timepill" id="deTime"></span></div>
+  <header class="top">
+    <svg class="de-bee" viewBox="0 0 64 64" aria-hidden="true"><ellipse cx="22" cy="20" rx="11" ry="8" fill="#DFF1FF" stroke="#1F2A44" stroke-width="2.5" transform="rotate(-25 22 20)"/><ellipse cx="40" cy="18" rx="11" ry="8" fill="#DFF1FF" stroke="#1F2A44" stroke-width="2.5" transform="rotate(20 40 18)"/><ellipse cx="32" cy="38" rx="20" ry="16" fill="#FFC928" stroke="#1F2A44" stroke-width="2.5"/><path d="M26 23.5 Q24 38 26 53 M36 23 Q38 38 36 53.5" stroke="#1F2A44" stroke-width="5" fill="none"/><circle cx="45" cy="35" r="2.6" fill="#1F2A44"/><path d="M42 43 Q46 46 49 42" stroke="#1F2A44" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M48 25 Q52 18 56 17 M44 24 Q46 16 50 14" stroke="#1F2A44" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+    <div class="brand">
+      <h1>Rechtschreib-Detektiv</h1>
+      <p>Deutsch · kurze und lange Vokale · Buch S. 352–371</p>
+    </div>
+  </header>
+  <section class="card voc-card" id="deHome">
+    <p class="voc-eyebrow">Was möchtest du üben?</p>
+    <div class="de-topics" id="deTopics"></div>
+    <button type="button" class="btn primary" id="deMix">Gemischte Runde (10 Aufgaben)</button>
+    <button type="button" class="btn" id="deTest">Rechtschreib-Test mit Note (20 Aufgaben)</button>
+    <p class="de-info" id="deInfo"></p>
+    <p class="voc-how">Die Regel kannst du jederzeit ansehen, das zählt nicht als Fehler. Falsche Wörter kommen in der Runde gleich nochmal und beim nächsten Mal wieder. <b>Sicher</b> wird ein Thema, wenn du es mehrmals fast fehlerfrei schaffst.</p>
+  </section>
+  <details class="levels" id="deRules">
+    <summary><span class="lv-title">Merkzettel: alle Regeln</span><span class="lv-sum">zum Nachlesen</span></summary>
+    <div class="lv-body" id="deRulesBody"></div>
+  </details>
+  <section class="card voc-card" id="deRun" aria-live="polite" hidden></section>
+  <section class="card voc-card" id="deEnd" hidden></section>
+  <p class="note">Tipp: Schreib schwierige Wörter mit Silbenbögen ins Heft und markiere den kurzen Vokal mit einem Punkt, den langen mit einem Strich.</p>
 </div>
 
 <div class="app view-wrap" id="printView" hidden>
@@ -2788,7 +2859,7 @@ window.LU5 = (function () {
     if (!logCache[k]) logCache[k] = { math: 0, en: 0 };
     logCache[k][subj] = (logCache[k][subj] || 0) + 1;
     var goal = settings().goal * 60, v = logCache[k][subj];
-    if (v === goal) toast(subj === 'math' ? 'Mathe-Ziel geschafft! Super' + kidName(', ') + '!' : 'Englisch-Ziel geschafft! Well done' + kidName(', ') + '!');
+    if (v === goal) toast(subj === 'math' ? 'Mathe-Ziel geschafft! Super' + kidName(', ') + '!' : subj === 'de' ? 'Deutsch: ' + settings().goal + ' Minuten geschafft! Klasse' + kidName(', ') + '!' : 'Englisch-Ziel geschafft! Well done' + kidName(', ') + '!');
     if (v === 20 * 60 && goal < 1200) toast('20 Minuten! Du darfst jetzt aufhören.');
     if (++dirty >= 5) { flushLog(); }
     renderTimePills();
@@ -2816,7 +2887,7 @@ window.LU5 = (function () {
   function minText(s) { return Math.floor(s / 60) + ' Min'; }
   function renderTimePills() {
     var k = dayKey(), goal = settings().goal;
-    [['math', 'mathTime'], ['en', 'enTime'], ['en', 'vocTime']].forEach(function (p) {
+    [['math', 'mathTime'], ['en', 'enTime'], ['en', 'vocTime'], ['de', 'deTime']].forEach(function (p) {
       var el = $(p[1]); if (!el) return;
       var s = (logCache[k] && logCache[k][p[0]]) || 0;
       el.innerHTML = CLOCK + '<span>' + Math.floor(s / 60) + ' / ' + goal + ' Min heute</span>';
@@ -2881,10 +2952,12 @@ window.LU5 = (function () {
     var rows = '';
     for (var n = 0; n < 14; n++) {
       var d3 = new Date(now.getFullYear(), now.getMonth(), now.getDate() - n), k3 = dayKey(d3);
-      rows += '<tr><td>' + WD[d3.getDay()] + ', ' + d3.getDate() + '.' + (d3.getMonth() + 1) + '.</td><td>' + minText(secs(k3, 'math')) + '</td><td>' + minText(secs(k3, 'en')) + '</td></tr>';
+      rows += '<tr><td>' + WD[d3.getDay()] + ', ' + d3.getDate() + '.' + (d3.getMonth() + 1) + '.</td><td>' + minText(secs(k3, 'math')) + '</td><td>' + minText(secs(k3, 'en')) + '</td><td>' + minText(secs(k3, 'de')) + '</td></tr>';
     }
     $('logTable').querySelector('tbody').innerHTML = rows;
     if (window.LU5Voc) window.LU5Voc.home();
+    if ($('deMin')) $('deMin').textContent = minText(secs(k, 'de')) + ' heute';
+    if (window.LU5De) window.LU5De.home();
   }
   $('mkaDate').addEventListener('change', function () { var s = settings(); s.mkaDate = this.value || null; store(SET_KEY, s); renderHome(); });
   $('kaDate').addEventListener('change', function () { var s = settings(); s.kaDate = this.value || null; store(SET_KEY, s); renderHome(); });
@@ -2898,6 +2971,8 @@ window.LU5 = (function () {
     $('enView').hidden = v !== 'en';
     $('vocView').hidden = v !== 'voc';
     $('printView').hidden = v !== 'print';
+    $('deView').hidden = v !== 'de';
+    if (v === 'de' && window.LU5De) window.LU5De.open();
     if (v === 'home') renderHome();
     if (v === 'voc' && window.LU5Voc) window.LU5Voc.open();
     if (v === 'en') { if (!enState) enStart(); renderEn(); }
@@ -4777,6 +4852,343 @@ window.LU5 = (function () {
     msg('Übernommen! Die App lädt neu …');
     setTimeout(function () { location.reload(); }, 900);
   };
+})();
+</script>
+
+<script>
+/* ================= Deutsch: Rechtschreib-Detektiv (Buch S. 352–371: kurze und lange Vokale) ================= */
+(function () {
+  function $(id) { return document.getElementById(id); }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function shuffle(a) { a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)), t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function pick(a) { return a[Math.floor(Math.random() * a.length)]; }
+  function rnd(n) { return Math.floor(Math.random() * n); }
+  function kidName(pre) { try { var n = JSON.parse(localStorage.getItem('lern-name')); n = n ? String(n).trim() : ''; return n ? (pre || '') + n : ''; } catch (e) { return ''; } }
+
+  /* ---------- Wortlisten (Gap-Schreibweise: {richtig|falsch|falsch}) ---------- */
+  var KL = ['Imker|k', 'Mutter|k', 'Platz|k', 'Zelle|k', 'Puppe|k', 'sammeln|k', 'Futter|k', 'Deckel|k', 'Rand|k', 'Wald|k', 'Katze|k', 'Sonne|k', 'Ball|k', 'Stock|k', 'Herz|k', 'Winter|k', 'Lampe|k', 'Brille|k', 'Teller|k', 'Himmel|k', 'Hund|k', 'Blitz|k', 'Wolke|k', 'Kamm|k',
+    'Biene|l', 'Wabe|l', 'Blüte|l', 'legen|l', 'Hose|l', 'Nase|l', 'Tiger|l', 'Bahn|l', 'Boot|l', 'Schule|l', 'Rabe|l', 'Tafel|l', 'Igel|l', 'Honig|l', 'Kuh|l', 'Wiese|l', 'Tee|l', 'Blume|l', 'Hase|l', 'Zahn|l', 'Moos|l', 'Brot|l', 'Ofen|l', 'kneten|l', 'Name|l'];
+  var DK = ['Ze{ll|l}e', 'Mu{tt|t}er', 'Pu{pp|p}e', 'sa{mm|m}eln', 'Fu{tt|t}er', 'Ka{mm|m}', 'Bu{tt|t}er', 'So{nn|n}e', 'Pfa{nn|n}e', 'Ta{nn|n}e', 'wi{pp|p}en', 'ro{ll|l}en', 'su{mm|m}en', 'So{mm|m}er', 'zusa{mm|m}en', 'Wa{ss|s}er',
+    'schne{ll|l}', 'vo{ll|l}', 'Bri{ll|l}e', 'Te{ll|l}er', 'Hi{mm|m}el', 'bru{mm|m}en', 're{nn|n}en', 'Su{pp|p}e', 'Tre{pp|p}e', 'Be{tt|t}', 'Bla{tt|t}', 'Ke{tt|t}e', 'Schi{ff|f}', 'Ko{ff|f}er', 'A{ff|f}e', 'Lö{ff|f}el', 'Mi{tt|t}e', 'Ra{tt|t}e', 'Hü{tt|t}e', 'Ke{ll|l}er', 'Fe{ll|l}', 'Sta{ll|l}', 'ste{ll|l}en', 'fa{ll|l}en', 'ke{nn|n}en', 'ko{mm|m}en', 'schwi{mm|m}en',
+    'Ta{f|ff}el', 'Ga{b|bb}el', 'Nu{d|dd}el', 'O{f|ff}en', 'Kro{n|nn}e', 'Toma{t|tt}e', 'Schu{l|ll}e', 'Blu{m|mm}e', 'I{g|gg}el', 'Na{m|mm}e', 'Ka{m|mm}el', 'ma{l|ll}en', 'ho{l|ll}en', 'Ra{b|bb}e', 'Wa{b|bb}e', 'Ho{n|nn}ig', 'le{g|gg}en', 'Ti{g|gg}er', 'Kä{f|ff}er'];
+  var CKZ = ['Bä{ck|k}er', 'Stü{ck|k}', 'pa{ck|k}en', 'Schne{ck|k}e', 'De{ck|k}e', 'E{ck|k}e', 'Da{ck|k}el', 'Schmu{ck|k}', 'Glo{ck|k}e', 'So{ck|k}e', 'Zu{ck|k}er', 'Rü{ck|k}en', 'Brü{ck|k}e', 'Ja{ck|k}e', 'Sa{ck|k}', 'di{ck|k}', 'Bli{ck|k}', 'we{ck|k}en', 'Sto{ck|k}', 'De{ck|k}el', 'schme{ck|k}en', 'schlu{ck|k}en', 'Mü{ck|k}e', 'He{ck|k}e', 'me{ck|k}ern', 'wa{ck|k}eln', 'le{ck|k}er',
+    'Ka{tz|z}e', 'Hi{tz|z}e', 'Ta{tz|z}e', 'si{tz|z}en', 'Bli{tz|z}', 'Spa{tz|z}', 'se{tz|z}en', 'Wi{tz|z}', 'Pla{tz|z}', 'Schmu{tz|z}', 'Schu{tz|z}', 'Ne{tz|z}', 'Mü{tz|z}e', 'Pfü{tz|z}e', 'Sa{tz|z}', 'Spi{tz|z}e', 'kra{tz|z}en', 'pu{tz|z}en', 'schwi{tz|z}en', 'je{tz|z}t', 'plö{tz|z}lich', 'Me{tz|z}ger',
+    'Fal{k|ck}e', 'Im{k|ck}er', 'Par{k|ck}', 'den{k|ck}en', 'tan{k|ck}en', 'blin{k|ck}en', 'Ban{k|ck}', 'Schran{k|ck}', 'Win{k|ck}el', 'win{k|ck}en', 'Bal{k|ck}en', 'star{k|ck}', 'Mar{k|ck}t', 'kran{k|ck}', 'schlan{k|ck}',
+    'Her{z|tz}', 'Tan{z|tz}', 'kur{z|tz}', 'Wan{z|tz}e', 'gan{z|tz}', 'stür{z|tz}en', 'Hol{z|tz}', 'Ker{z|tz}e', 'Pil{z|tz}', 'Schmer{z|tz}', 'Mär{z|tz}', 'Ar{z|tz}t', 'zwan{z|tz}ig', 'stol{z|tz}', 'Pflan{z|tz}e',
+    'Hei{z|tz}ung', 'Kreu{z|tz}', 'Wei{z|tz}en', 'Schnau{z|tz}e', 'Kau{z|tz}', 'Bre{z|tz}el', 'Ra{k|ck}ete', 'E{k|ck}el', 'Po{k|ck}al', 'Musi{k|ck}', 'Fabri{k|ck}', 'Kü{k|ck}en'];
+  var VK = ['Wi{n|nn}ter', 'La{m|mm}pe', 'hi{n|nn}ten', 'Wo{l|ll}ke', 'Tu{l|ll}pe', 'O{r|rr}t', 'La{n|nn}d', 'He{r|rr}bst', 'Mi{l|ll}ch', 'Ki{n|nn}d', 'fo{l|ll}gen', 'wa{n|nn}dern', 'Fe{l|ll}sen', 'bu{n|nn}t', 'a{l|ll}t', 'Elefa{n|nn}t', 'fi{n|nn}den', 'gesu{n|nn}d', 'hu{n|nn}dert', 'hü{p|pp}fen',
+    'Wa{l|ll}d', 'Hu{n|nn}d', 'Ma{n|nn}tel', 'sche{n|nn}ken', 'Ko{p|pp}f', 'He{m|mm}d', 'Ga{r|rr}ten', 'Ke{ll|l}er', 'Su{pp|p}e', 'So{nn|n}e', 'Schi{ff|f}', 'Ra{n|nn}d', 'Fe{l|ll}d', 'Ta{n|nn}te', 'Schra{n|nn}k', 'wa{r|rr}m'];
+  var H = ['B{ah|a|aa}n', 'Z{ah|a|aa}n', 'H{uh|u}n', 'H{ah|a|aa}n', '{Uh|U}r', 'K{uh|u}', 'R{eh|e|ee}', 'K{oh|o|oo}l', 'St{uh|u}l', 'F{ah|a|aa}ne', 'Z{ah|a|aa}l', 'w{oh|o|oo}nen', 'f{ah|a|aa}ren', 'L{eh|e|ee}rer', 'f{üh|ü}len', 'S{ah|a|aa}ne', 'J{ah|a|aa}r', 'Gef{ah|a|aa}r', 'Gef{üh|ü}l', 'F{eh|e|ee}ler', 'R{uh|u}e', '{Oh|O|Oo}r', 'n{eh|e|ee}men', 'z{eh|e|ee}n', 'H{öh|ö}le', 'M{üh|ü}le', 'B{oh|o|oo}ne', 'S{oh|o|oo}n', 'Str{oh|o|oo}', 'w{äh|ä}len', 'z{äh|ä}len', 'W{oh|o|oo}nung', 'Z{eh|e|ee}',
+    'D{o|oh|oo}se', 'H{o|oh|oo}se', 'R{o|oh|oo}se', 'N{a|ah|aa}se', 'H{a|ah|aa}se', 'N{o|oh|oo}t', 'r{o|oh|oo}t', 'H{o|oh|oo}nig', 'Bl{u|uh}me', 'Sch{u|uh}le', 'T{a|ah|aa}fel', 'G{a|ah|aa}bel', 'N{u|uh}del', '{O|Oh|Oo}fen', 'Kr{o|oh|oo}ne', 'Br{o|oh|oo}t', 'T{a|ah|aa}g', 'Z{u|uh}g', 'M{u|uh}t', 'N{a|ah|aa}me', 'R{e|eh|ee}gen', 'l{e|eh|ee}sen', 'B{e|eh|ee}sen', 'Kam{e|eh|ee}l', 'Pl{a|ah|aa}n'];
+  var AEO = ['B{oo|o|oh}t', 'M{oo|o|oh}s', 'Z{oo|o|oh}', 'H{aa|a|ah}r', 'P{aa|a|ah}r', 'S{aa|a|ah}l', 'St{aa|a|ah}t', 'W{aa|a|ah}ge', '{Aa|A|Ah}l', 'S{aa|a|ah}t', 'T{ee|e|eh}', 'S{ee|e|eh}', 'Schn{ee|e|eh}', 'Kl{ee|e|eh}', 'B{ee|e|eh}re', 'F{ee|e|eh}', 'Id{ee|e|eh}', 'T{ee|e|eh}r', 'Sp{ee|e|eh}r', 'All{ee|e|eh}', 'Kaff{ee|e|eh}', 'S{ee|e|eh}le', 'B{ee|e|eh}t', 'Arm{ee|e|eh}',
+    'H{ä|ää}rchen', 'B{ö|öö}tchen', 'P{ä|ää}rchen', 'S{ä|ää}le'];
+  var PAAR = ['Ich kaufe ein ___ Äpfel auf dem Markt.|paar', 'Lena und Tim sind seit Kurzem ein ___.|Paar', 'In ein ___ Minuten ist die Stunde vorbei.|paar', 'Ich brauche ein neues ___ Turnschuhe.|Paar', 'Wir warten noch ein ___ Tage.|paar', 'Das ___ Socken liegt auf dem Bett.|Paar', 'Nur ein ___ Kinder sind heute krank.|paar', 'Die zwei Schwäne sind ein ___.|Paar'];
+  var IE = ['W{ie|i|ih}se', 'R{ie|i|ih}se', 'B{ie|i|ih}ne', 'Fl{ie|i|ih}ge', 'Sp{ie|i|ih}gel', 'Br{ie|i|ih}f', 't{ie|i|ih}f', 'l{ie|i|ih}b', 'Z{ie|i|ih}l', 'T{ie|i|ih}r', 'v{ie|i|ih}r', 'Pap{ie|i|ih}r', 'Kn{ie|i|ih}', 'n{ie|i|ih}', 'D{ie|i|ih}b', 's{ie|i|ih}ben', 'Z{ie|i|ih}ge', 'St{ie|i|ih}fel', 'Sch{ie|i|ih}ne', 'R{ie|i|ih}gel', 'fr{ie|i|ih}ren', 'fl{ie|i|ih}gen', 'sch{ie|i|ih}f', 'M{ie|i|ih}te', 'Fr{ie|i|ih}den', 'S{ie|i|ih}b', 'D{ie|i|ih}nstag', 'n{ie|i|ih}sen', 'r{ie|i|ih}chen',
+    'T{i|ie|ih}ger', 'K{i|ie|ih}no', 'B{i|ie|ih}bel', 'Masch{i|ie|ih}ne', 'Benz{i|ie|ih}n', 'Margar{i|ie|ih}ne', 'Kl{i|ie|ih}ma', 'Term{i|ie|ih}n', 'Rub{i|ie|ih}n', 'Kus{i|ie|ih}ne', 'Apfels{i|ie|ih}ne', 'm{i|ie|ih}r', 'd{i|ie|ih}r', 'w{i|ie|ih}r', '{I|Ie|Ih}gel', 'Krokod{i|ie|ih}l'];
+  var IH = ['Ich gebe ___ das Buch. (dem Jungen)|ihm|im|iem', 'Wir besuchen ___ morgen. (den Opa)|ihn|in|ien', 'Lisa, ist das ___ Fahrrad?|ihr|ir|ier', 'Ich schreibe ___ einen Brief. (den Kindern)|ihnen|inen|ienen', 'Die Kinder holen ___ Hund ab.|ihren|iren|ieren', 'Der Hund liegt ___ Garten.|im|ihm|iem', 'Ich sehe ___ jeden Tag. (den Spatz)|ihn|in|ien', 'Das Buch liegt ___ Regal.|im|ihm|iem', 'Andreas schenkt ___ ein Buch. (Lisa)|ihr|ir|ier', 'Jonas besucht ___ im Krankenhaus. (Simon)|ihn|in|ien'];
+  var SATZ = ['Der Imker hebt den [Deckel|Dekel] vom Kasten.', 'Im Sommer [summen|sumen] die Bienen im Garten.', 'Die Königin [sitzt|sizt] in der Mitte.', 'Die Bienen [sammeln|sameln] den Pollen.', 'Im Winter bleiben die Bienen im [Stock|Stok].', 'Der Honig schmeckt [lecker|leker].', 'Die Katze liegt in der [Sonne|Sone].', 'Ein [Spatz|Spaz] sitzt auf dem Dach.', 'Der Bäcker [backt|bakt] frische Brötchen.', 'Im [Park|Parck] steht eine Bank.', 'Mein Herz klopft [ganz|gantz] schnell.', 'Der Falke fliegt über den [Wald|Walld].', 'Das Kind trinkt eine Tasse [Tee|Te].', 'Wir fahren mit dem [Boot|Bot] über den See.', 'Auf der [Wiese|Wise] wachsen Blumen.', 'Der [Tiger|Tieger] schleicht durch das Gras.', 'Ich gebe [ihm|im] das Buch.', 'Der Zug fährt auf der [Bahn|Ban].', 'Das [Huhn|Hun] legt ein Ei.', 'Der Lehrer [zählt|zält] die Hefte.', 'Im Winter fällt viel [Schnee|Schne].', 'Sieben [Riesen|Risen] niesen laut.', 'Ich habe ein [paar|Paar] Äpfel gekauft.', 'Lena trägt ein neues [Paar|paar] Schuhe.', 'Der Hase hat lange [Ohren|Oren].', 'Die Ziege frisst [Moos|Mos] und Gras.', 'Das Nashorn [wühlt|wült] im Schlamm.', 'Die Kinder [rennen|renen] über den Hof.', 'Am Morgen ist der [Himmel|Himel] blau.', 'Die Bienen [fliegen|fligen] zum Stock zurück.', 'Vier [Spatzen|Spazen] sitzen auf dem Zaun.', 'Die Schnecke kriecht über das [Blatt|Blat].', 'Der Imker [stellt|stelt] die Kästen auf.', 'Der [Imker|Immker] trägt einen Hut.', 'Im [Winter|Wintter] ist es kalt.', 'Der Zug hält am [Bahnhof|Banhof].', 'Der Arzt hilft dem [kranken|krancken] Kind.', 'Mein Bruder isst gern [Kuchen|Kuhchen].'];
+  var FORM = ['stellen → er …|stellt', 'rollen → es …|rollt', 'brummen → der Bär …|brummt', 'summen → die Biene …|summt', 'sammeln → sie …|sammelt', 'rennen → er …|rennt', 'fallen → es …|fällt', 'kennen → sie …|kennt', 'schwimmen → er …|schwimmt', 'kommen → sie …|kommt', 'packen → er …|packt', 'sitzen → sie …|sitzt', 'putzen → er …|putzt', 'schmecken → es …|schmeckt', 'kratzen → die Katze …|kratzt', 'wohnen → sie …|wohnt', 'fahren → er …|fährt', 'zählen → sie …|zählt', 'fühlen → er …|fühlt', 'fliegen → die Biene …|fliegt', 'frieren → sie …|friert', 'nehmen → er …|nimmt|Ausnahme: nehmen → er nimmt (kurzes i, doppeltes m)', 'sehen → sie …|sieht',
+    'Heute: ich nehme. Gestern: ich …|nahm', 'Heute: ich sehe. Gestern: ich …|sah', 'Heute: ich stehle. Gestern: ich …|stahl', 'Heute: ich fehle. Gestern: ich …|fehlte', 'Heute: ich stehe. Gestern: ich …|stand', 'Heute: ich fliehe. Gestern: ich …|floh', 'Heute: ich falle. Gestern: ich …|fiel', 'Heute: ich schreie. Gestern: ich …|schrie', 'Heute: ich rufe. Gestern: ich …|rief', 'Heute: ich halte. Gestern: ich …|hielt', 'Heute: ich schlafe. Gestern: ich …|schlief', 'Heute: ich schreibe. Gestern: ich …|schrieb', 'Heute: ich laufe. Gestern: ich …|lief', 'Heute: ich fliege. Gestern: ich …|flog'];
+  /* Diktat: alle richtigen Wörter aus den Listen, ohne gleich klingende Wörter */
+  var NODIKT = { Rad: 1, Weg: 1, Kamm: 1, Saat: 1, Uhr: 1, Ruhe: 1, Mühle: 1, Teer: 1, Stahl: 1, Sohn: 1, Zeh: 1, Moos: 1, wir: 1, mir: 1, dir: 1, Ale: 1 };
+  function gap(s) { var m = s.match(/^(.*)\{([^}]*)\}(.*)$/); var o = m[2].split('|'); return { pre: m[1], opts: o, post: m[3], word: m[1] + o[0] + m[3], variants: o.map(function (x) { return m[1] + x + m[3]; }) }; }
+  var DIKT = [];
+  [DK, CKZ, VK, H, AEO, IE].forEach(function (L) { L.forEach(function (s) { var w = gap(s).word; if (!NODIKT[w] && !/ä?rchen|tchen|Säle/.test(w) && DIKT.indexOf(w) === -1) DIKT.push(w); }); });
+
+  var TOPICS = [
+    ['kl', 'Kurz oder lang?', 'S. 354'], ['dk', 'Doppelter Konsonant', 'S. 355'], ['ckz', 'ck oder k? tz oder z?', 'S. 356–357'], ['vk', 'Verschiedene Konsonanten', 'S. 358'],
+    ['h', 'Dehnungs-h oder nicht?', 'S. 363–366'], ['aeo', 'aa, ee, oo und paar/Paar', 'S. 367–368'], ['ie', 'ie, i oder ih?', 'S. 366, 369–370'],
+    ['satz', 'Fehler-Detektiv', 'Sätze prüfen'], ['dikt', 'Hör-Diktat', 'Wörter schreiben'], ['formen', 'Verbformen', 'S. 355, 366, 370']];
+  var TNAME = {}; TOPICS.forEach(function (t) { TNAME[t[0]] = t[1]; });
+  var SIZE = { kl: KL.length, dk: DK.length, ckz: CKZ.length, vk: VK.length, h: H.length, aeo: AEO.length + PAAR.length, ie: IE.length + IH.length, satz: SATZ.length, dikt: DIKT.length, formen: FORM.length };
+
+  var RULE = {
+    kl: '<b>Kurz oder lang?</b> Sprich das Wort laut und deutlich. Beim kurzen Vokal klingt die Silbe knapp: <b>Ịmker, Mụtter</b>. Beim langen Vokal kannst du den Laut ziehen: <b>H<u>o</u>se, B<u>ie</u>ne</b>.<br>Kurzer Vokal → danach meist zwei Konsonanten (Zelle, Wald). Langer Vokal → oft nur ein Konsonant (Hose).',
+    dk: '<b>Regel:</b> Hörst du nach einem <b>kurz</b> gesprochenen Vokal nur <b>einen</b> Konsonanten, wird er meistens <b>verdoppelt</b>: ste<b>ll</b>en, Ka<b>mm</b>, Bu<b>tt</b>er, Ze<b>ll</b>e.<br>Nach einem <b>langen</b> Vokal wird nicht verdoppelt: Ho<b>s</b>e, Ta<b>f</b>el.<br><b>Trick:</b> Das Doppelte bleibt in der ganzen Wortfamilie: stellen → er stellt → die Stelle.',
+    ckz: '<b>Regel:</b> <b>k</b> und <b>z</b> werden nicht verdoppelt (nie kk, nie zz). Nach kurzem Vokal schreibt man <b>ck</b> und <b>tz</b>: La<b>ck</b>, me<b>ck</b>ern, Bli<b>tz</b>, pla<b>tz</b>en.<br><b>Merkvers:</b> Nach l, m, n, r, das merke ja, steht nie tz und nie ck: Ban<b>k</b>, Im<b>k</b>er, Kran<b>z</b>, Ar<b>z</b>t.<br>Nach langem Vokal und nach ei, au, eu: nur <b>k</b> und <b>z</b>: E<b>k</b>el, Hei<b>z</b>ung, Kreu<b>z</b>.',
+    vk: '<b>Regel:</b> Hörst du nach einem kurzen, betonten Vokal <b>zwei oder mehr verschiedene</b> Konsonanten, wird <b>keiner</b> verdoppelt: La<b>nd</b>, ru<b>tsch</b>en, Wa<b>ld</b>, Wi<b>nt</b>er.<br>Hörst du nur einen Konsonanten, wird er verdoppelt: So<b>nn</b>e.',
+    h: '<b>Gut zu wissen:</b> Die meisten Wörter mit langem Vokal schreibt man <b>ganz einfach</b>: D<b>o</b>se, N<b>a</b>se, Bl<b>u</b>me.<br>Manche haben ein <b>Dehnungs-h</b>: B<b>ah</b>n, Z<b>ah</b>l, St<b>uh</b>l. Dafür gibt es keine feste Regel, du musst sie dir merken.<br><b>Tipp:</b> Das Dehnungs-h steht fast immer vor <b>l, m, n</b> oder <b>r</b>: Kohl, nehmen, Bahn, Uhr.',
+    aeo: '<b>Doppelvokal:</b> Nur wenige Wörter haben <b>aa, ee</b> oder <b>oo</b>: Haar, Saal, Tee, Schnee, Boot, Zoo. Die musst du dir merken.<br><b>Achtung:</b> ä, ö, ü werden nie verdoppelt: Haar → H<b>ä</b>rchen, Boot → B<b>ö</b>tchen.<br><b>paar oder Paar?</b> ein <b>paar</b> (klein) = einige: ein paar Äpfel. Ein <b>Paar</b> (groß) = zwei, die zusammengehören: ein Paar Schuhe.',
+    ie: '<b>Langes i:</b> Die meisten Wörter schreibt man mit <b>ie</b>: B<b>ie</b>ne, W<b>ie</b>se, v<b>ie</b>r. Das e hört man nicht, es zeigt nur: Das i ist lang.<br><b>Nur i:</b> viele Wörter aus anderen Sprachen (T<b>i</b>ger, K<b>i</b>no, Masch<b>i</b>ne) und m<b>i</b>r, d<b>i</b>r, w<b>i</b>r.<br><b>ih:</b> nur bei <b>ihr, ihm, ihn, ihnen, ihre</b>.<br>Achtung: <b>im</b> Garten (= in dem), aber: Ich gebe <b>ihm</b> das Buch.',
+    satz: '<b>So findest du Fehler:</b> Lies den Satz Wort für Wort. Sprich jedes Wort deutlich: kurz oder lang? Dann prüfe die Regeln: Doppelkonsonant, ck/tz, Dehnungs-h, ie.',
+    dikt: '<b>So schreibst du ein Wort richtig:</b> 1. Genau hinhören (auch zweimal). 2. Kurz oder lang? 3. Regel anwenden: verdoppeln, ck/tz, ie … 4. Nach dem Schreiben noch einmal Buchstabe für Buchstabe prüfen.',
+    formen: '<b>Wortfamilie:</b> Die Schreibweise bleibt in allen Formen gleich: stellen → er ste<b>ll</b>t, wohnen → sie wo<b>hn</b>t, sitzen → er si<b>tz</b>t.<br><b>Ausnahme:</b> nehmen → er ni<b>mm</b>t (hier wird der Vokal kurz).<br><b>Vergangenheit:</b> Oft wird aus ei ein ie: schreiben → schr<b>ie</b>b, schreien → schr<b>ie</b>. Auch: fallen → f<b>ie</b>l, rufen → r<b>ie</b>f, schlafen → schl<b>ie</b>f.'
+  };
+
+  /* ---------- Aufgaben erzeugen ---------- */
+  var LMNR = /[lmnr]$/;
+  function gapTask(topic, s, mode) {
+    var g = gap(s), word = g.word, opts = g.opts.slice();
+    var full = mode === 'full' || (mode !== 'gap' && Math.random() < 0.45);
+    return { topic: topic, kind: 'choice', full: word,
+      q: full ? 'Welche Schreibweise ist richtig?' : 'Welche Buchstaben fehlen?',
+      big: full ? '' : esc(g.pre) + '<span class="de-gap">?</span>' + esc(g.post),
+      options: full ? shuffle(g.variants) : shuffle(opts), answer: full ? word : opts[0], say: word };
+  }
+  var G = {};
+  G.kl = function (i) {
+    var p = KL[i].split('|'), w = p[0], k = p[1] === 'k';
+    return { topic: 'kl', kind: 'choice', full: w, q: 'Wird der betonte Vokal <b>kurz</b> oder <b>lang</b> gesprochen? Sprich das Wort laut.', big: esc(w), options: ['kurz', 'lang'], answer: k ? 'kurz' : 'lang', keep: true, say: w,
+      explain: k ? 'Bei <b>' + esc(w) + '</b> ist der Vokal <b>kurz</b>. Danach kommen zwei Konsonanten.' : 'Bei <b>' + esc(w) + '</b> ist der Vokal <b>lang</b>. Du kannst ihn ziehen.' };
+  };
+  G.dk = function (i) {
+    var t = gapTask('dk', DK[i]), g = gap(DK[i]), dbl = g.opts[0].length === 2;
+    t.explain = dbl ? 'Kurzer Vokal, nur <b>ein</b> Konsonant zu hören → verdoppeln: <b>' + esc(g.word) + '</b>.' : 'Langer Vokal → <b>nicht</b> verdoppeln: <b>' + esc(g.word) + '</b>.';
+    return t;
+  };
+  G.ckz = function (i) {
+    var s = CKZ[i], g = gap(s), c = g.opts[0], t;
+    if (Math.random() < 0.3 && (c === 'ck' || c === 'tz' || c === 'k' || c === 'z')) { var extra = /k/.test(c) ? 'kk' : 'zz'; s = s.replace('}', '|' + extra + '}'); }
+    t = gapTask('ckz', s);
+    if (c === 'ck' || c === 'tz') t.explain = 'Kurzer Vokal → <b>' + c + '</b>: <b>' + esc(g.word) + '</b>. (Nie kk oder zz!)';
+    else if (LMNR.test(g.pre)) t.explain = 'Nach <b>' + g.pre.slice(-1) + '</b> steht nie tz und nie ck → <b>' + esc(g.word) + '</b>.';
+    else t.explain = 'Langer Vokal oder ei/au/eu davor → nur <b>' + c + '</b>: <b>' + esc(g.word) + '</b>.';
+    return t;
+  };
+  G.vk = function (i) {
+    var g = gap(VK[i]), t = gapTask('vk', VK[i], Math.random() < 0.65 ? 'full' : 'gap'), dbl = g.opts[0].length === 2;
+    t.explain = dbl ? 'Nach dem kurzen Vokal hörst du nur <b>einen</b> Konsonanten → verdoppeln: <b>' + esc(g.word) + '</b>.' : 'Du hörst zwei verschiedene Konsonanten (<b>' + esc(g.opts[0] + g.post.charAt(0)) + '</b>) → nichts verdoppeln: <b>' + esc(g.word) + '</b>.';
+    return t;
+  };
+  G.h = function (i) {
+    var g = gap(H[i]), t = gapTask('h', H[i], Math.random() < 0.75 ? 'full' : 'gap'), hasH = /h$/.test(g.opts[0]);
+    t.explain = hasH ? 'Merkwort mit <b>Dehnungs-h</b>: <b>' + esc(g.word) + '</b>.' + (/^[lmnr]/.test(g.post) ? ' Das h steht vor <b>' + g.post.charAt(0) + '</b>.' : '') : 'Langer Vokal, ganz <b>einfach</b> geschrieben: <b>' + esc(g.word) + '</b>. So schreibt man die meisten Wörter.';
+    return t;
+  };
+  G.aeo = function (i) {
+    if (i >= AEO.length) {
+      var p = PAAR[i - AEO.length].split('|'), a = p[1];
+      return { topic: 'aeo', kind: 'choice', full: p[0].replace('___', a), q: '<b>paar</b> oder <b>Paar</b>?', big: '', sent: p[0], options: ['paar', 'Paar'], answer: a, keep: true, say: p[0].replace('___', a),
+        explain: a === 'paar' ? 'ein <b>paar</b> = einige → klein.' : 'ein <b>Paar</b> = zwei, die zusammengehören → groß.' };
+    }
+    var g = gap(AEO[i]), t = gapTask('aeo', AEO[i], Math.random() < 0.7 ? 'full' : 'gap'), uml = /^[äöü]$/.test(g.opts[0]);
+    t.explain = uml ? 'ä, ö, ü werden <b>nie</b> verdoppelt: <b>' + esc(g.word) + '</b>.' : 'Merkwort mit <b>' + g.opts[0].toLowerCase() + '</b>: <b>' + esc(g.word) + '</b>.';
+    return t;
+  };
+  G.ie = function (i) {
+    if (i >= IE.length) {
+      var p = IH[i - IE.length].split('|');
+      return { topic: 'ie', kind: 'choice', full: p[0].replace('___', p[1]), q: 'Welches Wort passt?', big: '', sent: p[0], options: shuffle(p.slice(1)), answer: p[1], say: p[0].replace('___', p[1]).replace(/ \(.*\)/, ''),
+        explain: p[1] === 'im' ? '<b>im</b> = in dem (im Garten, im Regal).' : '<b>' + p[1] + '</b> steht für eine Person → mit <b>ih</b>.' };
+    }
+    var g = gap(IE[i]), t = gapTask('ie', IE[i], Math.random() < 0.6 ? 'full' : 'gap');
+    t.explain = g.opts[0] === 'ie' ? 'Langes i → meistens <b>ie</b>: <b>' + esc(g.word) + '</b>.' : /^(mir|dir|wir)$/.test(g.word) ? '<b>' + g.word + '</b> schreibt man nur mit i.' : 'Merkwort mit einfachem <b>i</b>: <b>' + esc(g.word) + '</b>' + (/^Igel$/.test(g.word) ? '.' : ' (kommt aus einer anderen Sprache).');
+    return t;
+  };
+  G.satz = function (i) {
+    var s = SATZ[i], m = s.match(/\[([^|\]]+)\|([^\]]+)\]/), right = m[1], wrong = m[2];
+    var shown = s.replace(m[0], wrong), toks = shown.replace(/([.,!?])/g, ' $1').split(' '), wi = -1;
+    toks.forEach(function (tk, k) { if (tk === wrong && wi === -1) wi = k; });
+    return { topic: 'satz', kind: 'tap', toks: toks, wi: wi, right: right, wrong: wrong, full: right, q: 'In diesem Satz ist <b>ein</b> Wort falsch geschrieben. Tippe es an.', say: s.replace(m[0], right), explain: whyWrong(right, wrong) };
+  };
+  function whyWrong(r, w) {
+    var rl = r.toLowerCase(), wl = w.toLowerCase();
+    if (rl === wl) return r.charAt(0) === r.charAt(0).toUpperCase() ? 'Hier ist ein <b>Nomen</b> gemeint (ein Paar = zwei, die zusammengehören) → groß.' : 'ein <b>paar</b> = einige → klein.';
+    if (/^ih/.test(rl)) return '<b>' + esc(r) + '</b> steht für eine Person → mit <b>ih</b>. (im = in dem)';
+    if ((wl.match(/h/g) || []).length > (rl.match(/h/g) || []).length) return 'Hier gibt es <b>kein</b> Dehnungs-h. Die meisten Wörter mit langem Vokal schreibt man einfach.';
+    if (/ck/.test(rl) && !/ck/.test(wl)) return 'Kurzer Vokal → <b>ck</b>.';
+    if (/tz/.test(rl) && !/tz/.test(wl)) return 'Kurzer Vokal → <b>tz</b>.';
+    if (/ck|tz/.test(wl)) return 'Nach l, m, n, r steht nie tz und nie ck.';
+    if (/ie/.test(rl) && !/ie/.test(wl)) return 'Langes i → meistens <b>ie</b>.';
+    if (/ie/.test(wl)) return 'Dieses Wort schreibt man nur mit <b>i</b>.';
+    if (/(aa|ee|oo)/.test(rl) && !/(aa|ee|oo)/.test(wl)) return 'Merkwort mit <b>Doppelvokal</b>.';
+    if ((rl.match(/h/g) || []).length > (wl.match(/h/g) || []).length) return 'Merkwort mit <b>Dehnungs-h</b>.';
+    if (/(.)\1/.test(rl) && !/(.)\1/.test(wl)) return 'Kurzer Vokal, nur ein Konsonant zu hören → <b>verdoppeln</b>.';
+    if (/(.)\1/.test(wl)) return 'Zwei verschiedene Konsonanten oder langer Vokal → <b>nicht</b> verdoppeln.';
+    return 'Richtig heißt es <b>' + esc(r) + '</b>.';
+  }
+  G.dikt = function (i) {
+    var w = DIKT[i];
+    return { topic: 'dikt', kind: 'type', full: w, answer: w, q: canSpeak() ? 'Hör genau hin und schreib das Wort.' : 'Schau dir das Wort genau an. Gleich verschwindet es, dann schreibst du es aus dem Kopf.', say: w, dikt: true, explain: 'Das Wort heißt <b>' + esc(w) + '</b>.' };
+  };
+  G.formen = function (i) {
+    var p = FORM[i].split('|');
+    return { topic: 'formen', kind: 'type', full: p[1], answer: p[1], q: 'Schreib die passende Form.', big: esc(p[0]), say: p[1], explain: p[2] ? esc(p[2]) : 'Richtig: <b>' + esc(p[1]) + '</b>. Die Schreibweise der Wortfamilie bleibt gleich.' };
+  };
+  function make(topic, idx) {
+    if (idx === undefined || idx === null || idx >= SIZE[topic]) idx = rnd(SIZE[topic]);
+    var t = G[topic](idx); t.ref = topic + ':' + idx; return t;
+  }
+
+  /* ---------- Speicher ---------- */
+  var KEY = 'lern-deutsch';
+  function load() { try { var d = JSON.parse(localStorage.getItem(KEY)) || {}; d.st = d.st || {}; d.miss = d.miss || []; d.stars = d.stars || 0; d.tests = d.tests || []; return d; } catch (e) { return { st: {}, miss: [], stars: 0, tests: [] }; } }
+  var db = load();
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(db)); } catch (e) {} }
+  function addStat(topic, ok) { var a = db.st[topic] || []; a.push(ok ? 1 : 0); db.st[topic] = a.slice(-12); }
+  function lvl(topic) { var a = db.st[topic] || []; if (a.length < 4) return 'neu'; var s = a.reduce(function (x, y) { return x + y; }, 0) / a.length; return s >= 0.9 && a.length >= 8 ? 'sicher' : s >= 0.7 ? 'gut' : 'üben'; }
+  var LVL_TXT = { neu: 'neu', 'üben': 'noch üben', gut: 'gut', sicher: 'sicher' };
+
+  /* ---------- Sprachausgabe (deutsche Stimme) ---------- */
+  var hasTTS = 'speechSynthesis' in window && typeof SpeechSynthesisUtterance === 'function', deVoice = null;
+  function vs(v) { var n = (v.name + ' ' + (v.voiceURI || '')).toLowerCase(), s = 0; if (!/^de/i.test(v.lang)) return -1; if (/premium/.test(n)) s += 40; else if (/enhanced|erweitert|natural|neural|online/.test(n)) s += 30; if (/siri/.test(n)) s += 20; if (/google deutsch/.test(n)) s += 25; if (/\b(anna|petra|markus|helena|katja|yannick)\b/.test(n)) s += 8; if (/compact/.test(n)) s -= 15; return s; }
+  function pickVoice() { if (!hasTTS) return; var l = (speechSynthesis.getVoices() || []).filter(function (v) { return vs(v) >= 0; }).sort(function (a, b) { return vs(b) - vs(a); }); deVoice = l[0] || null; }
+  if (hasTTS) { pickVoice(); try { speechSynthesis.addEventListener('voiceschanged', pickVoice); } catch (e) {} }
+  function canSpeak() { if (hasTTS && !deVoice) pickVoice(); return !!(hasTTS && deVoice); }
+  function speak(t) { if (!canSpeak()) return; try { speechSynthesis.cancel(); var u = new SpeechSynthesisUtterance(t); u.voice = deVoice; u.lang = deVoice.lang || 'de-DE'; u.rate = 0.85; speechSynthesis.speak(u); } catch (e) {} }
+
+  /* ---------- Runde ---------- */
+  var run = null;
+  function weakFirst() { return TOPICS.map(function (t) { return t[0]; }).sort(function (a, b) { var o = { 'üben': 0, neu: 1, gut: 2, sicher: 3 }; return o[lvl(a)] - o[lvl(b)]; }); }
+  function buildTasks(mode, topic) {
+    var tasks = [], used = {};
+    function add(t, again) { if (used[t.ref]) return false; used[t.ref] = 1; if (again) t.again = true; tasks.push(t); return true; }
+    function addTopic(tp) { for (var k = 0; k < 30; k++) if (add(make(tp))) return; }
+    if (mode === 'test') { TOPICS.forEach(function (t) { addTopic(t[0]); addTopic(t[0]); }); return shuffle(tasks); }
+    var miss = db.miss.filter(function (r) { var tp = r.split(':')[0]; return SIZE[tp] && (mode === 'mix' || tp === topic); });
+    shuffle(miss).slice(0, 3).forEach(function (r) { var p = r.split(':'); add(make(p[0], Number(p[1])), true); });
+    if (mode === 'mix') { var order = weakFirst(), k = 0; while (tasks.length < 10 && k < 100) { addTopic(order[k % 5 === 4 ? rnd(order.length) : k % 4]); k++; } }
+    else while (tasks.length < 10) addTopic(topic);
+    return shuffle(tasks).slice(0, 10);
+  }
+  function start(mode, topic) {
+    run = { mode: mode, topic: topic, tasks: buildTasks(mode, topic), i: 0, first: 0, done: 0, wrong: [], requeued: {} };
+    $('deHome').hidden = true; $('deRules').hidden = true; $('deEnd').hidden = true; $('deRun').hidden = false;
+    newTask(); window.scrollTo(0, 0);
+  }
+  function cur() { return run.tasks[run.i]; }
+  function newTask() { var t = cur(); run.st = { tries: 0, resolved: false, chosen: null, tapped: null, phase: 0, fb: null, ruleOpen: false, flash: false }; render(); if (t.kind === 'type' && t.dikt) { if (canSpeak()) setTimeout(function () { speak(t.say); }, 250); else { run.st.flash = true; render(); setTimeout(function () { if (run && cur() === t && !run.st.resolved) { run.st.flash = false; render(); } }, 2500); } } }
+
+  function render() {
+    var t = cur(), s = run.st, test = run.mode === 'test', n = run.tasks.length, h = '';
+    var label = test ? 'Rechtschreib-Test' : run.mode === 'mix' ? 'Gemischt' : TNAME[run.topic];
+    h += '<div class="voc-prog"><span>' + (run.i + 1) + ' / ' + n + '</span><span class="goalbar"><i style="width:' + (run.i / n * 100) + '%"></i></span></div>';
+    h += '<p class="voc-eyebrow">' + esc(label) + (run.mode !== 'topic' ? ' · ' + esc(TNAME[t.topic]) : '') + (t.again ? ' · nochmal' : '') + '</p>';
+    h += '<p class="de-q">' + t.q + '</p>';
+    if (t.sent) h += '<p class="de-sent">' + esc(t.sent).replace('___', s.resolved ? '<span class="de-gap filled">' + esc(t.answer) + '</span>' : '<span class="de-gap">?</span>') + '</p>';
+    if (t.kind === 'choice') {
+      if (t.big) h += '<p class="de-big">' + (s.resolved && t.big.indexOf('de-gap') !== -1 ? esc(t.full) : t.big) + '</p>';
+      h += '<div class="de-opts' + (t.options.length > 2 ? ' three' : '') + '">' + t.options.map(function (o, k) {
+        var c = 'opt'; if (s.resolved) { if (o === t.answer) c += ' good'; else if (s.chosen === k) c += ' bad'; }
+        return '<button type="button" class="' + c + '" data-opt="' + k + '"' + (s.resolved ? ' disabled' : '') + '>' + esc(o) + '</button>';
+      }).join('') + '</div>';
+    } else if (t.kind === 'tap') {
+      h += '<p class="de-tapline">' + t.toks.map(function (tk, k) {
+        if (/^[.,!?]$/.test(tk)) return '<span class="de-punct">' + tk + '</span>';
+        var c = 'de-w'; if (k === t.wi && (s.phase > 0 || s.resolved)) c += ' bad'; else if (s.tapped === k) c += ' ok';
+        return '<button type="button" class="' + c + '" data-tok="' + k + '"' + (s.phase > 0 || s.resolved ? ' disabled' : '') + '>' + esc(tk) + '</button>';
+      }).join(' ') + '</p>';
+      if (s.phase === 1 && !s.resolved) h += '<form class="voc-form" id="deForm"><input id="deIn" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="richtig geschrieben …" aria-label="Wort richtig schreiben"><button class="btn primary" type="submit">Prüfen</button></form>';
+    } else {
+      if (t.dikt) h += '<div class="de-big de-dikt">' + (s.flash ? esc(t.full) : s.resolved ? esc(t.full) : canSpeak() ? '<button type="button" class="btn" id="deSay">🔊 Nochmal hören</button>' : '<span class="de-hidden">Wort war kurz zu sehen</span>') + '</div>';
+      else if (t.big) h += '<p class="de-big">' + t.big + '</p>';
+      if (!s.resolved && !s.flash) h += '<form class="voc-form" id="deForm"><input id="deIn" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Hier schreiben …" aria-label="Antwort"><button class="btn primary" type="submit">Prüfen</button></form>';
+    }
+    if (s.fb) h += '<p class="voc-fb ' + s.fb[0] + '">' + s.fb[1] + '</p>';
+    if (s.ruleOpen) h += '<div class="de-rule">' + RULE[t.topic] + '</div>';
+    h += '<div class="voc-row">';
+    if (!test) h += '<button type="button" class="btn small" id="deRuleBtn">' + (s.ruleOpen ? 'Regel zu' : '📌 Regel') + '</button>';
+    if (canSpeak() && s.resolved && t.say) h += '<button type="button" class="btn small" id="deSay2">🔊 Anhören</button>';
+    if (s.resolved) h += '<button type="button" class="btn primary" id="deNext">' + (run.i + 1 < n ? 'Weiter' : 'Ergebnis ansehen') + '</button>';
+    h += '<button type="button" class="btn small de-quit" id="deQuit">Runde beenden</button></div>';
+    $('deRun').innerHTML = h;
+    var inp = $('deIn'); if (inp) inp.focus({ preventScroll: true });
+  }
+  function finishTask(ok, fbHtml) {
+    var t = cur(), s = run.st;
+    s.resolved = true; run.done++;
+    if (ok) { run.first++; s.fb = ['good', '✓ ' + pick(['Super!', 'Klasse!', 'Genau!', 'Richtig!', 'Stark!']) + (fbHtml ? ' ' + fbHtml : '')]; }
+    else {
+      s.fb = ['soft', fbHtml]; run.wrong.push(t.full);
+      if (db.miss.indexOf(t.ref) === -1) db.miss.push(t.ref);
+      if (run.mode !== 'test' && !run.requeued[t.ref] && run.tasks.length < 14) { run.requeued[t.ref] = 1; var again = make(t.topic, Number(t.ref.split(':')[1])); again.again = true; run.tasks.push(again); }
+    }
+    if (ok && t.again) db.miss = db.miss.filter(function (r) { return r !== t.ref; });
+    if (!t.again || run.mode === 'test') addStat(t.topic, ok);
+    if (ok) db.stars++;
+    save(); render();
+  }
+  function norm(v) { return String(v).replace(/[’‘`´]/g, "'").replace(/\s+/g, ' ').trim(); }
+  function onType(val) {
+    var t = cur(), s = run.st, test = run.mode === 'test', v = norm(val);
+    if (!v) return;
+    if (t.kind === 'tap') {
+      if (v === t.right) finishTask(s.tries === 0, 'Richtig heißt es <b>' + esc(t.right) + '</b>. ' + t.explain);
+      else if (v.toLowerCase() === t.right.toLowerCase() && t.right.toLowerCase() !== t.wrong.toLowerCase()) finishTask(s.tries === 0, 'Achte noch auf groß/klein: <b>' + esc(t.right) + '</b>.');
+      else if (!test && s.tries < 1) { s.tries++; s.fb = ['soft', 'Noch nicht ganz. ' + t.explain + ' Versuch es nochmal!']; render(); }
+      else finishTask(false, 'Richtig heißt es <b>' + esc(t.right) + '</b>. ' + t.explain + ' Schreib es einmal ins Heft.');
+      return;
+    }
+    var ok = v === t.answer, caseOnly = !ok && v.toLowerCase() === t.answer.toLowerCase();
+    if (ok || caseOnly) { finishTask(s.tries === 0, caseOnly ? 'Achte noch auf groß/klein: <b>' + esc(t.answer) + '</b>.' : ''); return; }
+    if (!test && s.tries < 1) {
+      s.tries++;
+      var hint = t.dikt ? 'Hör nochmal genau hin: kurz oder lang? Das Wort hat ' + t.answer.length + ' Buchstaben.' : 'Tipp: Das Wort beginnt mit „' + esc(t.answer.slice(0, 2)) + '…“.';
+      s.fb = ['soft', 'Noch nicht ganz. ' + hint]; render(); return;
+    }
+    finishTask(false, 'Richtig ist: <b>' + esc(t.answer) + '</b>. ' + t.explain + ' Schreib es einmal ins Heft.');
+  }
+  function onOpt(k) {
+    var t = cur(), s = run.st; if (s.resolved) return;
+    s.chosen = k;
+    var ok = t.options[k] === t.answer;
+    finishTask(ok, ok ? '' : 'Richtig ist <b>' + esc(t.answer) + '</b>. ' + (t.explain || ''));
+    if (ok && t.explain && run.mode !== 'test') { run.st.fb = ['good', '✓ ' + t.explain]; render(); }
+  }
+  function onTok(k) {
+    var t = cur(), s = run.st; if (s.resolved || s.phase) return;
+    if (k === t.wi) { s.phase = 1; s.fb = ['good', 'Gefunden! Jetzt schreib das Wort richtig.']; render(); return; }
+    s.tapped = k;
+    if (run.mode === 'test' || s.tries >= 1) { s.phase = 1; s.tries++; s.fb = ['soft', 'Das falsche Wort war <b>' + esc(t.wrong) + '</b>. Schreib es richtig.']; render(); return; }
+    s.tries++; s.fb = ['soft', '<b>' + esc(t.toks[k]) + '</b> ist richtig geschrieben. Such weiter!']; render();
+  }
+  function next() {
+    run.i++;
+    if (run.i >= run.tasks.length) { end(); return; }
+    newTask(); window.scrollTo(0, 0);
+  }
+  function grade(p) { return p >= 0.92 ? 1 : p >= 0.81 ? 2 : p >= 0.67 ? 3 : p >= 0.5 ? 4 : p >= 0.3 ? 5 : 6; }
+  function end() {
+    var n = run.done || 1, p = run.first / n, h = '';
+    $('deRun').hidden = true; $('deEnd').hidden = false;
+    var words = run.wrong.filter(function (w, i, a) { return a.indexOf(w) === i; });
+    if (run.mode === 'test') {
+      var note = grade(p); db.tests.push({ d: Date.now(), n: note, p: Math.round(p * 100) }); db.tests = db.tests.slice(-10); save();
+      h += '<p class="voc-grade"><span>' + note + '</span>Note im Rechtschreib-Test</p>';
+      h += '<p>' + run.first + ' von ' + n + ' Aufgaben richtig (' + Math.round(p * 100) + ' %).</p>';
+      h += '<p class="voc-how">' + (note <= 2 ? 'Wow' + esc(kidName(', ')) + '! Du bist ein echter Rechtschreib-Profi.' : note <= 3 ? 'Gut gemacht! Mit ein bisschen Üben wird es noch besser.' : 'Übe die Wörter unten und die Themen mit „noch üben“. Dann klappt es beim nächsten Mal besser.') + '</p>';
+    } else {
+      h += '<h2>' + (p >= 0.9 ? 'Super gemacht' + esc(kidName(', ')) + '!' : p >= 0.6 ? 'Gut gemacht!' : 'Geschafft!') + '</h2>';
+      h += '<p>' + run.first + ' von ' + n + ' beim ersten Versuch richtig · +' + run.first + ' ⭐</p>';
+    }
+    if (words.length) h += '<div class="de-rule"><b>Diese Wörter schreibst du 3× ins Heft:</b><br>' + words.map(esc).join(' · ') + '</div>';
+    h += '<div class="voc-row"><button type="button" class="btn primary" id="deAgain">' + (run.mode === 'test' ? 'Neuer Test' : 'Noch eine Runde') + '</button><button type="button" class="btn" id="deBack">Zur Übersicht</button></div>';
+    $('deEnd').innerHTML = h;
+    window.scrollTo(0, 0);
+  }
+  function overview() {
+    run = null;
+    $('deRun').hidden = true; $('deEnd').hidden = true; $('deHome').hidden = false; $('deRules').hidden = false;
+    $('deTopics').innerHTML = TOPICS.map(function (t) { var l = lvl(t[0]); return '<button type="button" class="de-topic" data-topic="' + t[0] + '"><span class="de-tn">' + esc(t[1]) + '</span><span class="de-tp">' + esc(t[2]) + '</span><span class="pill de-l ' + (l === 'sicher' ? 'good' : l === 'gut' ? 'ok' : l === 'üben' ? 'weak' : '') + '">' + LVL_TXT[l] + '</span></button>'; }).join('');
+    var last = db.tests[db.tests.length - 1];
+    $('deInfo').innerHTML = '⭐ ' + db.stars + ' Sterne in Deutsch' + (last ? ' · letzter Test: Note ' + last.n : '') + (db.miss.length ? ' · ' + db.miss.length + ' Wörter zum Wiederholen' : '');
+    $('deRulesBody').innerHTML = TOPICS.map(function (t) { return '<div class="de-rule"><b class="de-rt">' + esc(t[1]) + '</b><br>' + RULE[t[0]] + '</div>'; }).join('');
+  }
+  function homeTile() {
+    var safe = TOPICS.filter(function (t) { return lvl(t[0]) === 'sicher'; }).length;
+    var el = $('deTileState'); if (el) el.textContent = safe + ' von ' + TOPICS.length + ' Themen sicher';
+  }
+
+  document.addEventListener('click', function (e) {
+    if (!$('deView') || $('deView').hidden) return;
+    var b = e.target.closest('button'); if (!b) return;
+    if (b.dataset.topic && b.classList.contains('de-topic')) { start('topic', b.dataset.topic); return; }
+    if (b.id === 'deMix') { start('mix'); return; }
+    if (b.id === 'deTest') { start('test'); return; }
+    if (!run) { if (b.id === 'deBack') overview(); return; }
+    if (b.dataset.opt !== undefined) { onOpt(Number(b.dataset.opt)); return; }
+    if (b.dataset.tok !== undefined) { onTok(Number(b.dataset.tok)); return; }
+    if (b.id === 'deRuleBtn') { run.st.ruleOpen = !run.st.ruleOpen; render(); return; }
+    if (b.id === 'deSay' || b.id === 'deSay2') { speak(cur().say); return; }
+    if (b.id === 'deNext') { next(); return; }
+    if (b.id === 'deQuit') { if (run.done) end(); else overview(); return; }
+    if (b.id === 'deAgain') { start(run.mode, run.topic); return; }
+    if (b.id === 'deBack') { overview(); return; }
+  });
+  document.addEventListener('submit', function (e) { if (e.target && e.target.id === 'deForm') { e.preventDefault(); onType($('deIn').value); } });
+
+  window.LU5De = { open: function () { if (!run) overview(); }, home: homeTile, _t: { G: G, SIZE: SIZE, make: make, gap: gap, DIKT: DIKT, TOPICS: TOPICS } };
+  homeTile();
 })();
 </script>
 
