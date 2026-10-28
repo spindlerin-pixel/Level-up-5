@@ -698,6 +698,22 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
 .ka-wrap .mka .ka-num { color: #FFFFFF; text-shadow: 0 0 14px rgba(60,207,198,0.9), 0 0 2px #fff; }
 .ka-wrap .ka p, .ka-wrap .ka b { color: #EEF1FA; }
 .ka-wrap .ka b { display: block; font-weight: 700; }
+/* ===== Klassenarbeiten zum Ausdrucken ===== */
+.subj.print .subj-top { background: #FFE9EF; }
+.subj.print .subj-go { background: #E0457B; color: #FFFFFF; box-shadow: 0 4px 0 #B32C5C; }
+.subj.print .subj-top svg { width: 44px; height: 44px; }
+.pr-list { display: flex; flex-direction: column; gap: 12px; }
+.pr-card { display: flex; align-items: center; gap: 14px; padding: 14px 16px; background: var(--surface); border-radius: 20px; box-shadow: var(--soft-shadow); border-left: 8px solid var(--pc); }
+.pr-num { flex-shrink: 0; width: 46px; height: 46px; border-radius: 50%; background: var(--pc); color: #1F2A44; font-family: var(--font-display); font-weight: 700; font-size: 1.4rem; display: flex; align-items: center; justify-content: center; }
+.pr-txt { flex: 1; min-width: 0; }
+.pr-txt h3 { margin: 0; font-family: var(--font-display); font-weight: 600; font-size: 1.15rem; }
+.pr-txt p { margin: 2px 0 0; font-size: 0.92rem; color: var(--ink-soft); line-height: 1.35; }
+.pr-lvl { display: inline-block; font-size: 0.78rem; font-weight: 700; padding: 1px 9px; border-radius: 999px; background: var(--pc); color: #1F2A44; margin-left: 6px; vertical-align: 2px; }
+.pr-open { flex-shrink: 0; text-decoration: none; font-family: var(--font-display); font-weight: 600; padding: 10px 14px; border-radius: 14px; background: var(--primary); color: var(--on-primary); box-shadow: 0 4px 0 var(--primary-dark); white-space: nowrap; }
+@media (max-width: 460px) { .pr-card { flex-wrap: wrap; } .pr-open { flex-basis: 100%; text-align: center; } }
+.pr-intro { margin: 0; padding: 14px 16px; background: var(--tip-fill); border-radius: 18px; line-height: 1.45; }
+.pr-keys { display: flex; flex-direction: column; gap: 8px; }
+.pr-keys a { color: var(--primary-dark); font-weight: 600; }
 /* ===== Vokabel-Trainer ===== */
 .btn.voc-jump { background: var(--lina); color: #1F2A44; align-self: stretch; }
 .subj.voc .subj-go { background: var(--lina); color: #1F2A44; box-shadow: 0 4px 0 #C9A21E; }
@@ -811,6 +827,14 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
       <span class="goalbar voc-bar" id="vocTileBar"><i></i></span>
       <span class="subj-status"><b id="vocTileNum">0 grün</b><span id="vocTileState"></span></span>
       <span class="subj-go">Vokabel-Check starten</span>
+    </button>
+    <button type="button" class="subj print" data-go="print" id="printTile">
+      <span class="subj-top">
+        <svg viewBox="0 0 48 48" aria-hidden="true"><rect x="12" y="4" width="24" height="12" rx="2" fill="#fff" stroke="#1F2A44" stroke-width="2.5"/><rect x="4" y="15" width="40" height="19" rx="5" fill="#E0457B" stroke="#1F2A44" stroke-width="2.5"/><rect x="12" y="27" width="24" height="17" rx="2" fill="#fff" stroke="#1F2A44" stroke-width="2.5"/><path d="M16 33 H32 M16 38 H27" stroke="#1F2A44" stroke-width="2.2" stroke-linecap="round"/><circle cx="37" cy="21" r="2" fill="#fff"/></svg>
+        <span><span class="subj-name">Zum Ausdrucken</span><br><span class="subj-what">5 Probe-Klassenarbeiten Englisch auf Papier, mit Lösungen</span></span>
+      </span>
+      <span class="subj-status"><b>45 Min</b><span>wie in der echten Arbeit</span></span>
+      <span class="subj-go">Klassenarbeiten ansehen</span>
     </button>
   </section>
 
@@ -962,6 +986,52 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
   <section class="card voc-card" id="vocRun" aria-live="polite" hidden></section>
   <section class="card end" id="vocEnd" hidden></section>
   <p class="note">Tipp: Schreib jedes Wort, das du mit Hilfe gelernt hast, einmal zusätzlich ins Heft.</p>
+</div>
+
+<div class="app view-wrap" id="printView" hidden>
+  <div class="backbar"><button type="button" class="btn small" data-go="home">← Start</button></div>
+  <header class="top">
+    <svg class="lina" viewBox="0 0 110 140" aria-hidden="true"><use href="#pennyArt"></use></svg>
+    <div class="brand">
+      <h1>Klassenarbeiten zum Ausdrucken</h1>
+      <p>Englisch · Access 1 · Welcome + Unit 1 + Familientext</p>
+    </div>
+  </header>
+  <p class="pr-intro"><b>So geht's:</b> PDF öffnen, ausdrucken, Timer auf 45 Minuten stellen und ohne Hilfe schreiben – genau wie in der Klassenarbeit. Die Arbeiten werden von 1 bis 5 schwerer. Danach gemeinsam verbessern und die Fehler hier in der App üben.</p>
+  <section class="pr-list" aria-label="Probe-Klassenarbeiten">
+    <div class="pr-card" style="--pc:#FFD66B">
+      <span class="pr-num">1</span>
+      <div class="pr-txt"><h3>Probe-Klassenarbeit 1<span class="pr-lvl">Warm-up</span></h3><p>Zum Einstieg, mit Wortkästen und Satzanfängen. Vokabeln, am/is/are, he/his, Fragewörter, Plural, Lesen, Familientext.</p></div>
+      <a class="pr-open" href="klassenarbeiten/Probe-Klassenarbeit-1.pdf" target="_blank" rel="noopener">PDF öffnen</a>
+    </div>
+    <div class="pr-card" style="--pc:#8FD3FF">
+      <span class="pr-num">2</span>
+      <div class="pr-txt"><h3>Probe-Klassenarbeit 2<span class="pr-lvl">Normal</span></h3><p>Kurzantworten, Bens Familie, Fragen bauen, Fehler-Detektiv, E-Mail von Joe, Familientext.</p></div>
+      <a class="pr-open" href="klassenarbeiten/Probe-Klassenarbeit-2.pdf" target="_blank" rel="noopener">PDF öffnen</a>
+    </div>
+    <div class="pr-card" style="--pc:#B9E6B0">
+      <span class="pr-num">3</span>
+      <div class="pr-txt"><h3>Probe-Klassenarbeit 3<span class="pr-lvl">Normal</span></h3><p>Odd one out, I/you/he …, Kurzformen, my/his/her/its/our/their, Stammbaum lesen, Familientext.</p></div>
+      <a class="pr-open" href="klassenarbeiten/Probe-Klassenarbeit-3.pdf" target="_blank" rel="noopener">PDF öffnen</a>
+    </div>
+    <div class="pr-card" style="--pc:#FFB3C7">
+      <span class="pr-num">4</span>
+      <div class="pr-txt"><h3>Probe-Klassenarbeit 4<span class="pr-lvl">Profi</span></h3><p>Wörter sortieren, Dialog, Fragewörter ohne Kasten, Harrys Familie, 8 Fehler finden, E-Mail an Joe.</p></div>
+      <a class="pr-open" href="klassenarbeiten/Probe-Klassenarbeit-4.pdf" target="_blank" rel="noopener">PDF öffnen</a>
+    </div>
+    <div class="pr-card" style="--pc:#C9B8FF">
+      <span class="pr-num">5</span>
+      <div class="pr-txt"><h3>Probe-Klassenarbeit 5<span class="pr-lvl">Generalprobe</span></h3><p>Wie die echte Arbeit: ohne Wortkästen und ohne Satzanfänge. Am besten 1–2 Tage vorher mit Timer.</p></div>
+      <a class="pr-open" href="klassenarbeiten/Probe-Klassenarbeit-5.pdf" target="_blank" rel="noopener">PDF öffnen</a>
+    </div>
+  </section>
+  <details class="levels parents">
+    <summary><span class="lv-title">Für Eltern: Lösungen</span><span class="lv-sum">mit Punkten, Notenschlüssel und Beispieltext</span></summary>
+    <div class="lv-body pr-keys">
+      <p class="lv-legend">Jede Lösung hat eine eigene Datei, damit sie nicht aus Versehen mit ausgedruckt wird.</p>
+      <a href="klassenarbeiten/Loesung-Probe-Klassenarbeit-1.pdf" target="_blank" rel="noopener">Lösung zu Probe-Klassenarbeit 1 (Warm-up)</a><a href="klassenarbeiten/Loesung-Probe-Klassenarbeit-2.pdf" target="_blank" rel="noopener">Lösung zu Probe-Klassenarbeit 2 (Normal)</a><a href="klassenarbeiten/Loesung-Probe-Klassenarbeit-3.pdf" target="_blank" rel="noopener">Lösung zu Probe-Klassenarbeit 3 (Normal)</a><a href="klassenarbeiten/Loesung-Probe-Klassenarbeit-4.pdf" target="_blank" rel="noopener">Lösung zu Probe-Klassenarbeit 4 (Profi)</a><a href="klassenarbeiten/Loesung-Probe-Klassenarbeit-5.pdf" target="_blank" rel="noopener">Lösung zu Probe-Klassenarbeit 5 (Generalprobe)</a>
+    </div>
+  </details>
 </div>
 
 <div class="view-wrap" id="mathView" hidden>
@@ -2551,7 +2621,7 @@ window.LU5 = (function () {
   function flushLog() { dirty = 0; var keys = Object.keys(logCache).sort(); while (keys.length > 60) delete logCache[keys.shift()]; store(LOG_KEY, logCache); }
   ['pointerdown', 'keydown', 'input', 'scroll', 'touchstart'].forEach(function (ev) { document.addEventListener(ev, function () { lastAct = Date.now(); }, { passive: true, capture: true }); });
   setInterval(function () {
-    if (view === 'home') return;
+    if (view === 'home' || view === 'print') return;
     if (document.visibilityState !== 'visible') return;
     if (Date.now() - lastAct > 60000) return;
     if (view === 'math' && document.getElementById('breakView') && !document.getElementById('breakView').hidden) return;
@@ -2652,6 +2722,7 @@ window.LU5 = (function () {
     $('mathView').hidden = v !== 'math';
     $('enView').hidden = v !== 'en';
     $('vocView').hidden = v !== 'voc';
+    $('printView').hidden = v !== 'print';
     if (v === 'home') renderHome();
     if (v === 'voc' && window.LU5Voc) window.LU5Voc.open();
     if (v === 'en') { if (!enState) enStart(); renderEn(); }
