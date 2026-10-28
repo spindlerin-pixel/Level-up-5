@@ -334,10 +334,16 @@ b.w { color: var(--echt); }
 .stufe-list li { display: flex; justify-content: space-between; gap: 10px; padding: 4px 0; border-top: 1.5px solid var(--muted-fill); }
 .stufe-list li:first-child { border-top: 0; }
 
-.ka { display: flex; align-items: center; gap: 14px; padding: 12px 16px; border: 2.5px solid var(--line); border-radius: 18px; background: var(--post-fill); box-shadow: 3px 3px 0 var(--shadow); }
-.ka.mka { background: var(--karte-fill); }
-.ka.mka .ka-num { color: var(--karte); }
-.ka-num { font-family: var(--font-display); font-weight: 700; font-size: 2.2rem; line-height: 1; color: var(--post); font-variant-numeric: tabular-nums; min-width: 2ch; text-align: center; }
+.ka-wrap { display: flex; flex-direction: column; gap: 10px; padding: 14px; border: 3px solid var(--line); border-radius: 22px; background: var(--tip-fill); box-shadow: 4px 4px 0 var(--shadow); }
+.ka-head { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: 1.2rem; line-height: 1.1; }
+.ka-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+@media (max-width: 340px) { .ka-grid { grid-template-columns: 1fr; } }
+.ka { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; padding: 12px 14px; border: 2.5px solid var(--line); border-radius: 18px; background: var(--post); color: var(--post-ink); box-shadow: 3px 3px 0 var(--shadow); min-width: 0; }
+.ka.mka { background: var(--primary-dark, var(--karte)); color: var(--on-primary); }
+.ka[hidden] { display: none !important; }
+.ka-subj { font-family: var(--font-display); font-weight: 700; font-size: 0.85rem; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.9; }
+.ka-num { font-family: var(--font-display); font-weight: 700; font-size: 3.4rem; line-height: 0.95; color: inherit; font-variant-numeric: tabular-nums; }
+.ka p { font-size: 0.92rem; line-height: 1.3; }
 .ka p { margin: 0; min-width: 0; }
 .ka b { font-family: var(--font-display); font-weight: 600; }
 .subjects { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
@@ -677,7 +683,6 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
 @media (prefers-reduced-motion: reduce) { .sheet-panel { animation: none; } }
 
 /* ===== Vokabel-Trainer ===== */
-.subj.voc { grid-column: 1 / -1; }
 .btn.voc-jump { background: var(--lina); color: #1F2A44; align-self: stretch; }
 .subj.voc .subj-go { background: var(--lina); color: #1F2A44; }
 .voc-card { gap: 12px; }
@@ -713,6 +718,23 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
 .vdot.learn { background: var(--karte-fill); }
 .vdot.green { background: var(--good); }
 #vocEnd { align-items: center; text-align: center; }
+.voc-pick nav { display: flex; flex-direction: column; gap: 14px; padding-top: 4px; }
+.voc-pickhint { margin: 0; font-size: 0.92rem; color: var(--ink-soft); }
+.voc-pick h3 { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.voc-unit { font-family: var(--font-display); font-weight: 600; font-size: 0.82rem; text-transform: none; letter-spacing: 0; padding: 6px 10px; min-height: 34px; border: 2px solid var(--edge, var(--line)); border-radius: 999px; background: var(--surface); color: var(--ink); cursor: pointer; }
+.voc-unit[aria-pressed="true"] { background: var(--primary); color: var(--on-primary); border-color: var(--primary); }
+.voc-opts { display: flex; flex-direction: column; gap: 8px; }
+.vopt { all: unset; box-sizing: border-box; cursor: pointer; display: flex; flex-direction: column; gap: 6px; padding: 10px 12px; border: 2px solid var(--edge, var(--line)); border-radius: 16px; background: var(--surface); color: var(--ink); box-shadow: 0 3px 0 var(--edge, var(--line)); }
+.vopt:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+.vopt[aria-pressed="true"] { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-fill, var(--karte-fill)); }
+.vopt-top { display: flex; align-items: center; gap: 10px; }
+.vopt-box { flex-shrink: 0; width: 26px; height: 26px; border-radius: 8px; border: 2px solid var(--line); display: grid; place-items: center; font-weight: 800; background: var(--surface); }
+.vopt[aria-pressed="true"] .vopt-box { background: var(--primary); color: var(--on-primary); border-color: var(--primary); }
+.vopt-name { flex: 1; min-width: 0; font-family: var(--font-display); font-weight: 700; font-size: 1.02rem; line-height: 1.2; }
+.vopt-star { font-size: 0.78rem; font-weight: 600; padding: 2px 8px; border-radius: 999px; background: var(--tip-fill); white-space: nowrap; }
+.vopt-pct { font-family: var(--font-display); font-weight: 700; font-variant-numeric: tabular-nums; }
+.vopt-pages { font-size: 0.85rem; color: var(--ink-soft); }
+.vopt .voc-bar { height: 10px; }
 .voc-grade { margin: 0; display: flex; flex-direction: column; align-items: center; font-family: var(--font-display); font-weight: 600; font-size: 1.1rem; }
 .voc-grade span { font-size: 3.4rem; line-height: 1; width: 88px; height: 88px; display: grid; place-items: center; border: 3px solid var(--line); border-radius: 50%; background: var(--tip-fill); box-shadow: 3px 3px 0 var(--shadow); margin-bottom: 6px; }
 </style>
@@ -728,15 +750,22 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
     <p class="sub">Jeden Tag 15 bis 20 Minuten Mathe und 15 bis 20 Minuten Englisch. Die Uhr läuft nur, während du übst.</p>
   </header>
 
+  <section class="ka-wrap" aria-label="Countdown Klassenarbeiten">
+  <h2 class="ka-head">⏳ Countdown Klassenarbeiten</h2>
+  <div class="ka-grid">
   <div class="ka" id="kaBox">
+    <span class="ka-subj">Englisch</span>
     <span class="ka-num" id="kaNum">?</span>
     <p id="kaText"><b>Englisch-Klassenarbeit am Dienstag, 3. November.</b> Trag unten bei „Für Eltern“ das Datum ein, dann zählt die App die Tage.</p>
   </div>
 
   <div class="ka mka" id="mkaBox">
+    <span class="ka-subj">Mathe</span>
     <span class="ka-num" id="mkaNum">?</span>
     <p id="mkaText"><b>Mathe-Klassenarbeit am 25. November.</b></p>
   </div>
+  </div>
+  </section>
 
   <section class="subjects" aria-label="Fächer für heute">
     <button type="button" class="subj" data-go="math" id="subjMath">
@@ -895,9 +924,15 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
   </header>
   <div id="vocHome" class="view-wrap">
     <section class="card voc-card">
+      <section class="pick voc-pick">
+        <p class="pick-title">Welche Vokabeln?</p>
+        <button type="button" class="pick-field" aria-expanded="false" aria-controls="vocPickList"><span class="pf-v" id="vocPickLabel">Diese Woche</span><span class="pf-ch" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></button>
+        <nav id="vocPickList" aria-label="Listen wählen" class="chip-group" hidden></nav>
+      </section>
       <div id="vocWeek"></div>
       <p class="voc-due" id="vocDue"></p>
       <button type="button" class="btn primary" id="vocStart">Los geht’s</button>
+      <button type="button" class="btn" id="vocTest">Generalprobe mit Note</button>
       <div class="voc-tools"><p class="voc-how">Weißt du ein Wort nicht? Kein Problem: Lass es dir zeigen und vorlesen, dann schreibst du es selbst. Es kommt gleich nochmal und morgen wieder. <b>Grün</b> wird ein Wort, wenn du es an zwei verschiedenen Tagen ohne Hilfe richtig schreibst.</p><button type="button" class="btn small" id="vocTon">🔊 Ton an</button></div>
     </section>
     <div id="vocLists" class="view-wrap"></div>
@@ -3957,7 +3992,7 @@ window.LU5 = (function () {
   'use strict';
   var WEEK = 'u1a2';
   var LISTS = [
-    { id: 'wel', name: 'Welcome', pages: 'S. 225–230', words: [
+    { id: 'wel', unit: 'Welcome', short: 'Welcome', name: 'Welcome', pages: 'S. 225–230', words: [
       'Welcome to Brighton.|Willkommen in Brighton.',
       'My name is Alice.|Ich heiße Alice.|My name\'s Alice.',
       'I\'m from Brighton.|Ich bin aus Brighton. / Ich komme aus Brighton.|I am from Brighton.',
@@ -4014,7 +4049,7 @@ window.LU5 = (function () {
       'football|der Fußball', 'run|rennen, laufen', 'music|die Musik', 'swim|schwimmen', 'dance|tanzen',
       'what|was', 'What about you?|Und du? / Und was ist mit dir?', 'if|wenn, falls', 'need|brauchen, benötigen'
     ] },
-    { id: 'u1a1', name: 'Unit 1 · Start & Part A (1)', pages: 'S. 231–233', words: [
+    { id: 'u1a1', unit: 'Unit 1', short: 'Start & Part A (1)', name: 'Unit 1 · Start & Part A (1)', pages: 'S. 231–233', words: [
       'at home|daheim, zu Hause', 'everyone|jeder; alle', 'This is …|Dies ist … / Das ist …',
       'street|die Straße (in der Stadt)', 'It\'s called …|Er/Sie/Es heißt …|It is called',
       'road|die Straße (Landstraße zwischen Orten)', 'car|das Auto', 'house|das Haus',
@@ -4041,7 +4076,7 @@ window.LU5 = (function () {
       'English|Englisch; englisch', 'word|das Wort', 'like words in other languages|wie Wörter in anderen Sprachen',
       'other|andere(r, s)', 'language|die Sprache'
     ] },
-    { id: 'u1a2', name: 'Unit 1 · Part A (2)', pages: 'S. 234–235', words: [
+    { id: 'u1a2', unit: 'Unit 1', short: 'Part A (2)', name: 'Unit 1 · Part A (2)', pages: 'S. 234–235', words: [
       'e.g.|z. B. (zum Beispiel)', 'help|helfen', 'help|die Hilfe', 'when|wenn (sobald)', 'learn|lernen',
       'talk to|reden mit, sich unterhalten mit|talk;talk with', 'people|die Leute, die Menschen',
       'umbrella|der Schirm, der Regenschirm', 'type|tippen', 'pronounce|aussprechen', 'then|dann', 'hear|hören',
@@ -4131,26 +4166,39 @@ window.LU5 = (function () {
     var fresh = ids.filter(function (id) { return !st(id); });
     return { seen: seen, fresh: fresh };
   }
+  function sel() {
+    var v = (db.sel || []).filter(function (id) { return BYLIST[id]; });
+    return v.length ? v : [WEEK];
+  }
+  function setSel(v) { db.sel = v; save(); }
+  function pct(lids) {
+    var n = 0, sum = 0;
+    lids.forEach(function (lid) { BYLIST[lid].forEach(function (id) { var x = st(id); n++; sum += x ? Math.min(2, x.l) : 0; }); });
+    return n ? Math.round(sum / (2 * n) * 100) : 0;
+  }
+  function idsOf(lids) { var a = []; lids.forEach(function (lid) { a = a.concat(BYLIST[lid]); }); return a; }
   function dueCount() {
-    var n = 0; ORDER.forEach(function (lid) { var d = dueList(lid); n += d.seen.length + (lid === WEEK ? d.fresh.length : 0); });
+    var S = sel(), n = 0;
+    ORDER.forEach(function (lid) { var d = dueList(lid); n += d.seen.length + (S.indexOf(lid) !== -1 ? d.fresh.length : 0); });
     return n;
   }
   function buildRound() {
-    var out = [], w = dueList(WEEK);
+    var S = sel(), out = [];
     function add(arr) { arr.forEach(function (id) { if (out.length < ROUND && out.indexOf(id) === -1) out.push(id); }); }
-    add(w.seen); add(w.fresh);
-    var rev = []; ORDER.forEach(function (lid) { if (lid !== WEEK) rev = rev.concat(dueList(lid).seen); });
-    rev.sort(function (a, b) { return st(a).d - st(b).d; }); add(rev);
-    ORDER.forEach(function (lid) { if (lid !== WEEK) add(dueList(lid).fresh); });
+    var seen = [], fresh = [], other = [];
+    /* Wochenliste zuerst, dann die übrigen ausgewählten Listen */
+    var ordered = S.slice().sort(function (a, b) { return (a === WEEK ? -1 : 0) - (b === WEEK ? -1 : 0) || ORDER.indexOf(b) - ORDER.indexOf(a); });
+    ordered.forEach(function (lid) { var d = dueList(lid); seen = seen.concat(d.seen); fresh = fresh.concat(d.fresh); });
+    ORDER.forEach(function (lid) { if (S.indexOf(lid) === -1) other = other.concat(dueList(lid).seen); });
+    seen.sort(function (a, b) { return st(a).d - st(b).d; });
+    if (S.length > 1) fresh = shuffle(fresh);
+    other.sort(function (a, b) { return st(a).d - st(b).d; });
+    add(seen); add(fresh); add(other);
+    /* Rest auffüllen: schwächste Wörter der Auswahl */
+    add(idsOf(S).sort(function (a, b) { var sa = st(a), sb = st(b); return (sa ? sa.l : -1) - (sb ? sb.l : -1) || (sa ? sa.d : 0) - (sb ? sb.d : 0); }));
     return shuffle(out);
   }
-  function buildPractice(lid) {
-    var ids = BYLIST[lid].slice().sort(function (a, b) {
-      var sa = st(a), sb = st(b), la = sa ? sa.l : -1, lb = sb ? sb.l : -1;
-      return la - lb || (sa ? sa.d : 0) - (sb ? sb.d : 0);
-    });
-    return shuffle(ids.slice(0, 15));
-  }
+  function buildPractice() { return shuffle(idsOf(sel())).slice(0, 15); }
 
   /* Prüfen */
   function caseOk(input, model) {
@@ -4191,18 +4239,42 @@ window.LU5 = (function () {
   function view() { return $('vocView'); }
   function show(part) { ['vocHome', 'vocRun', 'vocEnd'].forEach(function (p) { $(p).hidden = p !== part; }); }
 
+  var CH = '<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>';
+  function selLabel() {
+    var S = sel();
+    if (S.length === 1) { var L = listOf(S[0]); return (L.id === WEEK ? 'Diese Woche: ' : '') + L.name; }
+    var units = {}; S.forEach(function (id) { units[listOf(id).unit] = 1; });
+    var u = Object.keys(units);
+    if (u.length === 1 && LISTS.filter(function (L) { return L.unit === u[0]; }).length === S.length) return 'Ganze ' + u[0];
+    return S.length + ' Listen gemischt';
+  }
+  function renderPick() {
+    var S = sel(), groups = [];
+    LISTS.forEach(function (L) { var g = groups.filter(function (x) { return x.u === L.unit; })[0]; if (!g) { g = { u: L.unit, l: [] }; groups.unshift(g); } g.l.push(L); });
+    $('vocPickLabel').textContent = selLabel();
+    $('vocPickList').innerHTML = '<p class="voc-pickhint">Tipp auf eine Liste. Du kannst auch mehrere auswählen.</p>' + groups.map(function (g) {
+      var all = g.l.every(function (L) { return S.indexOf(L.id) !== -1; });
+      return '<div class="chip-group"><h3>' + esc(g.u) + (g.l.length > 1 ? ' <button type="button" class="voc-unit" data-vunit="' + esc(g.u) + '" aria-pressed="' + all + '">' + (all ? '✓ ganze Unit' : 'ganze Unit') + '</button>' : '') + '</h3><div class="voc-opts">' +
+        g.l.slice().reverse().map(function (L) {
+          var p = pct([L.id]), on = S.indexOf(L.id) !== -1;
+          return '<button type="button" class="vopt" data-vlist="' + L.id + '" aria-pressed="' + on + '"><span class="vopt-top"><span class="vopt-box" aria-hidden="true">' + (on ? '✓' : '') + '</span><span class="vopt-name">' + esc(L.short) + (L.id === WEEK ? ' <span class="vopt-star">diese Woche</span>' : '') + '</span><span class="vopt-pct">' + p + ' %</span></span>' +
+            '<span class="goalbar voc-bar' + (p >= 100 ? ' done' : '') + '"><i style="width:' + p + '%"></i></span><span class="vopt-pages">' + esc(L.pages) + ' · ' + BYLIST[L.id].length + ' Wörter</span></button>';
+        }).join('') + '</div></div>';
+    }).join('') + '<button type="button" class="btn primary" id="vocPickDone">Fertig</button>';
+  }
+  function closePick() { $('vocPickList').hidden = true; var f = document.querySelector('[aria-controls="vocPickList"]'); if (f) f.setAttribute('aria-expanded', 'false'); }
   function renderOverview() {
-    var wl = listOf(WEEK), g = countGreen(WEEK), tot = BYLIST[WEEK].length, due = dueCount();
-    $('vocWeek').innerHTML = '<p class="voc-eyebrow">Diese Woche zuerst</p><h2>' + esc(wl.name) + ' <span class="voc-pages">' + esc(wl.pages) + '</span></h2>' +
-      bar(g, tot) + '<p class="voc-count"><b>' + g + '</b> von ' + tot + ' Wörtern grün</p>';
+    var S = sel(), ids = idsOf(S), g = ids.filter(isGreen).length, p = pct(S), due = dueCount();
+    renderPick();
+    $('vocWeek').innerHTML = bar(p, 100) + '<p class="voc-count"><b>' + p + ' %</b> gelernt · ' + g + ' von ' + ids.length + ' Wörtern grün</p>';
     var n = buildRound().length;
-    $('vocStart').textContent = due > 0 ? 'Los geht’s: ' + n + ' Wörter' : 'Extra-Runde üben';
+    $('vocStart').textContent = due > 0 ? 'Vokabel-Check starten: ' + n + ' Wörter' : 'Extra-Runde üben';
+    $('vocTest').textContent = 'Generalprobe mit Note (' + Math.min(15, ids.length) + ' Wörter)';
     $('vocDue').innerHTML = due > 0 ? 'Heute sind <b>' + due + '</b> Wörter dran. Eine Runde hat höchstens ' + ROUND + ' Wörter.' : '<b>Für heute ist alles geschafft!</b> Du kannst aufhören – oder eine Extra-Runde machen.';
     var h = '';
-    LISTS.slice().reverse().forEach(function (L) {
-      var gg = countGreen(L.id), tt = BYLIST[L.id].length;
-      h += '<details class="levels voc-list"><summary><span class="lv-title">' + esc(L.name) + (L.id === WEEK ? ' ★' : '') + '</span><span class="lv-sum">' + esc(L.pages) + ' · ' + gg + '/' + tt + ' grün</span></summary><div class="lv-body">' +
-        bar(gg, tt) + '<button type="button" class="btn small" data-vprac="' + L.id + '">Generalprobe mit Note (15 Wörter)</button><ul class="voc-words">' +
+    S.forEach(function (lid) {
+      var L = listOf(lid);
+      h += '<details class="levels voc-list"><summary><span class="lv-title">Wörter ansehen &amp; anhören</span><span class="lv-sum">' + esc(L.name) + '</span></summary><div class="lv-body"><ul class="voc-words">' +
         BYLIST[L.id].map(function (id) { var w = WORDS[id], s = st(id), cls = !s ? 'new' : s.l >= 2 ? 'green' : 'learn';
           return '<li><i class="vdot ' + cls + '" title="' + (cls === 'green' ? 'sitzt' : cls === 'learn' ? 'wird geübt' : 'neu') + '"></i><button type="button" class="say" data-vsay="' + esc(w.en) + '" aria-label="' + esc(w.en) + ' anhören">' + SPK + '</button><span><b>' + esc(w.en) + '</b> <span class="de">' + esc(w.de) + '</span></span></li>'; }).join('') +
         '</ul></div></details>';
@@ -4294,11 +4366,11 @@ window.LU5 = (function () {
         '<button type="button" class="btn primary" id="vocBack">Zur Übersicht</button>';
       show('vocEnd'); $('vocBack').onclick = renderOverview; run = null; return;
     }
-    var helped = Object.keys(run.helped).length, g = countGreen(WEEK), tot = BYLIST[WEEK].length, more = dueCount();
+    var helped = Object.keys(run.helped).length, sids = idsOf(sel()), g = sids.filter(isGreen).length, tot = sids.length, more = dueCount();
     $('vocEnd').innerHTML = '<svg class="lina" viewBox="0 0 110 140" aria-hidden="true"><use href="#pennyArt"></use></svg><h2>' + (more ? 'Runde geschafft!' : 'Fertig für heute!') + '</h2>' +
       '<p class="end-score">' + run.clean + ' von ' + run.total + ' ohne Hilfe</p><p class="end-msg"><b>' + praise(run.clean / run.total) + '</b></p>' +
       (helped ? '<p class="end-msg">' + helped + (helped === 1 ? ' Wort hast du' : ' Wörter hast du') + ' mit Hilfe geschrieben – ' + (helped === 1 ? 'es kommt' : 'sie kommen') + ' morgen nochmal. So lernt man!</p>' : '<p class="end-msg">Alles ohne Hilfe – stark!</p>') +
-      '<p class="record">' + esc(listOf(WEEK).name) + ': ' + g + ' von ' + tot + ' grün</p>' +
+      '<p class="record">' + esc(selLabel()) + ': ' + g + ' von ' + tot + ' grün</p>' +
       (more ? '<button type="button" class="btn primary" id="vocMore">Noch eine Runde</button>' : '<p class="end-msg"><b>Du darfst jetzt aufhören.</b></p>') +
       '<button type="button" class="btn" id="vocBack">Zur Übersicht</button>';
     show('vocEnd');
@@ -4311,9 +4383,16 @@ window.LU5 = (function () {
     if (!view() || view().hidden) return;
     var b = e.target.closest('[data-vsay]'); if (b) { sayNow(b.getAttribute('data-vsay')); return; }
     if (e.target.closest('[data-vslow]') && run) { sayNow(WORDS[run.cur].en, true); return; }
-    var p = e.target.closest('[data-vprac]'); if (p) { startRun(buildPractice(p.getAttribute('data-vprac')), true); return; }
+    var o = e.target.closest('[data-vlist]');
+    if (o) { var S = sel().slice(), id = o.getAttribute('data-vlist'), i = S.indexOf(id); if (i === -1) S.push(id); else if (S.length > 1) S.splice(i, 1); setSel(S); renderOverview(); $('vocPickList').hidden = false; return; }
+    var u = e.target.closest('[data-vunit]');
+    if (u) { var un = u.getAttribute('data-vunit'), ul = LISTS.filter(function (L) { return L.unit === un; }).map(function (L) { return L.id; }), on = u.getAttribute('aria-pressed') === 'true';
+      var S2 = on ? sel().filter(function (x) { return ul.indexOf(x) === -1; }) : sel().concat(ul.filter(function (x) { return sel().indexOf(x) === -1; }));
+      setSel(S2.length ? S2 : [WEEK]); renderOverview(); $('vocPickList').hidden = false; return; }
+    if (e.target.closest('#vocPickDone')) { closePick(); return; }
   });
-  $('vocStart').onclick = function () { var ids = buildRound(); if (!ids.length) ids = buildPractice(WEEK); startRun(ids, false); };
+  $('vocStart').onclick = function () { closePick(); startRun(buildRound(), false); };
+  $('vocTest').onclick = function () { closePick(); startRun(buildPractice(), true); };
   $('vocTon').onclick = function () { db.ton = !tonOn(); save(); this.textContent = tonOn() ? '🔊 Ton an' : '🔇 Ton aus'; };
 
   function homeTile() {
