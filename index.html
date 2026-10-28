@@ -682,9 +682,26 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
 
 @media (prefers-reduced-motion: reduce) { .sheet-panel { animation: none; } }
 
+/* ===== Countdown (futuristisch, überschreibt die Karten-Optik oben) ===== */
+.ka-wrap { position: relative; overflow: hidden; border: 0; border-radius: 24px; padding: 16px; gap: 12px; color: #EEF1FA;
+  background: radial-gradient(120% 140% at 0% 0%, #3B2A7A 0%, rgba(59,42,122,0) 55%), radial-gradient(120% 140% at 100% 100%, #0F5552 0%, rgba(15,85,82,0) 55%), #121833;
+  box-shadow: 0 10px 28px rgba(18,24,51,0.35); }
+.ka-wrap::before { content: ''; position: absolute; inset: 0; pointer-events: none; opacity: 0.35;
+  background-image: linear-gradient(rgba(255,255,255,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.07) 1px, transparent 1px); background-size: 18px 18px; }
+.ka-wrap > * { position: relative; }
+.ka-wrap .ka-head { color: #FFFFFF; font-size: 1.05rem; letter-spacing: 0.1em; text-transform: uppercase; }
+.ka-wrap .ka { background: rgba(255,255,255,0.06); color: #EEF1FA; border: 1.5px solid rgba(169,139,255,0.75); border-radius: 18px; box-shadow: 0 0 0 1px rgba(169,139,255,0.15), 0 0 18px rgba(169,139,255,0.28) inset; padding: 12px 14px; }
+.ka-wrap .ka.mka { background: rgba(255,255,255,0.06); border-color: rgba(60,207,198,0.8); box-shadow: 0 0 0 1px rgba(60,207,198,0.15), 0 0 18px rgba(60,207,198,0.25) inset; }
+.ka-wrap .ka-subj { color: #C9B8FF; opacity: 1; }
+.ka-wrap .mka .ka-subj { color: #8EEDE6; }
+.ka-wrap .ka-num { color: #FFFFFF; font-size: 3.6rem; text-shadow: 0 0 14px rgba(169,139,255,0.9), 0 0 2px #fff; }
+.ka-wrap .mka .ka-num { color: #FFFFFF; text-shadow: 0 0 14px rgba(60,207,198,0.9), 0 0 2px #fff; }
+.ka-wrap .ka p, .ka-wrap .ka b { color: #EEF1FA; }
+.ka-wrap .ka b { display: block; font-weight: 700; }
 /* ===== Vokabel-Trainer ===== */
 .btn.voc-jump { background: var(--lina); color: #1F2A44; align-self: stretch; }
-.subj.voc .subj-go { background: var(--lina); color: #1F2A44; }
+.subj.voc .subj-go { background: var(--lina); color: #1F2A44; box-shadow: 0 4px 0 #C9A21E; }
+.subj.voc .subj-top { background: var(--tip-fill); }
 .voc-card { gap: 12px; }
 .voc-card h2 { margin: 0; font-family: var(--font-display); font-weight: 600; font-size: 1.4rem; line-height: 1.15; }
 .voc-eyebrow { margin: 0; font-family: var(--font-display); font-weight: 600; font-size: 0.9rem; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.04em; }
