@@ -808,6 +808,37 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
 .de-quit { margin-left: auto; }
 #deEnd { align-items: center; text-align: center; }
 #deRulesBody { display: flex; flex-direction: column; gap: 10px; }
+/* ===== Erdkunde: Maßstab ===== */
+.subj.ek .subj-top { background: #DFF3E4; }
+.subj.ek .subj-go { background: #2E9E5B; color: #FFFFFF; box-shadow: 0 4px 0 #1E7442; }
+.subj.ek .subj-top svg, .top .ek-globe { width: 52px; height: 52px; flex-shrink: 0; }
+.ka-wrap .ka.eka { border-color: rgba(255,176,72,0.85); box-shadow: 0 0 0 1px rgba(255,176,72,0.15), 0 0 18px rgba(255,176,72,0.25) inset; }
+.ka-wrap .eka .ka-subj { color: #FFD08A; }
+.ka-wrap .eka .ka-num { text-shadow: 0 0 14px rgba(255,176,72,0.9), 0 0 2px #fff; }
+.ek-modes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+@media (max-width: 380px) { .ek-modes { grid-template-columns: 1fr; } }
+.ek-svg { width: 100%; max-width: 420px; height: auto; display: block; margin: 0 auto; }
+.ek-svg text { font-family: var(--font-body); fill: var(--ink); }
+.ek-flash { min-height: 190px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; text-align: center; padding: 20px 16px; border: 2.5px solid var(--line); border-radius: 20px; background: var(--surface); box-shadow: 3px 3px 0 var(--shadow); cursor: pointer; font-size: 1.2rem; line-height: 1.45; }
+.ek-flash.back { background: var(--tip-fill); font-size: 1.05rem; }
+.ek-flash .ek-side { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-soft); }
+.ek-flash b.ek-front { font-family: var(--font-display); font-size: 1.35rem; }
+.ek-boxes { display: flex; gap: 6px; flex-wrap: wrap; font-size: 0.9rem; }
+.ek-boxes span { padding: 3px 10px; border-radius: 999px; background: var(--tip-fill); }
+.ek-steps { margin: 0; padding: 10px 14px; border-radius: 14px; background: var(--good-fill); line-height: 1.5; }
+.ek-unit { font-family: var(--font-display); font-weight: 700; font-size: 1.3rem; align-self: center; }
+.ek-rate { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+#ekHome .btn, #ekRun .btn, #ekEnd .btn { flex: none; }
+.ek-op { display: inline-block; padding: 2px 10px; border-radius: 999px; background: #2E9E5B; color: #fff; font-weight: 800; font-size: 0.85rem; letter-spacing: 0.03em; }
+.ek-pts { float: right; font-weight: 800; color: var(--ink-soft); }
+.ek-wtask { margin: 0; font-size: 1.12rem; line-height: 1.45; }
+.ek-wta { width: 100%; min-height: 140px; resize: vertical; font-family: var(--font-body); font-size: 1.05rem; line-height: 1.5; padding: 10px 12px; border: 2.5px solid var(--line); border-radius: 14px; background: var(--paper); color: var(--ink); }
+.ek-wta:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.ek-mine { margin: 0; padding: 10px 12px; border-radius: 14px; background: var(--paper); border: 2px dashed var(--line); white-space: pre-wrap; }
+.ek-checks { display: flex; flex-direction: column; gap: 8px; }
+.ek-checks label { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border: 2px solid var(--line); border-radius: 14px; background: var(--surface); cursor: pointer; line-height: 1.4; }
+.ek-checks label.on { background: var(--good-fill); border-color: #2E9E5B; }
+.ek-checks input { width: 22px; height: 22px; flex-shrink: 0; margin-top: 1px; accent-color: #2E9E5B; }
 </style>
 
 <div class="app view-wrap" id="homeView">
@@ -834,6 +865,12 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
     <span class="ka-subj">Mathe</span>
     <span class="ka-num" id="mkaNum">?</span>
     <p id="mkaText"><b>Mathe-Klassenarbeit am 25. November.</b></p>
+  </div>
+
+  <div class="ka eka" id="ekaBox">
+    <span class="ka-subj">Erdkunde</span>
+    <span class="ka-num" id="ekaNum">?</span>
+    <p id="ekaText"><b>Erdkunde-HÜ am Freitag, 6. November.</b></p>
   </div>
   </div>
   </section>
@@ -873,6 +910,14 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
       </span>
       <span class="subj-status"><b id="deMin">0 Min</b><span id="deTileState"></span></span>
       <span class="subj-go">Deutsch üben</span>
+    </button>
+    <button type="button" class="subj ek" data-go="ek" id="ekTile">
+      <span class="subj-top">
+        <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="30" r="22" fill="#8FD3FF" stroke="#1F2A44" stroke-width="2.5"/><path d="M18 18 Q24 14 28 20 Q26 26 20 27 Q15 25 18 18 Z M34 24 Q42 20 46 28 Q47 36 40 40 Q34 38 35 32 Z M24 38 Q30 36 31 43 Q28 48 24 46 Z" fill="#7BC67E" stroke="#1F2A44" stroke-width="2"/><rect x="8" y="52" width="48" height="8" rx="2" fill="#FFC928" stroke="#1F2A44" stroke-width="2"/><path d="M14 52 V56 M20 52 V55 M26 52 V56 M32 52 V55 M38 52 V56 M44 52 V55 M50 52 V56" stroke="#1F2A44" stroke-width="1.6"/></svg>
+        <span><span class="subj-name">Erdkunde</span><br><span class="subj-what">HÜ 6.11.: Maßstab · Karteikarten und Übungen</span></span>
+      </span>
+      <span class="subj-status"><b id="ekMin">0 Min</b><span id="ekTileState"></span></span>
+      <span class="subj-go">Erdkunde üben</span>
     </button>
     <button type="button" class="subj print" data-go="print" id="printTile">
       <span class="subj-top">
@@ -922,6 +967,9 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
       <label class="lv-setting" for="mkaDate">Datum der Mathe-Klassenarbeit:
         <input type="date" id="mkaDate">
       </label>
+      <label class="lv-setting" for="ekaDate">Datum der Erdkunde-HÜ:
+        <input type="date" id="ekaDate">
+      </label>
       <label class="lv-setting" for="goalMin">Tagesziel pro Fach:
         <select id="goalMin"><option value="15">15 Minuten</option><option value="20">20 Minuten</option></select>
       </label>
@@ -932,7 +980,7 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
         <div class="voice-row"><button type="button" class="btn small" id="stufeReset">Alle auf „Normal“ setzen</button></div>
       </div>
       <p class="lv-legend">Gezählt wird nur aktive Zeit: Die Uhr hält an, wenn eine Minute lang nichts angetippt wird oder die App im Hintergrund ist.</p>
-      <div style="overflow-x:auto"><table id="logTable"><thead><tr><th>Tag</th><th>Mathe</th><th>Englisch</th><th>Deutsch</th></tr></thead><tbody></tbody></table></div>
+      <div style="overflow-x:auto"><table id="logTable"><thead><tr><th>Tag</th><th>Mathe</th><th>Englisch</th><th>Deutsch</th><th>Erdkunde</th></tr></thead><tbody></tbody></table></div>
     </div>
   </details>
   <p class="note">Alles wird nur auf diesem Gerät gespeichert.</p>
@@ -1058,6 +1106,39 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
   <section class="card voc-card" id="deRun" aria-live="polite" hidden></section>
   <section class="card voc-card" id="deEnd" hidden></section>
   <p class="note">Tipp: Schreib schwierige Wörter mit Silbenbögen ins Heft und markiere den kurzen Vokal mit einem Punkt, den langen mit einem Strich.</p>
+</div>
+
+<div class="app view-wrap" id="ekView" hidden>
+  <div class="backbar"><button type="button" class="btn small" data-go="home">← Start</button><span class="timepill" id="ekTime"></span></div>
+  <header class="top">
+    <svg class="ek-globe" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="30" r="22" fill="#8FD3FF" stroke="#1F2A44" stroke-width="2.5"/><path d="M18 18 Q24 14 28 20 Q26 26 20 27 Q15 25 18 18 Z M34 24 Q42 20 46 28 Q47 36 40 40 Q34 38 35 32 Z M24 38 Q30 36 31 43 Q28 48 24 46 Z" fill="#7BC67E" stroke="#1F2A44" stroke-width="2"/><rect x="8" y="52" width="48" height="8" rx="2" fill="#FFC928" stroke="#1F2A44" stroke-width="2"/><path d="M14 52 V56 M20 52 V55 M26 52 V56 M32 52 V55 M38 52 V56 M44 52 V55 M50 52 V56" stroke="#1F2A44" stroke-width="1.6"/></svg>
+    <div class="brand">
+      <h1>Maßstab-Profi</h1>
+      <p>Erdkunde · HÜ am 6. November · Buch S. 20–21 „Ob groß, ob klein – ein Maßstab muss sein“</p>
+    </div>
+  </header>
+  <section class="card voc-card" id="ekHome">
+    <p class="voc-eyebrow">Karteikarten-Check</p>
+    <p class="voc-how" id="ekDeckInfo"></p>
+    <div class="ek-modes">
+      <button type="button" class="btn primary" id="ekCards">🗂️ Karteikarten Maßstab</button>
+      <button type="button" class="btn" id="ekCardsX">🗺️ Zusatz: Karten &amp; Atlas</button>
+    </div>
+    <p class="voc-eyebrow">Übungen zum Maßstab</p>
+    <div class="de-topics" id="ekTopics"></div>
+    <button type="button" class="btn primary" id="ekMix">Gemischte Runde (10 Aufgaben)</button>
+    <button type="button" class="btn" id="ekTest">HÜ-Probe mit Note (12 Aufgaben)</button>
+    <button type="button" class="btn" id="ekWrite">✍️ Schreib-HÜ wie beim Lehrer (Nenne, Erkläre, Berechne)</button>
+    <p class="de-info" id="ekInfo"></p>
+    <p class="voc-how">Bei den Rechenaufgaben darfst du einmal falsch liegen, dann kommt ein Tipp. Den Merkzettel kannst du jederzeit aufmachen. Was nicht klappt, kommt gleich nochmal und beim nächsten Mal wieder. In der HÜ-Probe gibt es keine Tipps, wie in der echten HÜ.</p>
+  </section>
+  <details class="levels" id="ekRules">
+    <summary><span class="lv-title">Merkzettel Maßstab</span><span class="lv-sum">alles zum Nachlesen</span></summary>
+    <div class="lv-body" id="ekRulesBody"></div>
+  </details>
+  <section class="card voc-card" id="ekRun" aria-live="polite" hidden></section>
+  <section class="card voc-card" id="ekEnd" hidden></section>
+  <p class="note">Tipp: Schreib dir die Merksätze auf echte Karteikarten und rechne zwei Aufgaben mit Rechenweg ins Heft, wie im Buch (M7).</p>
 </div>
 
 <div class="app view-wrap" id="printView" hidden>
@@ -2836,7 +2917,7 @@ window.LU5 = (function () {
   /* ================= Zeit & Startseite ================= */
   var LOG_KEY = 'lern-zeiten', SET_KEY = 'lern-einstellungen';
   var view = 'home', lastAct = Date.now(), dirty = 0;
-  function settings() { var s = store(SET_KEY) || {}; if (s.goal !== 20) s.goal = 15; if (!s.ka1103) { if (s.kaDate === undefined || s.kaDate === '2026-11-05') s.kaDate = '2026-11-03'; s.ka1103 = 1; store(SET_KEY, s); } if (s.mkaDate === undefined) s.mkaDate = '2026-11-25'; return s; }
+  function settings() { var s = store(SET_KEY) || {}; if (s.goal !== 20) s.goal = 15; if (!s.ka1103) { if (s.kaDate === undefined || s.kaDate === '2026-11-05') s.kaDate = '2026-11-03'; s.ka1103 = 1; store(SET_KEY, s); } if (s.mkaDate === undefined) s.mkaDate = '2026-11-25'; if (s.ekaDate === undefined) s.ekaDate = '2026-11-06'; return s; }
   function log() { return store(LOG_KEY) || {}; }
   function secs(day, subj) { var l = log(); return (l[day] && l[day][subj]) || 0; }
   var logCache = log();
@@ -2860,7 +2941,7 @@ window.LU5 = (function () {
     if (!logCache[k]) logCache[k] = { math: 0, en: 0 };
     logCache[k][subj] = (logCache[k][subj] || 0) + 1;
     var goal = settings().goal * 60, v = logCache[k][subj];
-    if (v === goal) toast(subj === 'math' ? 'Mathe-Ziel geschafft! Super' + kidName(', ') + '!' : subj === 'de' ? 'Deutsch: ' + settings().goal + ' Minuten geschafft! Klasse' + kidName(', ') + '!' : 'Englisch-Ziel geschafft! Well done' + kidName(', ') + '!');
+    if (v === goal) toast(subj === 'math' ? 'Mathe-Ziel geschafft! Super' + kidName(', ') + '!' : subj === 'de' ? 'Deutsch: ' + settings().goal + ' Minuten geschafft! Klasse' + kidName(', ') + '!' : subj === 'ek' ? 'Erdkunde: ' + settings().goal + ' Minuten geschafft! Stark' + kidName(', ') + '!' : 'Englisch-Ziel geschafft! Well done' + kidName(', ') + '!');
     if (v === 20 * 60 && goal < 1200) toast('20 Minuten! Du darfst jetzt aufhören.');
     if (++dirty >= 5) { flushLog(); }
     renderTimePills();
@@ -2888,7 +2969,7 @@ window.LU5 = (function () {
   function minText(s) { return Math.floor(s / 60) + ' Min'; }
   function renderTimePills() {
     var k = dayKey(), goal = settings().goal;
-    [['math', 'mathTime'], ['en', 'enTime'], ['en', 'vocTime'], ['de', 'deTime']].forEach(function (p) {
+    [['math', 'mathTime'], ['en', 'enTime'], ['en', 'vocTime'], ['de', 'deTime'], ['ek', 'ekTime']].forEach(function (p) {
       var el = $(p[1]); if (!el) return;
       var s = (logCache[k] && logCache[k][p[0]]) || 0;
       el.innerHTML = CLOCK + '<span>' + Math.floor(s / 60) + ' / ' + goal + ' Min heute</span>';
@@ -2903,6 +2984,16 @@ window.LU5 = (function () {
     $('goalMin').value = String(st.goal);
     if (st.kaDate) $('kaDate').value = st.kaDate;
     if (st.mkaDate) $('mkaDate').value = st.mkaDate;
+    if (st.ekaDate) $('ekaDate').value = st.ekaDate;
+    (function () {
+      var box = $('ekaBox'); if (!box) return; box.hidden = !st.ekaDate; if (!st.ekaDate) return;
+      var d = new Date(st.ekaDate + 'T00:00:00'), t0 = new Date(now.getFullYear(), now.getMonth(), now.getDate()), days = Math.round((d - t0) / 86400000);
+      var when = d.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' });
+      if (days > 1) { $('ekaNum').textContent = days; $('ekaText').innerHTML = '<b>Tage bis zur Erdkunde-HÜ</b> am ' + when + '. Thema: Maßstab.' + (days <= 4 ? ' Jeden Tag Karteikarten und eine HÜ-Probe!' : ''); }
+      else if (days === 1) { $('ekaNum').textContent = '1'; $('ekaText').innerHTML = '<b>Morgen ist die Erdkunde-HÜ!</b> Heute nur noch die Karteikarten durchgehen.'; }
+      else if (days === 0) { $('ekaNum').textContent = '★'; $('ekaText').innerHTML = '<b>Heute ist die Erdkunde-HÜ.</b> Viel Glück' + esc(kidName(', ')) + '! Rechenweg aufschreiben und Einheit nicht vergessen.'; }
+      else { $('ekaNum').textContent = '✓'; $('ekaText').innerHTML = '<b>Die Erdkunde-HÜ ist vorbei.</b> Neues Datum unten eintragen.'; }
+    })();
     (function () {
       var box = $('mkaBox'); box.hidden = !st.mkaDate; if (!st.mkaDate) return;
       var d = new Date(st.mkaDate + 'T00:00:00'), t0 = new Date(now.getFullYear(), now.getMonth(), now.getDate()), days = Math.round((d - t0) / 86400000);
@@ -2953,13 +3044,16 @@ window.LU5 = (function () {
     var rows = '';
     for (var n = 0; n < 14; n++) {
       var d3 = new Date(now.getFullYear(), now.getMonth(), now.getDate() - n), k3 = dayKey(d3);
-      rows += '<tr><td>' + WD[d3.getDay()] + ', ' + d3.getDate() + '.' + (d3.getMonth() + 1) + '.</td><td>' + minText(secs(k3, 'math')) + '</td><td>' + minText(secs(k3, 'en')) + '</td><td>' + minText(secs(k3, 'de')) + '</td></tr>';
+      rows += '<tr><td>' + WD[d3.getDay()] + ', ' + d3.getDate() + '.' + (d3.getMonth() + 1) + '.</td><td>' + minText(secs(k3, 'math')) + '</td><td>' + minText(secs(k3, 'en')) + '</td><td>' + minText(secs(k3, 'de')) + '</td><td>' + minText(secs(k3, 'ek')) + '</td></tr>';
     }
     $('logTable').querySelector('tbody').innerHTML = rows;
     if (window.LU5Voc) window.LU5Voc.home();
     if ($('deMin')) $('deMin').textContent = minText(secs(k, 'de')) + ' heute';
     if (window.LU5De) window.LU5De.home();
+    if ($('ekMin')) $('ekMin').textContent = minText(secs(k, 'ek')) + ' heute';
+    if (window.LU5Ek) window.LU5Ek.home();
   }
+  $('ekaDate').addEventListener('change', function () { var s = settings(); s.ekaDate = this.value || null; store(SET_KEY, s); renderHome(); });
   $('mkaDate').addEventListener('change', function () { var s = settings(); s.mkaDate = this.value || null; store(SET_KEY, s); renderHome(); });
   $('kaDate').addEventListener('change', function () { var s = settings(); s.kaDate = this.value || null; store(SET_KEY, s); renderHome(); });
   $('goalMin').addEventListener('change', function () { var s = settings(); s.goal = Number(this.value) === 20 ? 20 : 15; store(SET_KEY, s); renderHome(); renderTimePills(); });
@@ -2973,6 +3067,8 @@ window.LU5 = (function () {
     $('vocView').hidden = v !== 'voc';
     $('printView').hidden = v !== 'print';
     $('deView').hidden = v !== 'de';
+    $('ekView').hidden = v !== 'ek';
+    if (v === 'ek' && window.LU5Ek) window.LU5Ek.open();
     var katV = $('katView'); if (katV) katV.hidden = v !== 'kat';
     if (v === 'print' && window.LU5Ka) window.LU5Ka.cards();
     if (v === 'de' && window.LU5De) window.LU5De.open();
@@ -5198,6 +5294,471 @@ window.LU5 = (function () {
 })();
 </script>
 
+<script>
+/* ================= Erdkunde: Maßstab-Profi (Buch S. 16–21, HÜ: Maßstab) ================= */
+(function () {
+  function $(id) { return document.getElementById(id); }
+  if (!$('ekView')) return;
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function shuffle(a) { a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)), t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function pick(a) { return a[Math.floor(Math.random() * a.length)]; }
+  function rnd(n) { return Math.floor(Math.random() * n); }
+  function kidName(pre) { try { var n = JSON.parse(localStorage.getItem('lern-name')); n = n ? String(n).trim() : ''; return n ? (pre || '') + n : ''; } catch (e) { return ''; } }
+  function nf(x) { return Number(x).toLocaleString('de-DE', { maximumFractionDigits: 3 }); }
+  function M(x) { return '1 : ' + nf(x); }
+  function parseNum(v) {
+    v = String(v).replace(/[^0-9.,\-]/g, '');
+    if (!v) return NaN;
+    if (v.indexOf(',') !== -1) v = v.replace(/\./g, '').replace(',', '.');
+    else if (/^\d{1,3}(\.\d{3})+$/.test(v)) v = v.replace(/\./g, '');
+    return Number(v);
+  }
+  function same(a, b) { return Math.abs(a - b) < 1e-9 * Math.max(1, Math.abs(b)); }
+  /* Länge in cm → schön lesbare Angabe */
+  function lenTxt(cm) { if (cm >= 100000) return nf(cm / 100000) + ' km'; if (cm >= 100) return nf(cm / 100) + ' m'; return nf(cm) + ' cm'; }
+  function chain(cm) { var s = nf(cm) + ' cm'; if (cm >= 100) s += ' = ' + nf(cm / 100) + ' m'; if (cm >= 100000) s += ' = ' + nf(cm / 100000) + ' km'; return s; }
+
+  /* ---------- Merkzettel ---------- */
+  var RULES = [
+    ['Was ist ein Maßstab?', 'Karten <b>verkleinern</b> die Wirklichkeit. Der Maßstab sagt, <b>wie stark</b> verkleinert wurde, also in welchem Verhältnis die Karte zur Wirklichkeit steht.'],
+    ['So liest du ' + M(100000), '<b>1 cm</b> auf der Karte = <b>100 000 cm</b> in Wirklichkeit.<br>100 000 cm = 1 000 m = <b>1 km</b>.<br>Die Zahl hinter „1 :“ heißt <b>Maßstabszahl</b>.'],
+    ['Großer Maßstab', 'Die Dinge erscheinen <b>groß</b>, man sieht viele Einzelheiten (z. B. den Hauptbahnhof). Die <b>Maßstabszahl ist klein</b>.<br>Beispiel: Innenstadt von Mainz ' + M(20000) + '.'],
+    ['Kleiner Maßstab', 'Die Dinge erscheinen <b>klein</b>, man sieht wenig Einzelheiten, aber ein großes Gebiet. Die <b>Maßstabszahl ist groß</b>.<br>Beispiel: Mainz in Europa ' + M(200000000) + '.'],
+    ['Merksatz', '<b>Kleine Maßstabszahl → großer Maßstab.</b><br><b>Große Maßstabszahl → kleiner Maßstab.</b><br>Je weiter man herauszoomt, desto kleiner wird der Maßstab.'],
+    ['Einheiten umrechnen', '1 km = 1 000 m · 1 m = 10 dm = 100 cm · 1 km = 100 000 cm.<br><b>Trick:</b> cm → m: zwei Nullen weg. cm → km: fünf Nullen weg.'],
+    ['Karte → Wirklichkeit', '1. Strecke mit dem Lineal messen (in cm).<br>2. <b>Mal</b> die Maßstabszahl rechnen.<br>3. In m oder km umrechnen.<br>Beispiel ' + M(50000) + ': 3 cm × 50 000 = 150 000 cm = 1 500 m = 1,5 km.'],
+    ['Wirklichkeit → Karte', '1. Die echte Strecke in <b>cm</b> umrechnen.<br>2. <b>Geteilt durch</b> die Maßstabszahl rechnen.<br>Beispiel ' + M(100000) + ': 5 km = 500 000 cm; 500 000 : 100 000 = 5 cm.'],
+    ['Maßstab bestimmen', 'Wirklichkeit in cm <b>geteilt durch</b> Karte in cm.<br>Beispiel: 2 cm auf der Karte sind 1 km = 100 000 cm. 100 000 : 2 = 50 000 → ' + M(50000) + '.'],
+    ['Maßstabsleiste', 'Ein Strich mit Einteilung unter der Karte. Daran liest du direkt ab, wie weit 1 cm in Wirklichkeit ist. Sie stimmt auch dann noch, wenn die Karte vergrößert oder verkleinert kopiert wird.'],
+    ['Verkleinern wie im Heft (M4)', 'Atlas 30 cm × 24 cm → halb so groß: 15 cm × 12 cm. Der Maßstab ist dann <b>1 : 2</b> (1 cm in der Zeichnung = 2 cm in echt).<br>Noch einmal halbieren: 7,5 cm × 6 cm → Maßstab <b>1 : 4</b>.'],
+    ['Aufgabenwörter in der HÜ', '<b>Nenne:</b> aufzählen, ohne Erklärung, so viele wie verlangt.<br><b>Erkläre:</b> mit „weil“ oder „dadurch“ begründen. <b>Pro Punkt ein eigener Gedanke</b>: Bei 3 Punkten mindestens 3 Sachen schreiben!<br><b>Berechne:</b> Rechenweg hinschreiben und die Einheit nicht vergessen.<br><b>Begründe:</b> erst die Antwort, dann der Grund mit „weil“.']
+  ];
+
+  /* ---------- Karteikarten ---------- */
+  var CARDS = [
+    ['m1', 'Was gibt der Maßstab einer Karte an?', 'Wie stark die Wirklichkeit <b>verkleinert</b> wurde: das Verhältnis zwischen Karte und Wirklichkeit.'],
+    ['m2', 'Warum braucht jede Karte einen Maßstab?', 'Karten verkleinern die Wirklichkeit. Mit dem Maßstab kann man <b>echte Entfernungen</b> ausrechnen.'],
+    ['m3', 'Was bedeutet ' + M(100000) + '?', '<b>1 cm</b> auf der Karte = <b>100 000 cm</b> in Wirklichkeit = 1 000 m = <b>1 km</b>.'],
+    ['m4', 'Wie heißt die Zahl hinter „1 :“?', 'Die <b>Maßstabszahl</b>.'],
+    ['m5', 'Woran erkennst du einen <b>großen</b> Maßstab?', 'Kleine Maßstabszahl. Die Dinge erscheinen groß, man sieht <b>viele Einzelheiten</b>. Beispiel: Stadtplan ' + M(20000) + '.'],
+    ['m6', 'Woran erkennst du einen <b>kleinen</b> Maßstab?', 'Große Maßstabszahl. Die Dinge erscheinen klein, man sieht <b>ein großes Gebiet</b>, aber wenig Einzelheiten. Beispiel: Europakarte ' + M(200000000) + '.'],
+    ['m7', 'Ergänze: Kleine Maßstabszahl → … Maßstab', '<b>großer</b> Maßstab (und große Maßstabszahl → kleiner Maßstab).'],
+    ['m8', 'Was ist größer: ' + M(20000) + ' oder ' + M(2000000) + '?', M(20000) + ' ist der <b>größere</b> Maßstab, weil die Maßstabszahl kleiner ist.'],
+    ['m9', 'Ich zoome auf einer Karte heraus. Was passiert mit dem Maßstab?', 'Er wird <b>kleiner</b>. Man sieht mehr Gebiet, aber weniger Einzelheiten.'],
+    ['m10', '1 km = ? m = ? cm', '1 km = <b>1 000 m</b> = <b>100 000 cm</b>.'],
+    ['m11', '1 m = ? dm = ? cm', '1 m = <b>10 dm</b> = <b>100 cm</b>.'],
+    ['m12', 'Trick: Wie kommst du schnell von cm zu km?', '<b>Fünf Nullen</b> wegstreichen: 300 000 cm = 3 km. (cm → m: zwei Nullen weg.)'],
+    ['m13', 'Wie bestimmst du eine echte Entfernung mit der Karte?', '1. Mit dem Lineal messen (cm). 2. <b>Mal</b> die Maßstabszahl. 3. In m oder km umrechnen.'],
+    ['m14', 'Wie rechnest du eine echte Strecke in die Karte um?', '1. Echte Strecke in <b>cm</b> umrechnen. 2. <b>Geteilt durch</b> die Maßstabszahl.'],
+    ['m15', 'Wie bestimmst du den Maßstab, wenn du Karte und Wirklichkeit kennst?', 'Wirklichkeit in cm <b>geteilt durch</b> Karte in cm. Ergebnis = Maßstabszahl.'],
+    ['m16', M(20000) + ': 1 cm entspricht …', '<b>200 m</b> (20 000 cm). Buch M3: Innenstadt von Mainz.'],
+    ['m17', M(2000000) + ': 1 cm entspricht …', '<b>20 km</b> (2 000 000 cm). Buch M2: Mainz im Rhein-Main-Gebiet.'],
+    ['m18', M(200000000) + ': 1 cm entspricht …', '<b>2 000 km</b> (200 000 000 cm). Buch M1: Mainz in Europa.'],
+    ['m19', M(50000) + ': 1 cm entspricht …', '<b>500 m</b> (50 000 cm). Buch S. 19: Atlaskarte an der Mosel.'],
+    ['m20', 'Was ist eine Maßstabsleiste?', 'Ein eingeteilter Strich unter der Karte. Daran liest du ab, wie weit 1 cm in Wirklichkeit ist. Sie stimmt auch auf einer vergrößerten Kopie.'],
+    ['m21', 'Dein Atlas (30 × 24 cm) wird halb so groß gezeichnet. Welcher Maßstab?', '<b>1 : 2</b>. Die Zeichnung ist 15 × 12 cm groß.'],
+    ['m22', 'Und noch einmal halbiert (7,5 × 6 cm)?', '<b>1 : 4</b>. 1 cm in der Zeichnung = 4 cm in echt.'],
+    ['m23', 'Auf welcher Karte siehst du den Hauptbahnhof von Mainz: ' + M(20000) + ' oder ' + M(2000000) + '?', 'Auf ' + M(20000) + ', dem <b>großen</b> Maßstab mit vielen Einzelheiten.'],
+    ['m24', 'Welche Rechenart brauchst du von der Karte zur Wirklichkeit?', '<b>Mal</b> (×) die Maßstabszahl. Umgekehrt (Wirklichkeit → Karte): <b>geteilt</b>.'],
+    ['k1', 'Was zeigt eine <b>physische</b> Karte?', 'Die Gestalt der Erdoberfläche (Relief) und den <b>Naturraum</b>: Höhen in Farben von Grün bis Braun, Flüsse, Seen, Gebirge.'],
+    ['k2', 'Was zeigt eine <b>thematische</b> Karte?', 'Ein bestimmtes <b>Thema</b>, z. B. Industrie oder Tourismus. Vor allem der <b>Kulturraum</b> (vom Menschen gestaltet).'],
+    ['k3', 'Was ist die Legende?', 'Die Zeichenerklärung einer Karte. Sie erklärt die <b>Signaturen</b> (Zeichen, Farben, Linien).'],
+    ['k4', 'Was bedeutet Normalhöhennull (NHN)?', 'Der festgelegte <b>Bezugspunkt</b> für alle Höhenmessungen in Deutschland.'],
+    ['k5', 'Nenne die drei Erschließungshilfen im Atlas.', '1. <b>Kartenübersicht</b>, 2. <b>Inhaltsverzeichnis</b>, 3. <b>Namensregister</b>.'],
+    ['k6', 'Wofür brauchst du das Namensregister?', 'Um einen <b>Ort, Fluss oder Berg</b> schnell zu finden. Es nennt Atlasseite, Karte und Planquadrat (z. B. Mainz: S. 19/2, C4).'],
+    ['k7', 'Was ist ein Planquadrat?', 'Ein Feld im <b>Raster</b> der Karte, ähnlich wie beim Schachbrett (z. B. C4). So findet man Orte schnell.'],
+    ['k8', 'Nenne drei Vorteile eines <b>Luftbilds</b> gegenüber einer Karte.', '1. Es zeigt, wie es <b>in Wirklichkeit aussieht</b>.<br>2. Man sieht <b>Einzelheiten</b> wie Bäume, Dächer, Gärten, Autos.<br>3. Nichts ist weggelassen oder vereinfacht, und es zeigt den <b>aktuellen Zustand</b>.'],
+    ['k9', 'Nenne drei Vorteile einer <b>Karte</b> gegenüber einem Luftbild.', '1. <b>Legende</b> und Signaturen erklären, was man sieht.<br>2. <b>Beschriftungen</b> (Namen von Orten, Straßen, Flüssen).<br>3. Mit dem <b>Maßstab</b> kann man Entfernungen ausrechnen. Außerdem ist sie vereinfacht und übersichtlich.'],
+    ['k10', 'Nenne vier Merkmale einer Karte.', 'Zum Beispiel: <b>Titel</b>, <b>Legende</b>, <b>Maßstab</b>, <b>Signaturen/Symbole</b>, Beschriftungen, Nordpfeil.']
+  ];
+  var DECK_M = CARDS.filter(function (c) { return c[0].charAt(0) === 'm'; }), DECK_K = CARDS.filter(function (c) { return c[0].charAt(0) === 'k'; });
+  var DUE = [0, 0, 1, 2, 4, 7]; /* Tage Pause je Fach 1–5 */
+
+  /* ---------- Übungen ---------- */
+  var TOPICS = [
+    ['gk', 'Großer oder kleiner Maßstab?', 'S. 20, M1–M3, M5'], ['1cm', '1 cm entspricht …', 'S. 20, M1–M3'], ['umr', 'Einheiten umrechnen', 'S. 21, M7'],
+    ['k2w', 'Karte → Wirklichkeit', 'S. 21, M6/M7'], ['mess', 'Messen und rechnen', 'S. 21, M8, Aufg. 3'], ['w2k', 'Wirklichkeit → Karte', 'umgekehrt rechnen'],
+    ['leiste', 'Maßstabsleiste', 'S. 20, M1–M3'], ['mbest', 'Maßstab bestimmen', 'Karte und Wirklichkeit'], ['verkl', 'Verkleinern wie im Heft', 'S. 20, M4']];
+  var TNAME = {}; TOPICS.forEach(function (t) { TNAME[t[0]] = t[1]; });
+  var RULE_OF = { gk: 4, '1cm': 1, umr: 5, k2w: 6, mess: 6, w2k: 7, leiste: 9, mbest: 8, verkl: 10 };
+  function ruleHtml(topic) { var r = RULES[RULE_OF[topic]]; return '<b>' + r[0] + '</b><br>' + r[1]; }
+
+  var SC = [1000, 2000, 5000, 10000, 20000, 25000, 50000, 100000, 200000, 250000, 500000, 1000000, 2000000];
+  /* Ortspaare passend zur ausgerechneten Entfernung, damit es realistisch bleibt */
+  var PLACES_NEAR = [['Schule', 'Sportplatz'], ['Bahnhof', 'Rathaus'], ['Haustür', 'Bäckerei'], ['Schule', 'Schwimmbad'], ['Spielplatz', 'Eisdiele'], ['Dom', 'Rheinufer']];
+  var PLACES_MID = [['Mainz', 'Wiesbaden'], ['Speyer', 'Ludwigshafen'], ['Kaiserslautern', 'Landstuhl'], ['Worms', 'Frankenthal'], ['Neustadt', 'Bad Dürkheim'], ['Landau', 'Annweiler'], ['Trier', 'Bernkastel'], ['Pirmasens', 'Zweibrücken']];
+  var PLACES_FAR = [['Mainz', 'Trier'], ['Speyer', 'Koblenz'], ['Kaiserslautern', 'Mainz'], ['Ludwigshafen', 'Trier'], ['Koblenz', 'Landau']];
+  function placesFor(cmReal) { var km = cmReal / 100000; return pick(km < 6 ? PLACES_NEAR : km <= 45 ? PLACES_MID : PLACES_FAR); }
+  function niceLenKm(cm) { var km = cm / 100000; return (km >= 1 && Math.round(km * 10) === km * 10) ? 'km' : 'm'; }
+
+  var G = {};
+  G.gk = function () {
+    var v = rnd(6);
+    if (v === 0) { var a = pick([20000, 50000, 100000, 25000]), b = pick([2000000, 5000000, 200000000]); var big = Math.random() < 0.5; return { topic: 'gk', kind: 'choice', q: 'Welcher Maßstab ist <b>' + (big ? 'größer' : 'kleiner') + '</b>?', options: shuffle([M(a), M(b)]), answer: big ? M(a) : M(b), explain: 'Kleine Maßstabszahl → großer Maßstab. Also ist ' + M(a) + ' der größere und ' + M(b) + ' der kleinere Maßstab.' }; }
+    if (v === 1) { var c = pick([[M(20000), M(200000000), 'den Hauptbahnhof von Mainz'], [M(10000), M(1000000), 'einzelne Straßen in Speyer'], [M(5000), M(500000), 'das Schulgebäude']]); return { topic: 'gk', kind: 'choice', q: 'Auf welcher Karte kannst du <b>' + c[2] + '</b> erkennen?', options: shuffle([c[0], c[1]]), answer: c[0], explain: 'Beim <b>großen</b> Maßstab (' + c[0] + ') sieht man viele Einzelheiten.' }; }
+    if (v === 2) { var m = pick([['Stadtplan der Innenstadt', M(20000), [M(2000000), M(200000000)]], ['Karte von Europa', M(200000000), [M(20000), M(200000)]], ['Karte von Rheinland-Pfalz', M(2000000), [M(20000), M(200000000)]], ['Wanderkarte vom Pfälzerwald', M(25000), [M(2500000), M(250000000)]]]); return { topic: 'gk', kind: 'choice', q: 'Welcher Maßstab passt am besten zu: <b>' + m[0] + '</b>?', options: shuffle([m[1]].concat(m[2])), answer: m[1], explain: 'Kleines Gebiet mit vielen Einzelheiten → großer Maßstab (kleine Zahl). Großes Gebiet → kleiner Maßstab (große Zahl). Richtig: ' + m[1] + '.' }; }
+    if (v === 3) { var s = Math.random() < 0.5; return { topic: 'gk', kind: 'choice', q: 'Eine <b>' + (s ? 'kleine' : 'große') + '</b> Maßstabszahl bedeutet …', options: ['großer Maßstab', 'kleiner Maßstab'], answer: s ? 'großer Maßstab' : 'kleiner Maßstab', keep: true, explain: 'Merksatz: Kleine Maßstabszahl → großer Maßstab. Große Maßstabszahl → kleiner Maßstab.' }; }
+    if (v === 4) { var z = Math.random() < 0.5; return { topic: 'gk', kind: 'choice', q: 'Du <b>' + (z ? 'zoomst heraus' : 'zoomst hinein') + '</b>. Der Maßstab wird …', options: ['größer', 'kleiner'], answer: z ? 'kleiner' : 'größer', keep: true, explain: 'Herauszoomen: mehr Gebiet, weniger Einzelheiten → <b>kleinerer</b> Maßstab. Hineinzoomen → <b>größerer</b> Maßstab.' }; }
+    var l = shuffle([20000, 2000000, 200000000]), most = Math.random() < 0.5;
+    return { topic: 'gk', kind: 'choice', q: 'Welche Karte zeigt das <b>' + (most ? 'größte Gebiet' : 'kleinste Gebiet') + '</b>?', options: l.map(M), answer: most ? M(200000000) : M(20000), explain: 'Kleinster Maßstab (größte Zahl) zeigt das größte Gebiet: ' + M(200000000) + '. Größter Maßstab zeigt das kleinste Gebiet: ' + M(20000) + '.' };
+  };
+  G['1cm'] = function () {
+    var x = pick([1000, 2000, 5000, 10000, 20000, 25000, 50000, 100000, 200000, 250000, 500000, 1000000, 2000000, 5000000, 20000000, 200000000]);
+    var right = lenTxt(x), wrong = [lenTxt(x * 10), lenTxt(x / 10), lenTxt(x * 100)].filter(function (w, i, a) { return w !== right && a.indexOf(w) === i; });
+    return { topic: '1cm', kind: 'choice', q: 'Maßstab <b>' + M(x) + '</b>: 1 cm auf der Karte entspricht in Wirklichkeit …', options: shuffle([right].concat(wrong.slice(0, 2))), answer: right, explain: '1 cm × ' + nf(x) + ' = ' + chain(x) + '.' };
+  };
+  G.umr = function () {
+    var t = pick([
+      function () { var k = pick([1, 2, 3, 5, 1.5, 2.5, 4, 0.5, 12]); return [nf(k) + ' km', 'm', k * 1000, 'km → m: mal 1 000.']; },
+      function () { var m = pick([1, 2, 5, 3, 7, 10, 25]); return [nf(m) + ' m', 'cm', m * 100, 'm → cm: mal 100.']; },
+      function () { var k = pick([1, 2, 3, 5, 10, 0.5, 1.5]); return [nf(k) + ' km', 'cm', k * 100000, 'km → cm: mal 100 000 (fünf Nullen anhängen).']; },
+      function () { var c = pick([100000, 200000, 500000, 300000, 1000000, 150000, 2500000]); return [nf(c) + ' cm', 'km', c / 100000, 'cm → km: fünf Nullen weg (geteilt durch 100 000).']; },
+      function () { var c = pick([500, 1000, 2000, 20000, 50000, 3000, 150]); return [nf(c) + ' cm', 'm', c / 100, 'cm → m: zwei Nullen weg (geteilt durch 100).']; },
+      function () { var m = pick([1000, 2000, 5000, 500, 1500, 20000, 250]); return [nf(m) + ' m', 'km', m / 1000, 'm → km: geteilt durch 1 000.']; },
+      function () { var m = pick([1, 2, 5, 10]); return [nf(m) + ' m', 'dm', m * 10, 'm → dm: mal 10.']; },
+      function () { var c = pick([100000, 50000, 10000]); return [nf(c) + ' cm', 'dm', c / 10, 'cm → dm: geteilt durch 10.']; }
+    ])();
+    return { topic: 'umr', kind: 'num', q: 'Rechne um:', big: esc(t[0]) + ' = ? ' + t[1], unit: t[1], answer: t[2], explain: t[3] + ' ' + esc(t[0]) + ' = <b>' + nf(t[2]) + ' ' + t[1] + '</b>.', hint: t[3] };
+  };
+  function k2wTask(topic, x, cm, svg) {
+    var real = cm * x, unit = niceLenKm(real), ans = unit === 'km' ? real / 100000 : real / 100;
+    return { topic: topic, kind: 'num', q: (svg ? 'Lies am gezeichneten Lineal ab, wie lang die Strecke ist. Wie weit ist das in Wirklichkeit?' : 'Auf einer Karte im Maßstab <b>' + M(x) + '</b> misst du <b>' + nf(cm) + ' cm</b>. Wie weit ist das in Wirklichkeit?'),
+      svg: svg || '', unit: unit, answer: ans,
+      hint: (svg ? 'Die Strecke ist ' + nf(cm) + ' cm lang. ' : '') + 'Rechne ' + nf(cm) + ' × ' + nf(x) + ' und rechne dann in ' + unit + ' um.',
+      steps: nf(cm) + ' cm × ' + nf(x) + ' = ' + chain(real), explain: 'Rechenweg: ' + nf(cm) + ' cm × ' + nf(x) + ' = ' + chain(real) + '. Antwort: <b>' + nf(ans) + ' ' + unit + '</b>.' };
+  }
+  G.k2w = function () {
+    var x = pick(SC), cm = pick([1, 2, 3, 4, 5, 6, 7, 8, 1.5, 2.5, 3.5, 4.5, 12]);
+    return k2wTask('k2w', x, cm);
+  };
+  G.mess = function () {
+    var x = pick([10000, 20000, 25000, 50000, 100000, 200000, 500000, 1000000]), cm = pick([2, 3, 4, 5, 6, 7, 8, 2.5, 3.5, 4.5, 5.5, 6.5]);
+    var pl = placesFor(cm * x), u = 38, x0 = 30, w = Math.round(cm * u), W = Math.max(x0 + 8 * u + 40, x0 + w + 40);
+    var ticks = '';
+    for (var i = 0; i <= 9; i++) { var tx = x0 + i * u; ticks += '<path d="M' + tx + ' 92 V' + (108) + '" stroke="#1F2A44" stroke-width="1.6"/><text x="' + tx + '" y="124" font-size="12" text-anchor="middle">' + i + '</text>'; if (i < 9) ticks += '<path d="M' + (tx + u / 2) + ' 92 V102" stroke="#1F2A44" stroke-width="1.1"/>'; }
+    var svg = '<svg class="ek-svg" viewBox="0 0 ' + (x0 + 9 * u + 30) + ' 150" role="img" aria-label="Kartenausschnitt mit Lineal">' +
+      '<rect x="4" y="4" width="' + (x0 + 9 * u + 22) + '" height="80" rx="10" fill="#E9F5DF" stroke="#1F2A44" stroke-width="1.5"/>' +
+      '<path d="M' + x0 + ' 50 L' + (x0 + w) + ' 50" stroke="#E0457B" stroke-width="3" stroke-dasharray="6 4"/>' +
+      '<circle cx="' + x0 + '" cy="50" r="6" fill="#E0457B" stroke="#1F2A44" stroke-width="1.5"/><circle cx="' + (x0 + w) + '" cy="50" r="6" fill="#E0457B" stroke="#1F2A44" stroke-width="1.5"/>' +
+      '<text x="' + x0 + '" y="32" font-size="13" font-weight="700">' + esc(pl[0]) + '</text><text x="' + (x0 + w) + '" y="74" font-size="13" font-weight="700" text-anchor="' + (w > 200 ? 'end' : 'start') + '">' + esc(pl[1]) + '</text>' +
+      '<text x="' + (x0 + 9 * u + 18) + '" y="20" font-size="12" text-anchor="end">Maßstab ' + M(x) + '</text>' +
+      '<rect x="' + (x0 - 14) + '" y="90" width="' + (9 * u + 28) + '" height="44" rx="4" fill="#FFF3B0" stroke="#1F2A44" stroke-width="1.5"/>' + ticks + '<text x="' + (x0 + 9 * u + 8) + '" y="146" font-size="11" text-anchor="end">cm</text></svg>';
+    var t = k2wTask('mess', x, cm, svg); t.q = 'Wie weit ist es von <b>' + esc(pl[0]) + '</b> nach <b>' + esc(pl[1]) + '</b> in Wirklichkeit? Lies die Länge am gezeichneten Lineal ab.';
+    return t;
+  };
+  G.w2k = function () {
+    var x = pick([10000, 20000, 25000, 50000, 100000, 200000, 500000, 1000000]), cm = pick([1, 2, 3, 4, 5, 6, 8, 10, 1.5, 2.5, 0.5]);
+    var real = cm * x, unit = niceLenKm(real), shown = unit === 'km' ? real / 100000 : real / 100;
+    return { topic: 'w2k', kind: 'num', q: 'In Wirklichkeit sind es <b>' + nf(shown) + ' ' + unit + '</b>. Wie lang ist die Strecke auf einer Karte im Maßstab <b>' + M(x) + '</b>?', unit: 'cm', answer: cm,
+      hint: 'Rechne zuerst ' + nf(shown) + ' ' + unit + ' in cm um. Dann geteilt durch ' + nf(x) + '.', explain: 'Rechenweg: ' + nf(shown) + ' ' + unit + ' = ' + nf(real) + ' cm; ' + nf(real) + ' : ' + nf(x) + ' = <b>' + nf(cm) + ' cm</b>.' };
+  };
+  G.leiste = function () {
+    var step = pick([[1, 'km', 100000], [2, 'km', 200000], [5, 'km', 500000], [10, 'km', 1000000], [20, 'km', 2000000], [500, 'm', 50000], [200, 'm', 20000], [100, 'm', 10000], [250, 'm', 25000]]);
+    var u = 44, x0 = 20, segs = 5, bar = '';
+    for (var i = 0; i < segs; i++) bar += '<rect x="' + (x0 + i * u) + '" y="30" width="' + u + '" height="12" fill="' + (i % 2 ? '#FFFFFF' : '#1F2A44') + '" stroke="#1F2A44" stroke-width="1.5"/>';
+    for (var j = 0; j <= segs; j++) bar += '<text x="' + (x0 + j * u) + '" y="22" font-size="13" text-anchor="middle">' + nf(j * step[0]) + '</text>';
+    var svg = '<svg class="ek-svg" viewBox="0 0 ' + (x0 + segs * u + 50) + ' 70" role="img" aria-label="Maßstabsleiste">' + bar + '<text x="' + (x0 + segs * u + 8) + '" y="41" font-size="13" font-weight="700">' + step[1] + '</text><text x="' + x0 + '" y="62" font-size="11">Jedes Feld ist 1 cm lang.</text></svg>';
+    var v = rnd(3);
+    if (v === 0) return { topic: 'leiste', kind: 'num', q: 'Lies an der Maßstabsleiste ab: 1 cm entspricht wie viel?', svg: svg, unit: step[1], answer: step[0], hint: 'Ein Feld = 1 cm. Schau, welche Zahl am Ende des ersten Feldes steht.', explain: 'Ein Feld (1 cm) reicht von 0 bis <b>' + nf(step[0]) + ' ' + step[1] + '</b>.' };
+    if (v === 1) { var n = pick([2, 3, 4, 1.5, 2.5]); return { topic: 'leiste', kind: 'num', q: 'Eine Strecke auf dieser Karte ist <b>' + nf(n) + ' cm</b> lang. Wie weit ist das laut Maßstabsleiste?', svg: svg, unit: step[1], answer: n * step[0], hint: '1 cm = ' + nf(step[0]) + ' ' + step[1] + '. Rechne mal ' + nf(n) + '.', explain: nf(n) + ' × ' + nf(step[0]) + ' ' + step[1] + ' = <b>' + nf(n * step[0]) + ' ' + step[1] + '</b>.' }; }
+    return { topic: 'leiste', kind: 'num', q: 'Welcher Maßstab gehört zu dieser Maßstabsleiste? Ergänze die Maßstabszahl.', svg: svg, pre: '1 :', unit: '', answer: step[2], hint: '1 cm = ' + nf(step[0]) + ' ' + step[1] + '. Rechne das in cm um.', explain: '1 cm = ' + nf(step[0]) + ' ' + step[1] + ' = ' + nf(step[2]) + ' cm → Maßstab <b>' + M(step[2]) + '</b>.' };
+  };
+  G.mbest = function () {
+    var x = pick([10000, 20000, 25000, 50000, 100000, 200000, 250000, 500000, 1000000]), cm = pick([1, 2, 3, 4, 5, 6, 8, 10]);
+    var real = cm * x, unit = niceLenKm(real), shown = unit === 'km' ? real / 100000 : real / 100;
+    return { topic: 'mbest', kind: 'num', q: 'Auf der Karte sind es <b>' + nf(cm) + ' cm</b>, in Wirklichkeit <b>' + nf(shown) + ' ' + unit + '</b>. Wie lautet der Maßstab?', pre: '1 :', unit: '', answer: x,
+      hint: 'Rechne ' + nf(shown) + ' ' + unit + ' in cm um. Dann geteilt durch ' + nf(cm) + '.', explain: 'Rechenweg: ' + nf(shown) + ' ' + unit + ' = ' + nf(real) + ' cm; ' + nf(real) + ' : ' + nf(cm) + ' = ' + nf(x) + ' → <b>' + M(x) + '</b>.' };
+  };
+  G.verkl = function () {
+    var v = rnd(4);
+    if (v === 0) { var f = pick([2, 4]); return { topic: 'verkl', kind: 'num', q: 'Dein Atlas ist <b>30 cm</b> lang. Du zeichnest ihn im Maßstab <b>1 : ' + f + '</b> ins Heft. Wie lang wird die Zeichnung?', unit: 'cm', answer: 30 / f, hint: 'Geteilt durch ' + f + ' rechnen.', explain: '30 cm : ' + f + ' = <b>' + nf(30 / f) + ' cm</b>.' }; }
+    if (v === 1) { var p = pick([[30, 15, 2], [24, 12, 2], [30, 7.5, 4], [24, 6, 4], [12, 4, 3]]); return { topic: 'verkl', kind: 'num', q: 'Eine Seite ist in echt <b>' + nf(p[0]) + ' cm</b> lang, in deiner Zeichnung <b>' + nf(p[1]) + ' cm</b>. Welcher Maßstab?', pre: '1 :', unit: '', answer: p[2], hint: 'Wie oft passt ' + nf(p[1]) + ' in ' + nf(p[0]) + '?', explain: nf(p[0]) + ' : ' + nf(p[1]) + ' = ' + p[2] + ' → Maßstab <b>1 : ' + p[2] + '</b>.' }; }
+    if (v === 2) { var r = pick([[8, 100], [6, 100], [10, 200], [5, 50], [12, 200]]); return { topic: 'verkl', kind: 'num', q: 'Dein Klassenzimmer ist <b>' + r[0] + ' m</b> lang. Du zeichnest einen Plan im Maßstab <b>' + M(r[1]) + '</b>. Wie lang wird die Wand im Plan?', unit: 'cm', answer: r[0] * 100 / r[1], hint: 'Rechne ' + r[0] + ' m in cm um, dann geteilt durch ' + r[1] + '.', explain: r[0] + ' m = ' + nf(r[0] * 100) + ' cm; ' + nf(r[0] * 100) + ' : ' + r[1] + ' = <b>' + nf(r[0] * 100 / r[1]) + ' cm</b>.' }; }
+    return { topic: 'verkl', kind: 'choice', q: 'Du halbierst ein Rechteck von 30 cm × 24 cm. Wie groß ist es dann?', options: shuffle(['15 cm × 12 cm', '60 cm × 48 cm', '15 cm × 24 cm']), answer: '15 cm × 12 cm', explain: 'Beide Seiten werden halbiert: 15 cm × 12 cm. Der Maßstab ist dann 1 : 2.' };
+  };
+  function make(topic) { var t = G[topic](); t.topic = topic; t.ref = topic; return t; }
+
+  /* ---------- Speicher ---------- */
+  var KEY = 'lern-erdkunde';
+  function load() { try { var d = JSON.parse(localStorage.getItem(KEY)) || {}; d.st = d.st || {}; d.miss = d.miss || []; d.stars = d.stars || 0; d.tests = d.tests || []; d.box = d.box || {}; return d; } catch (e) { return { st: {}, miss: [], stars: 0, tests: [], box: {} }; } }
+  var db = load();
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(db)); } catch (e) {} }
+  function addStat(topic, ok) { var a = db.st[topic] || []; a.push(ok ? 1 : 0); db.st[topic] = a.slice(-12); }
+  function lvl(topic) { var a = db.st[topic] || []; if (a.length < 4) return 'neu'; var s = a.reduce(function (x, y) { return x + y; }, 0) / a.length; return s >= 0.9 && a.length >= 8 ? 'sicher' : s >= 0.7 ? 'gut' : 'üben'; }
+  var LVL_TXT = { neu: 'neu', 'üben': 'noch üben', gut: 'gut', sicher: 'sicher' };
+  function today() { var d = new Date(); d.setHours(0, 0, 0, 0); return d.getTime(); }
+  function cardState(id) { return db.box[id] || { b: 0, due: 0 }; }
+  function isDue(id) { return cardState(id).due <= today(); }
+
+  /* ---------- Karteikarten-Runde ---------- */
+  var run = null;
+  function startCards(deck) {
+    var cards = deck === 'k' ? DECK_K : DECK_M;
+    var due = cards.filter(function (c) { return isDue(c[0]); });
+    due.sort(function (a, b) { return cardState(a[0]).b - cardState(b[0]).b; });
+    var list = due.length ? shuffle(due.slice(0, 12)) : shuffle(cards).slice(0, 8);
+    run = { cards: true, deck: deck, list: list, i: 0, back: false, ok: 0, done: 0, again: {}, extra: !due.length };
+    $('ekHome').hidden = true; $('ekRules').hidden = true; $('ekEnd').hidden = true; $('ekRun').hidden = false;
+    renderCard(); window.scrollTo(0, 0);
+  }
+  function renderCard() {
+    var c = run.list[run.i], n = run.list.length, h = '';
+    h += '<div class="voc-prog"><span>' + (run.i + 1) + ' / ' + n + '</span><span class="goalbar"><i style="width:' + (run.i / n * 100) + '%"></i></span></div>';
+    h += '<p class="voc-eyebrow">' + (run.deck === 'k' ? 'Zusatz: Karten &amp; Atlas' : 'Karteikarten Maßstab') + (run.extra ? ' · Wiederholung' : '') + '</p>';
+    h += '<div class="ek-flash' + (run.back ? ' back' : '') + '" id="ekFlip" role="button" tabindex="0"><span class="ek-side">' + (run.back ? 'Rückseite' : 'Vorderseite · überlege erst, dann antippen') + '</span>' + (run.back ? '<span>' + c[2] + '</span>' : '<b class="ek-front">' + c[1] + '</b>') + '</div>';
+    if (run.back) h += '<p class="de-q" style="text-align:center">Wusstest du es?</p><div class="ek-rate"><button type="button" class="btn" id="ekNo">✗ Noch nicht</button><button type="button" class="btn primary" id="ekYes">✓ Gewusst</button></div>';
+    else h += '<button type="button" class="btn primary" id="ekShow">Karte umdrehen</button>';
+    h += '<div class="voc-row"><button type="button" class="btn small de-quit" id="ekQuit">Runde beenden</button></div>';
+    $('ekRun').innerHTML = h;
+  }
+  function rateCard(ok) {
+    var c = run.list[run.i], s = cardState(c[0]);
+    if (ok) { s.b = Math.min(5, (s.b || 0) + 1); run.ok++; db.stars++; }
+    else { s.b = 1; if (!run.again[c[0]]) { run.again[c[0]] = 1; run.list.push(c); } }
+    s.due = today() + DUE[s.b] * 86400000; db.box[c[0]] = s; run.done++; save();
+    run.i++; run.back = false;
+    if (run.i >= run.list.length) endCards(); else renderCard();
+  }
+  function endCards() {
+    var cards = run.deck === 'k' ? DECK_K : DECK_M, safe = cards.filter(function (c) { return cardState(c[0]).b >= 3; }).length;
+    $('ekRun').hidden = true; $('ekEnd').hidden = false;
+    var h = '<h2>' + (run.ok === run.done ? 'Alles gewusst' + esc(kidName(', ')) + '!' : 'Karten geschafft!') + '</h2>';
+    h += '<p>' + run.ok + ' von ' + run.done + ' gewusst · +' + run.ok + ' ⭐</p>';
+    h += '<p class="voc-how"><b>' + safe + ' von ' + cards.length + '</b> Karten sitzen schon richtig (mindestens 3× gewusst). Karten, die du nicht wusstest, kommen morgen wieder.</p>';
+    h += '<div class="voc-row"><button type="button" class="btn primary" id="ekAgainC">Noch eine Runde</button><button type="button" class="btn" id="ekBack">Zur Übersicht</button></div>';
+    $('ekEnd').innerHTML = h; window.scrollTo(0, 0);
+  }
+
+  /* ---------- Übungs-Runde ---------- */
+  function weakFirst() { return TOPICS.map(function (t) { return t[0]; }).sort(function (a, b) { var o = { 'üben': 0, neu: 1, gut: 2, sicher: 3 }; return o[lvl(a)] - o[lvl(b)]; }); }
+  function buildTasks(mode, topic) {
+    var tasks = [];
+    if (mode === 'test') { var order = ['gk', '1cm', 'umr', 'k2w', 'mess', 'w2k', 'leiste', 'mbest', 'verkl', 'k2w', 'umr', 'gk']; return order.map(make); }
+    db.miss.filter(function (tp) { return mode === 'mix' || tp === topic; }).slice(0, 3).forEach(function (tp) { var t = make(tp); t.again = true; tasks.push(t); });
+    if (mode === 'mix') { var w = weakFirst(), k = 0; while (tasks.length < 10) { tasks.push(make(w[k % 4 === 3 ? rnd(w.length) : k % 5])); k++; } }
+    else while (tasks.length < 10) tasks.push(make(topic));
+    return shuffle(tasks).slice(0, 10);
+  }
+  function start(mode, topic) {
+    run = { mode: mode, topic: topic, tasks: buildTasks(mode, topic), i: 0, first: 0, done: 0, wrong: [], requeued: 0 };
+    $('ekHome').hidden = true; $('ekRules').hidden = true; $('ekEnd').hidden = true; $('ekRun').hidden = false;
+    newTask(); window.scrollTo(0, 0);
+  }
+  function cur() { return run.tasks[run.i]; }
+  function newTask() { run.st = { tries: 0, resolved: false, chosen: null, fb: null, ruleOpen: false }; render(); }
+  function render() {
+    var t = cur(), s = run.st, test = run.mode === 'test', n = run.tasks.length, h = '';
+    var label = test ? 'HÜ-Probe' : run.mode === 'mix' ? 'Gemischt' : TNAME[run.topic];
+    h += '<div class="voc-prog"><span>' + (run.i + 1) + ' / ' + n + '</span><span class="goalbar"><i style="width:' + (run.i / n * 100) + '%"></i></span></div>';
+    h += '<p class="voc-eyebrow">' + esc(label) + (run.mode !== 'topic' ? ' · ' + esc(TNAME[t.topic]) : '') + (t.again ? ' · nochmal' : '') + '</p>';
+    h += '<p class="de-q">' + t.q + '</p>';
+    if (t.svg) h += t.svg;
+    if (t.big) h += '<p class="de-big">' + t.big + '</p>';
+    if (t.kind === 'choice') {
+      h += '<div class="de-opts' + (t.options.length > 2 ? ' three' : '') + '">' + t.options.map(function (o, k) {
+        var c = 'opt'; if (s.resolved) { if (o === t.answer) c += ' good'; else if (s.chosen === k) c += ' bad'; }
+        return '<button type="button" class="' + c + '" data-ekopt="' + k + '"' + (s.resolved ? ' disabled' : '') + '>' + esc(o) + '</button>';
+      }).join('') + '</div>';
+    } else if (!s.resolved) {
+      h += '<form class="voc-form" id="ekForm">' + (t.pre ? '<span class="ek-unit">' + t.pre + '</span>' : '') + '<input id="ekIn" inputmode="decimal" autocomplete="off" placeholder="Zahl" aria-label="Antwort">' + (t.unit ? '<span class="ek-unit">' + t.unit + '</span>' : '') + '<button class="btn primary" type="submit">Prüfen</button></form>';
+    }
+    if (s.fb) h += '<p class="voc-fb ' + s.fb[0] + '">' + s.fb[1] + '</p>';
+    if (s.ruleOpen) h += '<div class="de-rule">' + ruleHtml(t.topic) + '</div>';
+    h += '<div class="voc-row">';
+    if (!test) h += '<button type="button" class="btn small" id="ekRuleBtn">' + (s.ruleOpen ? 'Merkzettel zu' : '📌 Merkzettel') + '</button>';
+    if (s.resolved) h += '<button type="button" class="btn primary" id="ekNext">' + (run.i + 1 < n ? 'Weiter' : 'Ergebnis ansehen') + '</button>';
+    h += '<button type="button" class="btn small de-quit" id="ekQuit">Runde beenden</button></div>';
+    $('ekRun').innerHTML = h;
+    var inp = $('ekIn'); if (inp) inp.focus({ preventScroll: true });
+  }
+  function finishTask(ok, fbHtml) {
+    var t = cur(), s = run.st;
+    s.resolved = true; run.done++;
+    if (ok) { run.first++; db.stars++; s.fb = ['good', '✓ ' + pick(['Super!', 'Klasse!', 'Genau!', 'Richtig!', 'Stark!']) + (fbHtml ? ' ' + fbHtml : '')]; if (t.again) db.miss = db.miss.filter(function (x) { return x !== t.topic; }); }
+    else {
+      s.fb = ['soft', fbHtml]; run.wrong.push(t.topic);
+      if (db.miss.indexOf(t.topic) === -1) db.miss.push(t.topic);
+      if (run.mode !== 'test' && run.requeued < 4) { run.requeued++; var again = make(t.topic); again.again = true; run.tasks.push(again); }
+    }
+    if (!t.again || run.mode === 'test') addStat(t.topic, ok);
+    save(); render();
+  }
+  function onNum(val) {
+    var t = cur(), s = run.st, test = run.mode === 'test', v = parseNum(val);
+    if (isNaN(v)) { s.fb = ['soft', 'Bitte eine Zahl eintippen, z. B. 2,5.']; render(); return; }
+    if (same(v, t.answer)) { finishTask(s.tries === 0, run.mode !== 'test' ? t.explain : ''); return; }
+    var wrongUnit = [10, 100, 1000, 100000, 0.1, 0.01, 0.001, 0.00001].some(function (f) { return same(v, t.answer * f); });
+    if (!test && s.tries < 1) { s.tries++; s.fb = ['soft', 'Noch nicht ganz. ' + (wrongUnit ? 'Die Ziffern stimmen fast, aber prüf die <b>Einheit</b> (' + (t.unit || 'Maßstabszahl') + ') und die Nullen! ' : '') + 'Tipp: ' + t.hint]; render(); return; }
+    finishTask(false, 'Richtig ist <b>' + (t.pre ? t.pre + ' ' : '') + nf(t.answer) + (t.unit ? ' ' + t.unit : '') + '</b>. ' + t.explain);
+  }
+  function onOpt(k) {
+    var t = cur(), s = run.st; if (s.resolved) return;
+    s.chosen = k; var ok = t.options[k] === t.answer;
+    finishTask(ok, ok ? (run.mode !== 'test' ? t.explain : '') : 'Richtig ist <b>' + esc(t.answer) + '</b>. ' + t.explain);
+  }
+  function next() { run.i++; if (run.i >= run.tasks.length) { end(); return; } newTask(); window.scrollTo(0, 0); }
+  function grade(p) { return p >= 0.92 ? 1 : p >= 0.81 ? 2 : p >= 0.67 ? 3 : p >= 0.5 ? 4 : p >= 0.3 ? 5 : 6; }
+  function end() {
+    var n = run.done || 1, p = run.first / n, h = '';
+    $('ekRun').hidden = true; $('ekEnd').hidden = false;
+    var weak = run.wrong.filter(function (w, i, a) { return a.indexOf(w) === i; }).map(function (w) { return TNAME[w]; });
+    if (run.mode === 'test') {
+      var note = grade(p); db.tests.push({ d: Date.now(), n: note, p: Math.round(p * 100) }); db.tests = db.tests.slice(-10); save();
+      h += '<p class="voc-grade"><span>' + note + '</span>Note in der HÜ-Probe</p>';
+      h += '<p>' + run.first + ' von ' + n + ' Aufgaben richtig (' + Math.round(p * 100) + ' %).</p>';
+      h += '<p class="voc-how">' + (note <= 2 ? 'Stark' + esc(kidName(', ')) + '! Du bist ein echter Maßstab-Profi.' : note <= 3 ? 'Gut gemacht! Übe die Themen unten noch einmal, dann wird es noch besser.' : 'Übe die Themen unten und geh den Merkzettel durch. Dann klappt es beim nächsten Mal besser.') + '</p>';
+    } else {
+      h += '<h2>' + (p >= 0.9 ? 'Super gemacht' + esc(kidName(', ')) + '!' : p >= 0.6 ? 'Gut gemacht!' : 'Geschafft!') + '</h2>';
+      h += '<p>' + run.first + ' von ' + n + ' beim ersten Versuch richtig · +' + run.first + ' ⭐</p>';
+    }
+    if (weak.length) h += '<div class="de-rule"><b>Das übst du noch:</b><br>' + weak.map(esc).join(' · ') + '</div>';
+    h += '<div class="voc-row"><button type="button" class="btn primary" id="ekAgain">' + (run.mode === 'test' ? 'Neue HÜ-Probe' : 'Noch eine Runde') + '</button><button type="button" class="btn" id="ekBack">Zur Übersicht</button></div>';
+    $('ekEnd').innerHTML = h; window.scrollTo(0, 0);
+  }
+
+  /* ---------- Schreib-HÜ im Stil des Lehrers (Operatoren + Punkte) ---------- */
+  var OPTIP = {
+    'Nenne': 'Aufzählen, ohne Erklärung. Genau so viele, wie verlangt sind.',
+    'Erkläre': 'Mit „weil“ oder „dadurch“ schreiben. Pro Punkt ein eigener Gedanke!',
+    'Berechne': 'Rechenweg hinschreiben, Einheit nicht vergessen.',
+    'Bestimme': 'Rechenweg hinschreiben und das Ergebnis als Maßstab (1 : …) angeben.',
+    'Begründe': 'Erst die Antwort, dann der Grund mit „weil“.',
+    'Vergleiche': 'Beide Seiten nennen: Was ist gleich, was ist anders?'
+  };
+  /* [Operator, Aufgabe, Punkte, Erwartungen [Text, Suchwörter], Gruppe] */
+  var WRITE = [
+    ['Nenne', 'Nenne vier Merkmale einer Karte.', 4, [['Legende (Zeichenerklärung)', /legende|zeichenerkl/], ['Maßstab', /ma(ß|ss)stab/], ['Titel / Überschrift', /titel|überschrift|ueberschrift/], ['Signaturen / Symbole', /symbol|signatur|zeichen\b/], ['Beschriftungen / Namen', /beschrift|namen/], ['Nordpfeil / Himmelsrichtung', /nord|himmelsricht/], ['Farben (z. B. für Höhen)', /farbe/]], 'a'],
+    ['Erkläre', 'Erkläre, was der Maßstab einer Karte angibt.', 2, [['Die Karte verkleinert die Wirklichkeit.', /verklein/], ['Der Maßstab sagt, wie stark verkleinert wurde (Verhältnis Karte : Wirklichkeit).', /verhältnis|verhaeltnis|wie (stark|viel|sehr)|wie groß|wievielmal/]], 'b'],
+    ['Erkläre', 'Erkläre den Unterschied zwischen einem großen und einem kleinen Maßstab.', 4, [['Großer Maßstab: kleine Maßstabszahl (z. B. 1 : 20 000).', /klein\w* (ma(ß|ss)stabs)?zahl|1 ?: ?20 ?000\b/], ['Großer Maßstab: viele Einzelheiten, kleines Gebiet.', /einzelheit|detail|genau|viel(e)? zu sehen/], ['Kleiner Maßstab: große Maßstabszahl (z. B. 1 : 2 000 000).', /gro(ß|ss)\w* (ma(ß|ss)stabs)?zahl|1 ?: ?2 ?000 ?000/], ['Kleiner Maßstab: großes Gebiet, wenig Einzelheiten.', /gro(ß|ss)\w* (gebiet|fläche|flaeche|raum)|wenig|ganz(es|e)? (land|europa|welt)/]], 'b'],
+    ['Erkläre', 'Erkläre, was der Maßstab 1 : 100 000 bedeutet.', 2, [['1 cm auf der Karte sind 100 000 cm in Wirklichkeit.', /100000 ?cm|100000/], ['Das sind 1 000 m = 1 km.', /1 ?km|1 kilometer|ein kilometer|1000 ?m/]], 'c'],
+    ['Begründe', 'Begründe, warum jede Karte einen Maßstab braucht.', 2, [['Die Karte ist eine Verkleinerung der Wirklichkeit.', /verklein/], ['Mit dem Maßstab kann man echte Entfernungen ausrechnen.', /entfern|ausrechn|berechn|strecke|wie weit/]], 'c'],
+    ['Begründe', 'Auf welcher Karte findest du den Mainzer Hauptbahnhof: 1 : 20 000 oder 1 : 2 000 000? Begründe.', 2, [['Auf der Karte 1 : 20 000.', /(^|\D)20 ?000(?!\d)/], ['Weil sie einen großen Maßstab hat und viele Einzelheiten zeigt.', /gro(ß|ss)\w* ma(ß|ss)stab|einzelheit|detail|genau|klein\w* (ma(ß|ss)stabs)?zahl/]], 'c'],
+    ['Berechne', 'Berechne mit Rechenweg: Auf einer Karte im Maßstab 1 : 50 000 misst du 4 cm. Wie weit ist das in Wirklichkeit?', 3, [['Rechnung: 4 cm × 50 000', /4 ?(cm)? ?(x|·|×|\*|mal) ?50 ?000|50 ?000 ?(x|·|×|\*|mal) ?4/], ['= 200 000 cm', /200 ?000/], ['= 2 000 m = 2 km', /2 ?km|2 ?000 ?m|2 kilometer/]], 'd'],
+    ['Berechne', 'Berechne mit Rechenweg: Auf einer Karte im Maßstab 1 : 25 000 sind zwei Orte 6 cm voneinander entfernt. Wie weit ist das in Wirklichkeit?', 3, [['Rechnung: 6 cm × 25 000', /6 ?(cm)? ?(x|·|×|\*|mal) ?25 ?000|25 ?000 ?(x|·|×|\*|mal) ?6/], ['= 150 000 cm', /150 ?000/], ['= 1 500 m = 1,5 km', /1[,.]5 ?km|1 ?500 ?m/]], 'd'],
+    ['Bestimme', 'Bestimme den Maßstab mit Rechenweg: 5 cm auf der Karte sind 1 km in Wirklichkeit.', 3, [['1 km = 100 000 cm', /100 ?000/], ['100 000 : 5 rechnen', /: ?5|\/ ?5|geteilt durch 5/], ['Maßstab 1 : 20 000', /1 ?: ?20 ?000(?!\d)/]], 'd'],
+    ['Erkläre', 'Erkläre die Vorteile eines Luftbilds im Vergleich zu einer Karte.', 3, [['Man sieht, wie es in Wirklichkeit aussieht.', /wirklich|echt|aussieht|in echt/], ['Man sieht Einzelheiten wie Bäume, Dächer, Gärten oder Autos.', /baum|bäume|dach|dächer|garten|auto|einzelheit|detail/], ['Nichts ist weggelassen oder vereinfacht, es zeigt den aktuellen Zustand.', /weggelassen|nicht vereinfacht|alles|aktuell|jetzt|heute/]], 'e'],
+    ['Erkläre', 'Erkläre die Vorteile einer Karte im Vergleich zu einem Luftbild.', 3, [['Legende und Signaturen erklären, was man sieht.', /legende|symbol|signatur|zeichen/], ['Orte, Straßen und Flüsse sind beschriftet.', /beschrift|namen/], ['Mit dem Maßstab kann man Entfernungen messen; sie ist vereinfacht und übersichtlich.', /ma(ß|ss)stab|entfern|messen|vereinfach|übersicht|uebersicht/]], 'e']
+  ];
+  function normTxt(s) { return String(s).toLowerCase().replace(/(\d)[ .](?=\d{3}\b)/g, '$1').replace(/(\d)[ .](?=\d{3}\b)/g, '$1').replace(/\s+/g, ' '); }
+  function pickWrite() {
+    /* wie der echte Test: rund 13 Punkte, je eine Aufgabe zu Merkmalen/Luftbild, Maßstab erklären und Rechnen */
+    function from(g) { return shuffle(WRITE.filter(function (w) { return w[4] === g; }))[0]; }
+    var set = [from('a'), from('b'), from('c'), from('d')], sum = set.reduce(function (s, w) { return s + w[2]; }, 0);
+    if (sum < 13) set.splice(rnd(2) ? 1 : 3, 0, from('e'));
+    return set.filter(function (w, i, a) { return a.indexOf(w) === i; });
+  }
+  function startWrite() {
+    run = { write: true, tasks: pickWrite(), i: 0, got: 0, max: 0, phase: 'q', text: '', marks: [] };
+    $('ekHome').hidden = true; $('ekRules').hidden = true; $('ekEnd').hidden = true; $('ekRun').hidden = false;
+    renderWrite(); window.scrollTo(0, 0);
+  }
+  function wPts() { var w = run.tasks[run.i]; return Math.min(w[2], run.marks.filter(Boolean).length); }
+  function renderWrite() {
+    var w = run.tasks[run.i], n = run.tasks.length, h = '';
+    h += '<div class="voc-prog"><span>' + (run.i + 1) + ' / ' + n + '</span><span class="goalbar"><i style="width:' + (run.i / n * 100) + '%"></i></span></div>';
+    h += '<p class="voc-eyebrow">Schreib-HÜ · wie im echten Test</p>';
+    h += '<p><span class="ek-op">' + w[0] + '</span><span class="ek-pts">' + w[2] + ' P.</span></p>';
+    h += '<p class="ek-wtask"><b>' + esc(w[1]) + '</b></p>';
+    h += '<div class="de-rule">💡 <b>' + w[0] + ':</b> ' + OPTIP[w[0]] + (w[2] > 1 && w[0] !== 'Nenne' && w[0] !== 'Berechne' && w[0] !== 'Bestimme' ? ' Hier gibt es <b>' + w[2] + ' Punkte</b>, also mindestens ' + w[2] + ' Sachen schreiben.' : '') + '</div>';
+    if (run.phase === 'q') {
+      h += '<textarea class="ek-wta" id="ekWta" placeholder="Schreib deine Antwort wie in der HÜ. Du kannst auch ins Heft schreiben und hier nur Stichworte tippen.">' + esc(run.text) + '</textarea>';
+      h += '<div class="voc-row"><button type="button" class="btn primary" id="ekWCheck">Fertig: mit der Lösung vergleichen</button><button type="button" class="btn small de-quit" id="ekQuit">Runde beenden</button></div>';
+    } else {
+      if (run.text.trim()) h += '<p class="voc-eyebrow">Deine Antwort</p><p class="ek-mine">' + esc(run.text) + '</p>';
+      h += '<p class="voc-eyebrow">Was der Lehrer erwartet · hak ab, was du hast</p><div class="ek-checks">' + w[3].map(function (it, k) {
+        return '<label class="' + (run.marks[k] ? 'on' : '') + '"><input type="checkbox" data-ekmark="' + k + '"' + (run.marks[k] ? ' checked' : '') + '><span>' + esc(it[0]) + '</span></label>';
+      }).join('') + '</div>';
+      if (w[3].length > w[2]) h += '<p class="voc-how">Es zählen höchstens ' + w[2] + ' Punkte, egal welche ' + w[2] + ' du hast.</p>';
+      var p = wPts();
+      h += '<p class="voc-fb ' + (p === w[2] ? 'good' : 'soft') + '"><b>' + p + ' / ' + w[2] + ' Punkte.</b> ' + (p === w[2] ? 'Volle Punktzahl!' : 'Merk dir, was gefehlt hat. Genau das bringt in der HÜ die Punkte.') + '</p>';
+      h += '<div class="voc-row"><button type="button" class="btn primary" id="ekWNext">' + (run.i + 1 < n ? 'Weiter' : 'Ergebnis ansehen') + '</button></div>';
+    }
+    $('ekRun').innerHTML = h;
+  }
+  function checkWrite() {
+    var w = run.tasks[run.i], t = normTxt(run.text);
+    run.marks = w[3].map(function (it) { return !!t && it[1].test(t); });
+    run.phase = 'a'; renderWrite();
+  }
+  function nextWrite() {
+    var w = run.tasks[run.i]; run.got += wPts(); run.max += w[2];
+    run.i++; run.phase = 'q'; run.text = ''; run.marks = [];
+    if (run.i < run.tasks.length) { renderWrite(); window.scrollTo(0, 0); return; }
+    var p = run.got / run.max, note = grade(p), h = '';
+    db.stars += run.got; db.tests.push({ d: Date.now(), n: note, p: Math.round(p * 100), w: 1 }); db.tests = db.tests.slice(-10); save();
+    $('ekRun').hidden = true; $('ekEnd').hidden = false;
+    h += '<p class="voc-grade"><span>' + note + '</span>Note in der Schreib-HÜ</p>';
+    h += '<p><b>' + run.got + ' von ' + run.max + ' Punkten</b> (' + Math.round(p * 100) + ' %) · +' + run.got + ' ⭐</p>';
+    h += '<div class="de-rule"><b>Profi-Tipp für Freitag:</b> Schau auf die Punktzahl hinter der Aufgabe. 3 Punkte heißt: 3 verschiedene Gedanken aufschreiben. Und beim Rechnen immer Rechenweg und Einheit.</div>';
+    h += '<div class="voc-row"><button type="button" class="btn primary" id="ekWAgain">Neue Schreib-HÜ</button><button type="button" class="btn" id="ekBack">Zur Übersicht</button></div>';
+    $('ekEnd').innerHTML = h; window.scrollTo(0, 0);
+  }
+  document.addEventListener('input', function (e) { if (e.target && e.target.id === 'ekWta' && run && run.write) run.text = e.target.value; });
+  document.addEventListener('change', function (e) {
+    var k = e.target && e.target.dataset ? e.target.dataset.ekmark : undefined;
+    if (k === undefined || !run || !run.write) return; run.marks[Number(k)] = e.target.checked; renderWrite();
+  });
+
+  /* ---------- Übersicht ---------- */
+  function deckInfo() {
+    var dueM = DECK_M.filter(function (c) { return isDue(c[0]); }).length, safeM = DECK_M.filter(function (c) { return cardState(c[0]).b >= 3; }).length;
+    var dueK = DECK_K.filter(function (c) { return isDue(c[0]); }).length;
+    return { dueM: dueM, safeM: safeM, dueK: dueK };
+  }
+  function overview() {
+    run = null;
+    $('ekRun').hidden = true; $('ekEnd').hidden = true; $('ekHome').hidden = false; $('ekRules').hidden = false;
+    var di = deckInfo();
+    $('ekDeckInfo').innerHTML = 'Maßstab: <b>' + di.safeM + ' von ' + DECK_M.length + '</b> Karten sitzen · heute fällig: <b>' + di.dueM + '</b>. Zusatz Karten &amp; Atlas (S. 16–19, falls doch dran): ' + di.dueK + ' fällig.';
+    $('ekTopics').innerHTML = TOPICS.map(function (t) { var l = lvl(t[0]); return '<button type="button" class="de-topic" data-ektopic="' + t[0] + '"><span class="de-tn">' + esc(t[1]) + '</span><span class="de-tp">' + esc(t[2]) + '</span><span class="pill de-l ' + (l === 'sicher' ? 'good' : l === 'gut' ? 'ok' : l === 'üben' ? 'weak' : '') + '">' + LVL_TXT[l] + '</span></button>'; }).join('');
+    var last = db.tests[db.tests.length - 1];
+    $('ekInfo').innerHTML = '⭐ ' + db.stars + ' Sterne in Erdkunde' + (last ? ' · letzte HÜ-Probe: Note ' + last.n : '');
+    $('ekRulesBody').innerHTML = RULES.map(function (r) { return '<div class="de-rule"><b class="de-rt">' + r[0] + '</b><br>' + r[1] + '</div>'; }).join('');
+  }
+  function homeTile() {
+    var di = deckInfo(), safeT = TOPICS.filter(function (t) { return lvl(t[0]) === 'sicher'; }).length;
+    var el = $('ekTileState'); if (el) el.textContent = di.safeM + '/' + DECK_M.length + ' Karten · ' + safeT + '/' + TOPICS.length + ' Übungen sicher';
+  }
+
+  document.addEventListener('click', function (e) {
+    if ($('ekView').hidden) return;
+    var flip = e.target.closest('#ekFlip'); if (flip && run && run.cards) { if (!run.back) { run.back = true; renderCard(); } return; }
+    var b = e.target.closest('button'); if (!b) return;
+    if (b.dataset.ektopic) { start('topic', b.dataset.ektopic); return; }
+    if (b.id === 'ekCards') { startCards('m'); return; }
+    if (b.id === 'ekCardsX') { startCards('k'); return; }
+    if (b.id === 'ekMix') { start('mix'); return; }
+    if (b.id === 'ekTest') { start('test'); return; }
+    if (b.id === 'ekBack') { overview(); return; }
+    if (b.id === 'ekWrite' || b.id === 'ekWAgain') { startWrite(); return; }
+    if (!run) return;
+    if (run.write) {
+      if (b.id === 'ekWCheck') { checkWrite(); return; }
+      if (b.id === 'ekWNext') { nextWrite(); return; }
+      if (b.id === 'ekQuit') { overview(); return; }
+      return;
+    }
+    if (run.cards) {
+      if (b.id === 'ekShow') { run.back = true; renderCard(); return; }
+      if (b.id === 'ekYes') { rateCard(true); return; }
+      if (b.id === 'ekNo') { rateCard(false); return; }
+      if (b.id === 'ekQuit') { if (run.done) endCards(); else overview(); return; }
+      if (b.id === 'ekAgainC') { startCards(run.deck); return; }
+      return;
+    }
+    if (b.dataset.ekopt !== undefined) { onOpt(Number(b.dataset.ekopt)); return; }
+    if (b.id === 'ekRuleBtn') { run.st.ruleOpen = !run.st.ruleOpen; render(); return; }
+    if (b.id === 'ekNext') { next(); return; }
+    if (b.id === 'ekQuit') { if (run.done) end(); else overview(); return; }
+    if (b.id === 'ekAgain') { start(run.mode, run.topic); return; }
+  });
+  document.addEventListener('keydown', function (e) { if (e.target && e.target.id === 'ekFlip' && (e.key === 'Enter' || e.key === ' ') && run && run.cards && !run.back) { e.preventDefault(); run.back = true; renderCard(); } });
+  document.addEventListener('submit', function (e) { if (e.target && e.target.id === 'ekForm') { e.preventDefault(); onNum($('ekIn').value); } });
+
+  window.LU5Ek = { open: function () { if (!run) overview(); }, home: homeTile, _t: { G: G, make: make, parseNum: parseNum, TOPICS: TOPICS, CARDS: CARDS, WRITE: WRITE, normTxt: normTxt } };
+  homeTile();
+})();
+</script>
 <script src="klassenarbeiten/ka-daten.js?v=1"></script>
 <script src="klassenarbeiten/ka-tablet.js?v=1"></script>
 </body></html>
