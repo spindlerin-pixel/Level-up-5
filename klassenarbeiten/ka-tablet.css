@@ -163,3 +163,15 @@
 .pr-status { margin: 4px 0 0 !important; font-size: 0.88rem !important; color: var(--ink) !important; }
 @media (max-width: 460px) { .pr-acts { flex-basis: 100%; flex-direction: row; } .pr-acts .pr-open { flex: 1; text-align: center; } }
 @media (max-width: 520px) { .ka-de { min-width: 0; display: block; } .ka-cols { grid-template-columns: 1fr; } .ka-word { min-width: 0; flex-basis: 100%; } .ka-fill { display: none; } }
+
+/* ===== Erdkunde-Probe-HÜs: Rechnen mit Einheit und Schreib-Aufgaben ===== */
+.ka-calc { max-width: 260px; }
+.ka-ops { display: flex; flex-direction: column; gap: 16px; }
+.ka-ops > li { display: flex; flex-direction: column; gap: 8px; }
+.ka-opq { margin: 0; font-size: 1.05rem; line-height: 1.45; }
+.ka-opw-op { display: inline-block; padding: 1px 10px; border-radius: 999px; background: var(--tip-fill); font-family: var(--font-display); }
+.ka-opp { color: var(--ink-soft); font-weight: 700; white-space: nowrap; }
+.ka-write.ka-opw { min-height: 150px; }
+.ka-checks li.miss { background: var(--muted-fill); color: var(--ink-soft); } .ka-checks li.miss::before { content: '○'; }
+.ka-oplegend { margin: 0; font-size: 0.85rem; color: var(--ink-soft); }
+#ekProbe .pr-list { margin: 0; }

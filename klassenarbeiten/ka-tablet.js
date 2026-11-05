@@ -23,6 +23,8 @@
   /* ---------------- Helfer ---------------- */
   function $(id) { return document.getElementById(id); }
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function nameOf(ex) { return ex.name || 'Probe-Klassenarbeit ' + ex.nr; }
+  function backTo() { return (cur && cur.back) || 'print'; }
   function byId(id) { return DATA.filter(function (x) { return x.id === id; })[0]; }
   function fmtP(p) { var w = Math.floor(p + 1e-9), h = p - w > 0.25; return (w || !h ? String(w) : '') + (h ? '½' : ''); }
   function half(x) { return Math.round(x * 2) / 2; }
@@ -128,6 +130,33 @@
     if (full && toks(g).length < 3) return { s: 0.5, note: 'Inhalt richtig, aber bitte im ganzen Satz antworten.' };
     return { s: 1, note: '' };
   }
+  /* Erdkunde: Zahlen mit Einheit (2 km = 2000 m). Tausenderpunkte und Komma werden vereinheitlicht. */
+  function numNorm(s) {
+    var t = norm(s).toLowerCase().replace(/kilometer/g, 'km').replace(/zentimeter/g, 'cm').replace(/millimeter/g, 'mm').replace(/meter/g, 'm');
+    for (var i = 0; i < 3; i++) t = t.replace(/(\d)[.\s'](?=\d{3}(\D|$))/g, '$1');
+    return t.replace(/,/g, '.').replace(/\s+/g, '').replace(/[.]$/, '');
+  }
+  function firstNum(s) { var m = String(s).match(/\d+(\.\d+)?/); return m ? Number(m[0]) : NaN; }
+  function cmpCalc(given, answer) {
+    var g = numNorm(given);
+    if (!g) return { s: 0, empty: true, note: '' };
+    var list = String(answer).split('|').map(numNorm);
+    if (list.indexOf(g) >= 0) return { s: 1, note: '' };
+    for (var i = 0; i < list.length; i++) {
+      var a = list[i];
+      if (/^1:/.test(a) && g === a.slice(2)) return { s: 0.5, note: 'Schreib den Maßstab vollständig als „1 : …“.' };
+      var unitA = a.replace(/[\d.]/g, ''), unitG = g.replace(/[\d.]/g, '');
+      if (unitA && !unitG && firstNum(g) === firstNum(a)) return { s: 0.5, note: 'Die Zahl stimmt, aber die Einheit fehlt!' };
+    }
+    return { s: 0, note: '' };
+  }
+  function opNorm(s) { var t = String(s || '').toLowerCase(); for (var i = 0; i < 3; i++) t = t.replace(/(\d)[ .](?=\d{3}\b)/g, '$1'); return t.replace(/\s+/g, ' '); }
+  function cmpOp(given, exp, max) {
+    var g = opNorm(given);
+    if (!g.trim()) return { s: 0, empty: true, hits: exp.map(function () { return false; }) };
+    var hits = exp.map(function (e) { return e[1].test(g); });
+    return { s: Math.min(max, hits.filter(Boolean).length), hits: hits };
+  }
   function cmpSplit(given, answers) {
     var g = toks(given), best = { s: 0, note: '' };
     if (!g.length) return { s: 0, empty: true, note: '' };
@@ -220,7 +249,9 @@
       task.parts.forEach(function (p, pi) {
         var base = 't' + ti + 'p' + pi;
         if (p.t === 'words') p.items.forEach(function (it, i) { out.push({ k: base + 'i' + i, ti: ti, p: p, kind: 'word', ans: it[1], max: 1 }); });
-        else if (p.t === 'gaps') p.lines.forEach(function (ln, i) { for (var g = 1; g < ln.length; g++) out.push({ k: base + 'i' + i + 'g' + (g - 1), ti: ti, p: p, kind: 'word', ans: ln[g], max: p.gp || 1 }); });
+        else if (p.t === 'gaps') p.lines.forEach(function (ln, i) { for (var g = 1; g < ln.length; g++) out.push({ k: base + 'i' + i + 'g' + (g - 1), ti: ti, p: p, kind: p.calc ? 'calc' : 'word', ans: ln[g], max: p.gp || 1 }); });
+        else if (p.t === 'calc') p.items.forEach(function (it, i) { out.push({ k: base + 'i' + i, ti: ti, p: p, kind: 'calc', ans: it[1], max: 1 }); });
+        else if (p.t === 'op') p.items.forEach(function (it, i) { out.push({ k: base + 'i' + i, ti: ti, p: p, kind: 'op', exp: it[3], max: it[2] }); });
         else if (p.t === 'para') p.ans.forEach(function (a, i) { out.push({ k: base + 'g' + i, ti: ti, p: p, kind: 'word', ans: a, max: 1 }); });
         else if (p.t === 'listen') listenGaps(p).forEach(function (a, i) { out.push({ k: base + 'g' + i, ti: ti, p: p, kind: 'word', ans: a, max: 1, listen: true }); });
         else if (p.t === 'pick') p.items.forEach(function (it, i) { out.push({ k: base + 'i' + i, ti: ti, p: p, kind: 'pick', ans: p.opts ? it[1] : it[2], max: 1 }); });
@@ -249,11 +280,13 @@
       else if (u.kind === 'open') r = cmpOpen(v, u.kw, u.p.full);
       else if (u.kind === 'sent') r = cmpSent(v, u.ans, u.p, u.orig);
       else if (u.kind === 'split') r = cmpSplit(v, u.ans);
+      else if (u.kind === 'calc') r = cmpCalc(v, u.ans);
+      else if (u.kind === 'op') { var adj2 = (run.adj && run.adj[u.k]) || 0; r = cmpOp(v, u.exp, u.max); r.auto = r.s; r.adj = adj2; r.s = Math.max(0, Math.min(u.max, half(r.s + adj2))); }
       else if (u.kind === 'write') {
         var w = writeScore(v || '', u.p.kind), adj = (run.adj && run.adj[u.k]) || 0;
         r = { s: Math.max(0, Math.min(14, half(w.total + adj))), w: w, adj: adj };
       }
-      r.s = r.s * (u.max / (u.kind === 'sent' || u.kind === 'write' ? u.max : 1));
+      r.s = r.s * (u.max / (u.kind === 'sent' || u.kind === 'write' || u.kind === 'op' ? u.max : 1));
       r.max = u.max;
       res[u.k] = r; tot += r.s; max += u.max;
       perTask[u.ti].got += r.s; perTask[u.ti].max += u.max;
@@ -334,13 +367,25 @@
       h += readHtml(p.text);
       h += '<ol class="ka-list ka-picks">' + p.items.map(function (it, i) {
         var k = base + 'i' + i;
-        return '<li><span class="ka-word">' + esc(it[0]) + '</span><span class="ka-opts"><button type="button" class="ka-opt" data-k="' + k + '" data-v="true" aria-pressed="' + (A[k] === true) + '">true</button><button type="button" class="ka-opt" data-k="' + k + '" data-v="false" aria-pressed="' + (A[k] === false) + '">false</button></span></li>';
+        var lb = p.labels || ['true', 'false'];
+        return '<li><span class="ka-word">' + esc(it[0]) + '</span><span class="ka-opts"><button type="button" class="ka-opt" data-k="' + k + '" data-v="true" aria-pressed="' + (A[k] === true) + '">' + esc(lb[0]) + '</button><button type="button" class="ka-opt" data-k="' + k + '" data-v="false" aria-pressed="' + (A[k] === false) + '">' + esc(lb[1]) + '</button></span></li>';
       }).join('') + '</ol>';
     } else if (p.t === 'open' || p.t === 'sent') {
       if (p.text) h += readHtml(p.text);
       h += '<ol class="ka-list ka-sents">' + p.items.map(function (it, i) {
         var k = base + 'i' + i;
         return '<li><span class="ka-de">' + esc(it[0]) + '</span><input class="ka-in ka-line" data-k="' + k + '" value="' + esc(A[k] || '') + '" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" enterkeyhint="next" aria-label="Antwort"></li>';
+      }).join('') + '</ol>';
+    } else if (p.t === 'calc') {
+      if (p.text) h += readHtml(p.text);
+      h += '<ol class="ka-list ka-sents">' + p.items.map(function (it, i) {
+        var k = base + 'i' + i;
+        return '<li><span class="ka-de">' + esc(it[0]) + '</span><input class="ka-in ka-line ka-calc" data-k="' + k + '" value="' + esc(A[k] || '') + '" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" enterkeyhint="next" aria-label="Ergebnis mit Einheit"></li>';
+      }).join('') + '</ol>';
+    } else if (p.t === 'op') {
+      h += '<ol class="ka-list ka-ops">' + p.items.map(function (it, i) {
+        var k = base + 'i' + i;
+        return '<li><p class="ka-opq"><b class="ka-opw-op">' + esc(it[0]) + '</b> ' + esc(it[1]) + ' <span class="ka-opp">(' + it[2] + ' P)</span></p><textarea class="ka-write ka-opw" data-k="' + k + '" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="Deine Antwort …">' + esc(A[k] || '') + '</textarea></li>';
       }).join('') + '</ol>';
     } else if (p.t === 'split') {
       h += '<ol class="ka-list ka-sents">' + p.items.map(function (it, i) {
@@ -360,8 +405,8 @@
 
   function renderRun() {
     var ex = cur, r = run(), host = $('katBody');
-    var h = '<header class="ka-head2"><p class="ka-eyebrow">Englisch · Klasse 5 · Access 1 · ' + esc(ex.lvl) + '</p><h1>Probe-Klassenarbeit ' + ex.nr + '</h1><p>' + esc(ex.sub) + '</p>' +
-      '<p class="ka-rules">⏱ ' + ex.min + ' Minuten · ✏️ Lies jede Aufgabe genau · Keine Tipps, keine Autokorrektur – wie in der echten Arbeit. Die Korrektur kommt erst nach dem Abgeben.</p></header>';
+    var h = '<header class="ka-head2"><p class="ka-eyebrow">' + esc(ex.eyebrow || 'Englisch · Klasse 5 · Access 1') + ' · ' + esc(ex.lvl) + '</p><h1>' + esc(nameOf(ex)) + '</h1><p>' + esc(ex.sub) + '</p>' +
+      '<p class="ka-rules">⏱ ' + ex.min + ' Minuten · ✏️ Lies jede Aufgabe genau · ' + esc(ex.rules || 'Keine Tipps, keine Autokorrektur – wie in der echten Arbeit. Die Korrektur kommt erst nach dem Abgeben.') + '</p></header>';
     ex.tasks.forEach(function (task, ti) {
       h += '<section class="card ka-task"><div class="ka-th"><span class="ka-tn">' + (ti + 1) + '</span><h2>' + esc(task.h) + ' <small>' + esc(task.de) + '</small></h2><span class="ka-tp">/ ' + fmtP(taskMax(ex, ti, r)) + ' P</span></div>';
       task.parts.forEach(function (p, pi) { h += partHtml(p, 't' + ti + 'p' + pi); });
@@ -426,10 +471,10 @@
     if (b.id === 'katSubmit') { askSubmit(); return; }
     if (b.id === 'katConfirmYes') { $('katConfirm').hidden = true; submit(); return; }
     if (b.id === 'katConfirmNo') { $('katConfirm').hidden = true; return; }
-    if (b.id === 'katBack') { stopPlay(); saveNow(); if (window.LU5 && LU5.go) LU5.go('print'); renderCards(); return; }
+    if (b.id === 'katBack') { stopPlay(); saveNow(); if (window.LU5 && LU5.go) LU5.go(backTo()); renderCards(); return; }
     if (b.id === 'katAgain') { delete db.run[cur.id]; saveNow(); start(cur.id); return; }
     if (b.hasAttribute('data-adj')) { adjust(b.getAttribute('data-adj'), Number(b.getAttribute('data-d'))); return; }
-    if (b.hasAttribute('data-practice')) { var tp = b.getAttribute('data-practice'); if (window.LU5 && LU5.startEn) LU5.startEn(tp); return; }
+    if (b.hasAttribute('data-practice')) { var tp = b.getAttribute('data-practice'); if (cur && cur.back && cur.back !== 'print') { if (window.LU5 && LU5.go) LU5.go(cur.back); window.scrollTo(0, 0); return; } if (window.LU5 && LU5.startEn) LU5.startEn(tp); return; }
   });
 
   /* Hören: Text in Sätzen nacheinander vorlesen, höchstens zweimal */
@@ -504,6 +549,26 @@
   function reviewPart(p, base, sc, A) {
     var h = '';
     if (p.q) h += '<p class="ka-q">' + esc(p.q) + '</p>';
+    if (p.t === 'calc') {
+      if (p.text) h += readHtml(p.text);
+      h += '<ol class="ka-list ka-sents">' + p.items.map(function (it, i) {
+        var k = base + 'i' + i, r = sc.res[k];
+        return '<li><span class="ka-de">' + esc(it[0]) + '</span><span class="ka-ans ' + mark(r) + '">' + shown(A[k]) + '</span>' + (r.s < r.max ? '<span class="ka-sol">✓ ' + esc(it[2] || alts(it[1])[0]) + '</span>' : '') + (r.note ? '<span class="ka-note">' + esc(r.note) + '</span>' : '') + pts(r) + '</li>';
+      }).join('') + '</ol>';
+      return h;
+    }
+    if (p.t === 'op') {
+      h += '<ol class="ka-list ka-ops">' + p.items.map(function (it, i) {
+        var k = base + 'i' + i, r = sc.res[k];
+        var s = '<li><p class="ka-opq"><b class="ka-opw-op">' + esc(it[0]) + '</b> ' + esc(it[1]) + '</p>';
+        s += '<div class="ka-ans ka-wtext ' + mark(r) + '">' + shown(A[k]).replace(/\n/g, '<br>') + '</div>';
+        s += '<ul class="ka-checks">' + it[3].map(function (e, ei) { return '<li class="' + (r.hits && r.hits[ei] ? 'ok' : 'miss') + '">' + esc(e[0]) + '</li>'; }).join('') + '</ul>';
+        s += '<p class="ka-oplegend">✓ = gefunden · ○ = mögliche weitere Punkte. Für jeden passenden Gedanken gibt es einen Punkt, höchstens ' + it[2] + '.</p>';
+        s += '<div class="ka-adj"><p><b>Für Eltern:</b> Die App sucht nach Stichwörtern. Ist etwas mit anderen Worten richtig erklärt, passt die Punkte an.</p><div class="ka-adj-row"><button type="button" class="btn small" data-adj="' + k + '" data-d="-0.5" aria-label="Einen halben Punkt weniger">− ½</button><span class="ka-adj-val">' + fmtP(r.s) + ' / ' + it[2] + ' P' + (r.adj ? ' <small>(' + (r.adj > 0 ? '+' : '−') + fmtP(Math.abs(r.adj)) + ' angepasst)</small>' : '') + '</span><button type="button" class="btn small" data-adj="' + k + '" data-d="0.5" aria-label="Einen halben Punkt mehr">+ ½</button></div></div>';
+        return s + '</li>';
+      }).join('') + '</ol>';
+      return h;
+    }
     if (p.t === 'words' || p.t === 'gaps' || p.t === 'para' || p.t === 'listen') {
       if (p.t === 'words') h += '<ol class="ka-list ka-cols">' + p.items.map(function (it, i) { var k = base + 'i' + i, r = sc.res[k]; return '<li><span class="ka-de">' + esc(it[0]) + '</span> ' + gapShow(r, A[k], it[1]) + '</li>'; }).join('') + '</ol>';
       if (p.t === 'gaps') h += '<ol class="ka-list">' + p.lines.map(function (ln, i) { var parts = ln[0].split('{}'), s = ''; parts.forEach(function (x, gi) { s += x; if (gi < parts.length - 1) { var k = base + 'i' + i + 'g' + gi; s += gapShow(sc.res[k], A[k], ln[gi + 1]); } }); return '<li>' + s + '</li>'; }).join('') + '</ol>';
@@ -515,7 +580,7 @@
     } else if (p.t === 'pick' || p.t === 'sort' || p.t === 'tf') {
       var items = p.t === 'sort' ? p.words : p.items;
       h += '<ol class="ka-list ka-picks">' + items.map(function (it, i) {
-        var k = base + 'i' + i, r = sc.res[k], opts = p.t === 'sort' ? p.groups : p.t === 'tf' ? ['true', 'false'] : (p.opts || it[1]);
+        var k = base + 'i' + i, r = sc.res[k], opts = p.t === 'sort' ? p.groups : p.t === 'tf' ? (p.labels || ['true', 'false']) : (p.opts || it[1]);
         var right = p.t === 'sort' ? it[1] : p.t === 'tf' ? (it[1] ? 0 : 1) : (p.opts ? it[1] : it[2]);
         var mine = p.t === 'tf' ? (A[k] === true ? 0 : A[k] === false ? 1 : -1) : (A[k] == null ? -1 : A[k]);
         return '<li>' + (it[0] && typeof it[0] === 'string' ? '<span class="ka-word">' + esc(it[0]) + '</span>' : '') + '<span class="ka-opts">' + opts.map(function (o, oi) {
@@ -551,24 +616,24 @@
     var pct = Math.round(sc.pct * 100), th = thresholds(ex);
     var h = '<section class="card ka-result g' + sc.grade + '">' +
       '<svg class="lina" viewBox="0 0 110 140" aria-hidden="true"><use href="#pennyArt"></use></svg>' +
-      '<p class="ka-eyebrow">Probe-Klassenarbeit ' + ex.nr + ' · ' + esc(ex.lvl) + '</p>' +
+      '<p class="ka-eyebrow">' + esc(nameOf(ex)) + ' · ' + esc(ex.lvl) + '</p>' +
       '<div class="ka-grade"><span>Note</span><b>' + sc.grade + '</b><em>' + GRADE_WORD[sc.grade] + '</em></div>' +
       '<p class="ka-score"><b>' + fmtP(sc.pts) + ' von ' + fmtP(sc.max) + ' Punkten</b> · ' + pct + ' %</p>' +
       '<div class="ka-bar" role="img" aria-label="' + pct + ' Prozent"><i style="width:' + pct + '%"></i></div>' +
       '<p class="ka-time">Zeit: ' + mmss(r.secs || 0) + ' Minuten' + ((r.secs || 0) > ex.min * 60 ? ' (länger als ' + ex.min + ' Minuten)' : '') + '</p>' +
       '<p class="ka-msg">' + msgFor(sc.grade) + '</p>' +
-      '<details class="ka-scale"><summary>Notenschlüssel</summary><p>1 ab ' + th[0] + ' % · 2 ab ' + th[1] + ' % · 3 ab ' + th[2] + ' % · 4 ab ' + th[3] + ' % · 5 ab ' + th[4] + ' % · darunter 6. Das ist eine übliche Staffelung – die Lehrerin kann anders gewichten. Bei der Hör-Aufgabe und beim Text kann die App sich irren; Eltern können die Punkte beim Text anpassen.</p></details>' +
+      '<details class="ka-scale"><summary>Notenschlüssel</summary><p>1 ab ' + th[0] + ' % · 2 ab ' + th[1] + ' % · 3 ab ' + th[2] + ' % · 4 ab ' + th[3] + ' % · 5 ab ' + th[4] + ' % · darunter 6. ' + esc(ex.scaleNote || 'Das ist eine übliche Staffelung – die Lehrerin kann anders gewichten. Bei der Hör-Aufgabe und beim Text kann die App sich irren; Eltern können die Punkte beim Text anpassen.') + '</p></details>' +
       '<div class="ka-sum">' + ex.tasks.map(function (t, ti) { var pt = sc.perTask[ti], ok = pt.got >= pt.max; return '<a href="#ka-t' + ti + '" class="' + (ok ? 'ok' : pt.got / Math.max(1, pt.max) >= 0.5 ? 'half' : 'bad') + '"><span>' + (ti + 1) + ' ' + esc(t.h) + '</span><b>' + fmtP(pt.got) + '/' + fmtP(pt.max) + '</b></a>'; }).join('') + '</div>' +
       '</section>';
     ex.tasks.forEach(function (task, ti) {
       var pt = sc.perTask[ti];
       h += '<section class="card ka-task ka-rev" id="ka-t' + ti + '"><div class="ka-th"><span class="ka-tn">' + (ti + 1) + '</span><h2>' + esc(task.h) + ' <small>' + esc(task.de) + '</small></h2><span class="ka-tp ' + (pt.got >= pt.max ? 'ok' : '') + '">' + fmtP(pt.got) + ' / ' + fmtP(pt.max) + ' P</span></div>';
       task.parts.forEach(function (p, pi) { h += reviewPart(p, 't' + ti + 'p' + pi, sc, A); });
-      if (pt.got < pt.max && task.topic && task.topic !== 'family') h += '<button type="button" class="btn small ka-prac" data-practice="' + task.topic + '">In der App üben →</button>';
+      if (pt.got < pt.max && task.topic && task.topic !== 'family') h += '<button type="button" class="btn small ka-prac" data-practice="' + task.topic + '">' + (ex.back && ex.back !== 'print' ? 'Im Maßstab-Profi üben →' : 'In der App üben →') + '</button>';
       if (task.topic === 'family') h += '<button type="button" class="btn small ka-prac" data-practice="family">Familientext weiter üben →</button>';
       h += '</section>';
     });
-    h += '<section class="card ka-submit"><p>Tipp: Verbessert die Fehler gleich zusammen. Lies jeden falschen Satz laut und schreib ihn einmal richtig ins Heft – das bringt am meisten.</p><button type="button" class="btn primary" id="katAgain">Diese Arbeit neu schreiben</button><button type="button" class="btn small" id="katBack2" data-go="print">← Zur Übersicht</button></section>';
+    h += '<section class="card ka-submit"><p>Tipp: Verbessert die Fehler gleich zusammen. Lies jeden falschen Satz laut und schreib ihn einmal richtig ins Heft – das bringt am meisten.</p><button type="button" class="btn primary" id="katAgain">Diese Arbeit neu schreiben</button><button type="button" class="btn small" id="katBack2" data-go="' + backTo() + '">← Zur Übersicht</button></section>';
     host.innerHTML = h;
     $('katClock').textContent = 'korrigiert'; $('katClock').className = 'ka-clock done'; $('katFill').textContent = ''; $('katOver').hidden = true;
     if (fresh && sc.grade <= 2) confetti();
@@ -588,7 +653,9 @@
     mode = r.done ? 'result' : 'run';
     saveNow();
     if (window.LU5 && LU5.go) LU5.go('kat');
-    $('katTitle').textContent = 'Probe-Klassenarbeit ' + cur.nr;
+    $('katTitle').textContent = nameOf(cur);
+    window.LU5KaSubj = cur.back === 'ek' ? 'ek' : 'en';
+    var kv = $('katView'); if (kv) { kv.classList.toggle('en', cur.back !== 'ek'); kv.classList.toggle('ek', cur.back === 'ek'); }
     if (mode === 'run') renderRun(); else renderResult(false);
     window.scrollTo(0, 0);
   }
@@ -603,7 +670,7 @@
       if (r && !r.done) s = '<b>Angefangen</b> · noch ' + mmss(Math.max(0, ex.min * 60 - (r.secs || 0))) + ' Min';
       else if (last) s = 'Zuletzt: <b>Note ' + last.g + '</b> (' + Math.round(last.p / last.m * 100) + ' %)' + (best && best !== last ? ' · beste: Note ' + best.g : '');
       el.innerHTML = s; el.hidden = !s;
-      btn.textContent = r && !r.done ? 'Weiterschreiben' : r && r.done ? 'Korrektur ansehen' : 'Am Tablet schreiben';
+      btn.textContent = r && !r.done ? 'Weiterschreiben' : r && r.done ? 'Korrektur ansehen' : (ex.back === 'ek' ? 'Probe-HÜ schreiben' : 'Am Tablet schreiben');
     });
   }
 

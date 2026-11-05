@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Andika:wght@400;700&display=swap">
-<link rel="stylesheet" href="klassenarbeiten/ka-tablet.css?v=1">
+<link rel="stylesheet" href="klassenarbeiten/ka-tablet.css?v=2">
 <style>
 /* Layout: one column like a page in a squared math notebook; one task card at a time, chips to pick a topic on top */
 :root {
@@ -915,7 +915,7 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
     <button type="button" class="subj ek" data-go="ek" id="ekTile">
       <span class="subj-top">
         <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="30" r="22" fill="#8FD3FF" stroke="#1F2A44" stroke-width="2.5"/><path d="M18 18 Q24 14 28 20 Q26 26 20 27 Q15 25 18 18 Z M34 24 Q42 20 46 28 Q47 36 40 40 Q34 38 35 32 Z M24 38 Q30 36 31 43 Q28 48 24 46 Z" fill="#7BC67E" stroke="#1F2A44" stroke-width="2"/><rect x="8" y="52" width="48" height="8" rx="2" fill="#FFC928" stroke="#1F2A44" stroke-width="2"/><path d="M14 52 V56 M20 52 V55 M26 52 V56 M32 52 V55 M38 52 V56 M44 52 V55 M50 52 V56" stroke="#1F2A44" stroke-width="1.6"/></svg>
-        <span><span class="subj-name">Erdkunde</span><br><span class="subj-what">HÜ 6.11.: Maßstab · Karteikarten und Übungen</span></span>
+        <span><span class="subj-name">Erdkunde</span><br><span class="subj-what">HÜ 6.11.: Maßstab · Karteikarten, Übungen und 4 Probe-HÜs</span></span>
       </span>
       <span class="subj-status"><b id="ekMin">0 Min</b><span id="ekTileState"></span></span>
       <span class="subj-go">Erdkunde üben</span>
@@ -1132,6 +1132,32 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
     <button type="button" class="btn" id="ekWrite">✍️ Schreib-HÜ wie beim Lehrer (Nenne, Erkläre, Berechne)</button>
     <p class="de-info" id="ekInfo"></p>
     <p class="voc-how">Bei den Rechenaufgaben darfst du einmal falsch liegen, dann kommt ein Tipp. Den Merkzettel kannst du jederzeit aufmachen. Was nicht klappt, kommt gleich nochmal und beim nächsten Mal wieder. In der HÜ-Probe gibt es keine Tipps, wie in der echten HÜ.</p>
+  </section>
+  <section class="card voc-card" id="ekProbe">
+    <p class="voc-eyebrow">Probe-HÜs zum Ausfüllen</p>
+    <p class="voc-how">Vier Probe-HÜs wie morgen: 20 Minuten Zeit, keine Tipps. Erst nach dem Abgeben gibt es Punkte, Prozent und eine Note. Bei den Schreib-Aufgaben (Nenne, Erkläre, Berechne) sucht die App nach den wichtigen Stichwörtern. Eltern können die Punkte danach anpassen.</p>
+    <div class="pr-list">
+      <div class="pr-card" style="--pc:#FFD66B">
+        <span class="pr-num">1</span>
+        <div class="pr-txt"><h3>Probe-HÜ 1<span class="pr-lvl">Warm-up</span></h3><p>Richtig oder falsch, großer oder kleiner Maßstab, Einheiten, „1 cm entspricht …“, eine Erkläre- und eine Berechne-Aufgabe.</p><p class="pr-status" data-ka-status="g1" hidden></p></div>
+        <div class="pr-acts"><button type="button" class="pr-open pr-tab" data-ka="g1">Probe-HÜ schreiben</button></div>
+      </div>
+      <div class="pr-card" style="--pc:#8FD3FF">
+        <span class="pr-num">2</span>
+        <div class="pr-txt"><h3>Probe-HÜ 2<span class="pr-lvl">Normal</span></h3><p>Karte → Wirklichkeit, Wirklichkeit → Karte, die passende Karte wählen, Merkmale einer Karte nennen, Rechnen mit Rechenweg.</p><p class="pr-status" data-ka-status="g2" hidden></p></div>
+        <div class="pr-acts"><button type="button" class="pr-open pr-tab" data-ka="g2">Probe-HÜ schreiben</button></div>
+      </div>
+      <div class="pr-card" style="--pc:#B9E6B0">
+        <span class="pr-num">3</span>
+        <div class="pr-txt"><h3>Probe-HÜ 3<span class="pr-lvl">Normal+</span></h3><p>Maßstab bestimmen, Maßstabsleiste, Rechen-Detektiv, großer und kleiner Maßstab erklären.</p><p class="pr-status" data-ka-status="g3" hidden></p></div>
+        <div class="pr-acts"><button type="button" class="pr-open pr-tab" data-ka="g3">Probe-HÜ schreiben</button></div>
+      </div>
+      <div class="pr-card" style="--pc:#C9B8FF">
+        <span class="pr-num">4</span>
+        <div class="pr-txt"><h3>Probe-HÜ 4<span class="pr-lvl">Generalprobe</span></h3><p>Wie beim Lehrer: Nenne, Erkläre, Begründe, Berechne, Bestimme. Ohne Ankreuzen, alles selbst schreiben. Am besten zum Schluss.</p><p class="pr-status" data-ka-status="g4" hidden></p></div>
+        <div class="pr-acts"><button type="button" class="pr-open pr-tab" data-ka="g4">Probe-HÜ schreiben</button></div>
+      </div>
+    </div>
   </section>
   <details class="levels" id="ekRules">
     <summary><span class="lv-title">Merkzettel Maßstab</span><span class="lv-sum">alles zum Nachlesen</span></summary>
@@ -2954,7 +2980,7 @@ window.LU5 = (function () {
     if (document.visibilityState !== 'visible') return;
     if (Date.now() - lastAct > 60000) return;
     if (view === 'math' && document.getElementById('breakView') && !document.getElementById('breakView').hidden) return;
-    addSec(view === 'voc' || view === 'kat' ? 'en' : view);
+    addSec(view === 'voc' ? 'en' : view === 'kat' ? (window.LU5KaSubj || 'en') : view);
   }, 1000);
   document.addEventListener('visibilitychange', function () { if (document.visibilityState !== 'visible') flushLog(); });
   window.addEventListener('pagehide', flushLog);
@@ -3070,6 +3096,7 @@ window.LU5 = (function () {
     $('deView').hidden = v !== 'de';
     $('ekView').hidden = v !== 'ek';
     if (v === 'ek' && window.LU5Ek) window.LU5Ek.open();
+    if (v === 'ek' && window.LU5Ka) window.LU5Ka.cards();
     var katV = $('katView'); if (katV) katV.hidden = v !== 'kat';
     if (v === 'print' && window.LU5Ka) window.LU5Ka.cards();
     if (v === 'de' && window.LU5De) window.LU5De.open();
@@ -5499,7 +5526,7 @@ window.LU5 = (function () {
     due.sort(function (a, b) { return cardState(a[0]).b - cardState(b[0]).b; });
     var list = due.length ? shuffle(due.slice(0, 12)) : shuffle(cards).slice(0, 8);
     run = { cards: true, deck: deck, list: list, i: 0, back: false, ok: 0, done: 0, again: {}, extra: !due.length };
-    $('ekHome').hidden = true; $('ekRules').hidden = true; $('ekEnd').hidden = true; $('ekRun').hidden = false;
+    $('ekHome').hidden = true; $('ekRules').hidden = true; if ($('ekProbe')) $('ekProbe').hidden = true; $('ekEnd').hidden = true; $('ekRun').hidden = false;
     renderCard(); window.scrollTo(0, 0);
   }
   function renderCard() {
@@ -5542,7 +5569,7 @@ window.LU5 = (function () {
   }
   function start(mode, topic) {
     run = { mode: mode, topic: topic, tasks: buildTasks(mode, topic), i: 0, first: 0, done: 0, wrong: [], requeued: 0 };
-    $('ekHome').hidden = true; $('ekRules').hidden = true; $('ekEnd').hidden = true; $('ekRun').hidden = false;
+    $('ekHome').hidden = true; $('ekRules').hidden = true; if ($('ekProbe')) $('ekProbe').hidden = true; $('ekEnd').hidden = true; $('ekRun').hidden = false;
     newTask(); window.scrollTo(0, 0);
   }
   function cur() { return run.tasks[run.i]; }
@@ -5650,7 +5677,7 @@ window.LU5 = (function () {
   }
   function startWrite() {
     run = { write: true, tasks: pickWrite(), i: 0, got: 0, max: 0, phase: 'q', text: '', marks: [] };
-    $('ekHome').hidden = true; $('ekRules').hidden = true; $('ekEnd').hidden = true; $('ekRun').hidden = false;
+    $('ekHome').hidden = true; $('ekRules').hidden = true; if ($('ekProbe')) $('ekProbe').hidden = true; $('ekEnd').hidden = true; $('ekRun').hidden = false;
     renderWrite(); window.scrollTo(0, 0);
   }
   function wPts() { var w = run.tasks[run.i]; return Math.min(w[2], run.marks.filter(Boolean).length); }
@@ -5708,7 +5735,7 @@ window.LU5 = (function () {
   }
   function overview() {
     run = null;
-    $('ekRun').hidden = true; $('ekEnd').hidden = true; $('ekHome').hidden = false; $('ekRules').hidden = false;
+    $('ekRun').hidden = true; $('ekEnd').hidden = true; $('ekHome').hidden = false; $('ekRules').hidden = false; if ($('ekProbe')) $('ekProbe').hidden = false;
     var di = deckInfo();
     $('ekDeckInfo').innerHTML = 'Maßstab: <b>' + di.safeM + ' von ' + DECK_M.length + '</b> Karten sitzen · heute fällig: <b>' + di.dueM + '</b>. Zusatz Karten &amp; Atlas (S. 16–19, falls doch dran): ' + di.dueK + ' fällig.';
     $('ekTopics').innerHTML = TOPICS.map(function (t) { var l = lvl(t[0]); return '<button type="button" class="de-topic" data-ektopic="' + t[0] + '"><span class="de-tn">' + esc(t[1]) + '</span><span class="de-tp">' + esc(t[2]) + '</span><span class="pill de-l ' + (l === 'sicher' ? 'good' : l === 'gut' ? 'ok' : l === 'üben' ? 'weak' : '') + '">' + LVL_TXT[l] + '</span></button>'; }).join('');
@@ -5761,5 +5788,6 @@ window.LU5 = (function () {
 })();
 </script>
 <script src="klassenarbeiten/ka-daten.js?v=1"></script>
-<script src="klassenarbeiten/ka-tablet.js?v=1"></script>
+<script src="klassenarbeiten/ek-daten.js?v=1"></script>
+<script src="klassenarbeiten/ka-tablet.js?v=2"></script>
 </body></html>
