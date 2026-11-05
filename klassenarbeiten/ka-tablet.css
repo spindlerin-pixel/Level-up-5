@@ -175,3 +175,4 @@
 .ka-checks li.miss { background: var(--muted-fill); color: var(--ink-soft); } .ka-checks li.miss::before { content: '○'; }
 .ka-oplegend { margin: 0; font-size: 0.85rem; color: var(--ink-soft); }
 #ekProbe .pr-list { margin: 0; }
+.ka-oplegend, .ka-ops .ka-adj p { line-height: 1.4; }
