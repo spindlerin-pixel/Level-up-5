@@ -4761,7 +4761,7 @@ window.LU5 = (function () {
    NEUE LISTE: unten in LISTS ergänzen und WEEK auf ihre id setzen. */
 (function () {
   'use strict';
-  var WEEK = 'u1a2';
+  var WEEK = 'u1b1';
   var LISTS = [
     { id: 'wel', unit: 'Welcome', short: 'Welcome', name: 'Welcome', pages: 'S. 225–230', words: [
       'Welcome to Brighton.|Willkommen in Brighton.',
@@ -4861,6 +4861,20 @@ window.LU5 = (function () {
       'order|die Reihenfolge', 'step|der Schritt', 'draw|zeichnen', 'write|schreiben',
       'this classroom|dieses Klassenzimmer', 'look at|etwas / jemanden anschauen, ansehen',
       'look up|etwas nachschlagen', 'check|(über)prüfen, kontrollieren'
+    ] },
+    { id: 'u1b1', unit: 'Unit 1', short: 'Part A (3) & Part B (1)', name: 'Unit 1 · Part A (3) & Part B (1)', pages: 'S. 236–237', words: [
+      'bin|der Abfalleimer', 'behind|hinter', 'in front of|vor', 'door|die Tür',
+      'TV|der Fernseher, das Fernsehgerät', 'watch TV|fernsehen', 'guys|Leute',
+      'photo|das Foto', 'young|jung', 'That\'s me.|Das bin ich.|That is me.', 'really|wirklich',
+      'next to|neben', 'dead|tot', 'guitar|die Gitarre', 'late|spät', 'compliment|das Kompliment',
+      'shelf|das Regal', 'shelves|die Regale (Plural von shelf)', 'lamp|die Lampe', 'toilet|die Toilette',
+      'bath|das Bad (die Badewanne)', 'bathroom|das Badezimmer, das Bad', 'armchair|der Sessel',
+      'cupboard|der Schrank', 'sink|das Abwaschbecken, das Spülbecken',
+      'get|(sich) etwas besorgen, (sich) etwas holen', 'drink|das Getränk', 'drink|trinken',
+      'Are there any …?|Gibt es (irgendwelche) …?', 'glass|das Glas', 'kitchen|die Küche',
+      'be fun|Spaß machen', 'have fun|Spaß haben, sich amüsieren', 'bedroom|das Schlafzimmer',
+      'quiet|ruhig, still, leise', 'tidy|ordentlich', 'clothes|die Kleidung, Kleidungsstücke',
+      'on the bed|auf dem Bett', 'on that chair|auf dem Stuhl (dort), auf jenem Stuhl'
     ] }
   ];
 
@@ -4937,7 +4951,12 @@ window.LU5 = (function () {
     var fresh = ids.filter(function (id) { return !st(id); });
     return { seen: seen, fresh: fresh };
   }
+  /* Neue Wochenliste: Auswahl einmalig auf die neue Liste setzen */
+  if (db.week !== WEEK) { db.week = WEEK; db.sel = [WEEK]; save(); }
+  /* Fokus-Phase: erst wenn jedes neue Wort einmal ohne Hilfe richtig war, kommen alte Listen wieder dazu */
+  function focus() { return BYLIST[WEEK].some(function (id) { var s = st(id); return !(s && s.l >= 1); }); }
   function sel() {
+    if (focus()) return [WEEK];
     var v = (db.sel || []).filter(function (id) { return BYLIST[id]; });
     return v.length ? v : [WEEK];
   }
@@ -4949,8 +4968,8 @@ window.LU5 = (function () {
   }
   function idsOf(lids) { var a = []; lids.forEach(function (lid) { a = a.concat(BYLIST[lid]); }); return a; }
   function dueCount() {
-    var S = sel(), n = 0;
-    ORDER.forEach(function (lid) { var d = dueList(lid); n += d.seen.length + (S.indexOf(lid) !== -1 ? d.fresh.length : 0); });
+    var S = sel(), n = 0, f = focus();
+    ORDER.forEach(function (lid) { if (f && lid !== WEEK) return; var d = dueList(lid); n += d.seen.length + (S.indexOf(lid) !== -1 ? d.fresh.length : 0); });
     return n;
   }
   function buildRound() {
@@ -4960,7 +4979,7 @@ window.LU5 = (function () {
     /* Wochenliste zuerst, dann die übrigen ausgewählten Listen */
     var ordered = S.slice().sort(function (a, b) { return (a === WEEK ? -1 : 0) - (b === WEEK ? -1 : 0) || ORDER.indexOf(b) - ORDER.indexOf(a); });
     ordered.forEach(function (lid) { var d = dueList(lid); seen = seen.concat(d.seen); fresh = fresh.concat(d.fresh); });
-    ORDER.forEach(function (lid) { if (S.indexOf(lid) === -1) other = other.concat(dueList(lid).seen); });
+    if (!focus()) ORDER.forEach(function (lid) { if (S.indexOf(lid) === -1) other = other.concat(dueList(lid).seen); });
     seen.sort(function (a, b) { return st(a).d - st(b).d; });
     if (S.length > 1) fresh = shuffle(fresh);
     other.sort(function (a, b) { return st(a).d - st(b).d; });
@@ -5023,7 +5042,7 @@ window.LU5 = (function () {
     var S = sel(), groups = [];
     LISTS.forEach(function (L) { var g = groups.filter(function (x) { return x.u === L.unit; })[0]; if (!g) { g = { u: L.unit, l: [] }; groups.unshift(g); } g.l.push(L); });
     $('vocPickLabel').textContent = selLabel();
-    $('vocPickList').innerHTML = '<p class="voc-pickhint">Tipp auf eine Liste. Du kannst auch mehrere auswählen.</p>' + groups.map(function (g) {
+    $('vocPickList').innerHTML = '<p class="voc-pickhint">' + (focus() ? 'Erst die neuen Wörter! Die anderen Listen kommen wieder dazu, sobald du jedes neue Wort einmal ohne Hilfe richtig geschrieben hast.' : 'Tipp auf eine Liste. Du kannst auch mehrere auswählen.') + '</p>' + groups.map(function (g) {
       var all = g.l.every(function (L) { return S.indexOf(L.id) !== -1; });
       return '<div class="chip-group"><h3>' + esc(g.u) + (g.l.length > 1 ? ' <button type="button" class="voc-unit" data-vunit="' + esc(g.u) + '" aria-pressed="' + all + '">' + (all ? '✓ ganze Unit' : 'ganze Unit') + '</button>' : '') + '</h3><div class="voc-opts">' +
         g.l.slice().reverse().map(function (L) {
