@@ -3547,11 +3547,9 @@ window.LU5 = (function () {
         items.push(vIt);
         if (near('en') && d <= PROBES.en.from) items = items.concat(probeItems('en', d, k));
         else if (near('en') && d <= 14) items.push(minItem('en', 'Englisch üben', 'Grammatik und Sätze', 10, Math.max(0, (L.en || 0) - vs), function () { go('en'); }));
-        else bonus.push(['Englisch üben', 'en']);
       }
     });
     if (!near('de')) bonus.push(['Deutsch', 'de']);
-    if (!near('ek')) bonus.push(['Erdkunde', 'ek']);
     /* Kopfzeile */
     var fe = $('planFocus');
     if (todayT.length) fe.textContent = 'Heute ' + todayT.map(function (t) { return TEST_NAME[t.s]; }).join(' und ') + ' – viel Glück!' + (focus ? ' · Danach: ' + TEST_NAME[focus.s] + (focus.d === 1 ? ' morgen' : ' in ' + focus.d + ' Tagen') : '');
