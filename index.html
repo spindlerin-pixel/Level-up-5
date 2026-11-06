@@ -860,7 +860,7 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
 .plan.all .plan-ring { background: #2E9E5B; }
 .plan-sum { margin: 0; color: var(--ink-soft); font-size: 0.95rem; }
 .plan-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
-.plan-item { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 18px; background: var(--bg, #F5F7FB); border-left: 8px solid var(--pc, var(--primary)); }
+.plan-item { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 18px; background: rgba(128,128,128,0.10); border-left: 8px solid var(--pc, var(--primary)); }
 .plan-item.math { --pc: var(--primary); } .plan-item.en { --pc: var(--post); } .plan-item.voc { --pc: #E5B800; } .plan-item.de { --pc: #E8A317; } .plan-item.ek { --pc: #2E9E5B; }
 .plan-check { flex-shrink: 0; width: 30px; height: 30px; box-sizing: border-box; border-radius: 50%; border: 3px solid var(--pc); display: flex; align-items: center; justify-content: center; font-weight: 800; color: #fff; }
 .plan-item.done .plan-check { background: #2E9E5B; border-color: #2E9E5B; }
@@ -886,6 +886,13 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
 .subj-subt { margin: 0; font-weight: 700; font-size: 0.92rem; }
 .subj-tip { margin: 0; font-size: 0.9rem; color: var(--ink-soft); line-height: 1.4; }
 .day .star { font-size: 0.9rem; line-height: 1; min-height: 1em; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .subj.deu .subj-top { background: #4A3A12; }
+  :root:not([data-theme="light"]) .subj.ek .subj-top { background: #173D29; }
+  :root:not([data-theme="light"]) .subj.print .subj-top { background: #4A1F2E; }
+  :root:not([data-theme="light"]) .plan-yay { background: #173D29; color: #BFF0D2; }
+  :root:not([data-theme="light"]) .linkbtn { color: var(--primary); }
+}
 .subjects { align-items: start; }
 @media (max-width: 699px) { .subjects { grid-template-columns: 1fr; } }
 @media (min-width: 760px) {
