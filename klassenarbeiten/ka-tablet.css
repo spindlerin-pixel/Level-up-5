@@ -176,3 +176,11 @@
 .ka-oplegend { margin: 0; font-size: 0.85rem; color: var(--ink-soft); }
 #ekProbe .pr-list { margin: 0; }
 .ka-oplegend, .ka-ops .ka-adj p { line-height: 1.4; }
+
+/* Mathe: Rechenausdruck = Ergebnis */
+.ka-terms li { flex-wrap: wrap; }
+.ka-termrow { display: flex; align-items: center; gap: 8px; flex-wrap: nowrap; width: 100%; }
+.ka-termrow .ka-in.ka-term { flex: 1 1 auto; min-width: 0; width: auto; font-variant-numeric: tabular-nums; }
+.ka-termrow .ka-in.ka-res { flex: 0 0 6.5em; width: 6.5em; min-width: 0; }
+.ka-termrow b { font-size: 1.2em; }
+.ka-task .ka-calcexpr { font-size: 1.15em; font-weight: 700; }

@@ -1,4 +1,16 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}.rb { display: flex; justify-content: center; overflow-x: auto; padding: 10px 0 4px; }
+.rb-n { display: flex; flex-direction: column; align-items: center; }
+.rb-kids { display: flex; align-items: flex-end; gap: 14px; position: relative; padding-bottom: 12px; }
+.rb-kids > .rb-n::after { content: ''; display: block; width: 2px; height: 12px; background: var(--ink); margin-bottom: -12px; }
+.rb-kids > .rb-n { position: relative; }
+.rb-kids > .rb-n::before { content: ''; position: absolute; bottom: -12px; height: 2px; background: var(--ink); }
+.rb-kids > .rb-n:first-child::before { left: 50%; right: -8px; }
+.rb-kids > .rb-n:last-child::before { left: -8px; right: 50%; }
+.rb-op { display: grid; place-items: center; width: 1.9em; height: 1.9em; border-radius: 50%; border: 2px solid var(--ink); background: #FFE58A; color: #1F2A44; font-weight: 800; margin: 6px 0; }
+.rb-b { min-width: 2.6em; min-height: 1.9em; padding: 3px 8px; border: 2px solid var(--ink); border-radius: 7px; background: var(--surface); color: var(--ink); font-weight: 800; text-align: center; box-sizing: border-box; }
+.rb-e { background: var(--paper); }
+.rb-q { background: #FFE58A; color: #1F2A44; }
+</style></head><body>
 <title>Level Up 5</title>
 <link rel="apple-touch-icon" href="apple-touch-icon.png?v=1">
 <link rel="icon" type="image/png" href="favicon.png?v=1">
@@ -8,7 +20,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Andika:wght@400;700&display=swap">
-<link rel="stylesheet" href="klassenarbeiten/ka-tablet.css?v=2">
+<link rel="stylesheet" href="klassenarbeiten/ka-tablet.css?v=3">
 <style>
 /* Layout: one column like a page in a squared math notebook; one task card at a time, chips to pick a topic on top */
 :root {
@@ -861,7 +873,7 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
 .plan-sum { margin: 0; color: var(--ink-soft); font-size: 0.95rem; }
 .plan-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
 .plan-item { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 18px; background: rgba(128,128,128,0.10); border-left: 8px solid var(--pc, var(--primary)); }
-.plan-item.math { --pc: var(--primary); } .plan-item.en { --pc: var(--post); } .plan-item.voc { --pc: #E5B800; } .plan-item.de { --pc: #E8A317; } .plan-item.ek { --pc: #2E9E5B; }
+.plan-item.math, .plan-item.mh { --pc: var(--primary); } .plan-item.en { --pc: var(--post); } .plan-item.voc { --pc: #E5B800; } .plan-item.de { --pc: #E8A317; } .plan-item.ek { --pc: #2E9E5B; }
 .plan-check { flex-shrink: 0; width: 30px; height: 30px; box-sizing: border-box; border-radius: 50%; border: 3px solid var(--pc); display: flex; align-items: center; justify-content: center; font-weight: 800; color: #fff; }
 .plan-item.done .plan-check { background: #2E9E5B; border-color: #2E9E5B; }
 .plan-txt { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; line-height: 1.25; }
@@ -940,6 +952,12 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
     <p id="kaText"><b>Englisch-Klassenarbeit am Dienstag, 3. November.</b> Trag unten bei „Für Eltern“ das Datum ein, dann zählt die App die Tage.</p>
   </div>
 
+  <div class="ka mka" id="mhBox">
+    <span class="ka-subj">Mathe-HÜ</span>
+    <span class="ka-num" id="mhNum">?</span>
+    <p id="mhText"><b>Mathe-HÜ am Mittwoch, 11. November.</b> Vorrangregeln.</p>
+  </div>
+
   <div class="ka mka" id="mkaBox">
     <span class="ka-subj">Mathe</span>
     <span class="ka-num" id="mkaNum">?</span>
@@ -965,7 +983,7 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
     <div class="subj" id="subjMath">
       <div class="subj-top">
         <svg viewBox="0 0 110 140" aria-hidden="true"><g transform="rotate(-6 55 66)"><rect class="m-body" x="28" y="6" width="54" height="118" rx="10"></rect><path class="m-tick" d="M28 20 H 39 M28 32 H 34 M28 44 H 39 M28 56 H 34 M28 68 H 39 M28 80 H 34 M28 92 H 39 M28 104 H 34 M28 116 H 39"></path><circle class="m-eye" cx="52" cy="44" r="5"></circle><circle class="m-eye" cx="68" cy="44" r="5"></circle><circle class="m-cheek" cx="46" cy="57" r="4.5"></circle><circle class="m-cheek" cx="74" cy="57" r="4.5"></circle><path class="m-smile" d="M52 57 Q 60 65, 68 57"></path></g></svg>
-        <span><span class="subj-name">Mathe</span><br><span class="subj-what">Natürliche Zahlen &amp; Maßstab mit Lina Lineal</span><span class="subj-ka" id="mathKa"></span></span>
+        <span><span class="subj-name">Mathe</span><br><span class="subj-what">Vorrangregeln &amp; Klammern (HÜ) · Natürliche Zahlen &amp; Maßstab · 4 Probe-HÜs</span><span class="subj-ka" id="mathKa"></span></span>
       </div>
       <span class="goalbar" id="mathBar"><i></i><span class="mark" id="mathMark"></span></span>
       <span class="subj-status"><b id="mathMin">0 Min</b><span id="mathState">noch nicht geübt</span></span>
@@ -1036,6 +1054,9 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
       </div>
       <label class="lv-setting" for="kaDate">Datum der Englisch-Klassenarbeit:
         <input type="date" id="kaDate">
+      </label>
+      <label class="lv-setting" for="mhDate">Datum der Mathe-HÜ:
+        <input type="date" id="mhDate">
       </label>
       <label class="lv-setting" for="mkaDate">Datum der Mathe-Klassenarbeit:
         <input type="date" id="mkaDate">
@@ -1355,7 +1376,7 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
     </svg>
     <div class="brand">
       <h1>Mathe mit Lina</h1>
-      <p>Klassenarbeit am 25. November: alles ab Maßstab – Maßstab, Kopfrechnen, schriftlich rechnen</p>
+      <p>HÜ am Mittwoch: Vorrangregeln &amp; Klammern · Klassenarbeit am 25. November: alles ab Maßstab</p>
     </div>
     <div class="stars" title="Alle gesammelten Sterne">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path class="star-fill" d="M12 2.5l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.3l-5.8 3.1 1.1-6.5L2.6 9.3l6.5-.9z"></path></svg>
@@ -1371,12 +1392,47 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
     </div>
   </div>
 
+  <section class="card voc-card" id="mhProbe">
+    <p class="voc-eyebrow">HÜ am Mittwoch: Vorrangregeln · Probe-HÜs zum Ausfüllen</p>
+    <p class="voc-how">Die Lehrerin hat gesagt: <b>Die Vorrangregeln kommen dran.</b> Jede Probe-HÜ dauert 20 Minuten, ohne Tipps. Erst nach dem Abgeben gibt es Punkte, Prozent und eine Note. Rechne auf einem Zettel mit!</p>
+    <p class="de-plan"><b>Merke:</b> 1. Klammern zuerst (innen vor außen) · 2. Punkt vor Strich · 3. sonst von links nach rechts.</p>
+    <p class="de-plan"><b>Samstag:</b> HÜ 1 · <b>Sonntag:</b> HÜ 2 · <b>Montag:</b> HÜ 3 · <b>Dienstag:</b> Generalprobe · Jeden Tag dazu eine Runde „HÜ: Vorrang &amp; Klammern“ mit Lina.</p>
+    <div class="pr-list">
+      <div class="pr-card" style="--pc:#FFD66B">
+        <span class="pr-num">1</span>
+        <div class="pr-txt"><h3>Probe-HÜ 1<span class="pr-lvl">Warm-up</span></h3><p>Punkt vor Strich, Klammern zuerst, Rechenschritte ausfüllen, Richtig oder falsch, Text → Aufgabe.</p><p class="pr-status" data-ka-status="m1" hidden></p></div>
+        <div class="pr-acts"><button type="button" class="pr-open pr-tab" data-ka="m1">Probe-HÜ schreiben</button></div>
+      </div>
+      <div class="pr-card" style="--pc:#8FD3FF">
+        <span class="pr-num">2</span>
+        <div class="pr-txt"><h3>Probe-HÜ 2<span class="pr-lvl">Normal</span></h3><p>Von links nach rechts, Stolperstellen wie bei Heike, Klammern setzen, Summe/Differenz/Produkt/Quotient.</p><p class="pr-status" data-ka-status="m2" hidden></p></div>
+        <div class="pr-acts"><button type="button" class="pr-open pr-tab" data-ka="m2">Probe-HÜ schreiben</button></div>
+      </div>
+      <div class="pr-card" style="--pc:#B9E6B0">
+        <span class="pr-num">3</span>
+        <div class="pr-txt"><h3>Probe-HÜ 3<span class="pr-lvl">Normal+</span></h3><p>Eckige Klammern, Klammern weglassen?, Rechenbaum, Zahlenrätsel, Sachaufgabe mit Rechenausdruck.</p><p class="pr-status" data-ka-status="m3" hidden></p></div>
+        <div class="pr-acts"><button type="button" class="pr-open pr-tab" data-ka="m3">Probe-HÜ schreiben</button></div>
+      </div>
+      <div class="pr-card" style="--pc:#C9B8FF">
+        <span class="pr-num">4</span>
+        <div class="pr-txt"><h3>Probe-HÜ 4<span class="pr-lvl">Generalprobe</span></h3><p>Alles gemischt wie bei der Lehrerin, mit Rechenschritten und einer Erkläre-Aufgabe. Am besten am Dienstag.</p><p class="pr-status" data-ka-status="m4" hidden></p></div>
+        <div class="pr-acts"><button type="button" class="pr-open pr-tab" data-ka="m4">Probe-HÜ schreiben</button></div>
+      </div>
+    </div>
+  </section>
+
   <div class="break-info" id="breakInfo"><p id="breakText"></p><button type="button" class="btn small primary" id="breakStart" hidden>Pause starten</button></div>
 
   <section class="pick" aria-labelledby="mathPickTitle">
     <h2 class="pick-title" id="mathPickTitle">Was möchtest du üben?</h2>
     <button type="button" class="pick-field" aria-expanded="false" aria-controls="mathTopics"><span class="pf-v" id="mathTopicBtnLabel">Maßstab gemischt</span><span class="pf-ch" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></button>
   <nav class="topics" id="mathTopics" aria-label="Thema wählen" hidden>
+    <button type="button" class="chip pro" data-topic="hue" aria-pressed="false">HÜ: Vorrang &amp; Klammern</button>
+    <button type="button" class="chip" data-topic="vrg" aria-pressed="false">Vorrangregeln</button>
+    <button type="button" class="chip" data-topic="eck" aria-pressed="false">Eckige Klammern</button>
+    <button type="button" class="chip" data-topic="baum" aria-pressed="false">Rechenbaum</button>
+    <button type="button" class="chip" data-topic="tterm" aria-pressed="false">Text → Aufgabe</button>
+    <button type="button" class="chip" data-topic="raetsel" aria-pressed="false">Zahlenrätsel</button>
     <button type="button" class="chip pro" data-topic="mka" aria-pressed="false">Klassenarbeit-Mix</button>
     <button type="button" class="chip" data-topic="nat" aria-pressed="false">Natürliche Zahlen</button>
     <button type="button" class="chip" data-topic="natplus" aria-pressed="false">Große Zahlen &amp; schriftlich</button>
@@ -2297,6 +2353,207 @@ window.LU5 = (function () {
     }
     return { type: 'zahlwort', key: 'zw-' + q, ans: ans, unit: '', q: q, hint: 'Nutze die Stellenwerttafel: Mio | HT ZT T | H Z E.', sol: sol, vis: null, p: {} };
   }
+  /* ---------- Mathe-HÜ: Vorrangregeln, Klammern, Rechenbaum, Texte (Buch S. 54–55) ---------- */
+  /* Ausdruck in Token zerlegen: Zahlen, + − · : ( ) [ ] */
+  function rTok(s) { return String(s).replace(/\s+/g, '').match(/\d+|[+−·:()\[\]]/g) || []; }
+  /* Baum bauen (Punkt vor Strich, links nach rechts) */
+  function rTree(s) {
+    var t = rTok(s), i = 0;
+    function fac() { var c = t[i]; if (c === '(' || c === '[') { i++; var v = sum(); i++; v.br = c; return v; } i++; return { n: Number(c) }; }
+    function prod() { var v = fac(); while (t[i] === '·' || t[i] === ':') { var o = t[i++]; v = { op: o, l: v, r: fac() }; } return v; }
+    function sum() { var v = prod(); while (t[i] === '+' || t[i] === '−') { var o = t[i++]; v = { op: o, l: v, r: prod() }; } return v; }
+    return sum();
+  }
+  function rVal(nd) { if (nd.n !== undefined) return nd.n; var a = rVal(nd.l), b = rVal(nd.r); var v = nd.op === '+' ? a + b : nd.op === '−' ? a - b : nd.op === '·' ? a * b : a / b; nd.v = v; return v; }
+  /* Gültig: alle Zwischenergebnisse natürliche Zahlen */
+  function rOk(nd) { if (nd.n !== undefined) return true; if (!rOk(nd.l) || !rOk(nd.r)) return false; var v = rVal(nd); return v >= 0 && Math.floor(v) === v && !(nd.op === ':' && rVal(nd.r) === 0); }
+  function rEval(s) { var tr = rTree(s); return rOk(tr) ? rVal(tr) : null; }
+  /* Rechenweg Schritt für Schritt: innerste Klammer zuerst, dort Punkt vor Strich, sonst von links */
+  function rSteps(s) {
+    var t = rTok(s).map(function (x) { return /\d/.test(x) ? Number(x) : x; }), lines = [];
+    function show(a) { return a.map(function (x, k) { if (typeof x === 'number') return fmt(x); if (x === '(' || x === '[') return x; if (x === ')' || x === ']') return x; return ' ' + x + ' '; }).join('').replace(/\( /g, '(').replace(/ \)/g, ')'); }
+    var guard = 0;
+    while (t.length > 1 && guard++ < 30) {
+      var open = -1, close = t.length, k;
+      for (k = 0; k < t.length; k++) { if (t[k] === '(' || t[k] === '[') open = k; else if (t[k] === ')' || t[k] === ']') { close = k; break; } }
+      var from = open + 1, to = close, at = -1;
+      for (k = from; k < to; k++) if (t[k] === '·' || t[k] === ':') { at = k; break; }
+      if (at < 0) for (k = from; k < to; k++) if (t[k] === '+' || t[k] === '−') { at = k; break; }
+      if (at < 0) { t.splice(close, 1); t.splice(open, 1); continue; }
+      var a = t[at - 1], b = t[at + 1], o = t[at], v = o === '+' ? a + b : o === '−' ? a - b : o === '·' ? a * b : a / b;
+      t.splice(at - 1, 3, v);
+      for (k = 0; k < t.length - 2; k++) if ((t[k] === '(' || t[k] === '[') && typeof t[k + 1] === 'number' && (t[k + 2] === ')' || t[k + 2] === ']')) { t.splice(k + 2, 1); t.splice(k, 1); }
+      lines.push(show(t));
+    }
+    return lines;
+  }
+  function rSol(expr) { var st = rSteps(expr); return [expr + ' = ' + st.map(function (x, i) { return i === st.length - 1 ? '<b>' + x + '</b>' : x; }).join(' = ')]; }
+  function big(expr) { return '<b style="font-size:1.3em">' + expr + '</b>'; }
+  /* Zufälligen Ausdruck aus einer Vorlage bauen, bis alle Zwischenergebnisse passen */
+  function rMake(fn) { for (var t = 0; t < 200; t++) { var e = fn(); var v = rEval(e); if (v !== null && v <= 2000) return { e: e, v: v }; } return { e: '36 − 4 · 5', v: 16 }; }
+  var RV_TPL = [
+    function () { var a = rnd(40, 99), b = rnd(5, 25), c = rnd(3, 15); return a + ' − ' + b + ' − ' + c; },
+    function () { var c = rnd(2, 5), b = rnd(2, 6), a = b * c * rnd(2, 9); return a + ' : ' + b + ' : ' + c; },
+    function () { var a = rnd(30, 90), b = rnd(10, 25), c = rnd(5, 30); return a + ' − ' + b + ' + ' + c; },
+    function () { var a = rnd(10, 60), b = rnd(2, 9), c = rnd(2, 9), d = rnd(3, 20); return a + ' + ' + b + ' · ' + c + ' − ' + d; },
+    function () { var c = rnd(2, 9), d = rnd(2, 9), b = rnd(5, 30), a = rnd(b + c * d + 5, 120); return a + ' − (' + b + ' + ' + c + ' · ' + d + ')'; },
+    function () { var c = rnd(2, 9), d = rnd(2, 9), b = rnd(5, 30), a = rnd(b + 5, 120); return a + ' − ' + b + ' + ' + c + ' · ' + d; },
+    function () { var a = rnd(2, 6), b = rnd(10, 25), c = rnd(2, b - 3), d = rnd(2, 5); return a + ' · (' + b + ' − ' + c + ') · ' + d; },
+    function () { var a = rnd(2, 15), b = rnd(2, 12), c = rnd(8, 15), d = rnd(1, c - 2); return '(' + a + ' + ' + b + ') · (' + c + ' − ' + d + ')'; },
+    function () { var e = rnd(2, 6), dd = e * rnd(2, 9), b = rnd(2, 9), c = rnd(2, 6), a = rnd(b * c + 1, 90); return a + ' − ' + b + ' · ' + c + ' + ' + dd + ' : ' + e; },
+    function () { var b = rnd(2, 9), c = rnd(2, 9), a = rnd(6, 15) * c, d = rnd(2, 9); return a + ' : ' + c + ' + ' + b + ' · ' + d; },
+    function () { var a = rnd(3, 9), b = rnd(10, 30), c = rnd(2, 9), d = rnd(2, 9); return a + ' · ' + b + ' − ' + c + ' · ' + d; },
+    function () { var a = rnd(50, 150), b = rnd(10, 40), c = rnd(2, 20); return a + ' − (' + b + ' − ' + c + ')'; }
+  ];
+  function genVrg() {
+    var m = rMake(pick(RV_TPL));
+    return { type: 'vrg', key: 'vr-' + m.e, ans: m.v, unit: '', q: 'Rechne. Achte auf die Vorrangregeln!<br>' + big(m.e),
+      hint: '1. Klammern zuerst. 2. Punkt vor Strich (· und : vor + und −). 3. Sonst von links nach rechts – auch bei „− −“ und „: :“!', sol: rSol(m.e), vis: null, p: {} };
+  }
+  var ECK_TPL = [
+    function () { var b = rnd(4, 15), c = rnd(2, 10), a = rnd(b + c + 2, 50), n = rnd(2, 9); return n + ' · [' + a + ' − (' + b + ' + ' + c + ')]'; },
+    function () { var b = rnd(4, 15), c = rnd(2, 10), a = rnd(b + c + 2, 60), n = rnd(2, 6); return '[' + a + ' − (' + b + ' + ' + c + ')] · ' + n; },
+    function () { var b = rnd(2, 4), c = rnd(2, 3), a = b * c * rnd(1, 5), d = rnd(2, 9), e = rnd(2, 9); return '[' + a + ' : (' + b + ' · ' + c + ') + ' + d + '] · ' + e; },
+    function () { var b = rnd(2, 9), c = rnd(2, 6), d = rnd(2, 6), e = rnd(2, 15), a = rnd(b * (c + d), 140); return a + ' − [' + b + ' · (' + c + ' + ' + d + ') − ' + e + ']'; },
+    function () { var c = rnd(2, 5), d = rnd(2, 4), b = rnd(c * d + 3, c * d + 20), n = rnd(2, 6); return n + ' · [' + b + ' − ' + c + ' · (' + d + ' + ' + rnd(1, 3) + ')]'; },
+    function () { var n = rnd(2, 9), x = rnd(2, 9), y = rnd(1, 4), a = rnd(15, 40); return '[' + a + ' − (' + x + ' + ' + y + ')] · ' + n; }
+  ];
+  function genEck() {
+    var m = rMake(pick(ECK_TPL));
+    return { type: 'eck', key: 'ek-' + m.e, ans: m.v, unit: '', q: 'Rechne. Beginne mit der <b>inneren</b> Klammer!<br>' + big(m.e),
+      hint: 'Erst die runde Klammer ( ) innen, dann die eckige Klammer [ ]. In jeder Klammer gilt Punkt vor Strich.', sol: rSol(m.e), vis: null, p: {} };
+  }
+  /* Stolperstelle: Heike/Timo rechnen falsch */
+  function genStolper() {
+    var nm = pick(['Heike', 'Timo', 'Ben', 'Lea']), k = rnd(0, 3), e, wrongTxt, why;
+    if (k === 0) { var a = rnd(20, 40), b = rnd(2, 6), c = rnd(2, 5); if (a <= b * c) a = b * c + rnd(3, 15); e = a + ' − ' + b + ' · ' + c; wrongTxt = e + ' = ' + (a - b) + ' · ' + c + ' = ' + (a - b) * c; why = nm + ' hat <b>Punkt vor Strich</b> vergessen.'; }
+    else if (k === 1) { var x = rnd(6, 15), y = rnd(2, 6), z = rnd(2, 9); e = x + ' · (' + y + ' + ' + z + ')'; wrongTxt = e + ' = ' + (x * y) + ' + ' + z + ' = ' + (x * y + z); why = nm + ' hat nur die erste Zahl in der Klammer mal genommen. <b>Die Klammer wird zuerst berechnet.</b>'; }
+    else if (k === 2) { var p = rnd(40, 80), q2 = rnd(10, 25), r = rnd(3, q2 - 2); e = p + ' − ' + q2 + ' − ' + r; wrongTxt = e + ' = ' + p + ' − ' + (q2 - r) + ' = ' + (p - (q2 - r)); why = nm + ' hat hinten zuerst gerechnet. Ohne Klammer und Punktrechnung gilt: <b>von links nach rechts</b>.'; }
+    else { var d = rnd(2, 4), m2 = d * rnd(2, 4), x2 = d * rnd(2, 5), u = m2 * x2; e = u + ' : ' + m2 + ' : ' + d; wrongTxt = e + ' = ' + u + ' : ' + (m2 / d) + ' = ' + (u / (m2 / d)); why = nm + ' hat hinten zuerst geteilt. Bei „: :“ rechnet man <b>von links nach rechts</b>.'; }
+    var v = rEval(e);
+    return { type: 'stolper', key: 'so-' + e, ans: v, unit: '', q: 'Stolperstelle! ' + nm + ' hat gerechnet:<br><b style="font-size:1.15em">' + wrongTxt + '</b><br>Das stimmt nicht. Was kommt richtig heraus?',
+      hint: 'Rechne selbst neu: Klammern zuerst, dann Punkt vor Strich, sonst von links nach rechts.', sol: [why].concat(rSol(e)), vis: null, p: {} };
+  }
+  /* Klammern setzen, damit eine bestimmte Zahl herauskommt – oder: darf die Klammer weg? */
+  var OPS = ['+', '−', '·', ':'];
+  function genKl() {
+    if (Math.random() < 0.35) {
+      for (var t2 = 0; t2 < 80; t2++) {
+        var w = rMake(pick([
+          function () { return '(' + rnd(10, 40) + ' : ' + pick([2, 5]) + ') + (' + rnd(2, 9) + ' · ' + rnd(2, 9) + ')'; },
+          function () { return rnd(50, 140) + ' + (' + rnd(3, 12) + ' · ' + rnd(2, 9) + ' − ' + rnd(2, 12) + ')'; },
+          function () { return rnd(80, 160) + ' − (' + rnd(3, 9) + ' · ' + rnd(2, 9) + ' − ' + rnd(2, 12) + ')'; },
+          function () { return '(' + rnd(20, 60) + ' + ' + rnd(10, 30) + ') · (' + rnd(8, 12) + ' − ' + rnd(1, 6) + ')'; },
+          function () { return '(' + rnd(4, 16) + ' · ' + pick([2, 4, 8]) + ') : 2 + ' + rnd(2, 30); },
+          function () { return rnd(60, 120) + ' − (' + rnd(10, 30) + ' + ' + rnd(5, 20) + ')'; }
+        ]));
+        var plain = w.e.replace(/[()]/g, ''), vp = rEval(plain);
+        if (vp === null && plain !== w.e) continue;
+        var same = vp === w.v;
+        return { type: 'kl', key: 'kw-' + w.e, q: 'Kann man die Klammern weglassen, <b>ohne</b> dass sich das Ergebnis ändert?<br>' + big(w.e),
+          opts: opts('Ja, das Ergebnis bleibt gleich.', ['Nein, dann kommt etwas anderes heraus.'], true).map(function (o) { return { t: o.t, ok: o.ok === same }; }),
+          ex: 'Mit Klammern: ' + rSol(w.e)[0] + '<br>Ohne Klammern: ' + (vp === null ? plain + ' geht nicht gut auf' : rSol(plain)[0]) + '<br>' + (same ? 'Gleiches Ergebnis – die Klammern sind hier nicht nötig (Punkt vor Strich oder von links nach rechts gilt sowieso).' : 'Anderes Ergebnis – die Klammern sind wichtig!') };
+      }
+    }
+    for (var t = 0; t < 200; t++) {
+      var a = rnd(2, 20), b = rnd(2, 12), c = rnd(2, 12), o1 = pick(OPS), o2 = pick(OPS);
+      if (o1 === ':' ) a = b * rnd(2, 9);
+      var A = a + ' ' + o1 + ' ' + b + ' ' + o2 + ' ' + c, L = '(' + a + ' ' + o1 + ' ' + b + ') ' + o2 + ' ' + c, R = a + ' ' + o1 + ' (' + b + ' ' + o2 + ' ' + c + ')';
+      var vA = rEval(A), vL = rEval(L), vR = rEval(R);
+      if (vA === null || vL === null || vR === null) continue;
+      var cand = [[L, vL], [R, vR]].filter(function (x) { return x[1] !== vA; });
+      if (!cand.length) continue;
+      var tgt = pick(cand); if ([vA, vL, vR].filter(function (x) { return x === tgt[1]; }).length > 1) continue;
+      var list = [[A, vA], [L, vL], [R, vR]].filter(function (x, i, arr) { return arr.map(function (y) { return y[0]; }).indexOf(x[0]) === i; });
+      return { type: 'kl', key: 'ks-' + A + tgt[1], q: 'Setze Klammern so, dass <b>' + tgt[1] + '</b> herauskommt:<br>' + big(A),
+        opts: opts(tgt[0], list.filter(function (x) { return x[0] !== tgt[0]; }).map(function (x) { return x[0]; })),
+        ex: rSol(tgt[0])[0] + '<br>Probiere bei solchen Aufgaben jede Klammer-Stelle aus und rechne nach.' };
+    }
+    return genVrg();
+  }
+  /* Rechenbaum: Baum zeichnen, Ergebnis oder passende Aufgabe finden */
+  function rbHtml(nd, root) {
+    if (nd.n !== undefined) return '<div class="rb-n"><span class="rb-b">' + fmt(nd.n) + '</span></div>';
+    return '<div class="rb-n"><div class="rb-kids">' + rbHtml(nd.l) + rbHtml(nd.r) + '</div><span class="rb-op">' + nd.op + '</span><span class="rb-b rb-e' + (root ? ' rb-q' : '') + '">' + (root ? '?' : '') + '</span></div>';
+  }
+  function rbShow(expr) { return '<div class="rb" aria-label="Rechenbaum">' + rbHtml(rTree(expr), true) + '</div>'; }
+  function genBaum() {
+    var m = rMake(pick([
+      function () { return '(' + rnd(5, 30) + ' + ' + rnd(2, 20) + ') · ' + rnd(2, 9); },
+      function () { var d = rnd(2, 6); return '(' + (d * rnd(4, 12) + 6) + ' − 6) : ' + d; },
+      function () { return rnd(20, 90) + ' − ' + rnd(2, 9) + ' · ' + rnd(2, 9); },
+      function () { return '(' + rnd(10, 30) + ' − ' + rnd(2, 9) + ') · (' + rnd(2, 9) + ' + ' + rnd(1, 9) + ')'; },
+      function () { return rnd(2, 9) + ' · ' + rnd(2, 9) + ' + ' + rnd(10, 40) + ' : ' + pick([2, 5, 10]); },
+      function () { return rnd(60, 150) + ' − (' + rnd(10, 30) + ' + ' + rnd(2, 9) + ' · ' + rnd(2, 6) + ')'; }
+    ]));
+    if (Math.random() < 0.5) {
+      var plain = m.e.replace(/[()]/g, ''), bad = [];
+      if (plain !== m.e) bad.push(plain);
+      var tk = rTok(m.e).filter(function (x) { return /\d/.test(x); });
+      var swapped = m.e.replace(/[+−·:]/, function (o) { return o === '+' ? '·' : o === '·' ? '+' : o === '−' ? '+' : '·'; });
+      if (swapped !== m.e && bad.indexOf(swapped) < 0) bad.push(swapped);
+      if (bad.length < 2) bad.push(tk.slice().reverse().join(' + '));
+      return { type: 'baum', key: 'bm-' + m.e, q: 'Welche Aufgabe gehört zu diesem Rechenbaum?' + rbShow(m.e), opts: opts(m.e, bad.slice(0, 2)),
+        ex: 'Was im Baum <b>oben</b> zusammen gerechnet wird, kommt zuerst – also in Klammern, wenn es + oder − ist. ' + rSol(m.e)[0] };
+    }
+    return { type: 'baum', key: 'bz-' + m.e, ans: m.v, unit: '', q: 'Rechne den Rechenbaum von oben nach unten aus. Welche Zahl kommt ins letzte Kästchen?' + rbShow(m.e),
+      hint: 'Rechne erst die oberen Kästchen aus, dann das Ergebnis darunter. Die Aufgabe dazu heißt: ' + m.e, sol: ['Aufgabe zum Baum: ' + m.e].concat(rSol(m.e)), vis: null, p: {} };
+  }
+  /* Text → Rechenausdruck (Summe, Differenz, Produkt, Quotient) */
+  function genTterm() {
+    var a, b, c, T = rnd(0, 9), txt, ok, bad;
+    for (var t = 0; t < 60; t++) {
+      a = rnd(3, 30); b = rnd(2, 15); c = rnd(2, 12);
+      if (T === 0) { c = rnd(a + b + 1, 99); txt = 'Subtrahiere die Summe aus ' + a + ' und ' + b + ' von ' + c + '.'; ok = c + ' − (' + a + ' + ' + b + ')'; bad = [c + ' − ' + a + ' + ' + b, '(' + a + ' + ' + b + ') − ' + c]; }
+      else if (T === 1) { b = rnd(a + 2, 60); txt = 'Addiere ' + c + ' zur Differenz aus ' + b + ' und ' + a + '.'; ok = b + ' − ' + a + ' + ' + c; bad = [b + ' − (' + a + ' + ' + c + ')', c + ' + ' + a + ' − ' + b]; }
+      else if (T === 2) { txt = 'Addiere ' + a + ' und das Produkt aus ' + b + ' und ' + c + '.'; ok = a + ' + ' + b + ' · ' + c; bad = ['(' + a + ' + ' + b + ') · ' + c, a + ' · ' + b + ' + ' + c]; }
+      else if (T === 3) { txt = 'Multipliziere die Summe aus ' + a + ' und ' + b + ' mit ' + c + '.'; ok = '(' + a + ' + ' + b + ') · ' + c; bad = [a + ' + ' + b + ' · ' + c, a + ' · (' + b + ' + ' + c + ')']; }
+      else if (T === 4) { c = rnd(2, 9); b = c * rnd(2, 9) - a; if (b < 2) continue; txt = 'Dividiere die Summe aus ' + a + ' und ' + b + ' durch ' + c + '.'; ok = '(' + a + ' + ' + b + ') : ' + c; bad = [a + ' + ' + b + ' : ' + c, a + ' : (' + b + ' + ' + c + ')']; }
+      else if (T === 5) { b = rnd(2, 9); a = b * rnd(2, 12); c = rnd(a / b + 2, 80); txt = 'Subtrahiere den Quotienten aus ' + a + ' und ' + b + ' von ' + c + '.'; ok = c + ' − ' + a + ' : ' + b; bad = ['(' + c + ' − ' + a + ') : ' + b, a + ' : ' + b + ' − ' + c]; }
+      else if (T === 6) { a = rnd(8, 20); b = rnd(2, a - 2); txt = 'Multipliziere die Differenz der Zahlen ' + a + ' und ' + b + ' mit ihrer Summe.'; ok = '(' + a + ' − ' + b + ') · (' + a + ' + ' + b + ')'; bad = [a + ' − ' + b + ' · ' + a + ' + ' + b, '(' + a + ' − ' + b + ') · ' + a + ' + ' + b]; }
+      else if (T === 7) { a = rnd(2, 9); b = rnd(10, 60); txt = 'Addiere das Produkt von ' + a + ' und ' + b + ' zur Summe von ' + a + ' und ' + b + '.'; ok = a + ' + ' + b + ' + ' + a + ' · ' + b; bad = ['(' + a + ' + ' + b + ') · ' + a + ' + ' + b, a + ' · ' + b + ' · (' + a + ' + ' + b + ')']; }
+      else if (T === 8) { a = rnd(2, 9); b = rnd(2, 12); c = pick([2, 3, 4, 6]); if ((a * b) % c) continue; txt = 'Multipliziere die Zahlen ' + a + ' und ' + b + ' und dividiere das Produkt durch ' + c + '.'; ok = a + ' · ' + b + ' : ' + c; bad = [a + ' · (' + b + ' + ' + c + ')', c + ' : (' + a + ' · ' + b + ')']; }
+      else { a = rnd(40, 99); b = rnd(15, 35); c = rnd(2, b - 3); txt = 'Subtrahiere von ' + a + ' die Differenz aus ' + b + ' und ' + c + '.'; ok = a + ' − (' + b + ' − ' + c + ')'; bad = [a + ' − ' + b + ' − ' + c, '(' + b + ' − ' + c + ') − ' + a]; }
+      if (rEval(ok) !== null) break;
+    }
+    var v = rEval(ok);
+    if (Math.random() < 0.5) {
+      return { type: 'tterm', key: 'tm-' + txt, q: 'Welcher Rechenausdruck passt?<br><b>' + txt + '</b>', opts: opts(ok, bad),
+        ex: 'Richtig ist <b>' + ok + '</b>. ' + rSol(ok)[0] + '<br>Summe → +, Differenz → −, Produkt → ·, Quotient → :. Was zuerst gerechnet werden muss, kommt in Klammern.' };
+    }
+    return { type: 'tterm', key: 'tw-' + txt, ans: v, unit: '', q: 'Schreib als Aufgabe ins Heft und berechne:<br><b>' + txt + '</b>',
+      hint: 'Übersetze Wort für Wort: Summe = +, Differenz = −, Produkt = ·, Quotient = :. Überlege, was zuerst ausgerechnet werden muss – das kommt in Klammern.', sol: ['Aufgabe: ' + ok].concat(rSol(ok)), vis: null, p: {} };
+  }
+  /* Zahlenrätsel wie Aufgabe 18 */
+  function genRaetsel() {
+    for (var t = 0; t < 120; t++) {
+      var k = rnd(0, 5), a, b, c, d, q, ans, sol;
+      if (k === 0) { d = pick([2, 3, 4, 5, 6, 7]); c = d * rnd(8, 40); a = rnd(30, 140); b = rnd(5, a - 5); ans = c / d - (a - b); q = 'Welche Zahl muss man zur Differenz aus ' + a + ' und ' + b + ' addieren, damit man den Quotienten aus ' + c + ' und ' + d + ' erhält?'; sol = ['Differenz: ' + a + ' − ' + b + ' = ' + (a - b), 'Quotient: ' + c + ' : ' + d + ' = ' + (c / d), (a - b) + ' + ■ = ' + (c / d) + ' → ' + (c / d) + ' − ' + (a - b) + ' = <b>' + ans + '</b>']; }
+      else if (k === 1) { var h = rnd(5, 30), x = pick([2, 3, 4, 5, 6, 7]); var s = h * x; if (s < 20) continue; a = rnd(10, s - 5); b = s - a; c = rnd(5, 2 * h - 5); d = 2 * h - c; ans = x; q = 'Durch welche Zahl muss man die Summe aus ' + a + ' und ' + b + ' dividieren, um die Hälfte der Summe aus ' + c + ' und ' + d + ' zu erhalten?'; sol = ['Summe: ' + a + ' + ' + b + ' = ' + s, 'Hälfte von ' + c + ' + ' + d + ' = ' + (2 * h) + ' ist ' + h, s + ' : ■ = ' + h + ' → ' + s + ' : ' + h + ' = <b>' + ans + '</b>']; }
+      else if (k === 2) { a = rnd(4, 12); b = rnd(4, 12); c = rnd(5, 30); d = rnd(5, 30); ans = a * b - (c + d); q = 'Welche Zahl muss man vom Produkt aus ' + a + ' und ' + b + ' subtrahieren, um die Summe aus ' + c + ' und ' + d + ' zu erhalten?'; sol = ['Produkt: ' + a + ' · ' + b + ' = ' + (a * b), 'Summe: ' + c + ' + ' + d + ' = ' + (c + d), (a * b) + ' − ■ = ' + (c + d) + ' → ' + (a * b) + ' − ' + (c + d) + ' = <b>' + ans + '</b>']; }
+      else if (k === 3) { var df = rnd(3, 12), m = rnd(2, 9); a = rnd(df + 5, 60); b = a - df; ans = m; c = df * m; q = 'Mit welcher Zahl muss man die Differenz aus ' + a + ' und ' + b + ' multiplizieren, um ' + c + ' zu erhalten?'; sol = ['Differenz: ' + a + ' − ' + b + ' = ' + df, df + ' · ■ = ' + c + ' → ' + c + ' : ' + df + ' = <b>' + ans + '</b>']; }
+      else if (k === 4) { ans = rnd(3, 15); a = rnd(2, 9); b = rnd(3, 30); c = ans * a + b; q = 'Ich denke mir eine Zahl. Ich multipliziere sie mit ' + a + ' und addiere dann ' + b + '. Ich erhalte ' + c + '. Wie heißt meine Zahl?'; sol = ['■ · ' + a + ' + ' + b + ' = ' + c, 'Rückwärts: ' + c + ' − ' + b + ' = ' + (c - b) + ', ' + (c - b) + ' : ' + a + ' = <b>' + ans + '</b>']; }
+      else { ans = rnd(3, 25); a = rnd(2, 15); b = rnd(2, 6); c = (ans + a) * b; q = 'Ich denke mir eine Zahl. Ich addiere ' + a + ' und multipliziere das Ergebnis mit ' + b + '. Ich erhalte ' + c + '. Wie heißt meine Zahl?'; sol = ['(■ + ' + a + ') · ' + b + ' = ' + c, 'Rückwärts: ' + c + ' : ' + b + ' = ' + (c / b) + ', ' + (c / b) + ' − ' + a + ' = <b>' + ans + '</b>']; }
+      if (ans > 0 && Math.floor(ans) === ans) return { type: 'raetsel', key: 'ra-' + q, ans: ans, unit: '', q: 'Zahlenrätsel: ' + q, hint: 'Rechne zuerst aus, was du kennst (Summe, Differenz, Produkt, Quotient). Dann schreib die Aufgabe mit ■ auf und rechne mit der Umkehraufgabe.', sol: sol, vis: null, p: {} };
+    }
+    return genWort();
+  }
+  /* Sachaufgaben mit einem Rechenausdruck (Aufgaben 15–17) */
+  function genSach2() {
+    var nm = pick(NAMES), k = rnd(0, 4), q, ex, unit;
+    if (k === 0) { var h = rnd(20, 45), s = rnd(8, 25), j = rnd(10, 40), sch = h + s + j <= 95 ? 100 : 200; q = nm + ' kauft eine Hose für ' + h + ' €, ein Shirt für ' + s + ' € und eine Jacke für ' + j + ' €. Bezahlt wird mit einem ' + sch + '-€-Schein. Wie viel Wechselgeld gibt es zurück?'; ex = sch + ' − (' + h + ' + ' + s + ' + ' + j + ')'; unit = '€'; }
+    else if (k === 1) { var z2 = rnd(3, 8), z1 = rnd(2, 6), et = rnd(2, 4); q = 'In einer Pension gibt es auf jeder Etage ' + z2 + ' Zweibettzimmer und ' + z1 + ' Einbettzimmer. Die Pension hat ' + et + ' Etagen. Wie viele Betten gibt es insgesamt?'; ex = et + ' · (' + z2 + ' · 2 + ' + z1 + ')'; unit = 'Betten'; }
+    else if (k === 2) { var n = pick([20, 25, 30]), bus = rnd(15, 25) * 10, ue = rnd(50, 90) * 10, ein = rnd(10, 30) * 10, kos = bus + ue + ein; if (kos % n) { ein += n - kos % n; kos = bus + ue + ein; } var per = kos / n, bez = (Math.floor(per / 5) + 1) * 5 + pick([0, 5]); q = 'Die ' + n + ' Kinder der Klasse 5b bezahlen für die Klassenfahrt je ' + bez + ' €. Der Bus kostet ' + bus + ' €, Übernachtung mit Essen ' + ue + ' €, dazu kommen ' + ein + ' € Eintritt. Wie viel Euro hat jedes Kind zu viel bezahlt?'; ex = bez + ' − (' + bus + ' + ' + ue + ' + ' + ein + ') : ' + n; unit = '€'; }
+    else if (k === 3) { var kids = rnd(2, 4), ke = pick([6, 7, 8]), er = pick([10, 11, 12]), pop = pick([3, 4, 5]); q = nm + ' geht mit ' + (kids - 1) + ' Freunden und einem Erwachsenen ins Kino. Eine Kinderkarte kostet ' + ke + ' €, eine Erwachsenenkarte ' + er + ' €. Jedes Kind bekommt Popcorn für ' + pop + ' €. Wie viel kostet alles zusammen?'; ex = kids + ' · (' + ke + ' + ' + pop + ') + ' + er; unit = '€'; }
+    else { var bl = rnd(3, 6), st = rnd(4, 9), lose = rnd(5, 15); q = 'Im Regal stehen ' + bl + ' Bretter mit je ' + st + ' Büchern. ' + nm + ' stellt noch ' + lose + ' Bücher dazu. Wie viele Bücher sind es jetzt?'; ex = bl + ' · ' + st + ' + ' + lose; unit = 'Bücher'; }
+    var v = rEval(ex);
+    if (v === null) return genSach2();
+    return { type: 'sach2', key: 's2-' + q, ans: v, unit: unit, q: q, hint: 'Schreib erst <b>einen</b> Rechenausdruck auf (mit Klammern, wo nötig). Dann rechne Schritt für Schritt.', sol: ['Rechenausdruck: ' + ex].concat(rSol(ex)), vis: null, p: {} };
+  }
+  GEN.vrg = genVrg; GEN.eck = genEck; GEN.stolper = genStolper; GEN.kl = genKl; GEN.baum = genBaum; GEN.tterm = genTterm; GEN.raetsel = genRaetsel; GEN.sach2 = genSach2;
+  var HUE = ['regel', 'vrg', 'vrg', 'eck', 'stolper', 'kl', 'baum', 'tterm', 'raetsel', 'sach2'];
+  window.LU5MathR = { steps: rSteps, eval: rEval, tree: rbShow, _gen: GEN };
+
   GEN.kopf = genKopf; GEN.platz = genPlatz; GEN.wort = genWort; GEN.begriff = genBegriff; GEN.probe = genProbe; GEN.zeichen = genZeichen; GEN.schlange = genSchlange; GEN.sach = genSach; GEN.zahlwort = genZahlwort;
   GEN.stelle = genStelle; GEN.rund = genRund; GEN.add = genAdd; GEN.sub = genSub; GEN.mul = genMul; GEN.div = genDiv; GEN.regel = genRegel; GEN.gesch = genGesch;
   var NATR = ['kopf', 'kopf', 'platz', 'wort', 'begriff', 'probe', 'zeichen', 'schlange', 'sach', 'zahlwort'];
@@ -2306,11 +2563,11 @@ window.LU5 = (function () {
   var KAMIX = KA_MASS.concat(KA_KOPF).concat(KA_SCHR);
   function kaMix() { return shuffle(shuffle(KA_MASS).slice(0, 4).concat(shuffle(KA_KOPF).slice(0, 3)).concat(shuffle(KA_SCHR).slice(0, 3))); }
   function buildRound(topic, stats) {
-    var types = (topic === 'mix' ? MIX : topic === 'profi' ? PROFI : topic === 'heft' ? HEFT : topic === 'nat' ? NATR : topic === 'natplus' ? NATPLUS : topic === 'mka' ? kaMix() : [topic, topic, topic, topic, topic, topic, topic, topic, topic, topic]).slice();
+    var types = (topic === 'mix' ? MIX : topic === 'profi' ? PROFI : topic === 'heft' ? HEFT : topic === 'nat' ? NATR : topic === 'natplus' ? NATPLUS : topic === 'hue' ? HUE : topic === 'mka' ? kaMix() : [topic, topic, topic, topic, topic, topic, topic, topic, topic, topic]).slice();
     LV = window.LU5 ? LU5.get('m', topic) : 2;
-    var focus = (topic === 'mix' || topic === 'profi' || topic === 'heft' || topic === 'nat' || topic === 'natplus' || topic === 'mka') ? adapt(types, stats || {}) : [];
-    if (LV === 3 && (topic === 'mix' || topic === 'heft' || topic === 'nat' || topic === 'natplus' || topic === 'mka')) {
-      var extra = topic === 'nat' ? ['sach', 'schlange'] : topic === 'natplus' ? ['regel', 'gesch'] : topic === 'mka' ? ['regel', 'mixed'] : ['bar', 'mixed'];
+    var focus = (topic === 'mix' || topic === 'profi' || topic === 'heft' || topic === 'nat' || topic === 'natplus' || topic === 'mka' || topic === 'hue') ? adapt(types, stats || {}) : [];
+    if (LV === 3 && (topic === 'mix' || topic === 'heft' || topic === 'nat' || topic === 'natplus' || topic === 'mka' || topic === 'hue')) {
+      var extra = topic === 'hue' ? ['eck', 'stolper'] : topic === 'nat' ? ['sach', 'schlange'] : topic === 'natplus' ? ['regel', 'gesch'] : topic === 'mka' ? ['regel', 'mixed'] : ['bar', 'mixed'];
       var slots = shuffle(types.map(function (x, i) { return i; }).filter(function (i) { return focus.indexOf(types[i]) === -1; })).slice(0, 2);
       slots.forEach(function (i, k) { types[i] = extra[k]; });
     }
@@ -2521,7 +2778,7 @@ window.LU5 = (function () {
   }
 
   /* ---------- State ---------- */
-  var TOPIC_LABEL = { mix: 'Gemischt', concept: 'Verstehen', k2w: 'Karte → echt', w2k: 'echt → Karte', find: 'Maßstab finden', zoom: 'Vergrößern', units: 'Einheiten', heft: 'Bild & Original', profi: 'Profi', nat: 'Natürliche Zahlen', natplus: 'Große Zahlen & schriftlich', mka: 'Klassenarbeit-Mix' };
+  var TOPIC_LABEL = { mix: 'Gemischt', concept: 'Verstehen', k2w: 'Karte → echt', w2k: 'echt → Karte', find: 'Maßstab finden', zoom: 'Vergrößern', units: 'Einheiten', heft: 'Bild & Original', profi: 'Profi', nat: 'Natürliche Zahlen', natplus: 'Große Zahlen & schriftlich', mka: 'Klassenarbeit-Mix', hue: 'HÜ: Vorrang & Klammern', vrg: 'Vorrangregeln', eck: 'Eckige Klammern', baum: 'Rechenbaum', tterm: 'Text → Aufgabe', raetsel: 'Zahlenrätsel', stolper: 'Stolperstellen', sach2: 'Sachaufgaben' };
   if (window.LU5) LU5.labels.m = TOPIC_LABEL;
   var MLESSON = {"stelle": "<p>Jede Ziffer hat einen Platz in der Stellenwerttafel. Von rechts: Einer, Zehner, Hunderter, Tausender …</p><table><tr><th>Mio</th><th>HT</th><th>ZT</th><th>T</th><th>H</th><th>Z</th><th>E</th></tr><tr><td>3</td><td>4</td><td>8</td><td>2</td><td>1</td><td>0</td><td>5</td></tr></table><p>Das ist die Zahl <b>3&nbsp;482&nbsp;105</b>. An der Tausender-Stelle (T) steht die <b>2</b>.</p><p class=\"trick\"><b>Merke:</b> Wo nichts steht, schreibst du eine <b>0</b>.</p>", "rund": "<p>Beispiel: Runde <b>34&nbsp;768</b> auf <b>Tausender</b>.</p><p>1. Finde die Tausender-Stelle: 3<b>4</b> 768.<br>2. Schau auf die Ziffer <b>rechts daneben</b>: 34 <b>7</b>68.<br>3. Die 7 ist 5 oder mehr → aufrunden: <b>35&nbsp;000</b>.</p><p class=\"trick\"><b>Merke:</b> 0, 1, 2, 3, 4 → abrunden. 5, 6, 7, 8, 9 → aufrunden. Alles rechts davon wird zu 0.</p>", "add": "<p>Beispiel: <b>4&nbsp;568&nbsp;+&nbsp;2&nbsp;375</b></p><p>Schreibe die Zahlen genau untereinander, Einer unter Einer. Fang rechts an:</p><p>E: 8 + 5 = 13 → schreibe 3, Übertrag 1<br>Z: 6 + 7 + 1 = 14 → schreibe 4, Übertrag 1<br>H: 5 + 3 + 1 = 9<br>T: 4 + 2 = 6</p><p>Ergebnis: <b>6&nbsp;943</b>. Überschlag: 5&nbsp;000&nbsp;+&nbsp;2&nbsp;000&nbsp;=&nbsp;7&nbsp;000, passt!</p><p class=\"trick\"><b>Merke:</b> Den Übertrag klein über die nächste Stelle schreiben, dann vergisst du ihn nicht.</p>", "sub": "<p>Beispiel: <b>7&nbsp;302&nbsp;−&nbsp;2&nbsp;458</b>. Wir rechnen mit Ergänzen, von rechts:</p><p>E: 8 + ? = 12 → <b>4</b>, Übertrag 1<br>Z: 5 + 1 = 6, 6 + ? = 10 → <b>4</b>, Übertrag 1<br>H: 4 + 1 = 5, 5 + ? = 13 → <b>8</b>, Übertrag 1<br>T: 2 + 1 = 3, 3 + ? = 7 → <b>4</b></p><p>Ergebnis: <b>4&nbsp;844</b>. Probe: 4&nbsp;844&nbsp;+&nbsp;2&nbsp;458&nbsp;=&nbsp;7&nbsp;302 ✓</p><p class=\"trick\"><b>Merke:</b> Mit der Probe (Ergebnis + abgezogene Zahl) findest du jeden Fehler.</p>", "mul": "<p>Beispiel: <b>324&nbsp;·&nbsp;23</b></p><p>Zerlege die 23 in 20 und 3:<br>324&nbsp;·&nbsp;20&nbsp;=&nbsp;6&nbsp;480<br>324&nbsp;·&nbsp;3&nbsp;=&nbsp;972<br>Zusammen: 6&nbsp;480&nbsp;+&nbsp;972&nbsp;=&nbsp;<b>7&nbsp;452</b></p><p>Mit Nullen: 45&nbsp;·&nbsp;300 → rechne 45&nbsp;·&nbsp;3&nbsp;=&nbsp;135 und hänge die zwei Nullen an: <b>13&nbsp;500</b>.</p><p class=\"trick\"><b>Merke:</b> Beim schriftlichen Rechnen rückt die zweite Zeile eine Stelle nach links.</p>", "div": "<p>Beispiel: <b>2&nbsp;736&nbsp;:&nbsp;4</b>, von links:</p><p>27 : 4 = <b>6</b>, Rest 3 → hole die 3 runter: 33<br>33 : 4 = <b>8</b>, Rest 1 → hole die 6 runter: 16<br>16 : 4 = <b>4</b>, Rest 0</p><p>Ergebnis: <b>684</b>. Probe: 684&nbsp;·&nbsp;4&nbsp;=&nbsp;2&nbsp;736 ✓</p><p class=\"trick\"><b>Merke:</b> Passt die Zahl nicht einmal hinein, schreibst du eine <b>0</b> ins Ergebnis und holst die nächste Ziffer.</p>", "regel": "<p>Die Reihenfolge ist fest:</p><p>1. <b>Klammern</b> zuerst<br>2. <b>Punkt vor Strich</b>: erst · und :, dann + und −<br>3. Sonst von links nach rechts</p><p><b>5 + 3 · 4</b> = 5 + 12 = <b>17</b> (nicht 32!)<br><b>(5 + 3) · 4</b> = 8 · 4 = <b>32</b></p><p class=\"trick\"><b>Merke:</b> Klammer – Punkt – Strich.</p>", "gesch": "<p>Bei + und · darfst du die Reihenfolge tauschen. Suche Partner, die eine runde Zahl ergeben.</p><p><b>25 · 17 · 4</b> → 25 · 4 = 100 → 100 · 17 = <b>1&nbsp;700</b><br><b>37 + 58 + 63</b> → 37 + 63 = 100 → 100 + 58 = <b>158</b></p><p class=\"trick\"><b>Merke:</b> Gute Partner: 25 · 4 = 100, 2 · 50 = 100, 20 · 5 = 100.</p>", "concept": "<p>Der Maßstab <b>1&nbsp;:&nbsp;100</b> heißt: <b class=\"k\">1&nbsp;cm&nbsp;auf&nbsp;der&nbsp;Karte</b> ist <b class=\"w\">100&nbsp;cm&nbsp;=&nbsp;1&nbsp;m&nbsp;in&nbsp;echt</b>.</p><p>Steht die große Zahl <b>hinten</b> (1 : 100), ist es eine <b>Verkleinerung</b>.<br>Steht sie <b>vorne</b> (10 : 1), ist es eine <b>Vergrößerung</b>.</p><p>Je <b>kleiner</b> die Zahl hinten, desto größer ist alles gezeichnet. Je <b>größer</b> die Zahl hinten, desto mehr Gebiet passt auf die Karte.</p><p class=\"trick\"><b>Merke:</b> Vorne Karte/Bild, hinten echt.</p>", "k2w": "<p>Beispiel: Maßstab <b>1&nbsp;:&nbsp;25&nbsp;000</b>, auf der Karte <b class=\"k\">4&nbsp;cm</b>.</p><p>1. Rechne <b>mal</b>: 4&nbsp;cm&nbsp;·&nbsp;25&nbsp;000&nbsp;=&nbsp;100&nbsp;000&nbsp;cm<br>2. Umwandeln: 100&nbsp;000&nbsp;cm&nbsp;=&nbsp;1&nbsp;000&nbsp;m = <b class=\"w\">1&nbsp;km</b></p><p class=\"trick\"><b>Merke:</b> Karte → echt: <b>mal</b> die Zahl hinten. Das Ergebnis ist zuerst in cm.</p>", "w2k": "<p>Beispiel: Maßstab <b>1&nbsp;:&nbsp;50&nbsp;000</b>, in echt <b class=\"w\">3&nbsp;km</b>.</p><p>1. Erst in cm umwandeln: 3&nbsp;km&nbsp;=&nbsp;3&nbsp;000&nbsp;m&nbsp;=&nbsp;300&nbsp;000&nbsp;cm<br>2. Rechne <b>geteilt</b>: 300&nbsp;000&nbsp;:&nbsp;50&nbsp;000 = <b class=\"k\">6&nbsp;cm</b></p><p class=\"trick\"><b>Merke:</b> Echt → Karte: erst in cm, dann <b>geteilt</b> durch die Zahl hinten.</p>", "find": "<p>Beispiel: Karte <b class=\"k\">5&nbsp;cm</b>, in echt <b class=\"w\">1&nbsp;km</b>.</p><p>1. Beide Längen in cm: 1&nbsp;km&nbsp;=&nbsp;100&nbsp;000&nbsp;cm<br>2. Echt geteilt durch Karte: 100&nbsp;000&nbsp;:&nbsp;5&nbsp;=&nbsp;20&nbsp;000<br>3. Maßstab: <b>1&nbsp;:&nbsp;20&nbsp;000</b></p><p class=\"trick\"><b>Merke:</b> Maßstab finden: echte Länge (in cm) <b>geteilt</b> durch die Länge auf der Karte.</p>", "zoom": "<p>Bei einer Vergrößerung steht die große Zahl vorne, z. B. <b>5 : 1</b>: Das Bild ist 5-mal so groß wie in echt.</p><p>Eine Ameise ist in echt <b class=\"w\">4&nbsp;mm</b> → im Bild 4&nbsp;·&nbsp;5 = <b class=\"k\">20&nbsp;mm</b>.<br>Im Bild <b class=\"k\">30&nbsp;mm</b> → in echt 30&nbsp;:&nbsp;5 = <b class=\"w\">6&nbsp;mm</b>.</p><p class=\"trick\"><b>Merke:</b> Echt → Bild: <b>mal</b>. Bild → echt: <b>geteilt</b>.</p>", "units": "<p>Stell dir eine Treppe vor:</p><p><b>km</b> →(· 1&nbsp;000)→ <b>m</b> →(· 10)→ <b>dm</b> →(· 10)→ <b>cm</b> →(· 10)→ <b>mm</b></p><p>Runter zu kleineren Einheiten: <b>mal</b>. Rauf zu größeren: <b>geteilt</b>.<br>3&nbsp;m&nbsp;=&nbsp;300&nbsp;cm · 7&nbsp;000&nbsp;m&nbsp;=&nbsp;7&nbsp;km · 50&nbsp;mm&nbsp;=&nbsp;5&nbsp;cm</p><p class=\"trick\"><b>Merke:</b> 1 m = 100 cm, 1&nbsp;km&nbsp;=&nbsp;1&nbsp;000&nbsp;m&nbsp;=&nbsp;100&nbsp;000&nbsp;cm.</p>", "pic": "<p>Zähle beim <b class=\"w\">Original</b> und beim <b class=\"k\">Bild</b> die Kästchen einer Seite.</p><p>Original 2 Kästchen, Bild 6 Kästchen → das Bild ist 3-mal so groß → <b>Vergrößerung 3 : 1</b>.<br>Original 8 Kästchen, Bild 2 Kästchen → das Bild ist 4-mal so klein → <b>Verkleinerung 1 : 4</b>.</p><p class=\"trick\"><b>Merke:</b> Beim Maßstab steht das Bild immer vorne: <b>Bild : Original</b>.</p>", "ratio": "<p>Bringe zuerst beide Längen in <b>dieselbe Einheit</b>.</p><p>Bild <b class=\"k\">2&nbsp;cm</b>, Original <b class=\"w\">10&nbsp;m&nbsp;=&nbsp;1&nbsp;000&nbsp;cm</b> → 1&nbsp;000&nbsp;:&nbsp;2&nbsp;=&nbsp;500 → <b>1&nbsp;:&nbsp;500</b><br>Bild <b class=\"k\">30&nbsp;mm</b>, Original <b class=\"w\">5&nbsp;mm</b> → 30&nbsp;:&nbsp;5&nbsp;=&nbsp;6 → <b>6 : 1</b></p><p class=\"trick\"><b>Merke:</b> Ist das Bild kleiner: <b>1 : …</b>. Ist das Bild größer: <b>… : 1</b>.</p>", "tab": "<p>Beispiel: Maßstab <b>1&nbsp;:&nbsp;200</b>. Im <b class=\"k\">Bild&nbsp;3&nbsp;cm</b>.</p><p>Bild → Wirklichkeit: <b>mal</b> 200 → 3&nbsp;cm&nbsp;·&nbsp;200&nbsp;=&nbsp;600&nbsp;cm = <b class=\"w\">6&nbsp;m</b><br>Wirklichkeit → Bild: <b>geteilt</b> durch 200.</p><p class=\"trick\"><b>Merke:</b> Achte auf die Einheit, in der das Ergebnis stehen soll. Wandle am Ende um.</p>", "model": "<p>Ein Modell ist eine Verkleinerung, z. B. <b>1&nbsp;:&nbsp;50</b>.</p><p>Ein Haus ist in echt <b class=\"w\">10&nbsp;m</b> hoch. 10&nbsp;m&nbsp;=&nbsp;1&nbsp;000&nbsp;cm → 1&nbsp;000&nbsp;:&nbsp;50 = <b class=\"k\">20&nbsp;cm</b> am Modell.<br>Am Modell <b class=\"k\">20&nbsp;cm</b> → 20&nbsp;·&nbsp;50&nbsp;=&nbsp;1&nbsp;000&nbsp;cm = <b class=\"w\">10&nbsp;m</b> in echt.</p><p class=\"trick\"><b>Merke:</b> Echt → Modell: <b>geteilt</b>. Modell → echt: <b>mal</b>.</p>", "fit": "<p>Ein DIN-A4-Blatt ist etwa 29&nbsp;cm&nbsp;×&nbsp;21&nbsp;cm. Rechne für jeden Maßstab aus, wie groß die Zeichnung wird.</p><p>Ein Fußballfeld ist etwa <b class=\"w\">100&nbsp;m&nbsp;=&nbsp;10&nbsp;000&nbsp;cm</b> lang.<br>Mit 1&nbsp;:&nbsp;100: 10&nbsp;000&nbsp;:&nbsp;100&nbsp;=&nbsp;100&nbsp;cm → passt <b>nicht</b>.<br>Mit 1&nbsp;:&nbsp;500: 10&nbsp;000&nbsp;:&nbsp;500&nbsp;=&nbsp;20&nbsp;cm → <b>passt</b>.</p><p class=\"trick\"><b>Merke:</b> Wähle den Maßstab, bei dem die Zeichnung möglichst groß ist, aber noch aufs Blatt passt.</p>", "bar": "<p>Eine Maßstabsleiste zeigt: ein Stück auf der Karte steht für eine echte Länge.</p><p>Ein Stück ist <b class=\"k\">1&nbsp;cm</b> und steht für <b class=\"w\">500&nbsp;m</b>.<br>Maßstab: 500&nbsp;m&nbsp;=&nbsp;50&nbsp;000&nbsp;cm → <b>1&nbsp;:&nbsp;50&nbsp;000</b><br><b class=\"w\">2&nbsp;km</b> sind 4 Stücke → <b class=\"k\">4&nbsp;cm</b> auf der Karte.</p><p class=\"trick\"><b>Merke:</b> Wandle die Länge eines Stücks in cm um, dann hast du den Maßstab.</p>", "time": "<p>Beispiel: Karte 1&nbsp;:&nbsp;25&nbsp;000, Weg <b class=\"k\">8&nbsp;cm</b>, 1 km dauert 15 Minuten.</p><p>1. Echte Länge: 8&nbsp;cm&nbsp;·&nbsp;25&nbsp;000&nbsp;=&nbsp;200&nbsp;000&nbsp;cm = <b class=\"w\">2&nbsp;km</b><br>2. Zeit: 2 · 15 Minuten = <b>30 Minuten</b></p><p class=\"trick\"><b>Merke:</b> Erst die echte Länge in km, dann die Zeit pro km.</p>", "sum": "<p>Beispiel: Stadtplan 1&nbsp;:&nbsp;10&nbsp;000, Teile <b class=\"k\">2&nbsp;cm</b>, <b class=\"k\">3&nbsp;cm</b> und <b class=\"k\">1&nbsp;cm</b>.</p><p>1. Zusammenzählen: 2 + 3 + 1 = <b class=\"k\">6&nbsp;cm</b><br>2. Mal den Maßstab: 6&nbsp;cm&nbsp;·&nbsp;10&nbsp;000&nbsp;=&nbsp;60&nbsp;000&nbsp;cm = <b class=\"w\">600&nbsp;m</b></p><p class=\"trick\"><b>Merke:</b> Hin und zurück heißt: den Weg <b>zweimal</b> rechnen.</p>", "compare": "<p>Beispiel: Auf Karte A (1&nbsp;:&nbsp;25&nbsp;000) ist ein Weg <b class=\"k\">4&nbsp;cm</b>. Wie lang auf Karte B (1&nbsp;:&nbsp;50&nbsp;000)?</p><p>1. Echte Länge: 4&nbsp;·&nbsp;25&nbsp;000&nbsp;=&nbsp;100&nbsp;000&nbsp;cm<br>2. Auf Karte B: 100&nbsp;000&nbsp;:&nbsp;50&nbsp;000 = <b class=\"k\">2&nbsp;cm</b></p><p class=\"trick\"><b>Merke:</b> Immer über die echte Länge gehen: erst mal, dann geteilt.</p>", "mixed": "<p>Bei Angaben wie <b>3 km 500 m</b> machst du zuerst <b>eine</b> Einheit daraus.</p><p>3&nbsp;km&nbsp;500&nbsp;m&nbsp;=&nbsp;3&nbsp;500&nbsp;m&nbsp;=&nbsp;350&nbsp;000&nbsp;cm<br>Mit 1&nbsp;:&nbsp;50&nbsp;000: 350&nbsp;000&nbsp;:&nbsp;50&nbsp;000 = <b class=\"k\">7&nbsp;cm</b></p><p class=\"trick\"><b>Merke:</b> Erst alles in m, dann in cm, dann rechnen.</p>", "reason": "<p>Prüfe die Aussage wie ein Detektiv: Rechne selbst nach, bevor du antwortest.</p><p>Typische Fehler: <b>mal und geteilt vertauscht</b>, <b>Einheit vergessen</b> (cm statt m) oder gedacht, eine größere Zahl hinten bedeutet „größer gezeichnet“.</p><p>Beispiel: „Bei 1&nbsp;:&nbsp;1&nbsp;000 ist alles größer gezeichnet als bei 1&nbsp;:&nbsp;100.“ → <b>Stimmt nicht</b>, bei 1 : 100 ist alles größer.</p><p class=\"trick\"><b>Merke:</b> Bei Profi-Aufgaben lohnt es sich, kurz auf einem Zettel mitzurechnen.</p>"};
 
@@ -2534,7 +2791,15 @@ window.LU5 = (function () {
   MLESSON.schlange = '<p><b>Rechenschlange rückwärts:</b> ■ → + 3 → · 2 → − 7 → 11<br>Von hinten: 11 + 7 = 18, 18 : 2 = 9, 9 − 3 = <b>6</b></p><p><b>Additionsmauer:</b> Unten 2 | 3 | 4 → Mitte 5 | 7 → oben <b>12</b></p><p class="trick"><b>Merke:</b> Rückwärts immer die Umkehraufgabe nehmen.</p>';
   MLESSON.sach = '<p>1. Was ist <b>gegeben</b>? 2. Was ist <b>gefragt</b>? 3. <b>Rechnung</b> aufschreiben. 4. <b>Antwortsatz</b>.</p><p>31 Personen, 8 pro Boot: 31 : 8 = 3 Rest 7 → für die 7 braucht man noch ein Boot → <b>4 Boote</b>.</p><p class="trick"><b>Merke:</b> Bei Booten, Bussen, Tischen musst du bei einem Rest aufrunden.</p>';
   MLESSON.zahlwort = '<p>25 407 = <b>fünfundzwanzigtausendvierhundertsieben</b><br>201 500 = <b>zweihunderteintausendfünfhundert</b></p><p>Verdoppeln: 25 → 50 → 100 → 200 → 400<br>Halbieren: 1 600 → 800 → 400 → 200 → 100</p><p class="trick"><b>Merke:</b> Bis eine Million schreibt man das Zahlwort zusammen. Ab Million kommt ein Leerzeichen: zwei Millionen.</p>';
-  var TYPE_LABEL = { kopf: 'Kopfrechnen', platz: 'Kästchen-Aufgaben', wort: 'Rechnen mit Worten', begriff: 'Fachbegriffe & Null', probe: 'Probe', zeichen: 'Rechenzeichen einsetzen', schlange: 'Rechenschlange & Mauer', sach: 'Sachaufgaben', zahlwort: 'Zahlwörter & Zählen', stelle: 'Stellenwerte', rund: 'Runden', add: 'Schriftlich addieren', sub: 'Schriftlich subtrahieren', mul: 'Multiplizieren', div: 'Dividieren', regel: 'Klammer & Punkt vor Strich', gesch: 'Geschickt rechnen', pic: 'Bild & Original vergleichen', ratio: 'Maßstab aus Bild und Original', tab: 'Bild ↔ Wirklichkeit (Einheiten)', model: 'Modelle', fit: 'Passt aufs Blatt?', concept: 'Verstehen', k2w: 'Karte → Wirklichkeit', w2k: 'Wirklichkeit → Karte', find: 'Maßstab finden', zoom: 'Vergrößerung', units: 'Einheiten umrechnen', bar: 'Profi: Maßstabsleiste', time: 'Profi: Wie lange?', sum: 'Profi: Wegstrecken', compare: 'Profi: Karten vergleichen', mixed: 'Profi: km und m', reason: 'Profi: Stimmt das?' };
+  MLESSON.vrg = '<p><b>Die drei Vorrangregeln:</b><br>1. <b>Klammern</b> zuerst.<br>2. <b>Punkt vor Strich</b>: · und : vor + und −.<br>3. Sonst <b>von links nach rechts</b>.</p><p>46 − 22 − 12 = 24 − 12 = <b>12</b> (nicht 46 − 10!)<br>82 − 19 + 7 · 3 = 82 − 19 + 21 = 63 + 21 = <b>84</b><br>82 − (19 + 7 · 3) = 82 − (19 + 21) = 82 − 40 = <b>42</b></p><p class="trick"><b>Merke:</b> Klammer – Punkt – Strich – von links. Schreib jeden Schritt in eine neue Zeile oder hinter ein =.</p>';
+  MLESSON.eck = '<p>Gibt es mehrere Klammern, fängst du mit der <b>inneren</b> an. Die äußere ist oft eine <b>eckige Klammer [ ]</b>.</p><p>6 · [12 − (5 + 3)]<br>= 6 · [12 − 8]<br>= 6 · 4 = <b>24</b></p><p class="trick"><b>Merke:</b> Von innen nach außen. In jeder Klammer gilt wieder Punkt vor Strich.</p>';
+  MLESSON.stolper = '<p>Typische Fehler:</p><p>✗ 27 − 5 · 3 = 22 · 3 → <b>Punkt vor Strich</b> vergessen. Richtig: 27 − 15 = <b>12</b><br>✗ 12 · (2 + 7) = 24 + 7 → <b>Klammer zuerst!</b> Richtig: 12 · 9 = <b>108</b><br>✗ 46 − 22 − 12 = 46 − 10 → <b>von links</b>! Richtig: 24 − 12 = <b>12</b></p><p class="trick"><b>Merke:</b> Rechne selbst nach und vergleiche Schritt für Schritt.</p>';
+  MLESSON.kl = '<p>Klammern ändern die Reihenfolge – und damit oft das Ergebnis:</p><p>2 · 8 + 10 = 16 + 10 = <b>26</b><br>2 · (8 + 10) = 2 · 18 = <b>36</b></p><p>Manchmal sind Klammern überflüssig: (45 : 3) − (6 · 2) = 45 : 3 − 6 · 2, weil Punkt vor Strich sowieso gilt.</p><p class="trick"><b>Tipp:</b> Probiere jede Stelle für die Klammer aus und rechne nach.</p>';
+  MLESSON.baum = '<p>Im <b>Rechenbaum</b> rechnest du von oben nach unten. Zwei Zahlen oben, darunter das Rechenzeichen, darunter das Ergebnis.</p><p>(3 + 20) · 11: zuerst 3 + 20 = 23, dann 23 · 11 = <b>253</b>.</p><p class="trick"><b>Merke:</b> Was im Baum <b>zuerst</b> zusammen gerechnet wird, ist in der Aufgabe in <b>Klammern</b> – außer es ist sowieso Punkt vor Strich.</p>';
+  MLESSON.tterm = '<table><tr><th>Wort</th><th>Zeichen</th></tr><tr><td>Summe, addieren</td><td>+</td></tr><tr><td>Differenz, subtrahieren</td><td>−</td></tr><tr><td>Produkt, multiplizieren</td><td>·</td></tr><tr><td>Quotient, dividieren</td><td>:</td></tr></table><p>„Dividiere die <b>Summe</b> aus 5 und 22 durch 3“ → <b>(5 + 22) : 3</b> = 27 : 3 = 9<br>„Subtrahiere den Quotienten aus 78 und 13 <b>von</b> 20“ → <b>20 − 78 : 13</b> = 20 − 6 = 14</p><p class="trick"><b>Achtung:</b> „Subtrahiere A <b>von</b> B“ heißt B − A.</p>';
+  MLESSON.raetsel = '<p>„Welche Zahl muss man zur Differenz aus 113 und 79 addieren, um den Quotienten aus 175 und 5 zu erhalten?“</p><p>1. Differenz: 113 − 79 = 34<br>2. Quotient: 175 : 5 = 35<br>3. 34 + ■ = 35 → ■ = <b>1</b></p><p class="trick"><b>Merke:</b> Erst ausrechnen, was du kennst. Dann mit der Umkehraufgabe die fehlende Zahl finden.</p>';
+  MLESSON.sach2 = '<p>Schreib <b>einen</b> Rechenausdruck für die ganze Aufgabe:</p><p>Hose 49 €, Shirt 19 €, Jacke 9 €, bezahlt mit 100 €:<br><b>100 − (49 + 19 + 9)</b> = 100 − 77 = <b>23 €</b></p><p>6 Zweibettzimmer und 4 Einbettzimmer pro Etage, 3 Etagen:<br><b>3 · (6 · 2 + 4)</b> = 3 · 16 = <b>48 Betten</b></p><p class="trick"><b>Merke:</b> Was zusammengehört, kommt in Klammern. Antwortsatz nicht vergessen.</p>';
+  var TYPE_LABEL = { kopf: 'Kopfrechnen', platz: 'Kästchen-Aufgaben', wort: 'Rechnen mit Worten', begriff: 'Fachbegriffe & Null', probe: 'Probe', zeichen: 'Rechenzeichen einsetzen', schlange: 'Rechenschlange & Mauer', sach: 'Sachaufgaben', zahlwort: 'Zahlwörter & Zählen', stelle: 'Stellenwerte', rund: 'Runden', add: 'Schriftlich addieren', sub: 'Schriftlich subtrahieren', mul: 'Multiplizieren', div: 'Dividieren', regel: 'Klammer & Punkt vor Strich', gesch: 'Geschickt rechnen', pic: 'Bild & Original vergleichen', ratio: 'Maßstab aus Bild und Original', tab: 'Bild ↔ Wirklichkeit (Einheiten)', model: 'Modelle', fit: 'Passt aufs Blatt?', concept: 'Verstehen', k2w: 'Karte → Wirklichkeit', w2k: 'Wirklichkeit → Karte', find: 'Maßstab finden', zoom: 'Vergrößerung', units: 'Einheiten umrechnen', bar: 'Profi: Maßstabsleiste', time: 'Profi: Wie lange?', sum: 'Profi: Wegstrecken', compare: 'Profi: Karten vergleichen', mixed: 'Profi: km und m', reason: 'Profi: Stimmt das?', vrg: 'Vorrangregeln', eck: 'Eckige Klammern', stolper: 'Stolperstelle: Fehler finden', kl: 'Klammern setzen', baum: 'Rechenbaum', tterm: 'Text → Rechenausdruck', raetsel: 'Zahlenrätsel', sach2: 'Sachaufgabe mit Rechenausdruck' };
   var PRAISE = ['Super!', 'Richtig!', 'Klasse!', 'Genau!', 'Stark gemacht!', 'Prima!'];
   var state = null;
 
@@ -2640,7 +2905,7 @@ window.LU5 = (function () {
       : 'Dranbleiben! Schau dir die Tipps an und probier es gleich nochmal.';
     if (second > 0) msg += ' ' + second + (second === 1 ? ' Aufgabe hast du' : ' Aufgaben hast du') + ' mit Tipp geschafft.';
     var weakNow = weakLabels();
-    if (weakNow.length && (state.topic === 'mix' || state.topic === 'profi' || state.topic === 'heft' || state.topic === 'nat' || state.topic === 'natplus' || state.topic === 'mka')) msg += ' Nächstes Mal üben wir extra: ' + weakNow.slice(0, 3).join(', ') + '.';
+    if (weakNow.length && (state.topic === 'mix' || state.topic === 'profi' || state.topic === 'heft' || state.topic === 'nat' || state.topic === 'natplus' || state.topic === 'mka' || state.topic === 'hue')) msg += ' Nächstes Mal üben wir extra: ' + weakNow.slice(0, 3).join(', ') + '.';
     el.endMsg.textContent = msg;
     var records = store('massstab-rekorde') || {};
     var best = records[state.topic];
@@ -2836,12 +3101,13 @@ window.LU5 = (function () {
 
   function shortLabel(t) { return TYPE_LABEL[t].replace(/^Profi: /, ''); }
   var BASIC = ['concept', 'k2w', 'w2k', 'find', 'zoom', 'units', 'pic', 'ratio', 'tab'];
+  var HUEL = ['regel', 'vrg', 'eck', 'stolper', 'kl', 'baum', 'tterm', 'raetsel', 'sach2'];
   var NAT = ['kopf', 'platz', 'wort', 'begriff', 'probe', 'zeichen', 'schlange', 'sach', 'zahlwort', 'stelle', 'rund', 'add', 'sub', 'mul', 'div', 'regel', 'gesch'];
   var PRO = ['bar', 'mixed', 'compare', 'time', 'sum', 'reason', 'model', 'fit'];
   var PILL = { good: 'kann ich schon', mid: 'fast sicher', weak: 'üben wir noch', 'new': 'noch wenig geübt' };
   function weakLabels() {
     var st = loadStats();
-    return NAT.concat(BASIC).concat(PRO).filter(function (t) { return levelOf(st[t]) === 'weak'; }).map(shortLabel);
+    return HUEL.concat(NAT.filter(function (t) { return t !== 'regel'; })).concat(BASIC).concat(PRO).filter(function (t) { return levelOf(st[t]) === 'weak'; }).map(shortLabel);
   }
   function renderNote() {
     var parts = [];
@@ -2863,7 +3129,7 @@ window.LU5 = (function () {
         return '<li class="lv-row"><span class="lv-name">' + shortLabel(t) + '</span><span class="lv-dots" aria-hidden="true">' + dots + '</span><span class="pill ' + lv + '">' + PILL[lv] + '</span></li>';
       }).join('') + '</ul></div>';
     }
-    el.levelBody.innerHTML = '<div class="lv-body" style="padding:0">' + group('Natürliche Zahlen', NAT) + group('Maßstab: Grundlagen', BASIC) + group('Maßstab: Profi', PRO) + '</div>';
+    el.levelBody.innerHTML = '<div class="lv-body" style="padding:0">' + group('HÜ: Vorrang & Klammern', HUEL) + group('Natürliche Zahlen', NAT.filter(function (t) { return t !== 'regel'; })) + group('Maßstab: Grundlagen', BASIC) + group('Maßstab: Profi', PRO) + '</div>';
     var sum = [];
     if (n.good) sum.push(n.good + ' kann ich schon');
     if (n.weak) sum.push(n.weak + ' üben wir noch');
@@ -2971,6 +3237,7 @@ window.LU5 = (function () {
     newRound(topic);
     render();
   }
+  window.LU5Math = { topic: function (t) { if (!GEN[t] && ['hue', 'mka', 'nat', 'natplus', 'mix', 'profi', 'heft'].indexOf(t) < 0) t = 'hue'; startTopic(t); window.scrollTo(0, 0); } };
 
   function bind() {
     el.card = document.getElementById('card');
@@ -3056,7 +3323,7 @@ window.LU5 = (function () {
   /* ================= Zeit & Startseite ================= */
   var LOG_KEY = 'lern-zeiten', SET_KEY = 'lern-einstellungen';
   var view = 'home', lastAct = Date.now(), dirty = 0;
-  function settings() { var s = store(SET_KEY) || {}; if (s.goal !== 20) s.goal = 15; if (!s.ka1103) { if (s.kaDate === undefined || s.kaDate === '2026-11-05') s.kaDate = '2026-11-03'; s.ka1103 = 1; store(SET_KEY, s); } if (s.mkaDate === undefined) s.mkaDate = '2026-11-25'; if (s.ekaDate === undefined) s.ekaDate = '2026-11-06'; if (s.dkaDate === undefined) s.dkaDate = '2026-11-09'; return s; }
+  function settings() { var s = store(SET_KEY) || {}; if (s.goal !== 20) s.goal = 15; if (!s.ka1103) { if (s.kaDate === undefined || s.kaDate === '2026-11-05') s.kaDate = '2026-11-03'; s.ka1103 = 1; store(SET_KEY, s); } if (s.mkaDate === undefined) s.mkaDate = '2026-11-25'; if (s.ekaDate === undefined) s.ekaDate = '2026-11-06'; if (s.dkaDate === undefined) s.dkaDate = '2026-11-09'; if (s.mhDate === undefined) s.mhDate = '2026-11-11'; return s; }
   function log() { return store(LOG_KEY) || {}; }
   function secs(day, subj) { var l = log(); return (l[day] && l[day][subj]) || 0; }
   var logCache = log();
@@ -3126,6 +3393,16 @@ window.LU5 = (function () {
     if (st.mkaDate) $('mkaDate').value = st.mkaDate;
     if (st.ekaDate) $('ekaDate').value = st.ekaDate;
     if (st.dkaDate) $('dkaDate').value = st.dkaDate;
+    if (st.mhDate) $('mhDate').value = st.mhDate;
+    (function () {
+      var box = $('mhBox'); if (!box) return; box.hidden = !st.mhDate; if (!st.mhDate) return;
+      var d = new Date(st.mhDate + 'T00:00:00'), t0 = new Date(now.getFullYear(), now.getMonth(), now.getDate()), days = Math.round((d - t0) / 86400000);
+      var when = d.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' });
+      if (days > 1) { $('mhNum').textContent = days; $('mhText').innerHTML = '<b>Tage bis zur Mathe-HÜ</b> am ' + when + '. Thema: Vorrangregeln, Klammern, Zahlenrätsel.' + (days <= 4 ? ' Jeden Tag eine Probe-HÜ!' : ''); }
+      else if (days === 1) { $('mhNum').textContent = '1'; $('mhText').innerHTML = '<b>Morgen ist die Mathe-HÜ!</b> Heute die Generalprobe und die Merksätze: Klammer – Punkt – Strich – von links.'; }
+      else if (days === 0) { $('mhNum').textContent = '★'; $('mhText').innerHTML = '<b>Heute ist die Mathe-HÜ.</b> Viel Glück' + esc(kidName(', ')) + '! Jeden Rechenschritt aufschreiben.'; }
+      else { $('mhNum').textContent = '✓'; $('mhText').innerHTML = '<b>Die Mathe-HÜ ist vorbei.</b> Neues Datum unten eintragen.'; }
+    })();
     (function () {
       var box = $('dkaBox'); if (!box) return; box.hidden = !st.dkaDate; if (!st.dkaDate) return;
       var d = new Date(st.dkaDate + 'T00:00:00'), t0 = new Date(now.getFullYear(), now.getMonth(), now.getDate()), days = Math.round((d - t0) / 86400000);
@@ -3197,11 +3474,12 @@ window.LU5 = (function () {
   /* Was als Nächstes geschrieben wird, kommt zuerst. Höchstens 2 Probe-HÜs pro Tag. */
   var PROBES = {
     de: { pre: 'd', n: 6, lv: ['Warm-up', 'Normal', 'Normal+', 'Normal', 'Profi', 'Generalprobe'], min: 15, max: 2, from: 4 },
+    mh: { pre: 'm', n: 4, lv: ['Warm-up', 'Normal', 'Normal+', 'Generalprobe'], min: 15, max: 1, from: 4 },
     ek: { pre: 'g', n: 4, lv: ['Warm-up', 'Normal', 'Normal+', 'Generalprobe'], min: 15, max: 2, from: 4 },
     en: { pre: 'e', n: 6, lv: ['Warm-up', 'Normal', 'Normal', 'Profi', 'Generalprobe', 'Schwerpunkte'], min: 45, max: 1, from: 3 }
   };
-  var SUBJ_NAME = { de: 'Deutsch', ek: 'Erdkunde', en: 'Englisch', math: 'Mathe', voc: 'Englisch' };
-  var TEST_NAME = { de: 'Deutsch-HÜ', ek: 'Erdkunde-HÜ', en: 'Englisch-Klassenarbeit', math: 'Mathe-Klassenarbeit' };
+  var SUBJ_NAME = { mh: 'Mathe', de: 'Deutsch', ek: 'Erdkunde', en: 'Englisch', math: 'Mathe', voc: 'Englisch' };
+  var TEST_NAME = { mh: 'Mathe-HÜ', de: 'Deutsch-HÜ', ek: 'Erdkunde-HÜ', en: 'Englisch-Klassenarbeit', math: 'Mathe-Klassenarbeit' };
   var planActs = [];
   function kaRes() { try { var d = JSON.parse(localStorage.getItem('ka-tablet') || 'null'); return (d && d.res) || {}; } catch (e) { return {}; } }
   function daysTo(ds, now) { if (!ds) return null; var d = new Date(ds + 'T00:00:00'), t0 = new Date(now.getFullYear(), now.getMonth(), now.getDate()); return Math.round((d - t0) / 86400000); }
@@ -3233,7 +3511,7 @@ window.LU5 = (function () {
   function renderPlan() {
     var box = $('planList'); if (!box) return;
     var now = new Date(), k = dayKey(now), st = settings(), L = logCache[k] || {};
-    var T = [['de', st.dkaDate], ['ek', st.ekaDate], ['math', st.mkaDate], ['en', st.kaDate]].map(function (t) { return { s: t[0], d: daysTo(t[1], now), date: t[1] }; });
+    var T = [['de', st.dkaDate], ['ek', st.ekaDate], ['mh', st.mhDate], ['math', st.mkaDate], ['en', st.kaDate]].map(function (t) { return { s: t[0], d: daysTo(t[1], now), date: t[1] }; });
     var up = T.filter(function (t) { return t.d !== null && t.d >= 1; }).sort(function (a, b) { return a.d - b.d; });
     var todayT = T.filter(function (t) { return t.d === 0; });
     var focus = up[0] || null, D = {}; T.forEach(function (t) { D[t.s] = t.d; });
@@ -3242,14 +3520,21 @@ window.LU5 = (function () {
     var busy = focus && focus.d <= 3;
     /* Fächer in der Reihenfolge der nächsten Termine */
     var order = up.map(function (t) { return t.s; });
-    ['en', 'math', 'de', 'ek'].forEach(function (s) { if (order.indexOf(s) < 0) order.push(s); });
+    ['en', 'math', 'de', 'ek', 'mh'].forEach(function (s) { if (order.indexOf(s) < 0) order.push(s); });
     order.forEach(function (s) {
       var d = D[s];
       if (s === 'de' || s === 'ek') {
         if (near(s) && d <= PROBES[s].from) items = items.concat(probeItems(s, d, k));
         else if (near(s) && d <= 14) items.push(minItem(s, SUBJ_NAME[s] + ' üben', s === 'de' ? 'Rechtschreib-Detektiv' : 'Karteikarten und Übungen', 10, L[s] || 0, function () { go(s); }));
+      } else if (s === 'mh') {
+        if (near('mh')) {
+          if (d <= PROBES.mh.from) items = items.concat(probeItems('mh', d, k));
+          if (d <= PROBES.mh.from) bonus.push(['Vorrang mit Lina', 'math']);
+          else if (d <= 10) items.push(minItem('math', 'Mathe: Vorrang & Klammern', 'Mit Lina üben, für die HÜ am ' + new Date(st.mhDate + 'T00:00:00').toLocaleDateString('de-DE', { weekday: 'long' }), 10, L.math || 0, function () { go('math'); if (window.LU5Math) LU5Math.topic('hue'); }));
+        }
       } else if (s === 'math') {
-        if (near('math')) {
+        if (near('mh') && D.mh <= 10) { /* erst die HÜ */ }
+        else if (near('math')) {
           var mm = d <= 7 ? 20 : d <= 14 ? 15 : 10;
           if (busy && focus.s !== 'math') mm = 10;
           items.push(minItem('math', 'Mathe: Klassenarbeit-Mix', d <= 7 ? 'Jetzt jeden Tag, die Arbeit kommt bald' : 'Schon mal anfangen, ganz entspannt', mm, L.math || 0, function () { go('math'); }));
@@ -3291,7 +3576,11 @@ window.LU5 = (function () {
     /* Fächer-Karten: Termin-Hinweis und Reihenfolge */
     var cards = { math: 'subjMath', en: 'subjEn', de: 'deTile', ek: 'ekTile' }, chips = { math: 'mathKa', en: 'enKa', de: 'deKa', ek: 'ekKa' };
     order.forEach(function (s, i) {
-      var c = $(cards[s]); if (c) c.style.order = String(i);
+      if (s === 'mh' && !near('mh')) return;
+      if (s === 'math' && near('mh')) return;
+      if (s === 'mh') s = 'mhx';
+      var c = $(cards[s === 'mhx' ? 'math' : s]); if (c) c.style.order = String(i);
+      if (s === 'mhx') { var chm = $('mathKa'), tm = T.filter(function (x) { return x.s === 'mh'; })[0], dm = new Date(tm.date + 'T00:00:00'); chm.textContent = (tm.d === 1 ? 'Morgen: ' : dm.toLocaleDateString('de-DE', { weekday: 'short', day: 'numeric', month: 'numeric' }) + ': ') + 'Mathe-HÜ' + (tm.d > 1 ? ' (in ' + tm.d + ' Tagen)' : ''); chm.classList.toggle('soon', tm.d <= 4); return; }
       var ch = $(chips[s]); if (!ch) return;
       var t = T.filter(function (x) { return x.s === s; })[0];
       if (t.d === null || t.d < 0) { ch.textContent = ''; return; }
@@ -3321,6 +3610,7 @@ window.LU5 = (function () {
   }
   $('dkaDate').addEventListener('change', function () { var s = settings(); s.dkaDate = this.value || null; store(SET_KEY, s); renderHome(); });
   $('ekaDate').addEventListener('change', function () { var s = settings(); s.ekaDate = this.value || null; store(SET_KEY, s); renderHome(); });
+  $('mhDate').addEventListener('change', function () { var s = settings(); s.mhDate = this.value || null; store(SET_KEY, s); renderHome(); });
   $('mkaDate').addEventListener('change', function () { var s = settings(); s.mkaDate = this.value || null; store(SET_KEY, s); renderHome(); });
   $('kaDate').addEventListener('change', function () { var s = settings(); s.kaDate = this.value || null; store(SET_KEY, s); renderHome(); });
   $('goalMin').addEventListener('change', function () { var s = settings(); s.goal = Number(this.value) === 20 ? 20 : 15; store(SET_KEY, s); renderHome(); renderTimePills(); });
@@ -3341,6 +3631,7 @@ window.LU5 = (function () {
     if (v === 'print' && window.LU5Ka) window.LU5Ka.cards();
     if (v === 'de' && window.LU5De) window.LU5De.open();
     if (v === 'de' && window.LU5Ka) window.LU5Ka.cards();
+    if (v === 'math' && window.LU5Ka) window.LU5Ka.cards();
     if (v === 'home') renderHome();
     if (v === 'voc' && window.LU5Voc) window.LU5Voc.open();
     if (v === 'en') { if (!enState) enStart(); renderEn(); }
@@ -6051,5 +6342,6 @@ window.LU5 = (function () {
 <script src="klassenarbeiten/ka-daten.js?v=1"></script>
 <script src="klassenarbeiten/ek-daten.js?v=1"></script>
 <script src="klassenarbeiten/de-daten.js?v=1"></script>
-<script src="klassenarbeiten/ka-tablet.js?v=3"></script>
+<script src="klassenarbeiten/ma-daten.js?v=1"></script>
+<script src="klassenarbeiten/ka-tablet.js?v=4"></script>
 </body></html>

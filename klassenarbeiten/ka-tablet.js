@@ -166,6 +166,30 @@
     var hits = exp.map(function (e) { return e[1].test(g); });
     return { s: Math.min(max, hits.filter(Boolean).length), hits: hits };
   }
+  /* Mathe: Rechenausdruck prüfen – richtig, wenn dieselben Zahlen vorkommen und derselbe Wert herauskommt */
+  function termNorm(s) {
+    return String(s == null ? '' : s).split('=')[0].replace(/[*×⋅•∙x]/gi, '·').replace(/[\/÷]/g, ':').replace(/[-–—]/g, '−').replace(/\[/g, '(').replace(/\]/g, ')').replace(/\{/g, '(').replace(/\}/g, ')').replace(/(\d)[.'’ ](?=\d{3}(\D|$))/g, '$1').replace(/\s+/g, '');
+  }
+  function termEval(s) {
+    var t = s.match(/\d+|[+−·:()]/g), i = 0;
+    if (!t || t.join('') !== s) return null;
+    function fac() { var c = t[i]; if (c === '(') { i++; var v = sum(); if (t[i] !== ')') throw 0; i++; return v; } if (!/^\d+$/.test(c || '')) throw 0; i++; return Number(c); }
+    function prod() { var v = fac(); while (t[i] === '·' || t[i] === ':') { var o = t[i++], w = fac(); v = o === '·' ? v * w : v / w; } return v; }
+    function sum() { var v = prod(); while (t[i] === '+' || t[i] === '−') { var o = t[i++], w = prod(); v = o === '+' ? v + w : v - w; } return v; }
+    try { var v = sum(); return i === t.length ? v : null; } catch (e) { return null; }
+  }
+  function numsOf(s) { return (s.match(/\d+/g) || []).map(Number).sort(function (a, b) { return a - b; }).join(','); }
+  function cmpTerm(given, model) {
+    var g = termNorm(given);
+    if (!g) return { s: 0, empty: true, note: '' };
+    var m = termNorm(model), vg = termEval(g), vm = termEval(m);
+    if (vg === null) return { s: 0, note: 'Das ist kein vollständiger Rechenausdruck – prüfe Klammern und Rechenzeichen.' };
+    var sameN = numsOf(g) === numsOf(m);
+    if (sameN && Math.abs(vg - vm) < 1e-9) return { s: 1, note: '' };
+    if (sameN) return { s: 0, note: 'Die Zahlen stimmen, aber Klammern oder Rechenzeichen nicht.' };
+    if (Math.abs(vg - vm) < 1e-9) return { s: 0, note: 'Schreib die ganze Aufgabe mit allen Zahlen aus dem Text auf.' };
+    return { s: 0, note: '' };
+  }
   function cmpSplit(given, answers) {
     var g = toks(given), best = { s: 0, note: '' };
     if (!g.length) return { s: 0, empty: true, note: '' };
@@ -269,6 +293,7 @@
         else if (p.t === 'open') p.items.forEach(function (it, i) { out.push({ k: base + 'i' + i, ti: ti, p: p, kind: 'open', kw: it[1], ans: it[2], max: 1 }); });
         else if (p.t === 'sent') p.items.forEach(function (it, i) { out.push({ k: base + 'i' + i, ti: ti, p: p, kind: 'sent', ans: it[1], orig: p.strict ? it[0] : null, max: p.pts || 1 }); });
         else if (p.t === 'split') p.items.forEach(function (it, i) { out.push({ k: base + 'i' + i, ti: ti, p: p, kind: 'split', ans: it[1], max: 1 }); });
+        else if (p.t === 'term') p.items.forEach(function (it, i) { if (it[1]) out.push({ k: base + 'i' + i + 't', ti: ti, p: p, kind: 'term', ans: it[1], max: 1 }); out.push({ k: base + 'i' + i + 'r', ti: ti, p: p, kind: 'num', ans: String(it[2]), max: 1 }); });
         else if (p.t === 'write') out.push({ k: base + 'w', ti: ti, p: p, kind: 'write', max: 14 });
       });
     });
@@ -290,6 +315,8 @@
       else if (u.kind === 'sent') r = cmpSent(v, u.ans, u.p, u.orig);
       else if (u.kind === 'split') r = cmpSplit(v, u.ans);
       else if (u.kind === 'calc') r = cmpCalc(v, u.ans);
+      else if (u.kind === 'term') r = cmpTerm(v, u.ans);
+      else if (u.kind === 'num') { var gn = String(v == null ? '' : v).replace(/[^\d,]/g, '').replace(',', '.'); r = gn ? { s: Number(gn) === Number(u.ans) ? 1 : 0, note: '' } : { s: 0, empty: true, note: '' }; }
       else if (u.kind === 'op') { var adj2 = (run.adj && run.adj[u.k]) || 0; r = cmpOp(v, u.exp, u.max); r.auto = r.s; r.adj = adj2; r.s = Math.max(0, Math.min(u.max, half(r.s + adj2))); }
       else if (u.kind === 'write') {
         var w = writeScore(v || '', u.p.kind), adj = (run.adj && run.adj[u.k]) || 0;
@@ -346,8 +373,14 @@
   function partHtml(p, base) {
     var A = run().a || {}, h = p.q ? '<p class="ka-q">' + esc(p.q) + '</p>' : '';
     PW = partWidth(p);
-    h += boxHtml(p) + tipHtml(p);
-    if (p.t === 'words') {
+    h += boxHtml(p) + tipHtml(p) + (p.html || '');
+    if (p.t === 'term') {
+      if (p.text) h += readHtml(p.text);
+      h += '<ol class="ka-list ka-sents ka-terms">' + p.items.map(function (it, i) {
+        var k = base + 'i' + i;
+        return '<li><span class="ka-de">' + esc(it[0]) + '</span>' + (it[3] || '') + '<span class="ka-termrow">' + (it[1] ? '<input class="ka-in ka-line ka-term" data-k="' + k + 't" value="' + esc(A[k + 't'] || '') + '" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" enterkeyhint="next" placeholder="Aufgabe" aria-label="Rechenausdruck"><b>=</b>' : '') + '<input class="ka-in ka-calc ka-res" data-k="' + k + 'r" value="' + esc(A[k + 'r'] || '') + '" inputmode="numeric" autocomplete="off" enterkeyhint="next" placeholder="' + (it[1] ? 'Ergebnis' : '?') + '" aria-label="Ergebnis">' + (p.unit ? '<span>' + esc(p.unit) + '</span>' : '') + '</span></li>';
+      }).join('') + '</ol>';
+    } else if (p.t === 'words') {
       h += '<ol class="ka-list ka-cols">' + p.items.map(function (it, i) { return '<li><span class="ka-de">' + esc(it[0]) + '</span>' + inputHtml(base + 'i' + i, it[1], p.num ? 'num' : '') + '</li>'; }).join('') + '</ol>';
     } else if (p.t === 'gaps') {
       if (p.tree) h += treeHtml(p.tree);
@@ -483,7 +516,7 @@
     if (b.id === 'katBack') { stopPlay(); saveNow(); if (window.LU5 && LU5.go) LU5.go(backTo()); renderCards(); return; }
     if (b.id === 'katAgain') { delete db.run[cur.id]; saveNow(); start(cur.id); return; }
     if (b.hasAttribute('data-adj')) { adjust(b.getAttribute('data-adj'), Number(b.getAttribute('data-d'))); return; }
-    if (b.hasAttribute('data-practice')) { var tp = b.getAttribute('data-practice'); if (cur && cur.back === 'de' && window.LU5De && LU5De.topic) { if (window.LU5 && LU5.go) LU5.go('de'); LU5De.topic(tp); return; } if (cur && cur.back && cur.back !== 'print') { if (window.LU5 && LU5.go) LU5.go(cur.back); window.scrollTo(0, 0); return; } if (window.LU5 && LU5.startEn) LU5.startEn(tp); return; }
+    if (b.hasAttribute('data-practice')) { var tp = b.getAttribute('data-practice'); if (cur && cur.back === 'de' && window.LU5De && LU5De.topic) { if (window.LU5 && LU5.go) LU5.go('de'); LU5De.topic(tp); return; } if (cur && cur.back === 'math' && window.LU5Math) { if (window.LU5 && LU5.go) LU5.go('math'); LU5Math.topic(tp); return; } if (cur && cur.back && cur.back !== 'print') { if (window.LU5 && LU5.go) LU5.go(cur.back); window.scrollTo(0, 0); return; } if (window.LU5 && LU5.startEn) LU5.startEn(tp); return; }
   });
 
   /* Hören: Text in Sätzen nacheinander vorlesen, höchstens zweimal */
@@ -563,6 +596,19 @@
   function reviewPart(p, base, sc, A) {
     var h = '';
     if (p.q) h += '<p class="ka-q">' + esc(p.q) + '</p>';
+    if (p.html) h += p.html;
+    if (p.t === 'term') {
+      if (p.text) h += readHtml(p.text);
+      h += '<ol class="ka-list ka-sents ka-terms">' + p.items.map(function (it, i) {
+        var k = base + 'i' + i, rt = it[1] ? sc.res[k + 't'] : null, rr = sc.res[k + 'r'];
+        var s = '<li><span class="ka-de">' + esc(it[0]) + '</span>' + (it[3] || '');
+        if (rt) s += '<span class="ka-ans ' + mark(rt) + '">' + shown(A[k + 't']) + '</span>' + pts(rt) + (rt.note ? '<span class="ka-note">' + esc(rt.note) + '</span>' : '');
+        s += '<span class="ka-ans ' + mark(rr) + '">= ' + shown(A[k + 'r']) + (p.unit ? ' ' + esc(p.unit) : '') + '</span>' + pts(rr);
+        if ((rt && rt.s < rt.max) || rr.s < rr.max) s += '<span class="ka-sol">✓ ' + esc((it[1] ? it[1] + ' = ' : '') + (it[4] ? it[4] + ' = ' : '') + it[2] + (p.unit ? ' ' + p.unit : '')) + '</span>';
+        return s + '</li>';
+      }).join('') + '</ol>';
+      return h;
+    }
     if (p.t === 'calc') {
       if (p.text) h += readHtml(p.text);
       h += '<ol class="ka-list ka-sents">' + p.items.map(function (it, i) {
@@ -643,7 +689,7 @@
       var pt = sc.perTask[ti];
       h += '<section class="card ka-task ka-rev" id="ka-t' + ti + '"><div class="ka-th"><span class="ka-tn">' + (ti + 1) + '</span><h2>' + esc(task.h) + ' <small>' + esc(task.de) + '</small></h2><span class="ka-tp ' + (pt.got >= pt.max ? 'ok' : '') + '">' + fmtP(pt.got) + ' / ' + fmtP(pt.max) + ' P</span></div>';
       task.parts.forEach(function (p, pi) { h += reviewPart(p, 't' + ti + 'p' + pi, sc, A); });
-      if (pt.got < pt.max && task.topic && task.topic !== 'family') h += '<button type="button" class="btn small ka-prac" data-practice="' + task.topic + '">' + (ex.back === 'de' ? 'Im Rechtschreib-Detektiv üben →' : ex.back && ex.back !== 'print' ? 'Im Maßstab-Profi üben →' : 'In der App üben →') + '</button>';
+      if (pt.got < pt.max && task.topic && task.topic !== 'family') h += '<button type="button" class="btn small ka-prac" data-practice="' + task.topic + '">' + (ex.back === 'de' ? 'Im Rechtschreib-Detektiv üben →' : ex.back === 'math' ? 'Mit Lina üben →' : ex.back && ex.back !== 'print' ? 'Im Maßstab-Profi üben →' : 'In der App üben →') + '</button>';
       if (task.topic === 'family') h += '<button type="button" class="btn small ka-prac" data-practice="family">Familientext weiter üben →</button>';
       h += '</section>';
     });
@@ -668,8 +714,8 @@
     saveNow();
     if (window.LU5 && LU5.go) LU5.go('kat');
     $('katTitle').textContent = nameOf(cur);
-    window.LU5KaSubj = cur.back === 'ek' || cur.back === 'de' ? cur.back : 'en';
-    var kv = $('katView'); if (kv) { kv.classList.toggle('en', cur.back !== 'ek' && cur.back !== 'de'); kv.classList.toggle('ek', cur.back === 'ek'); kv.classList.toggle('de', cur.back === 'de'); }
+    window.LU5KaSubj = cur.back === 'ek' || cur.back === 'de' || cur.back === 'math' ? cur.back : 'en';
+    var kv = $('katView'); if (kv) { kv.classList.toggle('en', cur.back !== 'ek' && cur.back !== 'de' && cur.back !== 'math'); kv.classList.toggle('math', cur.back === 'math'); kv.classList.toggle('ek', cur.back === 'ek'); kv.classList.toggle('de', cur.back === 'de'); }
     if (mode === 'run') renderRun(); else renderResult(false);
     window.scrollTo(0, 0);
   }
@@ -684,7 +730,7 @@
       if (r && !r.done) s = '<b>Angefangen</b> · noch ' + mmss(Math.max(0, ex.min * 60 - (r.secs || 0))) + ' Min';
       else if (last) s = 'Zuletzt: <b>Note ' + last.g + '</b> (' + Math.round(last.p / last.m * 100) + ' %)' + (best && best !== last ? ' · beste: Note ' + best.g : '');
       el.innerHTML = s; el.hidden = !s;
-      btn.textContent = r && !r.done ? 'Weiterschreiben' : r && r.done ? 'Korrektur ansehen' : (ex.back === 'ek' || ex.back === 'de' ? 'Probe-HÜ schreiben' : 'Am Tablet schreiben');
+      btn.textContent = r && !r.done ? 'Weiterschreiben' : r && r.done ? 'Korrektur ansehen' : (ex.back === 'ek' || ex.back === 'de' || ex.back === 'math' ? 'Probe-HÜ schreiben' : 'Am Tablet schreiben');
     });
   }
 
@@ -717,5 +763,5 @@
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mount); else mount();
 
-  window.LU5Ka = { start: start, cards: renderCards, _t: { cmpStrict: cmpStrict, score: score, writeScore: writeScore, cmpWord: cmpWord, cmpSent: cmpSent, cmpOpen: cmpOpen, cmpSplit: cmpSplit, units: units, DATA: DATA, db: function () { return db; } } };
+  window.LU5Ka = { start: start, cards: renderCards, _t: { cmpTerm: cmpTerm, cmpStrict: cmpStrict, score: score, writeScore: writeScore, cmpWord: cmpWord, cmpSent: cmpSent, cmpOpen: cmpOpen, cmpSplit: cmpSplit, units: units, DATA: DATA, db: function () { return db; } } };
 })();
