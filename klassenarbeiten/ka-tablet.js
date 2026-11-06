@@ -179,6 +179,22 @@
     try { var v = sum(); return i === t.length ? v : null; } catch (e) { return null; }
   }
   function numsOf(s) { return (s.match(/\d+/g) || []).map(Number).sort(function (a, b) { return a - b; }).join(','); }
+  /* Rechenweg: Zwischenschritte (Lösung kommt aus index.html: LU5MathR.way) */
+  function MR() { return window.LU5MathR || null; }
+  function wayN(expr) { var R = MR(); return R && expr ? R.wayNeed(expr) : 0; }
+  function calcWay(it) { return it && it[3] && it[3].way && wayN(it[3].way) ? it[3].way : null; }
+  function termWay(it) { return it && it[1] && wayN(it[1]) ? it[1] : null; }
+  function wayLinesA(A, k, n) { var a = []; for (var j = 0; j < n; j++) a.push(A[k + 's' + j] || ''); return a; }
+  function cmpWay(u, A) {
+    var R = MR(), lines = wayLinesA(A, u.base, u.n);
+    if (!R) return { s: 0, note: '' };
+    if (!lines.some(function (x) { return String(x).trim(); })) return { s: 0, empty: true, note: 'Der Rechenweg fehlt.', marks: [] };
+    var start = u.start;
+    if (u.termK && cmpTerm(A[u.termK], u.start).s === 1) start = termNorm(A[u.termK]);
+    var need = R.wayNeed(start); while (lines.length < need) lines.push('');
+    var r = R.way(start, lines);
+    return { s: r.ok ? 1 : r.first ? 0.5 : 0, note: r.ok ? '' : r.msg.replace(/<[^>]+>/g, ''), marks: r.marks };
+  }
   function cmpTerm(given, model) {
     var g = termNorm(given);
     if (!g) return { s: 0, empty: true, note: '' };
@@ -283,7 +299,7 @@
         var base = 't' + ti + 'p' + pi;
         if (p.t === 'words') p.items.forEach(function (it, i) { out.push({ k: base + 'i' + i, ti: ti, p: p, kind: 'word', ans: it[1], max: 1 }); });
         else if (p.t === 'gaps') p.lines.forEach(function (ln, i) { for (var g = 1; g < ln.length; g++) out.push({ k: base + 'i' + i + 'g' + (g - 1), ti: ti, p: p, kind: p.calc ? 'calc' : 'word', ans: ln[g], max: p.gp || 1 }); });
-        else if (p.t === 'calc') p.items.forEach(function (it, i) { out.push({ k: base + 'i' + i, ti: ti, p: p, kind: 'calc', ans: it[1], max: 1 }); });
+        else if (p.t === 'calc') p.items.forEach(function (it, i) { var cw = calcWay(it); if (cw) out.push({ k: base + 'i' + i + 'w', base: base + 'i' + i, ti: ti, p: p, kind: 'way', start: cw, n: wayN(cw), max: 1 }); out.push({ k: base + 'i' + i, ti: ti, p: p, kind: 'calc', ans: it[1], max: 1 }); });
         else if (p.t === 'op') p.items.forEach(function (it, i) { out.push({ k: base + 'i' + i, ti: ti, p: p, kind: 'op', exp: it[3], max: it[2] }); });
         else if (p.t === 'para') p.ans.forEach(function (a, i) { out.push({ k: base + 'g' + i, ti: ti, p: p, kind: 'word', ans: a, max: 1 }); });
         else if (p.t === 'listen') listenGaps(p).forEach(function (a, i) { out.push({ k: base + 'g' + i, ti: ti, p: p, kind: 'word', ans: a, max: 1, listen: true }); });
@@ -293,7 +309,7 @@
         else if (p.t === 'open') p.items.forEach(function (it, i) { out.push({ k: base + 'i' + i, ti: ti, p: p, kind: 'open', kw: it[1], ans: it[2], max: 1 }); });
         else if (p.t === 'sent') p.items.forEach(function (it, i) { out.push({ k: base + 'i' + i, ti: ti, p: p, kind: 'sent', ans: it[1], orig: p.strict ? it[0] : null, max: p.pts || 1 }); });
         else if (p.t === 'split') p.items.forEach(function (it, i) { out.push({ k: base + 'i' + i, ti: ti, p: p, kind: 'split', ans: it[1], max: 1 }); });
-        else if (p.t === 'term') p.items.forEach(function (it, i) { if (it[1]) out.push({ k: base + 'i' + i + 't', ti: ti, p: p, kind: 'term', ans: it[1], max: 1 }); out.push({ k: base + 'i' + i + 'r', ti: ti, p: p, kind: 'num', ans: String(it[2]), max: 1 }); });
+        else if (p.t === 'term') p.items.forEach(function (it, i) { if (it[1]) out.push({ k: base + 'i' + i + 't', ti: ti, p: p, kind: 'term', ans: it[1], max: 1 }); var tw = termWay(it); if (tw) out.push({ k: base + 'i' + i + 'w', base: base + 'i' + i, termK: base + 'i' + i + 't', ti: ti, p: p, kind: 'way', start: tw, n: wayN(tw), max: 1 }); out.push({ k: base + 'i' + i + 'r', ti: ti, p: p, kind: 'num', ans: String(it[2]), max: 1 }); });
         else if (p.t === 'write') out.push({ k: base + 'w', ti: ti, p: p, kind: 'write', max: 14 });
       });
     });
@@ -316,6 +332,7 @@
       else if (u.kind === 'split') r = cmpSplit(v, u.ans);
       else if (u.kind === 'calc') r = cmpCalc(v, u.ans);
       else if (u.kind === 'term') r = cmpTerm(v, u.ans);
+      else if (u.kind === 'way') r = cmpWay(u, A);
       else if (u.kind === 'num') { var gn = String(v == null ? '' : v).replace(/[^\d,]/g, '').replace(',', '.'); r = gn ? { s: Number(gn) === Number(u.ans) ? 1 : 0, note: '' } : { s: 0, empty: true, note: '' }; }
       else if (u.kind === 'op') { var adj2 = (run.adj && run.adj[u.k]) || 0; r = cmpOp(v, u.exp, u.max); r.auto = r.s; r.adj = adj2; r.s = Math.max(0, Math.min(u.max, half(r.s + adj2))); }
       else if (u.kind === 'write') {
@@ -370,6 +387,14 @@
   }
   function readHtml(txt) { return txt ? '<div class="ka-read">' + esc(txt).replace(/\n/g, '<br>') + '</div>' : ''; }
 
+  var KEYS = ['·', ':', '+', '−', '(', ')', '[', ']'];
+  function keysHtml() { return '<div class="ka-keys" aria-label="Rechenzeichen">' + KEYS.map(function (k) { return '<button type="button" data-ins="' + k + '" tabindex="-1">' + k + '</button>'; }).join('') + '</div>'; }
+  function stepRows(k, n, A) {
+    var h = '';
+    for (var j = 0; j < n; j++) h += '<div class="ka-wayrow"><b>=</b><input class="ka-in ka-line ka-step" data-k="' + k + 's' + j + '" value="' + esc(A[k + 's' + j] || '') + '" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" enterkeyhint="next" placeholder="' + (j + 1) + '. Schritt" aria-label="' + (j + 1) + '. Rechenschritt"></div>';
+    return h;
+  }
+  function partHasWay(p) { return (p.t === 'calc' && p.items.some(calcWay)) || (p.t === 'term' && p.items.some(termWay)); }
   function partHtml(p, base) {
     var A = run().a || {}, h = p.q ? '<p class="ka-q">' + esc(p.q) + '</p>' : '';
     PW = partWidth(p);
@@ -377,9 +402,10 @@
     if (p.t === 'term') {
       if (p.text) h += readHtml(p.text);
       h += '<ol class="ka-list ka-sents ka-terms">' + p.items.map(function (it, i) {
-        var k = base + 'i' + i;
+        var k = base + 'i' + i, tw = termWay(it);
+        if (tw) return '<li><span class="ka-de">' + esc(it[0]) + '</span>' + (it[3] || '') + '<div class="ka-way"><div class="ka-wayrow"><span class="ka-waylbl">Aufgabe:</span><input class="ka-in ka-line ka-term" data-k="' + k + 't" value="' + esc(A[k + 't'] || '') + '" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" enterkeyhint="next" placeholder="Rechenausdruck" aria-label="Rechenausdruck"></div>' + stepRows(k, wayN(tw), A) + '<div class="ka-wayrow"><b>=</b><input class="ka-in ka-calc ka-res" data-k="' + k + 'r" value="' + esc(A[k + 'r'] || '') + '" inputmode="numeric" autocomplete="off" enterkeyhint="next" placeholder="Ergebnis" aria-label="Ergebnis">' + (p.unit ? '<span>' + esc(p.unit) + '</span>' : '') + '</div></div></li>';
         return '<li><span class="ka-de">' + esc(it[0]) + '</span>' + (it[3] || '') + '<span class="ka-termrow">' + (it[1] ? '<input class="ka-in ka-line ka-term" data-k="' + k + 't" value="' + esc(A[k + 't'] || '') + '" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" enterkeyhint="next" placeholder="Aufgabe" aria-label="Rechenausdruck"><b>=</b>' : '') + '<input class="ka-in ka-calc ka-res" data-k="' + k + 'r" value="' + esc(A[k + 'r'] || '') + '" inputmode="numeric" autocomplete="off" enterkeyhint="next" placeholder="' + (it[1] ? 'Ergebnis' : '?') + '" aria-label="Ergebnis">' + (p.unit ? '<span>' + esc(p.unit) + '</span>' : '') + '</span></li>';
-      }).join('') + '</ol>';
+      }).join('') + '</ol>' + (partHasWay(p) ? keysHtml() : '');
     } else if (p.t === 'words') {
       h += '<ol class="ka-list ka-cols">' + p.items.map(function (it, i) { return '<li><span class="ka-de">' + esc(it[0]) + '</span>' + inputHtml(base + 'i' + i, it[1], p.num ? 'num' : '') + '</li>'; }).join('') + '</ol>';
     } else if (p.t === 'gaps') {
@@ -420,10 +446,12 @@
       }).join('') + '</ol>';
     } else if (p.t === 'calc') {
       if (p.text) h += readHtml(p.text);
+      if (partHasWay(p)) h += '<p class="ka-tip">Schreib jeden Rechenschritt in eine eigene Zeile – der Rechenweg gibt Punkte.</p>';
       h += '<ol class="ka-list ka-sents">' + p.items.map(function (it, i) {
-        var k = base + 'i' + i;
+        var k = base + 'i' + i, cw = calcWay(it);
+        if (cw) return '<li class="ka-wayli">' + (it[0] !== cw + ' =' ? '<span class="ka-de">' + esc(it[0]) + '</span>' : '') + '<span class="ka-de ka-wayexpr">' + esc(cw) + '</span><div class="ka-way">' + stepRows(k, wayN(cw), A) + '<div class="ka-wayrow"><b>=</b><input class="ka-in ka-line ka-calc ka-res" data-k="' + k + '" value="' + esc(A[k] || '') + '" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" enterkeyhint="next" placeholder="Ergebnis" aria-label="Ergebnis"></div></div></li>';
         return '<li><span class="ka-de">' + esc(it[0]) + '</span><input class="ka-in ka-line ka-calc" data-k="' + k + '" value="' + esc(A[k] || '') + '" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" enterkeyhint="next" aria-label="Ergebnis mit Einheit"></li>';
-      }).join('') + '</ol>';
+      }).join('') + '</ol>' + (partHasWay(p) ? keysHtml() : '');
     } else if (p.t === 'op') {
       h += '<ol class="ka-list ka-ops">' + p.items.map(function (it, i) {
         var k = base + 'i' + i;
@@ -490,6 +518,19 @@
     var r = run(); r.a = r.a || {}; r.a[k] = t.value; save();
     if (t.classList.contains('ka-write')) { var c = document.querySelector('[data-count="' + k + '"]'); if (c) updCount(c); }
     renderClock();
+  });
+  var lastIn = null;
+  document.addEventListener('focusin', function (e) { var t = e.target; if (t.classList && (t.classList.contains('ka-step') || t.classList.contains('ka-term') || t.classList.contains('ka-calc')) && t.closest('#katBody')) lastIn = t; });
+  document.addEventListener('mousedown', function (e) { if (e.target.closest && e.target.closest('.ka-keys [data-ins]')) e.preventDefault(); });
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('.ka-keys [data-ins]'); if (!b || mode !== 'run') return;
+    var part = b.closest('.ka-task') || b.parentNode.parentNode, inp = lastIn && document.body.contains(lastIn) && part.contains(lastIn) ? lastIn : null;
+    if (!inp) { var c = part.querySelectorAll('.ka-step, .ka-term'); for (var i = 0; i < c.length; i++) if (!c[i].value) { inp = c[i]; break; } }
+    if (!inp) return;
+    var k = b.getAttribute('data-ins'), ins = /[()\[\]]/.test(k) ? k : ' ' + k + ' ', a = inp.selectionStart == null ? inp.value.length : inp.selectionStart, z = inp.selectionEnd == null ? a : inp.selectionEnd;
+    inp.value = inp.value.slice(0, a) + ins + inp.value.slice(z);
+    inp.focus(); try { inp.setSelectionRange(a + ins.length, a + ins.length); } catch (er) {}
+    inp.dispatchEvent(new Event('input', { bubbles: true }));
   });
   document.addEventListener('keydown', function (e) {
     var t = e.target;
@@ -593,6 +634,12 @@
     if (r.s >= r.max) return '<span class="ka-g ok">' + esc(norm(v)) + '</span>' + (r.note ? '<span class="ka-note"> ' + esc(r.note) + '</span>' : '');
     return '<span class="ka-g ' + (r.s > 0 ? 'half' : 'bad') + '">' + shown(v) + '</span><span class="ka-g right">' + esc(right) + '</span>';
   }
+  function wayReview(k, n, sc, A) {
+    var rw = sc.res[k + 'w']; if (!rw) return '';
+    var h = '<div class="ka-way ka-wayrev">';
+    for (var j = 0; j < n; j++) { var v = A[k + 's' + j], m = rw.marks && rw.marks[j]; if (j && !String(v || '').trim()) continue; h += '<div class="ka-wayrow"><b>=</b><span class="ka-ans ' + (m || (rw.s >= 1 ? 'ok' : 'bad')) + '">' + shown(v) + '</span></div>'; }
+    return h + '<div class="ka-wayrow"><span class="ka-waylbl">Rechenweg</span>' + pts(rw) + (rw.note ? '<span class="ka-note">' + esc(rw.note) + '</span>' : '') + '</div></div>';
+  }
   function reviewPart(p, base, sc, A) {
     var h = '';
     if (p.q) h += '<p class="ka-q">' + esc(p.q) + '</p>';
@@ -603,8 +650,11 @@
         var k = base + 'i' + i, rt = it[1] ? sc.res[k + 't'] : null, rr = sc.res[k + 'r'];
         var s = '<li><span class="ka-de">' + esc(it[0]) + '</span>' + (it[3] || '');
         if (rt) s += '<span class="ka-ans ' + mark(rt) + '">' + shown(A[k + 't']) + '</span>' + pts(rt) + (rt.note ? '<span class="ka-note">' + esc(rt.note) + '</span>' : '');
+        var tw = termWay(it), rw2 = tw ? sc.res[k + 'w'] : null;
+        if (tw) s += wayReview(k, wayN(tw), sc, A);
         s += '<span class="ka-ans ' + mark(rr) + '">= ' + shown(A[k + 'r']) + (p.unit ? ' ' + esc(p.unit) : '') + '</span>' + pts(rr);
-        if ((rt && rt.s < rt.max) || rr.s < rr.max) s += '<span class="ka-sol">✓ ' + esc((it[1] ? it[1] + ' = ' : '') + (it[4] ? it[4] + ' = ' : '') + it[2] + (p.unit ? ' ' + p.unit : '')) + '</span>';
+        var wsol = tw && MR() ? MR().steps(tw).slice(0, -1).join(' = ') : '';
+        if ((rt && rt.s < rt.max) || rr.s < rr.max || (rw2 && rw2.s < rw2.max)) s += '<span class="ka-sol">✓ ' + esc((it[1] ? it[1] + ' = ' : '') + (wsol ? wsol + ' = ' : it[4] ? it[4] + ' = ' : '') + it[2] + (p.unit ? ' ' + p.unit : '')) + '</span>';
         return s + '</li>';
       }).join('') + '</ol>';
       return h;
@@ -612,7 +662,8 @@
     if (p.t === 'calc') {
       if (p.text) h += readHtml(p.text);
       h += '<ol class="ka-list ka-sents">' + p.items.map(function (it, i) {
-        var k = base + 'i' + i, r = sc.res[k];
+        var k = base + 'i' + i, r = sc.res[k], cw = calcWay(it), rw = cw ? sc.res[k + 'w'] : null;
+        if (cw) return '<li class="ka-wayli">' + (it[0] !== cw + ' =' ? '<span class="ka-de">' + esc(it[0]) + '</span>' : '') + '<span class="ka-de ka-wayexpr">' + esc(cw) + '</span>' + wayReview(k, wayN(cw), sc, A) + '<div class="ka-wayrow"><b>=</b><span class="ka-ans ' + mark(r) + '">' + shown(A[k]) + '</span>' + pts(r) + '</div>' + ((r.s < r.max || rw.s < rw.max) ? '<span class="ka-sol">✓ ' + esc(it[2]) + '</span>' : '') + '</li>';
         return '<li><span class="ka-de">' + esc(it[0]) + '</span><span class="ka-ans ' + mark(r) + '">' + shown(A[k]) + '</span>' + (r.s < r.max ? '<span class="ka-sol">✓ ' + esc(it[2] || alts(it[1])[0]) + '</span>' : '') + (r.note ? '<span class="ka-note">' + esc(r.note) + '</span>' : '') + pts(r) + '</li>';
       }).join('') + '</ol>';
       return h;

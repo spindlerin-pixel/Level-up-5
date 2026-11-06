@@ -16,14 +16,14 @@
   var R = window.LU5MathR || null;
   var MA = {
     eyebrow: 'Mathe · Klasse 5 · Vorrangregeln', back: 'math', lang: 'de', min: 20, pdfMax: 100, bands: [92, 80, 65, 50, 25],
-    rules: 'Keine Tipps und kein „Kurz erklärt“ – wie in der echten HÜ. Rechne auf einem Zettel mit und schreib jeden Schritt auf.',
-    scaleNote: 'Bei „Schreibe als Aufgabe“ gibt es einen Punkt für den richtigen Rechenausdruck (Klammern!) und einen für das Ergebnis. Bei „Erkläre“ sucht die App nach Stichwörtern; Eltern können die Punkte dort anpassen.'
+    rules: 'Keine Tipps und kein „Kurz erklärt“ – wie in der echten HÜ. Schreib jeden Rechenschritt in eine eigene Zeile, so wie im Heft.',
+    scaleNote: 'Bei Rechenaufgaben mit mehreren Schritten gibt es einen Punkt für den Rechenweg (halber Punkt, wenn der erste Schritt stimmt) und einen für das Ergebnis. Bei „Schreibe als Aufgabe“ gibt es zusätzlich einen Punkt für den richtigen Rechenausdruck (Klammern!). Bei „Erkläre“ sucht die App nach Stichwörtern; Eltern können die Punkte dort anpassen.'
   };
   function ma(o) { for (var k in MA) if (!(k in o)) o[k] = MA[k]; return o; }
   /* Rechenaufgabe mit automatisch erzeugtem Lösungsweg */
   function C(expr) {
     var v = R ? R.eval(expr) : null, st = R ? R.steps(expr) : [];
-    return [expr + ' =', String(v), st.length ? expr + ' = ' + st.join(' = ') : String(v)];
+    return [expr + ' =', String(v), st.length ? expr + ' = ' + st.join(' = ') : String(v), { way: expr }];
   }
   function tree(expr) { return R ? R.tree(expr) : '<p class="ka-calcexpr">' + expr + '</p>'; }
   var JN = ['ja', 'nein'], RF = ['richtig', 'falsch'];
@@ -54,7 +54,7 @@
         ['Ohne Klammern und ohne Punktrechnung rechnet man von links nach rechts.', true]] }
     ]},
     { h: 'Text → Aufgabe', de: 'Schreibe als Aufgabe mit Rechenzeichen und berechne.', topic: 'tterm', parts: [
-      { t: 'term', tip: 'Links den Rechenausdruck (z. B. (3 + 4) · 2), rechts das Ergebnis.', items: [
+      { t: 'term', tip: 'Oben den Rechenausdruck (z. B. (3 + 4) · 2), darunter jeden Rechenschritt und das Ergebnis.', items: [
         ['Multipliziere 4 und 7 und addiere 9 zum Produkt.', '4 · 7 + 9', 37],
         ['Addiere 15 und 9 und multipliziere die Summe mit 3.', '(15 + 9) · 3', 72],
         ['Subtrahiere 12 von 50.', '50 − 12', 38]] }
@@ -69,9 +69,9 @@
     ]},
     { h: 'Stolperstelle', de: 'Die Kinder haben sich verrechnet. Rechne richtig und finde den Fehler.', topic: 'stolper', parts: [
       { t: 'calc', q: 'Was kommt richtig heraus?', items: [
-        ['Heike: 35 − 4 · 6 = 31 · 6 = 186', '11', '35 − 4 · 6 = 35 − 24 = 11'],
-        ['Heike: 9 · (3 + 5) = 27 + 5 = 32', '72', '9 · (3 + 5) = 9 · 8 = 72'],
-        ['Timo: 58 − 20 − 8 = 58 − 12 = 46', '30', '58 − 20 − 8 = 38 − 8 = 30']] },
+        ['Heike: 35 − 4 · 6 = 31 · 6 = 186', '11', '35 − 4 · 6 = 35 − 24 = 11', { way: '35 − 4 · 6' }],
+        ['Heike: 9 · (3 + 5) = 27 + 5 = 32', '72', '9 · (3 + 5) = 9 · 8 = 72', { way: '9 · (3 + 5)' }],
+        ['Timo: 58 − 20 − 8 = 58 − 12 = 46', '30', '58 − 20 − 8 = 38 − 8 = 30', { way: '58 − 20 − 8' }]] },
       { t: 'pick', q: 'Welcher Fehler wurde gemacht?', opts: FEHLER, items: [['35 − 4 · 6 = 31 · 6', 0], ['9 · (3 + 5) = 27 + 5', 1], ['58 − 20 − 8 = 58 − 12', 2]] }
     ]},
     { h: 'Klammern setzen', de: 'Wo müssen die Klammern hin, damit das Ergebnis stimmt?', topic: 'kl', parts: [

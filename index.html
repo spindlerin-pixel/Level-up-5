@@ -178,6 +178,20 @@ b.w { color: var(--echt); }
 .input-row { display: flex; align-items: center; gap: 8px; }
 .input-row input { flex: 1; min-width: 0; width: 100%; font-family: var(--font-display); font-weight: 600; font-size: 1.6rem; line-height: 1.2; padding: 10px 14px; border: 2.5px solid var(--line); border-radius: 14px; background: var(--paper); color: var(--ink); font-variant-numeric: tabular-nums; }
 .input-row input:disabled { opacity: 0.75; }
+.way { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
+.way-start { font-family: var(--font-display); font-weight: 700; font-size: 1.3rem; font-variant-numeric: tabular-nums; }
+.way-note { margin: 0; font-size: 0.95rem; color: var(--ink-soft); }
+.way-row { display: flex; align-items: center; gap: 8px; }
+.way-row > b, .way-row .way-lbl { font-family: var(--font-display); font-weight: 700; font-size: 1.3rem; min-width: 1em; }
+.way-row .way-lbl { font-size: 1rem; min-width: auto; }
+.way-row input { flex: 1; min-width: 0; width: 100%; font-family: var(--font-display); font-weight: 600; font-size: 1.25rem; padding: 8px 12px; border: 2px solid var(--edge, var(--line)); border-radius: 14px; background: var(--paper); color: var(--ink); font-variant-numeric: tabular-nums; }
+.way-row input:focus { border-color: var(--primary, var(--line)); outline: none; box-shadow: 0 0 0 4px var(--primary-fill, transparent); }
+.way-row input:disabled { opacity: 0.8; }
+.way-row.ok input { border-color: var(--good); background: var(--good-fill); }
+.way-row.bad input { border-color: var(--echt); background: var(--echt-fill); }
+.way-keys { display: flex; flex-wrap: wrap; gap: 6px; }
+.way-keys button { font-family: var(--font-display); font-weight: 700; font-size: 1.2rem; min-width: 44px; min-height: 44px; border: 2px solid var(--line); border-radius: 12px; background: var(--surface); color: var(--ink); cursor: pointer; }
+.way-res { margin: 4px 0 0; font-weight: 700; }
 .affix { font-family: var(--font-display); font-weight: 700; font-size: 1.5rem; line-height: 1; white-space: nowrap; }
 .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
 .btn { font-family: var(--font-display); font-weight: 600; font-size: 1.12rem; line-height: 1; min-height: 52px; padding: 12px 20px; border: 2.5px solid var(--line); border-radius: 16px; box-shadow: 3px 3px 0 var(--shadow); cursor: pointer; color: var(--ink); background: var(--surface); transition: transform 0.08s ease, box-shadow 0.08s ease; }
@@ -1462,6 +1476,7 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
         <p class="question" id="question">Was bedeutet der Maßstab 1&nbsp;:&nbsp;100?</p>
         <div class="visual" id="visual"></div>
         <form id="answerForm" novalidate autocomplete="off" hidden>
+          <div class="way" id="wayBox" hidden></div>
           <label for="answer" class="sr-only">Deine Antwort</label>
           <div class="input-row">
             <span class="affix" id="prefix" hidden>1&nbsp;:</span>
@@ -1541,7 +1556,7 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
     </div>
   </div>
 
-  <p class="note">Jede Runde hat 10 neue Aufgaben. Schriftliche Aufgaben am besten auf einem Blatt rechnen und nur das Ergebnis eintippen. Sterne, Abzeichen, Lernstand und deine angefangene Runde werden auf diesem Gerät gespeichert.</p>
+  <p class="note">Jede Runde hat 10 neue Aufgaben. Schriftliche Aufgaben am besten auf einem Blatt rechnen. Bei Vorrangregeln, Klammern und Sachaufgaben trägst du jeden Rechenschritt ein – der Rechenweg zählt wie in der Schule. Sterne, Abzeichen, Lernstand und deine angefangene Runde werden auf diesem Gerät gespeichert.</p>
 </div>
 
 </div>
@@ -2185,7 +2200,7 @@ window.LU5 = (function () {
     else if (k === 3) { var x = rnd(2, 9), y = rnd(2, 9); expr = a + ' · ' + b + ' − ' + x + ' · ' + y; if (a * b < x * y) { var t = a; a = x; x = t; t = b; b = y; y = t; expr = a + ' · ' + b + ' − ' + x + ' · ' + y; } ans = a * b - x * y; wrong = null; why = ['Erst beide Mal-Aufgaben: ' + a + ' · ' + b + ' = ' + (a * b) + ' und ' + x + ' · ' + y + ' = ' + (x * y), (a * b) + ' − ' + (x * y) + ' = <b>' + ans + '</b>']; }
     else if (k === 4) { var big = c * rnd(5, 15); expr = '(' + (big + b) + ' − ' + b + ') : ' + c; ans = big / c; wrong = null; why = ['Klammer zuerst: ' + (big + b) + ' − ' + b + ' = ' + big, big + ' : ' + c + ' = <b>' + ans + '</b>']; }
     else { var z = rnd(2, 9); expr = a + ' · (' + b + ' + ' + z + ')'; ans = a * (b + z); wrong = a * b + z; why = ['Klammer zuerst: ' + b + ' + ' + z + ' = ' + (b + z), a + ' · ' + (b + z) + ' = <b>' + ans + '</b>']; }
-    return { type: 'regel', key: 'rg-' + expr, ans: ans, unit: '', p: { wrong: wrong },
+    return { type: 'regel', key: 'rg-' + expr, ans: ans, unit: '', p: { wrong: wrong }, way: expr,
       q: 'Rechne. Achte auf die Regeln!<br><b style="font-size:1.3em">' + expr + '</b>',
       hint: 'Klammern zuerst. Dann Punkt vor Strich: erst · und :, danach + und −.', sol: why, vis: null };
   }
@@ -2407,7 +2422,7 @@ window.LU5 = (function () {
   ];
   function genVrg() {
     var m = rMake(pick(RV_TPL));
-    return { type: 'vrg', key: 'vr-' + m.e, ans: m.v, unit: '', q: 'Rechne. Achte auf die Vorrangregeln!<br>' + big(m.e),
+    return { type: 'vrg', key: 'vr-' + m.e, ans: m.v, unit: '', way: m.e, q: 'Rechne. Achte auf die Vorrangregeln!<br>' + big(m.e),
       hint: '1. Klammern zuerst. 2. Punkt vor Strich (· und : vor + und −). 3. Sonst von links nach rechts – auch bei „− −“ und „: :“!', sol: rSol(m.e), vis: null, p: {} };
   }
   var ECK_TPL = [
@@ -2420,7 +2435,7 @@ window.LU5 = (function () {
   ];
   function genEck() {
     var m = rMake(pick(ECK_TPL));
-    return { type: 'eck', key: 'ek-' + m.e, ans: m.v, unit: '', q: 'Rechne. Beginne mit der <b>inneren</b> Klammer!<br>' + big(m.e),
+    return { type: 'eck', key: 'ek-' + m.e, ans: m.v, unit: '', way: m.e, q: 'Rechne. Beginne mit der <b>inneren</b> Klammer!<br>' + big(m.e),
       hint: 'Erst die runde Klammer ( ) innen, dann die eckige Klammer [ ]. In jeder Klammer gilt Punkt vor Strich.', sol: rSol(m.e), vis: null, p: {} };
   }
   /* Stolperstelle: Heike/Timo rechnen falsch */
@@ -2431,7 +2446,7 @@ window.LU5 = (function () {
     else if (k === 2) { var p = rnd(40, 80), q2 = rnd(10, 25), r = rnd(3, q2 - 2); e = p + ' − ' + q2 + ' − ' + r; wrongTxt = e + ' = ' + p + ' − ' + (q2 - r) + ' = ' + (p - (q2 - r)); why = nm + ' hat hinten zuerst gerechnet. Ohne Klammer und Punktrechnung gilt: <b>von links nach rechts</b>.'; }
     else { var d = rnd(2, 4), m2 = d * rnd(2, 4), x2 = d * rnd(2, 5), u = m2 * x2; e = u + ' : ' + m2 + ' : ' + d; wrongTxt = e + ' = ' + u + ' : ' + (m2 / d) + ' = ' + (u / (m2 / d)); why = nm + ' hat hinten zuerst geteilt. Bei „: :“ rechnet man <b>von links nach rechts</b>.'; }
     var v = rEval(e);
-    return { type: 'stolper', key: 'so-' + e, ans: v, unit: '', q: 'Stolperstelle! ' + nm + ' hat gerechnet:<br><b style="font-size:1.15em">' + wrongTxt + '</b><br>Das stimmt nicht. Was kommt richtig heraus?',
+    return { type: 'stolper', key: 'so-' + e, ans: v, unit: '', way: e, q: 'Stolperstelle! ' + nm + ' hat gerechnet:<br><b style="font-size:1.15em">' + wrongTxt + '</b><br>Das stimmt nicht. Was kommt richtig heraus?',
       hint: 'Rechne selbst neu: Klammern zuerst, dann Punkt vor Strich, sonst von links nach rechts.', sol: [why].concat(rSol(e)), vis: null, p: {} };
   }
   /* Klammern setzen, damit eine bestimmte Zahl herauskommt – oder: darf die Klammer weg? */
@@ -2521,7 +2536,7 @@ window.LU5 = (function () {
       return { type: 'tterm', key: 'tm-' + txt, q: 'Welcher Rechenausdruck passt?<br><b>' + txt + '</b>', opts: opts(ok, bad),
         ex: 'Richtig ist <b>' + ok + '</b>. ' + rSol(ok)[0] + '<br>Summe → +, Differenz → −, Produkt → ·, Quotient → :. Was zuerst gerechnet werden muss, kommt in Klammern.' };
     }
-    return { type: 'tterm', key: 'tw-' + txt, ans: v, unit: '', q: 'Schreib als Aufgabe ins Heft und berechne:<br><b>' + txt + '</b>',
+    return { type: 'tterm', key: 'tw-' + txt, ans: v, unit: '', way: ok, wayTerm: true, q: 'Schreib als Aufgabe auf und berechne Schritt für Schritt:<br><b>' + txt + '</b>',
       hint: 'Übersetze Wort für Wort: Summe = +, Differenz = −, Produkt = ·, Quotient = :. Überlege, was zuerst ausgerechnet werden muss – das kommt in Klammern.', sol: ['Aufgabe: ' + ok].concat(rSol(ok)), vis: null, p: {} };
   }
   /* Zahlenrätsel wie Aufgabe 18 */
@@ -2548,11 +2563,73 @@ window.LU5 = (function () {
     else { var bl = rnd(3, 6), st = rnd(4, 9), lose = rnd(5, 15); q = 'Im Regal stehen ' + bl + ' Bretter mit je ' + st + ' Büchern. ' + nm + ' stellt noch ' + lose + ' Bücher dazu. Wie viele Bücher sind es jetzt?'; ex = bl + ' · ' + st + ' + ' + lose; unit = 'Bücher'; }
     var v = rEval(ex);
     if (v === null) return genSach2();
-    return { type: 'sach2', key: 's2-' + q, ans: v, unit: unit, q: q, hint: 'Schreib erst <b>einen</b> Rechenausdruck auf (mit Klammern, wo nötig). Dann rechne Schritt für Schritt.', sol: ['Rechenausdruck: ' + ex].concat(rSol(ex)), vis: null, p: {} };
+    return { type: 'sach2', key: 's2-' + q, ans: v, unit: unit, way: ex, wayTerm: true, q: q, hint: 'Schreib erst <b>einen</b> Rechenausdruck auf (mit Klammern, wo nötig). Dann rechne Schritt für Schritt.', sol: ['Rechenausdruck: ' + ex].concat(rSol(ex)), vis: null, p: {} };
   }
   GEN.vrg = genVrg; GEN.eck = genEck; GEN.stolper = genStolper; GEN.kl = genKl; GEN.baum = genBaum; GEN.tterm = genTterm; GEN.raetsel = genRaetsel; GEN.sach2 = genSach2;
   var HUE = ['regel', 'vrg', 'vrg', 'eck', 'stolper', 'kl', 'baum', 'tterm', 'raetsel', 'sach2'];
-  window.LU5MathR = { steps: rSteps, eval: rEval, tree: rbShow, _gen: GEN };
+  /* ---------- Rechenweg prüfen (Üben und Probe-HÜs) ----------
+     Jede Zeile darf nur ausrechnen, was in der Zeile davor schon „dran“ ist
+     (Klammer innen zuerst, Punkt vor Strich, von links nach rechts).
+     Mehrere unabhängige Rechnungen in einer Zeile sind erlaubt (24 + 15 aus 6 · 4 + 3 · 5). */
+  function wNorm(s) {
+    return String(s == null ? '' : s).replace(/[*×⋅•∙xX]/g, '·').replace(/[\/÷]/g, ':').replace(/[-–—]/g, '−')
+      .replace(/[\[{]/g, '(').replace(/[\]}]/g, ')').replace(/(\d)[.'’](?=\d{3}(\D|$))/g, '$1').replace(/\s+/g, '');
+  }
+  function wParse(s) {
+    var t = wNorm(s).match(/\d+|[+−·:()]/g), i = 0;
+    if (!t || t.join('') !== wNorm(s)) return null;
+    function fac() { var c = t[i]; if (c === '(') { i++; var v = sum(); if (t[i] !== ')') throw 0; i++; return v; } if (!/^\d+$/.test(c || '')) throw 0; i++; return { n: Number(c) }; }
+    function prod() { var v = fac(); while (t[i] === '·' || t[i] === ':') { var o = t[i++]; v = { op: o, l: v, r: fac() }; } return v; }
+    function sum() { var v = prod(); while (t[i] === '+' || t[i] === '−') { var o = t[i++]; v = { op: o, l: v, r: prod() }; } return v; }
+    try { var v = sum(); return i === t.length ? v : null; } catch (e) { return null; }
+  }
+  function wVal(nd) { if (nd.n !== undefined) return nd.n; var a = wVal(nd.l), b = wVal(nd.r); return nd.op === '+' ? a + b : nd.op === '−' ? a - b : nd.op === '·' ? a * b : a / b; }
+  function wKey(nd) { return nd.n !== undefined ? String(nd.n) : '(' + wKey(nd.l) + nd.op + wKey(nd.r) + ')'; }
+  function wShape(nd) { return nd.n !== undefined ? '#' : '(' + wShape(nd.l) + nd.op + wShape(nd.r) + ')'; }
+  function wLeaves(nd, a) { a = a || []; if (nd.n !== undefined) a.push(nd.n); else { wLeaves(nd.l, a); wLeaves(nd.r, a); } return a; }
+  function wOps(nd) { return nd.n !== undefined ? 0 : 1 + wOps(nd.l) + wOps(nd.r); }
+  function wReady(nd, out) { out = out || []; if (nd.n !== undefined) return out; if (nd.l.n !== undefined && nd.r.n !== undefined) out.push(nd); else { wReady(nd.l, out); wReady(nd.r, out); } return out; }
+  function wCollapse(nd, set) { if (nd.n !== undefined) return nd; if (set.indexOf(nd) >= 0) return { n: wVal(nd) }; return { op: nd.op, l: wCollapse(nd.l, set), r: wCollapse(nd.r, set) }; }
+  /* alle Zeilen, die direkt nach dieser Zeile richtig sind */
+  function wNext(nd) {
+    var rd = wReady(nd), out = [];
+    for (var m = 1; m < (1 << rd.length); m++) { var set = rd.filter(function (x, i) { return m & (1 << i); }); out.push(wCollapse(nd, set)); }
+    return out;
+  }
+  /* alles, was man irgendwann richtig hinschreiben könnte */
+  function wAll(nd, acc) { acc = acc || {}; wNext(nd).forEach(function (x) { var k = wKey(x); if (!acc[k]) { acc[k] = 1; wAll(x, acc); } }); return acc; }
+  function wOneClass(nd) { var c = {}; (function go(x) { if (x.n !== undefined) return; c[x.op === '+' || x.op === '−' ? 's' : 'p'] = 1; go(x.l); go(x.r); })(nd); return Object.keys(c).length <= 1; }
+  /* start: Aufgabe; lines: eingetragene Zwischenschritte (leere werden übersprungen).
+     Ergebnis: { need, ok, first, marks[], bad, msg } */
+  function wayCheck(start, lines) {
+    var prev = wParse(start), res = { need: 0, ok: true, first: true, marks: [], bad: -1, msg: '' };
+    if (!prev) return res;
+    res.need = Math.max(0, wOps(prev) - 1);
+    if (!res.need) return res;
+    var list = [];
+    (lines || []).forEach(function (ln, li) { String(ln == null ? '' : ln).split('=').forEach(function (part) { if (wNorm(part)) list.push({ s: part, li: li }); }); });
+    (lines || []).forEach(function (ln, li) { res.marks[li] = wNorm(ln) ? 'ok' : ''; });
+    function fail(i, msg) { res.ok = false; res.bad = i; res.msg = msg; if (i < list.length) res.marks[list[i].li] = 'bad'; if (i === 0) res.first = false; return res; }
+    if (!list.length) { res.first = false; return fail(0, 'Schreib den Rechenweg auf: Was rechnest du <b>zuerst</b>?'); }
+    for (var i = 0; i < list.length; i++) {
+      var tr = wParse(list[i].s);
+      if (!tr) return fail(i, 'In Schritt ' + (i + 1) + ' fehlt etwas – prüfe Zahlen, Rechenzeichen und Klammern.');
+      var nx = wNext(prev), k = wKey(tr), ok = nx.some(function (x) { return wKey(x) === k; });
+      if (!ok && i > 0 && wOps(tr) === 0 && wOps(prev) >= 2 && wOneClass(prev) && Math.abs(wVal(tr) - wVal(prev)) < 1e-9 && i === list.length - 1) ok = true;
+      if (!ok) {
+        if (k === wKey(prev)) return fail(i, 'Schritt ' + (i + 1) + ' ist nur abgeschrieben – rechne darin etwas aus.');
+        if (wAll(prev)[k]) return fail(i, 'Schritt ' + (i + 1) + ': Da hast du zu viel auf einmal gerechnet. Schreib jeden Zwischenschritt auf.');
+        var sh = wShape(tr), lv = wLeaves(tr);
+        if (nx.some(function (x) { if (wShape(x) !== sh) return false; var xl = wLeaves(x), d = 0; xl.forEach(function (v, q) { if (v !== lv[q]) d++; }); return d === 1; })) return fail(i, 'Schritt ' + (i + 1) + ': Die Reihenfolge stimmt, aber du hast dich verrechnet.');
+        return fail(i, 'Schritt ' + (i + 1) + ': Hier stimmt die Reihenfolge nicht. Erst Klammern, dann Punkt vor Strich, sonst von links nach rechts.');
+      }
+      prev = tr;
+    }
+    if (wOps(prev) >= 2 && !wOneClass(prev)) return fail(list.length, 'Dein Rechenweg ist noch nicht fertig – es fehlt noch ein Schritt.');
+    return res;
+  }
+  function wayNeed(expr) { var t = wParse(expr); return t ? Math.max(0, wOps(t) - 1) : 0; }
+  window.LU5MathR = { steps: rSteps, eval: rEval, tree: rbShow, way: wayCheck, wayNeed: wayNeed, wayParse: wParse, wayVal: wVal, _gen: GEN };
 
   GEN.kopf = genKopf; GEN.platz = genPlatz; GEN.wort = genWort; GEN.begriff = genBegriff; GEN.probe = genProbe; GEN.zeichen = genZeichen; GEN.schlange = genSchlange; GEN.sach = genSach; GEN.zahlwort = genZahlwort;
   GEN.stelle = genStelle; GEN.rund = genRund; GEN.add = genAdd; GEN.sub = genSub; GEN.mul = genMul; GEN.div = genDiv; GEN.regel = genRegel; GEN.gesch = genGesch;
@@ -2807,7 +2884,7 @@ window.LU5 = (function () {
   function loadStats() { return store(STATS_KEY) || {}; }
   function newRound(topic) {
     var tasks = buildRound(topic, loadStats());
-    state = { topic: topic, tasks: tasks, focus: tasks.focus || [], resumed: false, i: 0, results: [], attempts: 0, hintUsed: false, resolved: false, feedback: null, chosen: null, done: false, input: '' };
+    state = { topic: topic, tasks: tasks, focus: tasks.focus || [], resumed: false, i: 0, results: [], attempts: 0, hintUsed: false, resolved: false, feedback: null, chosen: null, done: false, input: '', wayIn: {}, wayMarks: null };
   }
 
   var el = {};
@@ -2854,6 +2931,7 @@ window.LU5 = (function () {
     el.visual.innerHTML = visualHtml(t.vis);
     var isMC = !!t.opts;
     el.answerForm.hidden = isMC;
+    if (isMC || !t.way) { var wb0 = document.getElementById('wayBox'); if (wb0) { wb0.hidden = true; wb0.innerHTML = ''; } }
     if (isMC) {
       el.options.innerHTML = t.opts.map(function (o, idx) {
         var cls = 'opt';
@@ -2867,6 +2945,7 @@ window.LU5 = (function () {
       el.unit.hidden = !t.unit;
       el.answer.value = state.input || '';
       el.answer.disabled = state.resolved;
+      renderWay(t);
       el.checkBtn.hidden = state.resolved;
       el.hintBtn.hidden = state.resolved || state.hintUsed;
     }
@@ -2884,6 +2963,82 @@ window.LU5 = (function () {
     var mtr = document.getElementById('mcTipRow');
     if (mtr) mtr.hidden = !(t.opts && !state.resolved && !state.hintUsed && (t.hint || lh));
     renderFeedback();
+  }
+
+  /* ---------- Rechenweg: jeden Schritt eintragen ---------- */
+  function wayLines(t) { var R = window.LU5MathR; return R ? R.wayNeed(t.way) : 0; }
+  function renderWay(t) {
+    var box = document.getElementById('wayBox');
+    if (!box) return;
+    var n = t.way ? wayLines(t) : 0;
+    if (!t.way || (!n && !t.wayTerm)) { box.hidden = true; box.innerHTML = ''; return; }
+    var W = state.wayIn || {}, M = state.wayMarks || {}, dis = state.resolved ? ' disabled' : '';
+    function inp(key, ph, lbl) {
+      return '<div class="way-row' + (M[key] ? ' ' + M[key] : '') + '">' + lbl + '<input type="text" data-w="' + key + '" value="' + String(W[key] || '').replace(/"/g, '&quot;') + '" placeholder="' + ph + '" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" enterkeyhint="next" aria-label="' + ph + '"' + dis + '></div>';
+    }
+    var h = '';
+    if (t.wayTerm) h += '<p class="way-note">Schreib erst die Aufgabe als <b>einen</b> Rechenausdruck auf, dann jeden Rechenschritt.</p>' + inp('t', 'Rechenausdruck, z. B. (3 + 4) · 2', '<span class="way-lbl">Aufgabe:</span>');
+    else h += '<p class="way-note">Schreib jeden Rechenschritt auf – wie im Heft. Wenn zwei Rechnungen gleichzeitig dran sind, darfst du beide in einem Schritt rechnen.</p>' + (t.type === 'stolper' ? '<div class="way-start">' + t.way + '</div>' : '');
+    for (var j = 0; j < n; j++) h += inp(String(j), (j + 1) + '. Schritt', '<b>=</b>');
+    if (!state.resolved) h += '<div class="way-keys" aria-label="Rechenzeichen">' + ['·', ':', '+', '−', '(', ')', '[', ']'].map(function (k) { return '<button type="button" data-key="' + k + '" tabindex="-1">' + k + '</button>'; }).join('') + '</div>';
+    h += '<p class="way-res">= Ergebnis:</p>';
+    box.innerHTML = h;
+    box.hidden = false;
+  }
+  function wayFocusTarget(box) {
+    var last = box._last && box.contains(box._last) && !box._last.disabled ? box._last : null;
+    if (last) return last;
+    var ins = box.querySelectorAll('input[data-w]');
+    for (var i = 0; i < ins.length; i++) if (!ins[i].value) return ins[i];
+    return ins[0] || null;
+  }
+  function bindWay() {
+    var box = document.getElementById('wayBox');
+    if (!box || box._bound) return;
+    box._bound = true;
+    box.addEventListener('focusin', function (e) { if (e.target.matches('input[data-w]')) box._last = e.target; });
+    box.addEventListener('input', function (e) {
+      var k = e.target.getAttribute('data-w'); if (k == null) return;
+      state.wayIn = state.wayIn || {}; state.wayIn[k] = e.target.value;
+      if (state.wayMarks && state.wayMarks[k]) { delete state.wayMarks[k]; e.target.parentNode.classList.remove('ok', 'bad'); }
+      saveRound();
+    });
+    box.addEventListener('keydown', function (e) {
+      if (e.key !== 'Enter' || !e.target.matches('input[data-w]')) return;
+      e.preventDefault();
+      var ins = Array.prototype.slice.call(box.querySelectorAll('input[data-w]')), i = ins.indexOf(e.target);
+      (ins[i + 1] || el.answer).focus();
+    });
+    box.addEventListener('mousedown', function (e) { if (e.target.closest('[data-key]')) e.preventDefault(); });
+    box.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-key]'); if (!b || state.resolved) return;
+      var inp = wayFocusTarget(box); if (!inp) return;
+      var a = inp.selectionStart == null ? inp.value.length : inp.selectionStart, z = inp.selectionEnd == null ? a : inp.selectionEnd, k = b.getAttribute('data-key');
+      var ins2 = /[()\[\]]/.test(k) ? k : ' ' + k + ' ';
+      inp.value = inp.value.slice(0, a) + ins2 + inp.value.slice(z);
+      inp.focus(); var c = a + ins2.length; try { inp.setSelectionRange(c, c); } catch (er) {}
+      inp.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+  }
+  /* Rechenweg auswerten: { ok, msg, marks, first } */
+  function wayEval(t) {
+    var R = window.LU5MathR, W = state.wayIn || {}, n = wayLines(t), lines = [], marks = {};
+    if (!R) return { ok: true, msg: '', marks: marks };
+    for (var j = 0; j < n; j++) lines.push(W[j] || '');
+    var start = t.way;
+    if (t.wayTerm) {
+      var tr = R.wayParse(W.t || ''), mt = R.wayParse(t.way);
+      var nums = function (x) { return (String(x || '').replace(/\s/g, '').match(/\d+/g) || []).map(Number).sort(function (a, b) { return a - b; }).join(','); };
+      if (!tr) { marks.t = 'bad'; return { ok: false, marks: marks, msg: String(W.t || '').trim() ? 'Dein Rechenausdruck ist noch nicht vollständig – prüfe Zahlen, Rechenzeichen und Klammern.' : 'Schreib zuerst die Aufgabe als Rechenausdruck auf.' }; }
+      var sameV = mt && Math.abs(R.wayVal(tr) - R.wayVal(mt)) < 1e-9, sameN = nums(W.t) === nums(t.way);
+      if (!sameV || !sameN) { marks.t = 'bad'; return { ok: false, marks: marks, msg: sameN ? 'Die Zahlen stimmen, aber Klammern oder Rechenzeichen noch nicht. Überlege: Was muss zuerst gerechnet werden?' : sameV ? 'Schreib die ganze Aufgabe mit allen Zahlen aus dem Text in einen Rechenausdruck.' : 'Der Rechenausdruck passt noch nicht zum Text.' }; }
+      marks.t = 'ok'; start = W.t;
+      var need = R.wayNeed(start);
+      if (need > n) for (var q = n; q < need; q++) lines.push('');
+    }
+    var r = R.way(start, lines);
+    r.marks.forEach(function (m, i) { if (m) marks[i] = m; });
+    return { ok: r.ok, msg: r.msg, marks: marks };
   }
 
   function renderEnd() {
@@ -3172,7 +3327,7 @@ window.LU5 = (function () {
   function check() {
     var t = state.tasks[state.i];
     if (state.resolved || t.opts) return;
-    var raw = el.answer.value.trim();
+    var raw = el.answer.value.trim().replace(/^=\s*/, '');
     state.input = raw;
     var v = parseNum(raw);
     if (raw === '' || isNaN(v)) {
@@ -3180,6 +3335,24 @@ window.LU5 = (function () {
       renderFeedback();
       el.answer.focus();
       return;
+    }
+    if (t.way && (wayLines(t) || t.wayTerm)) {
+      var wr = wayEval(t), resOk = v === t.ans;
+      state.wayMarks = wr.marks;
+      if (!wr.ok || !resOk) {
+        state.attempts++;
+        var wmsg = !wr.ok ? (resOk ? 'Das Ergebnis stimmt! Aber in der Schule zählt auch der Rechenweg. ' : '') + wr.msg : 'Dein Rechenweg stimmt – nur beim Ergebnis hast du dich verrechnet.';
+        if (state.attempts === 1) {
+          state.hintUsed = true;
+          state.feedback = { tone: 'tip', title: 'Noch nicht ganz.', text: wmsg + ' Versuch es nochmal!' };
+          renderTask(); saveRound();
+          var badIn = document.querySelector('#wayBox .way-row.bad input');
+          (badIn || el.answer).focus();
+          return;
+        }
+        resolve('wrong', { tone: 'bad', title: 'Das war knifflig!', text: (resOk ? 'Das Ergebnis war richtig – aber ohne vollständigen Rechenweg gibt es in der HÜ Punktabzug. ' + wr.msg + ' ' : 'Richtig ist ' + fmt(t.ans) + '. ') + 'So geht der Rechenweg:', steps: t.sol });
+        return;
+      }
     }
     if (v === t.ans) {
       var first = state.attempts === 0; /* Tipp oder Erklärung nutzen bleibt grün */
@@ -3223,7 +3396,7 @@ window.LU5 = (function () {
     state.resumed = false;
     if (state.i >= 9) { state.done = true; state.endNews = newsHtml(award(null, true)); render(); el.againBtn.focus({ preventScroll: true }); return; }
     state.i++;
-    state.attempts = 0; state.hintUsed = false; state.resolved = false; state.feedback = null; state.chosen = null; state.input = ''; state.lessonOpen = undefined;
+    state.attempts = 0; state.hintUsed = false; state.resolved = false; state.feedback = null; state.chosen = null; state.input = ''; state.wayIn = {}; state.wayMarks = null; state.lessonOpen = undefined;
     render();
     var t = state.tasks[state.i];
     if (t.opts) { var first = el.options.querySelector('.opt'); if (first) first.focus({ preventScroll: true }); }
@@ -3242,6 +3415,7 @@ window.LU5 = (function () {
   function bind() {
     el.card = document.getElementById('card');
     el.answerForm.addEventListener('submit', function (e) { e.preventDefault(); check(); });
+    bindWay();
     el.hintBtn.addEventListener('click', hint);
     document.getElementById('mLessonBtn').addEventListener('click', function () { state.lessonOpen = !state.lessonOpen; saveRound(); renderTask(); });
     document.getElementById('mcHintBtn').addEventListener('click', function () {

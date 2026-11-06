@@ -184,3 +184,16 @@
 .ka-termrow .ka-in.ka-res { flex: 0 0 6.5em; width: 6.5em; min-width: 0; }
 .ka-termrow b { font-size: 1.2em; }
 .ka-task .ka-calcexpr { font-size: 1.15em; font-weight: 700; }
+
+/* Rechenweg: Zwischenschritte */
+.ka-way { display: flex; flex-direction: column; gap: 6px; width: 100%; margin-top: 4px; }
+.ka-wayrow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.ka-wayrow > b { font-size: 1.2em; min-width: 1em; }
+.ka-wayrow .ka-in { flex: 1 1 auto; min-width: 0; width: auto; max-width: 420px; font-variant-numeric: tabular-nums; }
+.ka-wayrow .ka-in.ka-res { flex: 0 1 9em; }
+.ka-waylbl { font-weight: 700; font-size: 0.95rem; }
+.ka-wayli { flex-direction: column; align-items: flex-start; }
+.ka-wayexpr { font-weight: 700; font-size: 1.1em; font-variant-numeric: tabular-nums; }
+.ka-wayrev .ka-ans { font-variant-numeric: tabular-nums; }
+.ka-keys { position: sticky; bottom: 8px; z-index: 2; display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; padding: 8px; border-radius: 14px; background: var(--surface); box-shadow: 0 2px 10px rgba(0,0,0,0.12); }
+.ka-keys button { font: inherit; font-weight: 700; font-size: 1.2rem; min-width: 44px; min-height: 44px; border: 2px solid var(--line); border-radius: 12px; background: var(--paper); color: var(--ink); cursor: pointer; }
