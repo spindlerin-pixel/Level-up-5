@@ -846,6 +846,61 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
 .ek-checks label { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border: 2px solid var(--line); border-radius: 14px; background: var(--surface); cursor: pointer; line-height: 1.4; }
 .ek-checks label.on { background: var(--good-fill); border-color: #2E9E5B; }
 .ek-checks input { width: 22px; height: 22px; flex-shrink: 0; margin-top: 1px; accent-color: #2E9E5B; }
+/* ===== Startseite: Tagesplan, Fächer-Karten, Tablet ===== */
+.sec-title { margin: 6px 2px -4px; font-family: var(--font-display); font-weight: 800; font-size: 1.2rem; }
+.plan { display: flex; flex-direction: column; gap: 10px; padding: 16px; background: var(--surface); border-radius: 24px; box-shadow: var(--soft-shadow); border: 3px solid var(--lina, #FFD54A); }
+.plan-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.plan-head h2 { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: 1.45rem; line-height: 1.1; }
+.plan-eyebrow { margin: 0 0 2px; font-size: 0.82rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink-soft); }
+.plan-ring { flex-shrink: 0; width: 74px; height: 74px; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: conic-gradient(var(--primary) calc(var(--p, 0) * 1%), var(--primary-fill, #E3F4F2) 0); position: relative; }
+.plan-ring::before { content: ''; position: absolute; inset: 7px; border-radius: 50%; background: var(--surface); }
+.plan-ring b, .plan-ring span { position: relative; }
+.plan-ring b { font-family: var(--font-display); font-size: 1.2rem; line-height: 1; }
+.plan-ring span { font-size: 0.68rem; color: var(--ink-soft); }
+.plan.all .plan-ring { background: #2E9E5B; }
+.plan-sum { margin: 0; color: var(--ink-soft); font-size: 0.95rem; }
+.plan-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.plan-item { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 18px; background: var(--bg, #F5F7FB); border-left: 8px solid var(--pc, var(--primary)); }
+.plan-item.math { --pc: var(--primary); } .plan-item.en { --pc: var(--post); } .plan-item.voc { --pc: #E5B800; } .plan-item.de { --pc: #E8A317; } .plan-item.ek { --pc: #2E9E5B; }
+.plan-check { flex-shrink: 0; width: 30px; height: 30px; box-sizing: border-box; border-radius: 50%; border: 3px solid var(--pc); display: flex; align-items: center; justify-content: center; font-weight: 800; color: #fff; }
+.plan-item.done .plan-check { background: #2E9E5B; border-color: #2E9E5B; }
+.plan-txt { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; line-height: 1.25; }
+.plan-txt b { font-family: var(--font-display); font-size: 1.05rem; }
+.plan-txt small { color: var(--ink-soft); font-size: 0.85rem; }
+.plan-item.done .plan-txt b { text-decoration: line-through; text-decoration-thickness: 2px; opacity: 0.7; }
+.plan-go { flex-shrink: 0; appearance: none; cursor: pointer; border: 0; border-radius: 12px; padding: 10px 14px; font: 600 0.95rem var(--font-display); background: var(--pc); color: #fff; box-shadow: 0 3px 0 rgba(0,0,0,0.18); }
+.plan-item.voc .plan-go, .plan-item.de .plan-go { color: #1F2A44; }
+.plan-item.done .plan-go { background: var(--surface); color: var(--ink-soft); box-shadow: none; border: 2px solid var(--edge, #D5DBE6); }
+.plan-bonus { padding: 10px 14px; border-radius: 16px; border: 2px dashed var(--edge, #D5DBE6); font-size: 0.92rem; color: var(--ink-soft); line-height: 1.45; }
+.plan-yay { margin: 0; padding: 10px 14px; border-radius: 16px; background: #DFF3E4; color: #17603A; font-weight: 700; }
+.linkbtn { appearance: none; background: none; border: 0; padding: 0; cursor: pointer; color: var(--primary-dark, #0B7A6E); font: inherit; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+.subj { cursor: default; }
+.subj-ka { display: table; margin-top: 6px; padding: 3px 10px; border-radius: 999px; font-size: 0.8rem; font-weight: 700; background: var(--surface); color: var(--ink); box-shadow: 0 0 0 2px rgba(31,42,68,0.12) inset; }
+.subj-ka:empty { display: none; }
+.subj-ka.soon { background: #E0457B; color: #fff; box-shadow: none; }
+.subj-acts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; }
+.subj-acts .subj-go { flex: 1 1 140px; appearance: none; cursor: pointer; font-family: var(--font-display); font-weight: 600; font-size: 1.05rem; }
+.subj.en .subj-go.voc { background: #FFD54A; color: #1F2A44; box-shadow: 0 4px 0 #C9A21E; }
+.subj-go2 { flex: 1 1 100%; appearance: none; cursor: pointer; border: 2px solid var(--edge, #D5DBE6); background: var(--surface); color: var(--ink); border-radius: 14px; padding: 10px; font: 600 1rem var(--font-display); }
+.subj-sub { display: flex; flex-direction: column; gap: 6px; padding: 10px 12px; border-radius: 16px; background: var(--tip-fill); }
+.subj-subt { margin: 0; font-weight: 700; font-size: 0.92rem; }
+.subj-tip { margin: 0; font-size: 0.9rem; color: var(--ink-soft); line-height: 1.4; }
+.day .star { font-size: 0.9rem; line-height: 1; min-height: 1em; }
+.subjects { align-items: start; }
+@media (max-width: 699px) { .subjects { grid-template-columns: 1fr; } }
+@media (min-width: 760px) {
+  .app, .backbar { max-width: 1000px; }
+  #mathView, #enView, #vocView { max-width: 820px; }
+  .ka-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .plan-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pr-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .pr-card { flex-wrap: wrap; align-content: flex-start; }
+  .pr-card .pr-txt { flex: 1 1 60%; }
+  .pr-card .pr-acts, .pr-card > .pr-open { flex-basis: 100%; }
+  .pr-acts { display: flex; gap: 8px; } .pr-acts .pr-open { flex: 1; text-align: center; }
+  .de-topics { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .subj-name { font-size: 1.6rem; }
+}
 </style>
 
 <div class="app view-wrap" id="homeView">
@@ -856,8 +911,18 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
       <label for="nameIn">Wie heißt du? Dann begrüßt dich die App mit deinem Namen.</label>
       <div class="name-row"><input id="nameIn" maxlength="20" autocomplete="off" placeholder="Dein Vorname"><button type="submit" class="btn small">Los geht's</button></div>
     </form>
-    <p class="sub">Jeden Tag 15 bis 20 Minuten Mathe und 15 bis 20 Minuten Englisch, Deutsch zwischendurch. Die Uhr läuft nur, während du übst.</p>
+    <p class="sub">Dein Tagesplan zeigt dir, was heute dran ist. Was als Nächstes geschrieben wird, kommt zuerst.</p>
   </header>
+
+  <section class="plan" id="planBox" aria-label="Dein Plan für heute">
+    <div class="plan-head">
+      <div><p class="plan-eyebrow" id="planFocus">Heute</p><h2>Dein Plan für heute</h2></div>
+      <div class="plan-ring" id="planRing" role="img" aria-label="Fortschritt"><b id="planCount">0/0</b><span>erledigt</span></div>
+    </div>
+    <p class="plan-sum" id="planSum"></p>
+    <ol class="plan-list" id="planList"></ol>
+    <div class="plan-bonus" id="planBonus" hidden></div>
+  </section>
 
   <section class="ka-wrap" aria-label="Countdown Klassenarbeiten">
   <h2 class="ka-head">⏳ Countdown Klassenarbeiten</h2>
@@ -888,70 +953,58 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
   </div>
   </section>
 
-  <section class="subjects" aria-label="Fächer für heute">
-    <button type="button" class="subj" data-go="math" id="subjMath">
-      <span class="subj-top">
+  <h2 class="sec-title">Deine Fächer</h2>
+  <section class="subjects" aria-label="Fächer">
+    <div class="subj" id="subjMath">
+      <div class="subj-top">
         <svg viewBox="0 0 110 140" aria-hidden="true"><g transform="rotate(-6 55 66)"><rect class="m-body" x="28" y="6" width="54" height="118" rx="10"></rect><path class="m-tick" d="M28 20 H 39 M28 32 H 34 M28 44 H 39 M28 56 H 34 M28 68 H 39 M28 80 H 34 M28 92 H 39 M28 104 H 34 M28 116 H 39"></path><circle class="m-eye" cx="52" cy="44" r="5"></circle><circle class="m-eye" cx="68" cy="44" r="5"></circle><circle class="m-cheek" cx="46" cy="57" r="4.5"></circle><circle class="m-cheek" cx="74" cy="57" r="4.5"></circle><path class="m-smile" d="M52 57 Q 60 65, 68 57"></path></g></svg>
-        <span><span class="subj-name">Mathe</span><br><span class="subj-what">Natürliche Zahlen &amp; Maßstab mit Lina Lineal</span></span>
-      </span>
+        <span><span class="subj-name">Mathe</span><br><span class="subj-what">Natürliche Zahlen &amp; Maßstab mit Lina Lineal</span><span class="subj-ka" id="mathKa"></span></span>
+      </div>
       <span class="goalbar" id="mathBar"><i></i><span class="mark" id="mathMark"></span></span>
       <span class="subj-status"><b id="mathMin">0 Min</b><span id="mathState">noch nicht geübt</span></span>
-      <span class="subj-go">Mathe üben</span>
-    </button>
-    <button type="button" class="subj en" data-go="en" id="subjEn">
-      <span class="subj-top">
+      <div class="subj-acts"><button type="button" class="subj-go" data-go="math">Mathe üben</button></div>
+    </div>
+    <div class="subj en" id="subjEn">
+      <div class="subj-top">
         <svg viewBox="0 0 110 140" aria-hidden="true"><use href="#pennyArt"></use></svg>
-        <span><span class="subj-name">Englisch</span><br><span class="subj-what">Klassenarbeit 3.11.: Tiere, Zahlen, Schulsachen, Familie</span></span>
-      </span>
+        <span><span class="subj-name">Englisch</span><br><span class="subj-what">Access 1 · Vokabeln und Grammatik</span><span class="subj-ka" id="enKa"></span></span>
+      </div>
       <span class="goalbar" id="enBar"><i></i><span class="mark" id="enMark"></span></span>
       <span class="subj-status"><b id="enMin">0 Min</b><span id="enState">noch nicht geübt</span></span>
-      <span class="subj-go">Englisch üben</span>
-    </button>
-    <button type="button" class="subj voc" data-go="voc" id="vocTile">
-      <span class="subj-top">
-        <svg viewBox="0 0 110 140" aria-hidden="true"><use href="#pennyArt"></use></svg>
-        <span><span class="subj-name">Vokabel-Check</span><br><span class="subj-what" id="vocTileWhat">Deutsch sehen, Englisch schreiben</span></span>
-      </span>
-      <span class="goalbar voc-bar" id="vocTileBar"><i></i></span>
-      <span class="subj-status"><b id="vocTileNum">0 grün</b><span id="vocTileState"></span></span>
-      <span class="subj-go">Vokabel-Check starten</span>
-    </button>
-    <button type="button" class="subj deu" data-go="de" id="deTile">
-      <span class="subj-top">
+      <div class="subj-sub" id="vocTile">
+        <p class="subj-subt">✏️ Vokabel-Check · <span id="vocTileWhat">Deutsch sehen, Englisch schreiben</span></p>
+        <span class="goalbar voc-bar" id="vocTileBar"><i></i></span>
+        <span class="subj-status"><b id="vocTileNum">0 grün</b><span id="vocTileState"></span></span>
+      </div>
+      <p class="subj-tip" id="tipBox"><b>Tipp:</b> <span id="tipText">Starte mit einer gemischten Runde.</span> <button type="button" class="linkbtn" id="tipGo">Direkt dorthin</button></p>
+      <div class="subj-acts">
+        <button type="button" class="subj-go" data-go="en">Englisch üben</button>
+        <button type="button" class="subj-go voc" data-go="voc">Vokabel-Check</button>
+        <button type="button" class="subj-go2" data-go="print" id="printTile">📝 Probe-Klassenarbeiten</button>
+      </div>
+    </div>
+    <div class="subj deu" id="deTile">
+      <div class="subj-top">
         <svg viewBox="0 0 64 64" aria-hidden="true"><ellipse cx="22" cy="20" rx="11" ry="8" fill="#DFF1FF" stroke="#1F2A44" stroke-width="2.5" transform="rotate(-25 22 20)"/><ellipse cx="40" cy="18" rx="11" ry="8" fill="#DFF1FF" stroke="#1F2A44" stroke-width="2.5" transform="rotate(20 40 18)"/><ellipse cx="32" cy="38" rx="20" ry="16" fill="#FFC928" stroke="#1F2A44" stroke-width="2.5"/><path d="M26 23.5 Q24 38 26 53 M36 23 Q38 38 36 53.5" stroke="#1F2A44" stroke-width="5" fill="none"/><circle cx="45" cy="35" r="2.6" fill="#1F2A44"/><path d="M42 43 Q46 46 49 42" stroke="#1F2A44" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M48 25 Q52 18 56 17 M44 24 Q46 16 50 14" stroke="#1F2A44" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
-        <span><span class="subj-name">Deutsch</span><br><span class="subj-what">HÜ Mo 9.11.: kurze Vokale · 6 Probe-HÜs</span></span>
-      </span>
+        <span><span class="subj-name">Deutsch</span><br><span class="subj-what">Rechtschreibung: kurze und lange Vokale · 6 Probe-HÜs</span><span class="subj-ka" id="deKa"></span></span>
+      </div>
       <span class="subj-status"><b id="deMin">0 Min</b><span id="deTileState"></span></span>
-      <span class="subj-go">Deutsch üben</span>
-    </button>
-    <button type="button" class="subj ek" data-go="ek" id="ekTile">
-      <span class="subj-top">
+      <div class="subj-acts"><button type="button" class="subj-go" data-go="de">Deutsch üben</button></div>
+    </div>
+    <div class="subj ek" id="ekTile">
+      <div class="subj-top">
         <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="30" r="22" fill="#8FD3FF" stroke="#1F2A44" stroke-width="2.5"/><path d="M18 18 Q24 14 28 20 Q26 26 20 27 Q15 25 18 18 Z M34 24 Q42 20 46 28 Q47 36 40 40 Q34 38 35 32 Z M24 38 Q30 36 31 43 Q28 48 24 46 Z" fill="#7BC67E" stroke="#1F2A44" stroke-width="2"/><rect x="8" y="52" width="48" height="8" rx="2" fill="#FFC928" stroke="#1F2A44" stroke-width="2"/><path d="M14 52 V56 M20 52 V55 M26 52 V56 M32 52 V55 M38 52 V56 M44 52 V55 M50 52 V56" stroke="#1F2A44" stroke-width="1.6"/></svg>
-        <span><span class="subj-name">Erdkunde</span><br><span class="subj-what">HÜ 6.11.: Maßstab · Karteikarten, Übungen und 4 Probe-HÜs</span></span>
-      </span>
+        <span><span class="subj-name">Erdkunde</span><br><span class="subj-what">Maßstab · Karteikarten, Übungen und 4 Probe-HÜs</span><span class="subj-ka" id="ekKa"></span></span>
+      </div>
       <span class="subj-status"><b id="ekMin">0 Min</b><span id="ekTileState"></span></span>
-      <span class="subj-go">Erdkunde üben</span>
-    </button>
-    <button type="button" class="subj print" data-go="print" id="printTile">
-      <span class="subj-top">
-        <svg viewBox="0 0 48 48" aria-hidden="true"><rect x="12" y="4" width="24" height="12" rx="2" fill="#fff" stroke="#1F2A44" stroke-width="2.5"/><rect x="4" y="15" width="40" height="19" rx="5" fill="#E0457B" stroke="#1F2A44" stroke-width="2.5"/><rect x="12" y="27" width="24" height="17" rx="2" fill="#fff" stroke="#1F2A44" stroke-width="2.5"/><path d="M16 33 H32 M16 38 H27" stroke="#1F2A44" stroke-width="2.2" stroke-linecap="round"/><circle cx="37" cy="21" r="2" fill="#fff"/></svg>
-        <span><span class="subj-name">Probe-Klassenarbeiten</span><br><span class="subj-what">6 Probe-Arbeiten Englisch: am Tablet mit Note oder auf Papier</span></span>
-      </span>
-      <span class="subj-status"><b>45 Min</b><span>wie in der echten Arbeit</span></span>
-      <span class="subj-go">Probe-Arbeit schreiben</span>
-    </button>
-  </section>
-
-  <section class="tipbox" id="tipBox">
-    <h2>Heute in Englisch dran</h2>
-    <p id="tipText">Starte mit einer gemischten Runde.</p>
-    <button type="button" class="btn small" id="tipGo">Direkt dorthin</button>
+      <div class="subj-acts"><button type="button" class="subj-go" data-go="ek">Erdkunde üben</button></div>
+    </div>
   </section>
 
   <section class="week" aria-label="Diese Woche">
     <h2 id="streakText">Deine Lern-Woche</h2>
     <div class="week-row" id="weekRow"></div>
-    <p class="week-legend">Türkiser Punkt: Mathe geschafft. Lila Punkt: Englisch geschafft. Blasser Punkt: angefangen.</p>
+    <p class="week-legend">⭐ Tagesplan geschafft. Türkiser Punkt: Mathe geübt. Lila Punkt: Englisch geübt. Blasser Punkt: angefangen.</p>
   </section>
 
   <details class="levels parents" id="parents">
@@ -3019,6 +3072,7 @@ window.LU5 = (function () {
     var k = dayKey();
     if (!logCache[k]) logCache[k] = { math: 0, en: 0 };
     logCache[k][subj] = (logCache[k][subj] || 0) + 1;
+    if (view === 'voc') logCache[k].voc = (logCache[k].voc || 0) + 1;
     var goal = settings().goal * 60, v = logCache[k][subj];
     if (v === goal) toast(subj === 'math' ? 'Mathe-Ziel geschafft! Super' + kidName(', ') + '!' : subj === 'de' ? 'Deutsch: ' + settings().goal + ' Minuten geschafft! Klasse' + kidName(', ') + '!' : subj === 'ek' ? 'Erdkunde: ' + settings().goal + ' Minuten geschafft! Stark' + kidName(', ') + '!' : 'Englisch-Ziel geschafft! Well done' + kidName(', ') + '!');
     if (v === 20 * 60 && goal < 1200) toast('20 Minuten! Du darfst jetzt aufhören.');
@@ -3111,19 +3165,7 @@ window.LU5 = (function () {
       $(p[4]).textContent = s >= 1200 ? 'genug für heute!' : s >= goal ? 'Ziel geschafft' : s > 0 ? 'noch ' + Math.ceil((goal - s) / 60) + ' Min' : 'noch nicht geübt';
     });
     // Woche
-    var row = '', streak = 0, counting = true;
-    for (var i = 6; i >= 0; i--) {
-      var dd = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i), dk = dayKey(dd);
-      var m = secs(dk, 'math'), e = secs(dk, 'en');
-      row += '<div class="day' + (i === 0 ? ' today' : '') + '"><span>' + WD[dd.getDay()] + '</span><span class="dots"><i class="' + (m >= goal ? 'm' : m > 0 ? 'm half' : '') + '"></i><i class="' + (e >= goal ? 'e' : e > 0 ? 'e half' : '') + '"></i></span></div>';
-    }
-    $('weekRow').innerHTML = row;
-    for (var j = 0; j < 60; j++) {
-      var d2 = dayKey(new Date(now.getFullYear(), now.getMonth(), now.getDate() - j));
-      var ok = secs(d2, 'math') >= goal && secs(d2, 'en') >= goal;
-      if (ok) streak++; else if (j > 0) break;
-    }
-    $('streakText').textContent = streak > 1 ? streak + ' Tage am Stück beide Ziele geschafft!' : streak === 1 ? '1 Tag mit beiden Zielen. Morgen weiter!' : 'Deine Lern-Woche';
+    renderWeek();
     // Tipp
     var rec = recommend();
     $('tipText').innerHTML = rec.text;
@@ -3141,6 +3183,134 @@ window.LU5 = (function () {
     if (window.LU5De) window.LU5De.home();
     if ($('ekMin')) $('ekMin').textContent = minText(secs(k, 'ek')) + ' heute';
     if (window.LU5Ek) window.LU5Ek.home();
+    renderPlan();
+  }
+
+  /* ================= Tagesplan ================= */
+  /* Was als Nächstes geschrieben wird, kommt zuerst. Höchstens 2 Probe-HÜs pro Tag. */
+  var PROBES = {
+    de: { pre: 'd', n: 6, lv: ['Warm-up', 'Normal', 'Normal+', 'Normal', 'Profi', 'Generalprobe'], min: 15, max: 2, from: 4 },
+    ek: { pre: 'g', n: 4, lv: ['Warm-up', 'Normal', 'Normal+', 'Generalprobe'], min: 15, max: 2, from: 4 },
+    en: { pre: 'e', n: 6, lv: ['Warm-up', 'Normal', 'Normal', 'Profi', 'Generalprobe', 'Schwerpunkte'], min: 45, max: 1, from: 3 }
+  };
+  var SUBJ_NAME = { de: 'Deutsch', ek: 'Erdkunde', en: 'Englisch', math: 'Mathe', voc: 'Englisch' };
+  var TEST_NAME = { de: 'Deutsch-HÜ', ek: 'Erdkunde-HÜ', en: 'Englisch-Klassenarbeit', math: 'Mathe-Klassenarbeit' };
+  var planActs = [];
+  function kaRes() { try { var d = JSON.parse(localStorage.getItem('ka-tablet') || 'null'); return (d && d.res) || {}; } catch (e) { return {}; } }
+  function daysTo(ds, now) { if (!ds) return null; var d = new Date(ds + 'T00:00:00'), t0 = new Date(now.getFullYear(), now.getMonth(), now.getDate()); return Math.round((d - t0) / 86400000); }
+  function probeItems(subj, days, k) {
+    var P = PROBES[subj], R = kaRes(), ids = [], i;
+    for (i = 1; i <= P.n; i++) ids.push(P.pre + i);
+    function list(id) { return R[id] || []; }
+    function today(id) { return list(id).some(function (x) { return dayKey(new Date(x.d)) === k; }); }
+    function before(id) { return list(id).some(function (x) { return dayKey(new Date(x.d)) < k; }); }
+    var open = ids.filter(function (id) { return !before(id); });
+    var target = Math.min(P.max, Math.ceil(open.length / Math.max(1, days)));
+    var pickIds;
+    if (open.length) {
+      var doneT = open.filter(today), rest = open.filter(function (id) { return !today(id); });
+      pickIds = doneT.concat(rest).slice(0, Math.max(target, doneT.length));
+    } else {
+      /* alles schon geschrieben: die schwächste noch einmal */
+      var worst = ids.slice().sort(function (a, b) { var la = list(a), lb = list(b); return (lb[lb.length - 1].g || 0) - (la[la.length - 1].g || 0); })[0];
+      pickIds = [worst];
+    }
+    return pickIds.map(function (id) {
+      var n = Number(id.slice(1)), again = !open.length;
+      return { subj: subj, title: SUBJ_NAME[subj] + ': Probe-HÜ ' + n + (again ? ' noch einmal' : ''), sub: (subj === 'en' ? 'Probe-Klassenarbeit ' + n + ' · ' : P.lv[n - 1] + ' · ') + P.min + '–' + (subj === 'en' ? 45 : 20) + ' Min, mit Note', min: P.min, done: today(id), btn: today(id) ? 'Ansehen' : 'Schreiben', act: function () { if (window.LU5Ka) LU5Ka.start(id); } };
+    });
+  }
+  function minItem(subj, title, sub, mins, have, act) {
+    return { subj: subj, title: title, sub: sub + ' · ' + Math.min(mins, Math.floor(have / 60)) + ' / ' + mins + ' Min', min: mins, done: have >= mins * 60, btn: have >= mins * 60 ? 'Weiter' : 'Los', act: act };
+  }
+  function renderPlan() {
+    var box = $('planList'); if (!box) return;
+    var now = new Date(), k = dayKey(now), st = settings(), L = logCache[k] || {};
+    var T = [['de', st.dkaDate], ['ek', st.ekaDate], ['math', st.mkaDate], ['en', st.kaDate]].map(function (t) { return { s: t[0], d: daysTo(t[1], now), date: t[1] }; });
+    var up = T.filter(function (t) { return t.d !== null && t.d >= 1; }).sort(function (a, b) { return a.d - b.d; });
+    var todayT = T.filter(function (t) { return t.d === 0; });
+    var focus = up[0] || null, D = {}; T.forEach(function (t) { D[t.s] = t.d; });
+    var items = [], bonus = [];
+    function near(s) { return D[s] !== null && D[s] >= 1; }
+    var busy = focus && focus.d <= 3;
+    /* Fächer in der Reihenfolge der nächsten Termine */
+    var order = up.map(function (t) { return t.s; });
+    ['en', 'math', 'de', 'ek'].forEach(function (s) { if (order.indexOf(s) < 0) order.push(s); });
+    order.forEach(function (s) {
+      var d = D[s];
+      if (s === 'de' || s === 'ek') {
+        if (near(s) && d <= PROBES[s].from) items = items.concat(probeItems(s, d, k));
+        else if (near(s) && d <= 14) items.push(minItem(s, SUBJ_NAME[s] + ' üben', s === 'de' ? 'Rechtschreib-Detektiv' : 'Karteikarten und Übungen', 10, L[s] || 0, function () { go(s); }));
+      } else if (s === 'math') {
+        if (near('math')) {
+          var mm = d <= 7 ? 20 : d <= 14 ? 15 : 10;
+          if (busy && focus.s !== 'math') mm = 10;
+          items.push(minItem('math', 'Mathe: Klassenarbeit-Mix', d <= 7 ? 'Jetzt jeden Tag, die Arbeit kommt bald' : 'Schon mal anfangen, ganz entspannt', mm, L.math || 0, function () { go('math'); }));
+        } else bonus.push(['Mathe', 'math']);
+      } else if (s === 'en') {
+        /* Vokabeln: jeden Tag, die neue Liste hat Vorrang */
+        var dueN = window.LU5Voc && LU5Voc.due ? LU5Voc.due() : null, vs = L.voc || 0;
+        var vIt = minItem('voc', 'Englisch: Vokabel-Check', dueN ? dueN + ' Wörter heute dran' : 'Neue Wörter schreiben', 10, vs, function () { go('voc'); });
+        if (dueN === 0 && vs > 0) { vIt.done = true; vIt.btn = 'Weiter'; }
+        items.push(vIt);
+        if (near('en') && d <= PROBES.en.from) items = items.concat(probeItems('en', d, k));
+        else if (near('en') && d <= 14) items.push(minItem('en', 'Englisch üben', 'Grammatik und Sätze', 10, Math.max(0, (L.en || 0) - vs), function () { go('en'); }));
+        else bonus.push(['Englisch üben', 'en']);
+      }
+    });
+    if (!near('de')) bonus.push(['Deutsch', 'de']);
+    if (!near('ek')) bonus.push(['Erdkunde', 'ek']);
+    /* Kopfzeile */
+    var fe = $('planFocus');
+    if (todayT.length) fe.textContent = 'Heute ' + todayT.map(function (t) { return TEST_NAME[t.s]; }).join(' und ') + ' – viel Glück!' + (focus ? ' · Danach: ' + TEST_NAME[focus.s] + (focus.d === 1 ? ' morgen' : ' in ' + focus.d + ' Tagen') : '');
+    else if (focus) fe.textContent = 'Fokus: ' + TEST_NAME[focus.s] + (focus.d === 1 ? ' morgen' : ' in ' + focus.d + ' Tagen');
+    else fe.textContent = 'Heute';
+    var done = items.filter(function (x) { return x.done; }).length, mins = items.reduce(function (a, x) { return a + (x.done ? 0 : x.min); }, 0);
+    $('planCount').textContent = done + '/' + items.length;
+    $('planRing').style.setProperty('--p', items.length ? Math.round(done / items.length * 100) : 0);
+    $('planRing').setAttribute('aria-label', done + ' von ' + items.length + ' erledigt');
+    var all = items.length && done === items.length;
+    $('planBox').classList.toggle('all', !!all);
+    $('planSum').innerHTML = all ? '' : items.length + ' Aufgaben · noch etwa ' + mins + ' Minuten. Die erste ist am wichtigsten.';
+    $('planSum').hidden = !!all;
+    planActs = items.map(function (x) { return x.act; });
+    box.innerHTML = items.map(function (x, i) {
+      return '<li class="plan-item ' + x.subj + (x.done ? ' done' : '') + '"><span class="plan-check" aria-hidden="true">' + (x.done ? '✓' : '') + '</span><span class="plan-txt"><b>' + esc(x.title) + '</b><small>' + esc(x.sub) + '</small></span><button type="button" class="plan-go" data-plan="' + i + '">' + x.btn + '</button></li>';
+    }).join('');
+    var bh = all ? '<p class="plan-yay">⭐ Tagesplan geschafft' + esc(kidName(', ')) + '! Alles Weitere ist Bonus.</p>' : '';
+    if (bonus.length) bh += '<span>Bonus, wenn du noch Lust hast: ' + bonus.map(function (b) { return '<button type="button" class="linkbtn" data-go="' + b[1] + '">' + b[0] + '</button>'; }).join(' · ') + '</span>';
+    $('planBonus').innerHTML = bh; $('planBonus').hidden = !bh;
+    if (all && !L.plan) { L.plan = 1; logCache[k] = L; flushLog(); toast('⭐ Tagesplan geschafft! Super' + kidName(', ') + '!'); renderWeek(); }
+    /* Fächer-Karten: Termin-Hinweis und Reihenfolge */
+    var cards = { math: 'subjMath', en: 'subjEn', de: 'deTile', ek: 'ekTile' }, chips = { math: 'mathKa', en: 'enKa', de: 'deKa', ek: 'ekKa' };
+    order.forEach(function (s, i) {
+      var c = $(cards[s]); if (c) c.style.order = String(i);
+      var ch = $(chips[s]); if (!ch) return;
+      var t = T.filter(function (x) { return x.s === s; })[0];
+      if (t.d === null || t.d < 0) { ch.textContent = ''; return; }
+      var dd = new Date(t.date + 'T00:00:00'), w = dd.toLocaleDateString('de-DE', { weekday: 'short', day: 'numeric', month: 'numeric' });
+      ch.textContent = (t.d === 0 ? 'Heute: ' : t.d === 1 ? 'Morgen: ' : w + ': ') + TEST_NAME[s] + (t.d > 1 ? ' (in ' + t.d + ' Tagen)' : '');
+      ch.classList.toggle('soon', t.d <= 4);
+    });
+  }
+  window.LU5Plan = function () { if (view === 'home') renderPlan(); };
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('[data-plan]'); if (!b) return;
+    var f = planActs[Number(b.getAttribute('data-plan'))]; if (f) f();
+  });
+  function renderWeek() {
+    var now = new Date(), goal = settings().goal * 60, row = '', streak = 0;
+    for (var i = 6; i >= 0; i--) {
+      var dd = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i), dk = dayKey(dd);
+      var m = secs(dk, 'math'), e = secs(dk, 'en'), pl = (log()[dk] || {}).plan;
+      row += '<div class="day' + (i === 0 ? ' today' : '') + '"><span>' + WD[dd.getDay()] + '</span><span class="star">' + (pl ? '⭐' : '') + '</span><span class="dots"><i class="' + (m >= goal ? 'm' : m > 0 ? 'm half' : '') + '"></i><i class="' + (e >= goal ? 'e' : e > 0 ? 'e half' : '') + '"></i></span></div>';
+    }
+    $('weekRow').innerHTML = row;
+    for (var j = 0; j < 60; j++) {
+      var d2 = dayKey(new Date(now.getFullYear(), now.getMonth(), now.getDate() - j));
+      if ((log()[d2] || {}).plan) streak++; else if (j > 0) break;
+    }
+    $('streakText').textContent = streak > 1 ? streak + ' Tage am Stück den Tagesplan geschafft!' : streak === 1 ? 'Heute Tagesplan geschafft. Morgen weiter!' : 'Deine Lern-Woche';
   }
   $('dkaDate').addEventListener('change', function () { var s = settings(); s.dkaDate = this.value || null; store(SET_KEY, s); renderHome(); });
   $('ekaDate').addEventListener('change', function () { var s = settings(); s.ekaDate = this.value || null; store(SET_KEY, s); renderHome(); });
@@ -4997,8 +5167,9 @@ window.LU5 = (function () {
     $('vocTileBar').classList.toggle('done', g >= tot);
     $('vocTileNum').textContent = g + ' / ' + tot + ' grün';
     $('vocTileState').textContent = due > 0 ? 'heute ' + due + ' Wörter dran' : 'für heute geschafft ✓';
+    if (window.LU5Plan) window.LU5Plan();
   }
-  window.LU5Voc = { open: function () { if (!run) renderOverview(); }, home: homeTile };
+  window.LU5Voc = { open: function () { if (!run) renderOverview(); }, home: homeTile, due: function () { return dueCount(); } };
   homeTile();
 })();
 </script>
