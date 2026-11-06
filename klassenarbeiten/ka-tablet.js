@@ -74,6 +74,15 @@
     return best;
   }
 
+  /* Deutsch-Rechtschreibung: ein falscher Buchstabe ist ein Fehler. Nur Groß/klein gibt ½ Punkt. */
+  function cmpStrict(given, answer) {
+    var g = norm(given).replace(/[.!?,;:]+$/, '').trim(), list = alts(answer), i;
+    if (!g) return { s: 0, empty: true, note: '' };
+    for (i = 0; i < list.length; i++) if (g === list[i]) return { s: 1, note: '' };
+    for (i = 0; i < list.length; i++) if (g.toLowerCase() === list[i].toLowerCase()) return { s: 0.5, note: 'Groß- und Kleinschreibung beachten.' };
+    return { s: 0, note: '' };
+  }
+
   /* Sätze vergleichen: Kurzformen werden zur Langform, damit „I’m“ und „I am“ beide zählen */
   function canon(s) {
     s = norm(s).replace(/\s+([.,!?;:])/g, '$1');
@@ -274,7 +283,7 @@
     us.forEach(function (u) {
       var v = A[u.k], r;
       if (u.listen && noListen) { res[u.k] = { s: 0, max: 0, skip: true }; return; }
-      if (u.kind === 'word') r = cmpWord(v, u.ans, u.p.box);
+      if (u.kind === 'word') r = ex.strict ? cmpStrict(v, u.ans) : cmpWord(v, u.ans, u.p.box);
       else if (u.kind === 'pick') r = { s: v === u.ans ? 1 : 0, empty: v == null };
       else if (u.kind === 'tf') r = { s: v === u.ans ? 1 : 0, empty: v == null };
       else if (u.kind === 'open') r = cmpOpen(v, u.kw, u.p.full);
@@ -474,17 +483,22 @@
     if (b.id === 'katBack') { stopPlay(); saveNow(); if (window.LU5 && LU5.go) LU5.go(backTo()); renderCards(); return; }
     if (b.id === 'katAgain') { delete db.run[cur.id]; saveNow(); start(cur.id); return; }
     if (b.hasAttribute('data-adj')) { adjust(b.getAttribute('data-adj'), Number(b.getAttribute('data-d'))); return; }
-    if (b.hasAttribute('data-practice')) { var tp = b.getAttribute('data-practice'); if (cur && cur.back && cur.back !== 'print') { if (window.LU5 && LU5.go) LU5.go(cur.back); window.scrollTo(0, 0); return; } if (window.LU5 && LU5.startEn) LU5.startEn(tp); return; }
+    if (b.hasAttribute('data-practice')) { var tp = b.getAttribute('data-practice'); if (cur && cur.back === 'de' && window.LU5De && LU5De.topic) { if (window.LU5 && LU5.go) LU5.go('de'); LU5De.topic(tp); return; } if (cur && cur.back && cur.back !== 'print') { if (window.LU5 && LU5.go) LU5.go(cur.back); window.scrollTo(0, 0); return; } if (window.LU5 && LU5.startEn) LU5.startEn(tp); return; }
   });
 
   /* Hören: Text in Sätzen nacheinander vorlesen, höchstens zweimal */
+  function deVoice() {
+    var best = null, bs = -1;
+    try { speechSynthesis.getVoices().forEach(function (v) { if (!/^de/i.test(v.lang)) return; var n = (v.name + ' ' + (v.voiceURI || '')).toLowerCase(), sc = 1; if (/premium/.test(n)) sc += 40; else if (/enhanced|erweitert|natural|neural|online/.test(n)) sc += 20; if (/de-de/i.test(v.lang)) sc += 5; if (sc > bs) { bs = sc; best = v; } }); } catch (e) {}
+    return best;
+  }
   function stopPlay() { if (hasTTS) try { speechSynthesis.cancel(); } catch (e) {} playing = false; document.querySelectorAll('#katView .ka-stop').forEach(function (s) { s.hidden = true; }); }
   function play(base, btn) {
     var r = run(); r.plays = r.plays || {};
     if ((r.plays[base] || 0) >= 2 || playing) return;
     var ti = Number(base.match(/^t(\d+)/)[1]), pi = Number(base.match(/p(\d+)$/)[1]), p = cur.tasks[ti].parts[pi];
     var sents = listenSay(p).match(/[^.!?]+[.!?]+/g) || [listenSay(p)];
-    var v = window.LU5 && LU5.voice ? LU5.voice() : null;
+    var v = cur.lang === 'de' ? deVoice() : (window.LU5 && LU5.voice ? LU5.voice() : null);
     r.plays[base] = (r.plays[base] || 0) + 1; save();
     playing = true; btn.disabled = true;
     var stop = btn.parentNode.querySelector('.ka-stop'); if (stop) stop.hidden = false;
@@ -501,8 +515,8 @@
       if (!playing) { done(); return; }
       if (i >= sents.length) { done(); return; }
       var u = new SpeechSynthesisUtterance(sents[i++].trim());
-      u.lang = v ? v.lang : 'en-GB'; if (v) u.voice = v; u.rate = 0.82; u.pitch = 1;
-      u.onend = function () { setTimeout(next, 450); };
+      u.lang = v ? v.lang : (cur.lang === 'de' ? 'de-DE' : 'en-GB'); if (v) u.voice = v; u.rate = cur.rate || 0.82; u.pitch = 1;
+      u.onend = function () { setTimeout(next, cur.pause || 450); };
       u.onerror = function () { setTimeout(next, 200); };
       speechSynthesis.speak(u);
     }
@@ -629,7 +643,7 @@
       var pt = sc.perTask[ti];
       h += '<section class="card ka-task ka-rev" id="ka-t' + ti + '"><div class="ka-th"><span class="ka-tn">' + (ti + 1) + '</span><h2>' + esc(task.h) + ' <small>' + esc(task.de) + '</small></h2><span class="ka-tp ' + (pt.got >= pt.max ? 'ok' : '') + '">' + fmtP(pt.got) + ' / ' + fmtP(pt.max) + ' P</span></div>';
       task.parts.forEach(function (p, pi) { h += reviewPart(p, 't' + ti + 'p' + pi, sc, A); });
-      if (pt.got < pt.max && task.topic && task.topic !== 'family') h += '<button type="button" class="btn small ka-prac" data-practice="' + task.topic + '">' + (ex.back && ex.back !== 'print' ? 'Im Maßstab-Profi üben →' : 'In der App üben →') + '</button>';
+      if (pt.got < pt.max && task.topic && task.topic !== 'family') h += '<button type="button" class="btn small ka-prac" data-practice="' + task.topic + '">' + (ex.back === 'de' ? 'Im Rechtschreib-Detektiv üben →' : ex.back && ex.back !== 'print' ? 'Im Maßstab-Profi üben →' : 'In der App üben →') + '</button>';
       if (task.topic === 'family') h += '<button type="button" class="btn small ka-prac" data-practice="family">Familientext weiter üben →</button>';
       h += '</section>';
     });
@@ -654,8 +668,8 @@
     saveNow();
     if (window.LU5 && LU5.go) LU5.go('kat');
     $('katTitle').textContent = nameOf(cur);
-    window.LU5KaSubj = cur.back === 'ek' ? 'ek' : 'en';
-    var kv = $('katView'); if (kv) { kv.classList.toggle('en', cur.back !== 'ek'); kv.classList.toggle('ek', cur.back === 'ek'); }
+    window.LU5KaSubj = cur.back === 'ek' || cur.back === 'de' ? cur.back : 'en';
+    var kv = $('katView'); if (kv) { kv.classList.toggle('en', cur.back !== 'ek' && cur.back !== 'de'); kv.classList.toggle('ek', cur.back === 'ek'); kv.classList.toggle('de', cur.back === 'de'); }
     if (mode === 'run') renderRun(); else renderResult(false);
     window.scrollTo(0, 0);
   }
@@ -670,7 +684,7 @@
       if (r && !r.done) s = '<b>Angefangen</b> · noch ' + mmss(Math.max(0, ex.min * 60 - (r.secs || 0))) + ' Min';
       else if (last) s = 'Zuletzt: <b>Note ' + last.g + '</b> (' + Math.round(last.p / last.m * 100) + ' %)' + (best && best !== last ? ' · beste: Note ' + best.g : '');
       el.innerHTML = s; el.hidden = !s;
-      btn.textContent = r && !r.done ? 'Weiterschreiben' : r && r.done ? 'Korrektur ansehen' : (ex.back === 'ek' ? 'Probe-HÜ schreiben' : 'Am Tablet schreiben');
+      btn.textContent = r && !r.done ? 'Weiterschreiben' : r && r.done ? 'Korrektur ansehen' : (ex.back === 'ek' || ex.back === 'de' ? 'Probe-HÜ schreiben' : 'Am Tablet schreiben');
     });
   }
 
@@ -703,5 +717,5 @@
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mount); else mount();
 
-  window.LU5Ka = { start: start, cards: renderCards, _t: { score: score, writeScore: writeScore, cmpWord: cmpWord, cmpSent: cmpSent, cmpOpen: cmpOpen, cmpSplit: cmpSplit, units: units, DATA: DATA, db: function () { return db; } } };
+  window.LU5Ka = { start: start, cards: renderCards, _t: { cmpStrict: cmpStrict, score: score, writeScore: writeScore, cmpWord: cmpWord, cmpSent: cmpSent, cmpOpen: cmpOpen, cmpSplit: cmpSplit, units: units, DATA: DATA, db: function () { return db; } } };
 })();

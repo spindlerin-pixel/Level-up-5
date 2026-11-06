@@ -815,6 +815,12 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
 .ka-wrap .ka.eka { border-color: rgba(255,176,72,0.85); box-shadow: 0 0 0 1px rgba(255,176,72,0.15), 0 0 18px rgba(255,176,72,0.25) inset; }
 .ka-wrap .eka .ka-subj { color: #FFD08A; }
 .ka-wrap .eka .ka-num { text-shadow: 0 0 14px rgba(255,176,72,0.9), 0 0 2px #fff; }
+.ka-wrap .ka.dka { border-color: rgba(255,120,170,0.85); box-shadow: 0 0 0 1px rgba(255,120,170,0.15), 0 0 18px rgba(255,120,170,0.25) inset; }
+.ka-wrap .dka .ka-subj { color: #FFB3CF; }
+.ka-wrap .dka .ka-num { text-shadow: 0 0 14px rgba(255,120,170,0.9), 0 0 2px #fff; }
+#deProbe .pr-list { margin: 0; }
+.de-plan { margin: 4px 0 12px; padding: 10px 14px; border-radius: 14px; background: var(--tip-fill); font-size: 0.95em; line-height: 1.5; }
+.de-plan b { white-space: nowrap; }
 .ek-modes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
 @media (max-width: 380px) { .ek-modes { grid-template-columns: 1fr; } }
 /* Erdkunde-Bilder wie ein ausgedrucktes Blatt: immer weißes Papier mit dunkler Schrift, auch im Dunkelmodus des Tablets */
@@ -873,6 +879,12 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
     <span class="ka-num" id="ekaNum">?</span>
     <p id="ekaText"><b>Erdkunde-HÜ am Freitag, 6. November.</b></p>
   </div>
+
+  <div class="ka dka" id="dkaBox">
+    <span class="ka-subj">Deutsch</span>
+    <span class="ka-num" id="dkaNum">?</span>
+    <p id="dkaText"><b>Deutsch-HÜ am Montag, 9. November.</b> Kurze Vokale.</p>
+  </div>
   </div>
   </section>
 
@@ -907,7 +919,7 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
     <button type="button" class="subj deu" data-go="de" id="deTile">
       <span class="subj-top">
         <svg viewBox="0 0 64 64" aria-hidden="true"><ellipse cx="22" cy="20" rx="11" ry="8" fill="#DFF1FF" stroke="#1F2A44" stroke-width="2.5" transform="rotate(-25 22 20)"/><ellipse cx="40" cy="18" rx="11" ry="8" fill="#DFF1FF" stroke="#1F2A44" stroke-width="2.5" transform="rotate(20 40 18)"/><ellipse cx="32" cy="38" rx="20" ry="16" fill="#FFC928" stroke="#1F2A44" stroke-width="2.5"/><path d="M26 23.5 Q24 38 26 53 M36 23 Q38 38 36 53.5" stroke="#1F2A44" stroke-width="5" fill="none"/><circle cx="45" cy="35" r="2.6" fill="#1F2A44"/><path d="M42 43 Q46 46 49 42" stroke="#1F2A44" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M48 25 Q52 18 56 17 M44 24 Q46 16 50 14" stroke="#1F2A44" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
-        <span><span class="subj-name">Deutsch</span><br><span class="subj-what">Rechtschreibung: kurze und lange Vokale</span></span>
+        <span><span class="subj-name">Deutsch</span><br><span class="subj-what">HÜ Mo 9.11.: kurze Vokale · 6 Probe-HÜs</span></span>
       </span>
       <span class="subj-status"><b id="deMin">0 Min</b><span id="deTileState"></span></span>
       <span class="subj-go">Deutsch üben</span>
@@ -970,6 +982,9 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
       </label>
       <label class="lv-setting" for="ekaDate">Datum der Erdkunde-HÜ:
         <input type="date" id="ekaDate">
+      </label>
+      <label class="lv-setting" for="dkaDate">Datum der Deutsch-HÜ:
+        <input type="date" id="dkaDate">
       </label>
       <label class="lv-setting" for="goalMin">Tagesziel pro Fach:
         <select id="goalMin"><option value="15">15 Minuten</option><option value="20">20 Minuten</option></select>
@@ -1089,9 +1104,46 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
     <svg class="de-bee" viewBox="0 0 64 64" aria-hidden="true"><ellipse cx="22" cy="20" rx="11" ry="8" fill="#DFF1FF" stroke="#1F2A44" stroke-width="2.5" transform="rotate(-25 22 20)"/><ellipse cx="40" cy="18" rx="11" ry="8" fill="#DFF1FF" stroke="#1F2A44" stroke-width="2.5" transform="rotate(20 40 18)"/><ellipse cx="32" cy="38" rx="20" ry="16" fill="#FFC928" stroke="#1F2A44" stroke-width="2.5"/><path d="M26 23.5 Q24 38 26 53 M36 23 Q38 38 36 53.5" stroke="#1F2A44" stroke-width="5" fill="none"/><circle cx="45" cy="35" r="2.6" fill="#1F2A44"/><path d="M42 43 Q46 46 49 42" stroke="#1F2A44" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M48 25 Q52 18 56 17 M44 24 Q46 16 50 14" stroke="#1F2A44" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
     <div class="brand">
       <h1>Rechtschreib-Detektiv</h1>
-      <p>Deutsch · kurze und lange Vokale · Buch S. 352–371</p>
+      <p>Deutsch · HÜ am Montag: kurze Vokale (S. 354–358) · lange Vokale S. 363–371</p>
     </div>
   </header>
+  <section class="card voc-card" id="deProbe">
+    <p class="voc-eyebrow">HÜ am Montag: kurze Vokale · Probe-HÜs zum Ausfüllen</p>
+    <p class="voc-how">Jede Probe-HÜ dauert 20 Minuten, ohne Tipps. Erst nach dem Abgeben gibt es Punkte, Prozent und eine Note. <b>Streng wie in der Schule:</b> Ein falscher Buchstabe ist ein Fehler.</p>
+    <p class="de-plan"><b>Freitag:</b> HÜ 1 und 2 · <b>Samstag:</b> HÜ 3 und 4 · <b>Sonntag:</b> HÜ 5 und die Generalprobe · <b>Montag früh:</b> nur die Fehlerwörter noch einmal ansehen.</p>
+    <div class="pr-list">
+      <div class="pr-card" style="--pc:#FFD66B">
+        <span class="pr-num">1</span>
+        <div class="pr-txt"><h3>Probe-HÜ 1<span class="pr-lvl">Warm-up</span></h3><p>Kurz oder lang?, ein oder zwei Buchstaben, ck oder k, tz oder z, Regeln prüfen, eine Begründe-Aufgabe.</p><p class="pr-status" data-ka-status="d1" hidden></p></div>
+        <div class="pr-acts"><button type="button" class="pr-open pr-tab" data-ka="d1">Probe-HÜ schreiben</button></div>
+      </div>
+      <div class="pr-card" style="--pc:#8FD3FF">
+        <span class="pr-num">2</span>
+        <div class="pr-txt"><h3>Probe-HÜ 2<span class="pr-lvl">Normal</span></h3><p>Lückendiktat zum Anhören, Wortfamilie (schwimmen → schwimmt), Fehler-Detektiv, welche Regel passt?</p><p class="pr-status" data-ka-status="d2" hidden></p></div>
+        <div class="pr-acts"><button type="button" class="pr-open pr-tab" data-ka="d2">Probe-HÜ schreiben</button></div>
+      </div>
+      <div class="pr-card" style="--pc:#B9E6B0">
+        <span class="pr-num">3</span>
+        <div class="pr-txt"><h3>Probe-HÜ 3<span class="pr-lvl">Normal+</span></h3><p>ck/k und tz/z ganz genau: nach l, m, n, r, nach ei, au, eu, richtig trennen, die Regel erklären.</p><p class="pr-status" data-ka-status="d3" hidden></p></div>
+        <div class="pr-acts"><button type="button" class="pr-open pr-tab" data-ka="d3">Probe-HÜ schreiben</button></div>
+      </div>
+      <div class="pr-card" style="--pc:#FFB3C7">
+        <span class="pr-num">4</span>
+        <div class="pr-txt"><h3>Probe-HÜ 4<span class="pr-lvl">Normal</span></h3><p>Doppelt oder zwei verschiedene Konsonanten (Wolke, Winter), Wortfamilie, Lückendiktat, Begründe.</p><p class="pr-status" data-ka-status="d4" hidden></p></div>
+        <div class="pr-acts"><button type="button" class="pr-open pr-tab" data-ka="d4">Probe-HÜ schreiben</button></div>
+      </div>
+      <div class="pr-card" style="--pc:#9FE3D6">
+        <span class="pr-num">5</span>
+        <div class="pr-txt"><h3>Probe-HÜ 5<span class="pr-lvl">Profi</span></h3><p>Ganze Wörter selbst schreiben, Fehler ohne Hinweis finden, Wortpaare wie Bett/Beet, Regel mit Beispiel.</p><p class="pr-status" data-ka-status="d5" hidden></p></div>
+        <div class="pr-acts"><button type="button" class="pr-open pr-tab" data-ka="d5">Probe-HÜ schreiben</button></div>
+      </div>
+      <div class="pr-card" style="--pc:#C9B8FF">
+        <span class="pr-num">6</span>
+        <div class="pr-txt"><h3>Probe-HÜ 6<span class="pr-lvl">Generalprobe</span></h3><p>Wie bei der Lehrerin: Diktat, alle Regeln gemischt, Fehler, Wortfamilie, Begründe und Erkläre. Am besten am Sonntag.</p><p class="pr-status" data-ka-status="d6" hidden></p></div>
+        <div class="pr-acts"><button type="button" class="pr-open pr-tab" data-ka="d6">Probe-HÜ schreiben</button></div>
+      </div>
+    </div>
+  </section>
   <section class="card voc-card" id="deHome">
     <p class="voc-eyebrow">Was möchtest du üben?</p>
     <div class="de-topics" id="deTopics"></div>
@@ -2944,7 +2996,7 @@ window.LU5 = (function () {
   /* ================= Zeit & Startseite ================= */
   var LOG_KEY = 'lern-zeiten', SET_KEY = 'lern-einstellungen';
   var view = 'home', lastAct = Date.now(), dirty = 0;
-  function settings() { var s = store(SET_KEY) || {}; if (s.goal !== 20) s.goal = 15; if (!s.ka1103) { if (s.kaDate === undefined || s.kaDate === '2026-11-05') s.kaDate = '2026-11-03'; s.ka1103 = 1; store(SET_KEY, s); } if (s.mkaDate === undefined) s.mkaDate = '2026-11-25'; if (s.ekaDate === undefined) s.ekaDate = '2026-11-06'; return s; }
+  function settings() { var s = store(SET_KEY) || {}; if (s.goal !== 20) s.goal = 15; if (!s.ka1103) { if (s.kaDate === undefined || s.kaDate === '2026-11-05') s.kaDate = '2026-11-03'; s.ka1103 = 1; store(SET_KEY, s); } if (s.mkaDate === undefined) s.mkaDate = '2026-11-25'; if (s.ekaDate === undefined) s.ekaDate = '2026-11-06'; if (s.dkaDate === undefined) s.dkaDate = '2026-11-09'; return s; }
   function log() { return store(LOG_KEY) || {}; }
   function secs(day, subj) { var l = log(); return (l[day] && l[day][subj]) || 0; }
   var logCache = log();
@@ -3012,6 +3064,16 @@ window.LU5 = (function () {
     if (st.kaDate) $('kaDate').value = st.kaDate;
     if (st.mkaDate) $('mkaDate').value = st.mkaDate;
     if (st.ekaDate) $('ekaDate').value = st.ekaDate;
+    if (st.dkaDate) $('dkaDate').value = st.dkaDate;
+    (function () {
+      var box = $('dkaBox'); if (!box) return; box.hidden = !st.dkaDate; if (!st.dkaDate) return;
+      var d = new Date(st.dkaDate + 'T00:00:00'), t0 = new Date(now.getFullYear(), now.getMonth(), now.getDate()), days = Math.round((d - t0) / 86400000);
+      var when = d.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' });
+      if (days > 1) { $('dkaNum').textContent = days; $('dkaText').innerHTML = '<b>Tage bis zur Deutsch-HÜ</b> am ' + when + '. Thema: kurze Vokale.' + (days <= 4 ? ' Jeden Tag ein bis zwei Probe-HÜs!' : ''); }
+      else if (days === 1) { $('dkaNum').textContent = '1'; $('dkaText').innerHTML = '<b>Morgen ist die Deutsch-HÜ!</b> Heute die Generalprobe und die Fehlerwörter noch einmal schreiben.'; }
+      else if (days === 0) { $('dkaNum').textContent = '★'; $('dkaText').innerHTML = '<b>Heute ist die Deutsch-HÜ.</b> Viel Glück' + esc(kidName(', ')) + '! Kurz oder lang? Dann die Regel. Am Ende jedes Wort prüfen.'; }
+      else { $('dkaNum').textContent = '✓'; $('dkaText').innerHTML = '<b>Die Deutsch-HÜ ist vorbei.</b> Neues Datum unten eintragen.'; }
+    })();
     (function () {
       var box = $('ekaBox'); if (!box) return; box.hidden = !st.ekaDate; if (!st.ekaDate) return;
       var d = new Date(st.ekaDate + 'T00:00:00'), t0 = new Date(now.getFullYear(), now.getMonth(), now.getDate()), days = Math.round((d - t0) / 86400000);
@@ -3080,6 +3142,7 @@ window.LU5 = (function () {
     if ($('ekMin')) $('ekMin').textContent = minText(secs(k, 'ek')) + ' heute';
     if (window.LU5Ek) window.LU5Ek.home();
   }
+  $('dkaDate').addEventListener('change', function () { var s = settings(); s.dkaDate = this.value || null; store(SET_KEY, s); renderHome(); });
   $('ekaDate').addEventListener('change', function () { var s = settings(); s.ekaDate = this.value || null; store(SET_KEY, s); renderHome(); });
   $('mkaDate').addEventListener('change', function () { var s = settings(); s.mkaDate = this.value || null; store(SET_KEY, s); renderHome(); });
   $('kaDate').addEventListener('change', function () { var s = settings(); s.kaDate = this.value || null; store(SET_KEY, s); renderHome(); });
@@ -3100,6 +3163,7 @@ window.LU5 = (function () {
     var katV = $('katView'); if (katV) katV.hidden = v !== 'kat';
     if (v === 'print' && window.LU5Ka) window.LU5Ka.cards();
     if (v === 'de' && window.LU5De) window.LU5De.open();
+    if (v === 'de' && window.LU5Ka) window.LU5Ka.cards();
     if (v === 'home') renderHome();
     if (v === 'voc' && window.LU5Voc) window.LU5Voc.open();
     if (v === 'en') { if (!enState) enStart(); renderEn(); }
@@ -5173,7 +5237,7 @@ window.LU5 = (function () {
   }
   function start(mode, topic) {
     run = { mode: mode, topic: topic, tasks: buildTasks(mode, topic), i: 0, first: 0, done: 0, wrong: [], requeued: {} };
-    $('deHome').hidden = true; $('deRules').hidden = true; $('deEnd').hidden = true; $('deRun').hidden = false;
+    $('deHome').hidden = true; $('deRules').hidden = true; $('deEnd').hidden = true; $('deRun').hidden = false; if ($('deProbe')) $('deProbe').hidden = true;
     newTask(); window.scrollTo(0, 0);
   }
   function cur() { return run.tasks[run.i]; }
@@ -5288,7 +5352,7 @@ window.LU5 = (function () {
   }
   function overview() {
     run = null;
-    $('deRun').hidden = true; $('deEnd').hidden = true; $('deHome').hidden = false; $('deRules').hidden = false;
+    $('deRun').hidden = true; $('deEnd').hidden = true; $('deHome').hidden = false; $('deRules').hidden = false; if ($('deProbe')) $('deProbe').hidden = false;
     $('deTopics').innerHTML = TOPICS.map(function (t) { var l = lvl(t[0]); return '<button type="button" class="de-topic" data-topic="' + t[0] + '"><span class="de-tn">' + esc(t[1]) + '</span><span class="de-tp">' + esc(t[2]) + '</span><span class="pill de-l ' + (l === 'sicher' ? 'good' : l === 'gut' ? 'ok' : l === 'üben' ? 'weak' : '') + '">' + LVL_TXT[l] + '</span></button>'; }).join('');
     var last = db.tests[db.tests.length - 1];
     $('deInfo').innerHTML = '⭐ ' + db.stars + ' Sterne in Deutsch' + (last ? ' · letzter Test: Note ' + last.n : '') + (db.miss.length ? ' · ' + db.miss.length + ' Wörter zum Wiederholen' : '');
@@ -5317,7 +5381,7 @@ window.LU5 = (function () {
   });
   document.addEventListener('submit', function (e) { if (e.target && e.target.id === 'deForm') { e.preventDefault(); onType($('deIn').value); } });
 
-  window.LU5De = { open: function () { if (!run) overview(); }, home: homeTile, _t: { G: G, SIZE: SIZE, make: make, gap: gap, DIKT: DIKT, TOPICS: TOPICS } };
+  window.LU5De = { open: function () { if (!run) overview(); }, topic: function (t) { if (SIZE[t]) start('topic', t); else overview(); }, home: homeTile, _t: { G: G, SIZE: SIZE, make: make, gap: gap, DIKT: DIKT, TOPICS: TOPICS } };
   homeTile();
 })();
 </script>
@@ -5789,5 +5853,6 @@ window.LU5 = (function () {
 </script>
 <script src="klassenarbeiten/ka-daten.js?v=1"></script>
 <script src="klassenarbeiten/ek-daten.js?v=1"></script>
-<script src="klassenarbeiten/ka-tablet.js?v=2"></script>
+<script src="klassenarbeiten/de-daten.js?v=1"></script>
+<script src="klassenarbeiten/ka-tablet.js?v=3"></script>
 </body></html>
