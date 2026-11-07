@@ -20,7 +20,9 @@
   };
   function de(o) { for (var k in DE) if (!(k in o)) o[k] = DE[k]; return o; }
   var RF = ['richtig', 'falsch'], KL = ['kurz', 'lang'];
-  var GAP_TIP = 'Schreib nur die fehlenden Buchstaben in die Lücke.';
+  var GAP_TIP = 'Der Hinweis in Klammern verrät dir, welches Wort gemeint ist. Schreib nur die fehlenden Buchstaben in die Lücke.';
+  /* Lückenwort mit Bedeutungs-Hinweis, damit nur ein Wort passt (z. B. Ofen statt offen) */
+  function W(w, c) { return w + ' <span class="ka-clue" style="opacity:.7;font-size:.9em;font-style:italic">(' + c + ')</span>'; }
 
   /* Begründe/Erkläre: Stichwörter (der Text wird vorher klein geschrieben) */
   var KURZ = /kurz/;
@@ -37,10 +39,10 @@
       { t: 'pick', opts: KL, items: [['Sonne', 0], ['Hose', 1], ['Katze', 0], ['Blume', 1], ['Bett', 0], ['Tafel', 1], ['Stock', 0], ['Nase', 1]] }
     ]},
     { h: 'Doppelt oder einfach?', de: 'Ein Buchstabe oder zwei?', topic: 'dk', parts: [
-      { t: 'gaps', tip: GAP_TIP, lines: [['Te{}er', 'll'], ['So{}er', 'mm'], ['Na{}e', 'm'], ['Ke{}er', 'll'], ['Bu{}er', 'tt'], ['O{}en', 'f'], ['Pu{}e', 'pp'], ['Wa{}er', 'ss']] }
+      { t: 'gaps', tip: GAP_TIP, lines: [[W('Te{}er', 'darauf liegt das Essen'), 'll'], [W('So{}er', 'die heißeste Jahreszeit'), 'mm'], [W('Na{}e', 'so heißt du'), 'm'], [W('Ke{}er', 'Raum unter dem Haus'), 'll'], [W('Bu{}er', 'kommt aufs Brot'), 'tt'], [W('O{}en', 'darin backt man Kuchen'), 'f'], [W('Pu{}e', 'Spielzeug zum Anziehen'), 'pp'], [W('Wa{}er', 'man trinkt es'), 'ss']] }
     ]},
     { h: 'ck oder k? tz oder z?', de: 'Setze richtig ein.', topic: 'ckz', parts: [
-      { t: 'gaps', tip: GAP_TIP, lines: [['Ja{}e', 'ck'], ['Mü{}e', 'tz'], ['Schran{}', 'k'], ['Her{}', 'z'], ['Zu{}er', 'ck'], ['Pla{}', 'tz'], ['Hei{}ung', 'z'], ['Schne{}e', 'ck']] }
+      { t: 'gaps', tip: GAP_TIP, lines: [[W('Ja{}e', 'zieht man an, wenn es kalt ist'), 'ck'], [W('Mü{}e', 'Kopfbedeckung im Winter'), 'tz'], [W('Schran{}', 'darin hängen Kleider'), 'k'], [W('Her{}', 'schlägt in der Brust'), 'z'], [W('Zu{}er', 'macht den Tee süß'), 'ck'], [W('Pla{}', 'hier ist noch frei'), 'tz'], [W('Hei{}ung', 'macht im Winter warm'), 'z'], [W('Schne{}e', 'Tier mit Haus auf dem Rücken'), 'ck']] }
     ]},
     { h: 'Stimmt die Regel?', de: 'Richtig oder falsch?', topic: 'ckz', parts: [
       { t: 'tf', labels: RF, items: [
@@ -80,10 +82,10 @@
   D.push(de({ id: 'd3', nr: 3, name: 'Probe-HÜ 3', lvl: 'Normal+', pc: '#B9E6B0', sub: 'ck/k und tz/z genau · nach l, m, n, r · nach ei, au, eu · Silben',
     tasks: [
     { h: 'ck oder k?', de: 'Denk an: kurzer Vokal? l, m, n, r? langer Vokal?', topic: 'ckz', parts: [
-      { t: 'gaps', tip: GAP_TIP, lines: [['Ban{}', 'k'], ['Brü{}e', 'ck'], ['Fal{}e', 'k'], ['De{}el', 'ck'], ['Pau{}e', 'k'], ['Sto{}', 'ck'], ['den{}en', 'k'], ['Ha{}en', 'k']] }
+      { t: 'gaps', tip: GAP_TIP, lines: [[W('Ban{}', 'Sitz im Park'), 'k'], [W('Brü{}e', 'führt über den Fluss'), 'ck'], [W('Fal{}e', 'Greifvogel'), 'k'], [W('De{}el', 'liegt auf dem Topf'), 'ck'], [W('Pau{}e', 'große Trommel'), 'k'], [W('Sto{}', 'Stab zum Gehen'), 'ck'], [W('den{}en', 'mit dem Kopf überlegen'), 'k'], [W('Ha{}en', 'daran hängt man die Jacke'), 'k']] }
     ]},
     { h: 'tz oder z?', de: 'Gleiche Regeln wie bei ck und k.', topic: 'ckz', parts: [
-      { t: 'gaps', tip: GAP_TIP, lines: [['Mü{}e', 'tz'], ['Pil{}', 'z'], ['Schnau{}e', 'z'], ['pu{}en', 'tz'], ['Ker{}e', 'z'], ['je{}t', 'tz'], ['tan{}en', 'z'], ['Spi{}e', 'tz']] }
+      { t: 'gaps', tip: GAP_TIP, lines: [[W('Mü{}e', 'Kopfbedeckung im Winter'), 'tz'], [W('Pil{}', 'wächst im Wald'), 'z'], [W('Schnau{}e', 'das Maul vom Hund'), 'z'], [W('pu{}en', 'sauber machen'), 'tz'], [W('Ker{}e', 'brennt mit einer Flamme'), 'z'], [W('je{}t', 'in diesem Moment'), 'tz'], [W('tan{}en', 'zur Musik bewegen'), 'z'], [W('Spi{}e', 'das spitze Ende vom Bleistift'), 'tz']] }
     ]},
     { h: 'Richtig getrennt?', de: 'Tippe die richtige Trennung an.', topic: 'ckz', parts: [
       { t: 'pick', items: [['', ['Zu-cker', 'Zuc-ker', 'Zuck-er'], 0], ['', ['Ka-tze', 'Kat-ze', 'Katz-e'], 1], ['', ['Glock-e', 'Glo-cke', 'Gloc-ke'], 1], ['', ['Pfü-tze', 'Pfütz-e', 'Pfüt-ze'], 2], ['', ['Son-ne', 'So-nne', 'Sonn-e'], 0]] }
@@ -111,7 +113,7 @@
       { t: 'pick', items: [['', ['Manntel', 'Mantel'], 1], ['', ['Suppe', 'Supe'], 0], ['', ['Hemmd', 'Hemd'], 1], ['', ['Kopf', 'Kopff'], 0], ['', ['Löfel', 'Löffel'], 1], ['', ['Gabel', 'Gabbel'], 0], ['', ['Hunnd', 'Hund'], 1], ['', ['Teller', 'Teler'], 0]] }
     ]},
     { h: 'Setze ein', de: 'Ein Buchstabe oder zwei?', topic: 'dk', parts: [
-      { t: 'gaps', tip: GAP_TIP, lines: [['Hi{}el', 'mm'], ['fa{}en', 'll'], ['Wa{}d', 'l'], ['Ki{}d', 'n'], ['Ra{}e', 'tt'], ['Ta{}e', 'nn'], ['He{}bst', 'r'], ['Fe{}', 'll'], ['Mi{}ch', 'l']] }
+      { t: 'gaps', tip: GAP_TIP, lines: [[W('Hi{}el', 'oben, oft blau'), 'mm'], [W('fa{}en', 'nach unten stürzen'), 'll'], [W('Wa{}d', 'viele Bäume'), 'l'], [W('Ki{}d', 'ein kleiner Mensch'), 'n'], [W('Ra{}e', 'Nagetier, größer als eine Maus'), 'tt'], [W('Ta{}e', 'ein Nadelbaum'), 'nn'], [W('He{}bst', 'Jahreszeit mit bunten Blättern'), 'r'], [W('Fe{}', 'Haarkleid eines Tieres'), 'll'], [W('Mi{}ch', 'weißes Getränk von der Kuh'), 'l']] }
     ]},
     { h: 'Wortfamilie', de: 'Schreib die passende Form.', topic: 'formen', parts: [
       { t: 'words', items: [['fallen → es …', 'fällt'], ['kommen → sie …', 'kommt'], ['rollen → der Ball …', 'rollt'], ['brennen → das Feuer …', 'brennt'], ['die Mutter → die …', 'Mütter'], ['der Stall → die …', 'Ställe'], ['nehmen → er …', 'nimmt']] }
@@ -158,7 +160,7 @@
         text: 'Der {Imker} öffnet vorsichtig den {Deckel}. Tausende Bienen {summen} um ihn herum. Sie {sammeln} Nektar und bringen ihn in den {Stock}. Die Königin {sitzt} in der Mitte. Im {Winter} bleiben alle Bienen ganz {dicht} zusammen. Der {Honig} {schmeckt} sehr {lecker}.' }
     ]},
     { h: 'Alle Regeln gemischt', de: 'Setze die fehlenden Buchstaben ein.', topic: 'dk', parts: [
-      { t: 'gaps', tip: GAP_TIP, lines: [['Tre{}e', 'pp'], ['Pfa{}e', 'nn'], ['Bli{}', 'tz'], ['Wi{}el', 'nk'], ['Hi{}e', 'tz'], ['Schu{}e', 'l'], ['O{}t', 'r'], ['Ke{}e', 'tt'], ['Kreu{}', 'z']] }
+      { t: 'gaps', tip: GAP_TIP, lines: [[W('Tre{}e', 'Stufen nach oben'), 'pp'], [W('Pfa{}e', 'darin brät man Eier'), 'nn'], [W('Bli{}', 'leuchtet beim Gewitter'), 'tz'], [W('Wi{}el', '90° ist ein rechter …'), 'nk'], [W('Hi{}e', 'große Wärme'), 'tz'], [W('Schu{}e', 'dorthin gehst du morgens'), 'l'], [W('O{}t', 'eine Stelle, ein Platz'), 'r'], [W('Ke{}e', 'Schmuck um den Hals'), 'tt'], [W('Kreu{}', 'Zeichen aus zwei Balken'), 'z']] }
     ]},
     { h: 'Fehler-Detektiv', de: 'In jedem Satz ist ein Wort falsch. Schreib es richtig.', topic: 'satz', parts: [
       { t: 'words', items: [['Wir paken die Koffer.', 'packen'], ['Die Katze sizt auf dem Sofa.', 'sitzt'], ['Der Wekker klingelt um sieben.', 'Wecker'], ['Das Waser ist kalt.', 'Wasser'], ['Mein Bruder ist sehr starck.', 'stark'], ['Im Herbst fallen die Bläter.', 'Blätter']] }
