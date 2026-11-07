@@ -2,7 +2,6 @@
    Speichert den Lernstand einer Familie unter ihrem Verbindungs-Wort (z. B. "sonne-tiger-27").
    Jeder Speicher-Eintrag hat einen Zeitstempel; beim Zusammenführen gewinnt der neuere. */
 import { getStore } from "@netlify/blobs";
-import type { Config } from "@netlify/functions";
 
 type Entry = { v: string | null; t: number };
 type Keys = Record<string, Entry>;
@@ -57,4 +56,4 @@ export default async (req: Request) => {
   return new Response("Method not allowed", { status: 405 });
 };
 
-export const config: Config = { path: "/api/sync", method: ["GET", "POST"] };
+export const config = { path: "/api/sync", method: ["GET", "POST"] };

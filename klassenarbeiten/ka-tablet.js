@@ -419,7 +419,9 @@
       var gi2 = 0, lt = p.text.replace(/\{([^}]+)\}/g, function (m, w) { return '\u0000' + (gi2++) + '\u0001' + w + '\u0000'; });
       var html = esc(lt).replace(/\u0000(\d+)\u0001([^\u0000]*)\u0000/g, function (m, i, w) { return inputHtml(base + 'g' + i, w); });
       var plays = (run().plays || {})[base] || 0, left = Math.max(0, 2 - plays);
-      h += '<div class="ka-listen-bar">' + (hasTTS ? '<button type="button" class="btn primary ka-play" data-play="' + base + '"' + (left ? '' : ' disabled') + '>' + (left ? '▶ Anhören <span>(noch ' + left + '×)</span>' : 'Zweimal gehört') + '</button><button type="button" class="btn small ka-stop" data-stop="1" hidden>■ Stopp</button>' : '<p class="ka-tip">Dieses Gerät kann leider nicht vorlesen. Diese Aufgabe wird nicht gewertet.</p>') + '</div>';
+      var isDe = cur && cur.lang === 'de';
+      h += '<div class="ka-listen-bar">' + (hasTTS ? '<button type="button" class="btn primary ka-play" data-play="' + base + '"' + (left ? '' : ' disabled') + '>' + playLabel(plays, left) + '</button><button type="button" class="btn small ka-pause" data-pause="1" hidden>⏸ Pause</button>' + tempoHtml() : '<p class="ka-tip">Dieses Gerät kann leider nicht vorlesen. Diese Aufgabe wird nicht gewertet.</p>') + '</div>';
+      if (hasTTS && isDe) h += '<p class="ka-tip">So läuft das Diktat: Jeder Satz wird erst ganz vorgelesen, dann in kleinen Stücken mit Pausen zum Schreiben. Beim zweiten Mal hörst du den Text zum Kontrollieren. Mit ⏸ hältst du jederzeit an.</p>';
       h += '<div class="ka-para ka-listen-text">' + html + '</div>';
     } else if (p.t === 'pick') {
       h += '<ol class="ka-list ka-picks">' + p.items.map(function (it, i) {
@@ -550,7 +552,8 @@
       renderClock(); return;
     }
     if (b.hasAttribute('data-play')) { play(b.getAttribute('data-play'), b); return; }
-    if (b.hasAttribute('data-stop')) { stopPlay(); return; }
+    if (b.hasAttribute('data-tempo')) { db.tempo = b.getAttribute('data-tempo'); saveNow(); document.querySelectorAll('#katView [data-tempo]').forEach(function (x) { x.setAttribute('aria-pressed', String(x.getAttribute('data-tempo') === db.tempo)); }); return; }
+    if (b.hasAttribute('data-pause')) return;
     if (b.id === 'katSubmit') { askSubmit(); return; }
     if (b.id === 'katConfirmYes') { $('katConfirm').hidden = true; submit(); return; }
     if (b.id === 'katConfirmNo') { $('katConfirm').hidden = true; return; }
@@ -566,37 +569,85 @@
     try { speechSynthesis.getVoices().forEach(function (v) { if (!/^de/i.test(v.lang)) return; var n = (v.name + ' ' + (v.voiceURI || '')).toLowerCase(), sc = 1; if (/premium/.test(n)) sc += 40; else if (/enhanced|erweitert|natural|neural|online/.test(n)) sc += 20; if (/de-de/i.test(v.lang)) sc += 5; if (sc > bs) { bs = sc; best = v; } }); } catch (e) {}
     return best;
   }
-  function stopPlay() { if (hasTTS) try { speechSynthesis.cancel(); } catch (e) {} playing = false; document.querySelectorAll('#katView .ka-stop').forEach(function (s) { s.hidden = true; }); }
+  /* Tempo fürs Vorlesen: wird gemerkt */
+  var TEMPO = { normal: [1, 1], langsam: [0.88, 1.5], sehr: [0.78, 2.1] };
+  function tempo() { return TEMPO[db.tempo] ? db.tempo : 'langsam'; }
+  function tempoHtml() {
+    return '<span class="ka-tempo" role="group" aria-label="Tempo">Tempo: ' + [['normal', 'normal'], ['langsam', 'langsam'], ['sehr', 'sehr langsam']].map(function (t) {
+      return '<button type="button" class="ka-tbtn" data-tempo="' + t[0] + '" aria-pressed="' + (tempo() === t[0]) + '">' + t[1] + '</button>'; }).join('') + '</span>';
+  }
+  function playLabel(plays, left) {
+    if (!left) return 'Zweimal gehört';
+    var de = cur && cur.lang === 'de';
+    return (de ? (plays === 0 ? '▶ Diktat starten' : '▶ Zum Kontrollieren anhören') : (plays === 0 ? '▶ Anhören' : '▶ Noch einmal anhören')) + ' <span>(noch ' + left + '×)</span>';
+  }
+  var paused = false, resume = null;
+  function stopPlay() { if (hasTTS) try { speechSynthesis.cancel(); } catch (e) {} playing = false; paused = false; resume = null; document.querySelectorAll('#katView .ka-pause').forEach(function (s) { s.hidden = true; }); }
+  /* Satz in kleine Diktat-Stücke teilen (an Kommas, sonst 3–4 Wörter) */
+  function chunks(sent) {
+    var out = [];
+    sent.split(/(?<=,)\s+/).forEach(function (part) {
+      var w = part.trim().split(/\s+/);
+      if (w.length <= 4) { out.push(w.join(' ')); return; }
+      var n = Math.ceil(w.length / 3), size = Math.ceil(w.length / n);
+      for (var i = 0; i < w.length; i += size) out.push(w.slice(i, i + size).join(' '));
+    });
+    return out;
+  }
   function play(base, btn) {
     var r = run(); r.plays = r.plays || {};
     if ((r.plays[base] || 0) >= 2 || playing) return;
     var ti = Number(base.match(/^t(\d+)/)[1]), pi = Number(base.match(/p(\d+)$/)[1]), p = cur.tasks[ti].parts[pi];
-    var sents = listenSay(p).match(/[^.!?]+[.!?]+/g) || [listenSay(p)];
+    var sents = (listenSay(p).match(/[^.!?]+[.!?]+/g) || [listenSay(p)]).map(function (x) { return x.trim(); });
     var v = cur.lang === 'de' ? deVoice() : (window.LU5 && LU5.voice ? LU5.voice() : null);
-    r.plays[base] = (r.plays[base] || 0) + 1; save();
-    playing = true; btn.disabled = true;
-    var stop = btn.parentNode.querySelector('.ka-stop'); if (stop) stop.hidden = false;
+    var round = r.plays[base] || 0;
+    r.plays[base] = round + 1; save();
+    var T = TEMPO[tempo()], rate = (cur.rate || 0.82) * T[0], f = T[1];
+    /* Ablauf bauen */
+    var steps = [];
+    if (cur.lang === 'de' && round === 0) {
+      /* echtes Diktat: Satz ganz, dann Stück für Stück mit Schreibpausen */
+      sents.forEach(function (st, si) {
+        steps.push({ say: st, rate: rate, after: 1100 * f, n: si });
+        chunks(st).forEach(function (c) { var words = c.split(/\s+/).length; steps.push({ say: c, rate: rate * 0.95, after: (1300 + 750 * words) * f, n: si }); });
+        steps[steps.length - 1].after += 900 * f;
+      });
+    } else {
+      sents.forEach(function (st, si) { steps.push({ say: st, rate: rate, after: (cur.lang === 'de' ? 2200 : (cur.pause || 450) + 300) * f, n: si }); });
+    }
+    playing = true; paused = false; btn.disabled = true;
+    var pb = btn.parentNode.querySelector('.ka-pause'); if (pb) { pb.hidden = false; pb.textContent = '⏸ Pause'; }
     var left = 2 - r.plays[base];
-    btn.innerHTML = '🔊 Hör gut zu …';
     try { speechSynthesis.cancel(); } catch (e) {}
-    var i = 0;
+    var i = 0, timer = null;
+    function label() { btn.innerHTML = '🔊 Satz ' + (Math.min(sents.length, (steps[Math.max(0, i - 1)] || {}).n + 1)) + ' von ' + sents.length + (paused ? ' · Pause' : ''); }
     function done() {
-      playing = false; if (stop) stop.hidden = true;
+      playing = false; paused = false; resume = null; if (pb) pb.hidden = true;
       btn.disabled = left <= 0;
-      btn.innerHTML = left > 0 ? '▶ Noch einmal anhören <span>(noch ' + left + '×)</span>' : 'Zweimal gehört';
+      btn.innerHTML = playLabel(r.plays[base], left);
     }
     function next() {
+      timer = null;
       if (!playing) { done(); return; }
-      if (i >= sents.length) { done(); return; }
-      var u = new SpeechSynthesisUtterance(sents[i++].trim());
-      u.lang = v ? v.lang : (cur.lang === 'de' ? 'de-DE' : 'en-GB'); if (v) u.voice = v; u.rate = cur.rate || 0.82; u.pitch = 1;
-      u.onend = function () { setTimeout(next, cur.pause || 450); };
-      u.onerror = function () { setTimeout(next, 200); };
+      if (paused) { resume = next; label(); return; }
+      if (i >= steps.length) { done(); return; }
+      var s0 = steps[i++], u = new SpeechSynthesisUtterance(s0.say);
+      label();
+      u.lang = v ? v.lang : (cur.lang === 'de' ? 'de-DE' : 'en-GB'); if (v) u.voice = v; u.rate = s0.rate; u.pitch = 1;
+      var fired = false;
+      function after() { if (fired) return; fired = true; timer = setTimeout(next, s0.after); }
+      u.onend = after;
+      u.onerror = function () { if (fired) return; fired = true; timer = setTimeout(next, 200); };
       speechSynthesis.speak(u);
+      /* Notbremse, falls ein Gerät kein onend meldet */
+      setTimeout(function () { try { if (!fired && !speechSynthesis.speaking && !speechSynthesis.pending) after(); } catch (e) {} }, 1500 + s0.say.length * 160);
     }
-    setTimeout(next, 120);
-    /* Notbremse, falls ein Gerät kein onend meldet */
-    var guard = setInterval(function () { if (!playing) { clearInterval(guard); return; } try { if (!speechSynthesis.speaking && !speechSynthesis.pending && i >= sents.length) { clearInterval(guard); done(); } } catch (e) {} }, 1500);
+    if (pb) pb.onclick = function () {
+      if (!playing) return;
+      if (!paused) { paused = true; pb.textContent = '▶ Weiter'; label(); }
+      else { paused = false; pb.textContent = '⏸ Pause'; if (resume) { var f2 = resume; resume = null; f2(); } }
+    };
+    setTimeout(next, 150);
   }
 
   function askSubmit() {

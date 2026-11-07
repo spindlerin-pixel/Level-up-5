@@ -205,3 +205,9 @@
 .ka-grow ul:last-child { margin-bottom: 0; }
 .ka-grow-top { font-size: 1.15rem; margin-bottom: 6px !important; }
 .ka-grow-h { font-weight: 800; }
+
+/* Diktat: Tempo und Pause */
+.ka-tempo { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px; font-weight: 700; font-size: 0.95rem; }
+.ka-tbtn { font: inherit; font-weight: 700; font-size: 0.92rem; min-height: 40px; padding: 6px 12px; border: 2px solid var(--edge, var(--line)); border-radius: 999px; background: var(--surface); color: var(--ink); cursor: pointer; }
+.ka-tbtn[aria-pressed="true"] { background: var(--primary); border-color: var(--primary); color: var(--on-primary, #fff); }
+.ka-pause { min-width: 96px; }
