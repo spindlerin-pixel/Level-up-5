@@ -197,3 +197,11 @@
 .ka-wayrev .ka-ans { font-variant-numeric: tabular-nums; }
 .ka-keys { position: sticky; bottom: 8px; z-index: 2; display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; padding: 8px; border-radius: 14px; background: var(--surface); box-shadow: 0 2px 10px rgba(0,0,0,0.12); }
 .ka-keys button { font: inherit; font-weight: 700; font-size: 1.2rem; min-width: 44px; min-height: 44px; border: 2px solid var(--line); border-radius: 12px; background: var(--paper); color: var(--ink); cursor: pointer; }
+
+/* Was klappt schon (besser)? – steht vor der Note */
+.ka-grow { width: 100%; max-width: 520px; padding: 12px 14px; border-radius: 16px; background: var(--good-fill); text-align: left; }
+.ka-grow p { margin: 0; }
+.ka-grow ul { margin: 4px 0 8px; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 3px; }
+.ka-grow ul:last-child { margin-bottom: 0; }
+.ka-grow-top { font-size: 1.15rem; margin-bottom: 6px !important; }
+.ka-grow-h { font-weight: 800; }

@@ -1,0 +1,9 @@
+{
+  "name": "level-up-5",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@netlify/blobs": "latest",
+    "@netlify/functions": "latest"
+  }
+}

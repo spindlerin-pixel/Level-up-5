@@ -1,4 +1,4 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}.rb { display: flex; justify-content: center; overflow-x: auto; padding: 10px 0 4px; }
+<!doctype html><html><head><meta charset=utf8><script src="sync.js"></script><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}.rb { display: flex; justify-content: center; overflow-x: auto; padding: 10px 0 4px; }
 .rb-n { display: flex; flex-direction: column; align-items: center; }
 .rb-kids { display: flex; align-items: flex-end; gap: 14px; position: relative; padding-bottom: 12px; }
 .rb-kids > .rb-n::after { content: ''; display: block; width: 2px; height: 12px; background: var(--ink); margin-bottom: -12px; }
@@ -777,6 +777,10 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
 .vdot { flex-shrink: 0; width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--line); background: var(--surface); }
 .vdot.learn { background: var(--karte-fill); }
 .vdot.green { background: var(--good); }
+.as-in { flex: 1; min-width: 0; font: inherit; font-size: 1.05rem; padding: 10px 12px; min-height: 44px; border: 2px solid var(--line); border-radius: 12px; background: var(--paper); color: var(--ink); }
+.as-code { font-size: 1.15rem; letter-spacing: 0.02em; user-select: all; }
+#asMsg { font-weight: 700; } #asMsg.bad { color: var(--echt); }
+.plan-why { display: block; margin-top: 2px; font-weight: 700; }
 .vdot.ok { background: var(--good-fill); border-color: var(--good); }
 .voc-seg { display: flex; height: 16px; border-radius: 8px; overflow: hidden; background: var(--muted-fill); }
 .voc-seg i { display: block; height: 100%; transition: width 0.4s ease; }
@@ -1064,8 +1068,26 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
     <summary><span class="lv-title">Für Eltern</span><span class="lv-sum">Stimme, Datum, Ziel, Lernzeiten</span></summary>
     <div class="lv-body">
       <div class="voice-box" id="voiceBox"></div>
-      <div class="voice-box sync-box" id="syncBox">
-        <label>Lernstand übertragen</label>
+      <div class="voice-box sync-box" id="autoSyncBox">
+        <label>Handy und Tablet verbinden</label>
+        <div id="asOff">
+          <p>Einmal verbinden, danach ist der Lernstand auf beiden Geräten automatisch gleich.</p>
+          <p><b>1. Auf dem Gerät mit dem neuesten Lernstand:</b></p>
+          <div class="voice-row"><button type="button" class="btn small" id="asMake">Verbindungs-Wort erstellen</button></div>
+          <p><b>2. Auf dem anderen Gerät</b> hier das Wort eintippen:</p>
+          <div class="voice-row"><input id="asIn" class="as-in" type="text" placeholder="z. B. sonne-tiger-27-14" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" aria-label="Verbindungs-Wort"><button type="button" class="btn small" id="asJoin">Verbinden</button></div>
+          <p class="voc-note">Achtung: Auf dem zweiten Gerät wird dabei der Lernstand vom ersten Gerät übernommen.</p>
+        </div>
+        <div id="asOn" hidden>
+          <p>✅ <b>Verbunden.</b> Der Lernstand wird automatisch abgeglichen.</p>
+          <p>Verbindungs-Wort für weitere Geräte: <b class="as-code" id="asCode"></b> <button type="button" class="btn small" id="asShare">Teilen</button></p>
+          <p class="voc-note" id="asLast"></p>
+          <div class="voice-row"><button type="button" class="btn small" id="asNow">Jetzt abgleichen</button><button type="button" class="btn small" id="asLeave">Verbindung trennen</button></div>
+        </div>
+        <p id="asMsg" role="status"></p>
+      </div>
+      <details class="voice-box sync-box" id="syncBox">
+        <summary><b>Lernstand einmalig per Code übertragen (alter Weg)</b></summary>
         <p>So nimmst du deinen Lernstand von einem Gerät aufs andere mit (z. B. Handy → Tablet).</p>
         <p><b>1. Auf dem Gerät mit dem neuesten Stand:</b></p>
         <div class="voice-row"><button type="button" class="btn small" id="syncMake">Code erstellen</button><button type="button" class="btn small" id="syncShare" hidden>Teilen / Kopieren</button></div>
@@ -1074,7 +1096,7 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
         <textarea id="syncIn" rows="3" placeholder="Code hier einfügen" aria-label="Code einfügen"></textarea>
         <div class="voice-row"><button type="button" class="btn small" id="syncLoad">Lernstand übernehmen</button></div>
         <p id="syncMsg" role="status"></p>
-      </div>
+      </details>
       <div class="voice-box" id="updBox">
         <label>App aktualisieren</label>
         <p>Holt die neueste Version der App. Der Lernstand bleibt dabei erhalten.</p>
@@ -1108,7 +1130,7 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
       <div style="overflow-x:auto"><table id="logTable"><thead><tr><th>Tag</th><th>Mathe</th><th>Englisch</th><th>Deutsch</th><th>Erdkunde</th></tr></thead><tbody></tbody></table></div>
     </div>
   </details>
-  <p class="note">Alles wird nur auf diesem Gerät gespeichert.</p>
+  <p class="note" id="saveNote">Alles wird nur auf diesem Gerät gespeichert. Handy und Tablet verbinden: unter „Für Eltern“.</p>
 </div>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -3627,6 +3649,17 @@ window.LU5 = (function () {
       else if (days === 0) { $('kaNum').textContent = '★'; $('kaText').innerHTML = '<b>Heute ist die Klassenarbeit.</b> Good luck' + esc(kidName(', ')) + '! Lies jede Aufgabe genau.'; }
       else { $('kaNum').textContent = '✓'; $('kaText').innerHTML = '<b>Die Klassenarbeit ist vorbei.</b> Weiter üben hilft für die nächste. Neues Datum unten eintragen.'; }
     }
+    // Countdown: Vorbei oder ohne Datum ausblenden, das Nächste zuerst
+    (function () {
+      var t0 = new Date(now.getFullYear(), now.getMonth(), now.getDate()), any = false;
+      [['kaBox', st.kaDate], ['mhBox', st.mhDate], ['mkaBox', st.mkaDate], ['ekaBox', st.ekaDate], ['dkaBox', st.dkaDate]].forEach(function (b) {
+        var el = $(b[0]); if (!el) return;
+        var dd = b[1] ? Math.round((new Date(b[1] + 'T00:00:00') - t0) / 86400000) : -1;
+        el.style.display = dd < 0 ? 'none' : ''; el.style.order = String(Math.max(0, dd));
+        if (dd >= 0) any = true;
+      });
+      var sec = document.querySelector('.ka-wrap[aria-label="Countdown Klassenarbeiten"]'); if (sec) sec.style.display = any ? '' : 'none';
+    })();
     // Fächer
     [['math', 'mathBar', 'mathMark', 'mathMin', 'mathState'], ['en', 'enBar', 'enMark', 'enMin', 'enState']].forEach(function (p) {
       var s = secs(k, p[0]), max = 20 * 60;
@@ -3738,6 +3771,20 @@ window.LU5 = (function () {
       }
     });
     if (!near('de')) bonus.push(['Deutsch', 'de']);
+    /* Lernzeit nach Terminlage: je näher und je mehr Arbeiten, desto mehr Zeit; ruhige Tage kürzer, Wochenende vor Arbeiten länger */
+    var load = 0;
+    up.forEach(function (t) { var w = (t.s === 'math' || t.s === 'en') ? 2 : 1, u = t.d <= 2 ? 3 : t.d <= 4 ? 2 : t.d <= 7 ? 1 : t.d <= 14 ? 0.4 : 0; load += w * u; });
+    var wkend = now.getDay() === 0 || now.getDay() === 6;
+    var budget = load < 1 ? 20 : load < 3 ? 30 : load < 6 ? 40 : 50;
+    if (wkend && load >= 1) budget += 15;
+    var why = load < 1 ? 'Ruhiger Tag: kurz und knackig reicht.' : wkend && load >= 3 ? 'Wochenende vor den Arbeiten: heute etwas mehr.' : load >= 6 ? 'Viele Arbeiten stehen an: heute etwas mehr.' : '';
+    /* Was nicht mehr in die Zeit passt, wird Bonus – die Vokabeln und das Wichtigste bleiben immer */
+    var keep = [], used = 0, extra = [];
+    items.forEach(function (x, i) {
+      if (x.done || i === 0 || x.subj === 'voc' || used + x.min <= budget + 5) { keep.push(x); if (!x.done) used += x.min; }
+      else extra.push(x);
+    });
+    items = keep;
     /* Kopfzeile */
     var fe = $('planFocus');
     if (todayT.length) fe.textContent = 'Heute ' + todayT.map(function (t) { return TEST_NAME[t.s]; }).join(' und ') + ' – viel Glück!' + (focus ? ' · Danach: ' + TEST_NAME[focus.s] + (focus.d === 1 ? ' morgen' : ' in ' + focus.d + ' Tagen') : '');
@@ -3749,14 +3796,16 @@ window.LU5 = (function () {
     $('planRing').setAttribute('aria-label', done + ' von ' + items.length + ' erledigt');
     var all = items.length && done === items.length;
     $('planBox').classList.toggle('all', !!all);
-    $('planSum').innerHTML = all ? '' : items.length + ' Aufgaben · noch etwa ' + mins + ' Minuten. Die erste ist am wichtigsten.';
+    $('planSum').innerHTML = all ? '' : items.length + ' Aufgaben · noch etwa ' + mins + ' Minuten. Die erste ist am wichtigsten.' + (why ? ' <span class="plan-why">' + why + '</span>' : '');
     $('planSum').hidden = !!all;
     planActs = items.map(function (x) { return x.act; });
+    extra.forEach(function (x) { planActs.push(x.act); });
     box.innerHTML = items.map(function (x, i) {
       return '<li class="plan-item ' + x.subj + (x.done ? ' done' : '') + '"><span class="plan-check" aria-hidden="true">' + (x.done ? '✓' : '') + '</span><span class="plan-txt"><b>' + esc(x.title) + '</b><small>' + esc(x.sub) + '</small></span><button type="button" class="plan-go" data-plan="' + i + '">' + x.btn + '</button></li>';
     }).join('');
     var bh = all ? '<p class="plan-yay">⭐ Tagesplan geschafft' + esc(kidName(', ')) + '! Alles Weitere ist Bonus.</p>' : '';
-    if (bonus.length) bh += '<span>Bonus, wenn du noch Lust hast: ' + bonus.map(function (b) { return '<button type="button" class="linkbtn" data-go="' + b[1] + '">' + b[0] + '</button>'; }).join(' · ') + '</span>';
+    var bl = extra.map(function (x, j) { return '<button type="button" class="linkbtn" data-plan="' + (items.length + j) + '">' + esc(x.title) + '</button>'; }).concat(bonus.map(function (b) { return '<button type="button" class="linkbtn" data-go="' + b[1] + '">' + b[0] + '</button>'; }));
+    if (bl.length) bh += '<span>Bonus, wenn du noch Lust hast: ' + bl.join(' · ') + '</span>';
     $('planBonus').innerHTML = bh; $('planBonus').hidden = !bh;
     if (all && !L.plan) { L.plan = 1; logCache[k] = L; flushLog(); toast('⭐ Tagesplan geschafft! Super' + kidName(', ') + '!'); renderWeek(); }
     /* Fächer-Karten: Termin-Hinweis und Reihenfolge */
@@ -6543,4 +6592,31 @@ window.LU5 = (function () {
 <script src="klassenarbeiten/de-daten.js?v=1"></script>
 <script src="klassenarbeiten/ma-daten.js?v=1"></script>
 <script src="klassenarbeiten/ka-tablet.js?v=4"></script>
+<script>
+(function () {
+  var S = window.LU5Sync; if (!S || !document.getElementById('autoSyncBox')) return;
+  function $(i) { return document.getElementById(i); }
+  function msg(t, bad) { var m = $('asMsg'); m.textContent = t || ''; m.className = bad ? 'bad' : ''; }
+  function render() {
+    var on = !!S.id(); $('asOff').hidden = on; $('asOn').hidden = !on;
+    var n = $('saveNote'); if (n) n.textContent = on ? 'Dein Lernstand wird automatisch zwischen deinen Geräten abgeglichen.' : 'Alles wird nur auf diesem Gerät gespeichert. Handy und Tablet verbinden: unter „Für Eltern“.';
+    if (on) { $('asCode').textContent = S.id(); var l = S.last(); $('asLast').textContent = l ? 'Zuletzt abgeglichen: ' + new Date(l).toLocaleString('de-DE', { weekday: 'short', day: 'numeric', month: 'numeric', hour: '2-digit', minute: '2-digit' }) + ' Uhr' : 'Noch nicht abgeglichen.'; }
+  }
+  S.onChange(render);
+  $('asMake').onclick = function () { msg('Einen Moment …'); S.create().then(function (c) { render(); msg('Fertig! Tippe dieses Wort jetzt auf dem anderen Gerät ein: ' + c); }); };
+  $('asJoin').onclick = function () {
+    var v = $('asIn').value; if (!v.trim()) { msg('Bitte das Wort vom ersten Gerät eintippen.', true); return; }
+    msg('Einen Moment …');
+    S.join(v).then(function (r) { if (!r.ok) { msg(r.why, true); return; } msg('Verbunden! Der Lernstand wird geladen …'); setTimeout(function () { location.reload(); }, 800); });
+  };
+  $('asNow').onclick = function () { msg('Gleiche ab …'); S.now().then(function (c) { render(); msg(c ? 'Neuer Stand geladen.' : 'Alles ist auf dem neuesten Stand.'); }); };
+  $('asLeave').onclick = function () { if (!confirm('Verbindung auf diesem Gerät trennen? Der Lernstand bleibt hier gespeichert, wird aber nicht mehr abgeglichen.')) return; S.leave(); render(); msg('Verbindung getrennt.'); };
+  $('asShare').onclick = function () {
+    var t = 'Verbindungs-Wort für Level Up 5: ' + S.id();
+    if (navigator.share) navigator.share({ text: t }).catch(function () {});
+    else if (navigator.clipboard) navigator.clipboard.writeText(S.id()).then(function () { msg('Wort kopiert.'); });
+  };
+  render();
+})();
+</script>
 </body></html>

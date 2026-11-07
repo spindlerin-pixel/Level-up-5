@@ -611,7 +611,7 @@
     var r = run(), sc = score(cur, r);
     r.done = true; r.when = Date.now();
     db.res[cur.id] = db.res[cur.id] || [];
-    db.res[cur.id].push({ d: r.when, p: sc.pts, m: sc.max, g: sc.grade, s: r.secs || 0 });
+    db.res[cur.id].push({ d: r.when, p: sc.pts, m: sc.max, g: sc.grade, s: r.secs || 0, tp: topicPts(cur, sc) });
     while (db.res[cur.id].length > 20) db.res[cur.id].shift();
     saveNow();
     mode = 'result';
@@ -716,6 +716,33 @@
     }
     return h;
   }
+  /* ---------- Was klappt schon (besser)? ---------- */
+  function tKey(t) { return t.topic || t.h; }
+  function topicPts(ex, sc) {
+    var o = {};
+    ex.tasks.forEach(function (t, ti) { var pt = sc.perTask[ti]; if (!pt || !pt.max) return; var k = tKey(t); o[k] = o[k] || [0, 0]; o[k][0] += pt.got; o[k][1] += pt.max; });
+    return o;
+  }
+  function growHtml(ex, sc, r) {
+    var pre = String(ex.id).charAt(0), prev = {}, prevSame = null, all = [];
+    for (var id in db.res) if (String(id).charAt(0) === pre) (db.res[id] || []).forEach(function (x) { if (x.d !== r.when) all.push({ id: id, x: x }); });
+    all.sort(function (a, b) { return a.x.d - b.x.d; });
+    all.forEach(function (e) { if (e.x.tp) for (var k in e.x.tp) if (e.x.tp[k][1]) prev[k] = e.x.tp[k][0] / e.x.tp[k][1]; if (e.id === ex.id && (!r.when || e.x.d < r.when)) prevSame = e.x; });
+    var now = topicPts(ex, sc), label = {}, better = [], strong = [];
+    var TN = ex.back === 'de' ? { kl: 'Kurz oder lang', dk: 'Doppelkonsonant', ckz: 'ck/k und tz/z', vk: 'Zwei verschiedene Konsonanten', formen: 'Wortfamilie', satz: 'Fehler finden', dikt: 'Diktat' } : {};
+    ex.tasks.forEach(function (t) { if (!label[tKey(t)]) label[tKey(t)] = TN[t.topic] || t.h; });
+    Object.keys(now).forEach(function (k) {
+      var p = now[k][0] / now[k][1], q = prev[k];
+      if (q != null && p > q + 0.001) better.push('<li>📈 <b>' + esc(label[k]) + '</b>: ' + Math.round(q * 100) + ' % → ' + Math.round(p * 100) + ' %</li>');
+      else if (p >= 0.8) strong.push('<li>✓ <b>' + esc(label[k]) + '</b>' + (p >= 1 ? ' – alles richtig' : ' – ' + Math.round(p * 100) + ' %') + '</li>');
+    });
+    var h = '', up = prevSame ? Math.round(sc.pct * 100) - Math.round(prevSame.p / prevSame.m * 100) : null;
+    if (up !== null && up > 0) h += '<p class="ka-grow-top">Seit dem letzten Mal: <b>+' + up + ' %</b></p>';
+    if (better.length) h += '<p class="ka-grow-h">Das klappt jetzt besser:</p><ul>' + better.join('') + '</ul>';
+    if (strong.length) h += '<p class="ka-grow-h">Das klappt schon:</p><ul>' + strong.join('') + '</ul>';
+    if (!h) h = '<p class="ka-grow-h">Jeder Versuch zählt.</p><p>Unten siehst du genau, welche Aufgaben du als Nächstes üben kannst – beim nächsten Mal siehst du hier, was besser geworden ist.</p>';
+    return '<div class="ka-grow">' + h + '</div>';
+  }
   function msgFor(g) {
     return g === 1 ? 'Sehr gut! Das sitzt richtig. Schau dir trotzdem die roten Stellen an – dann klappt es in der echten Arbeit genauso.'
       : g === 2 ? 'Gut gemacht! Bis zur 1 fehlt nicht viel. Unten siehst du genau, wo die Punkte geblieben sind.'
@@ -728,6 +755,7 @@
     var h = '<section class="card ka-result g' + sc.grade + '">' +
       '<svg class="lina" viewBox="0 0 110 140" aria-hidden="true"><use href="#pennyArt"></use></svg>' +
       '<p class="ka-eyebrow">' + esc(nameOf(ex)) + ' · ' + esc(ex.lvl) + '</p>' +
+      growHtml(ex, sc, r) +
       '<div class="ka-grade"><span>Note</span><b>' + sc.grade + '</b><em>' + GRADE_WORD[sc.grade] + '</em></div>' +
       '<p class="ka-score"><b>' + fmtP(sc.pts) + ' von ' + fmtP(sc.max) + ' Punkten</b> · ' + pct + ' %</p>' +
       '<div class="ka-bar" role="img" aria-label="' + pct + ' Prozent"><i style="width:' + pct + '%"></i></div>' +
