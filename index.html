@@ -2604,9 +2604,9 @@ window.LU5 = (function () {
   GEN.vrg = genVrg; GEN.eck = genEck; GEN.stolper = genStolper; GEN.kl = genKl; GEN.baum = genBaum; GEN.tterm = genTterm; GEN.raetsel = genRaetsel; GEN.sach2 = genSach2;
   var HUE = ['regel', 'vrg', 'vrg', 'eck', 'stolper', 'kl', 'baum', 'tterm', 'raetsel', 'sach2'];
   /* ---------- Rechenweg prüfen (Üben und Probe-HÜs) ----------
-     Jede Zeile darf nur ausrechnen, was in der Zeile davor schon „dran“ ist
-     (Klammer innen zuerst, Punkt vor Strich, von links nach rechts).
-     Mehrere unabhängige Rechnungen in einer Zeile sind erlaubt (24 + 15 aus 6 · 4 + 3 · 5). */
+     Jede Zeile muss richtig aus der Zeile davor folgen. Man darf beliebig viele
+     Rechnungen in einem Schritt zusammenfassen (z. B. eine ganze Klammer auf einmal),
+     nur ganz ohne Zwischenschritt direkt zum Ergebnis springen geht bei gemischten Aufgaben nicht. */
   function wNorm(s) {
     return String(s == null ? '' : s).replace(/[*×⋅•∙xX]/g, '·').replace(/[\/÷]/g, ':').replace(/[-–—]/g, '−')
       .replace(/[\[{]/g, '(').replace(/[\]}]/g, ')').replace(/(\d)[.'’](?=\d{3}(\D|$))/g, '$1').replace(/\s+/g, '');
@@ -2652,11 +2652,16 @@ window.LU5 = (function () {
       if (!tr) return fail(i, 'In Schritt ' + (i + 1) + ' fehlt etwas – prüfe Zahlen, Rechenzeichen und Klammern.');
       var nx = wNext(prev), k = wKey(tr), ok = nx.some(function (x) { return wKey(x) === k; });
       if (!ok && i > 0 && wOps(tr) === 0 && wOps(prev) >= 2 && wOneClass(prev) && Math.abs(wVal(tr) - wVal(prev)) < 1e-9 && i === list.length - 1) ok = true;
+      /* mehrere Schritte zusammengezogen – erlaubt */
+      if (!ok && wAll(prev)[k]) ok = true;
+      /* anders umgeformt, aber gleichwertig und weitergerechnet (z. B. 1500 − 1080 − 300 statt 1500 − 1380) */
+      if (!ok && wOps(tr) < wOps(prev) && Math.abs(wVal(tr) - wVal(prev)) < 1e-9) ok = true;
+      if (ok && i === 0 && wOps(tr) === 0 && wOps(prev) >= 2 && !wOneClass(prev)) return fail(i, 'Schreib mindestens einen Zwischenschritt auf, bevor du das Ergebnis hinschreibst.');
       if (!ok) {
         if (k === wKey(prev)) return fail(i, 'Schritt ' + (i + 1) + ' ist nur abgeschrieben – rechne darin etwas aus.');
-        if (wAll(prev)[k]) return fail(i, 'Schritt ' + (i + 1) + ': Da hast du zu viel auf einmal gerechnet. Schreib jeden Zwischenschritt auf.');
         var sh = wShape(tr), lv = wLeaves(tr);
-        if (nx.some(function (x) { if (wShape(x) !== sh) return false; var xl = wLeaves(x), d = 0; xl.forEach(function (v, q) { if (v !== lv[q]) d++; }); return d === 1; })) return fail(i, 'Schritt ' + (i + 1) + ': Die Reihenfolge stimmt, aber du hast dich verrechnet.');
+        var reach = []; (function go(x) { wNext(x).forEach(function (y) { if (reach.length < 400) { reach.push(y); go(y); } }); })(prev);
+        if (reach.some(function (x) { if (wShape(x) !== sh) return false; var xl = wLeaves(x), d = 0; xl.forEach(function (v, q) { if (v !== lv[q]) d++; }); return d === 1; })) return fail(i, 'Schritt ' + (i + 1) + ': Die Reihenfolge stimmt, aber du hast dich verrechnet.');
         return fail(i, 'Schritt ' + (i + 1) + ': Hier stimmt die Reihenfolge nicht. Erst Klammern, dann Punkt vor Strich, sonst von links nach rechts.');
       }
       prev = tr;
@@ -2665,7 +2670,40 @@ window.LU5 = (function () {
     return res;
   }
   function wayNeed(expr) { var t = wParse(expr); return t ? Math.max(0, wOps(t) - 1) : 0; }
-  window.LU5MathR = { steps: rSteps, eval: rEval, tree: rbShow, way: wayCheck, wayNeed: wayNeed, wayParse: wParse, wayVal: wVal, _gen: GEN };
+  /* Rechenausdruck prüfen. given: Eingabe, model: Musterlösung, text: Aufgabentext.
+     flex (Sachaufgaben): jeder Ausdruck mit demselben Ergebnis zählt, wenn alle Zahlen aus dem Text vorkommen,
+     die die Musterlösung braucht, und keine fremden Zahlen dazukommen (Zahlen dürfen mehrfach vorkommen).
+     sonst (Text → Aufgabe): dieselben Zahlen wie in der Musterlösung und derselbe Wert. */
+  function termCheck(given, model, text, flex) {
+    var g = wParse(given), m = wParse(model);
+    if (!String(given || '').trim()) return { ok: false, msg: 'Schreib zuerst die Aufgabe als Rechenausdruck auf.' };
+    if (!g) return { ok: false, msg: 'Dein Rechenausdruck ist noch nicht vollständig – prüfe Zahlen, Rechenzeichen und Klammern.' };
+    if (!m) return { ok: true, msg: '' };
+    var vg = wVal(g), vm = wVal(m), same = Math.abs(vg - vm) < 1e-9;
+    var gl = wLeaves(g), ml = wLeaves(m), tl = (String(text || '').replace(/<[^>]+>/g, ' ').replace(/(\d)[.](?=\d{3})/g, '$1').match(/\d+/g) || []).map(Number);
+    var sorted = function (a) { return a.slice().sort(function (x, y) { return x - y; }).join(','); };
+    if (!flex) {
+      var sameN = sorted(gl) === sorted(ml);
+      if (same && sameN) return { ok: true, msg: '' };
+      return { ok: false, msg: sameN ? 'Die Zahlen stimmen, aber Klammern oder Rechenzeichen noch nicht. Überlege: Was muss zuerst gerechnet werden?' : same ? 'Schreib die ganze Aufgabe mit allen Zahlen aus dem Text in einen Rechenausdruck.' : 'Der Rechenausdruck passt noch nicht zum Text.' };
+    }
+    var need = ml.filter(function (x, i) { return ml.indexOf(x) === i && (!tl.length || tl.indexOf(x) >= 0); });
+    var allow = ml.concat(tl).concat([1, 2]);
+    var missing = need.filter(function (x) { return gl.indexOf(x) < 0; }), extra = gl.filter(function (x) { return allow.indexOf(x) < 0; });
+    if (same && !missing.length && !extra.length) return { ok: true, msg: '' };
+    if (!same && vm) {
+      var nums = tl.concat(ml).filter(function (x) { return x > 1; });
+      for (var i = 0; i < nums.length; i++) {
+        var f = nums[i];
+        if (Math.abs(vg - vm * f) < 1e-9) return { ok: false, msg: 'Dein Rechenausdruck ist schon fast richtig – er rechnet aber das Ganze für alle ' + f + ' zusammen aus. Gefragt ist für <b>einen</b>. Setz deinen Ausdruck in eckige Klammern und teile noch durch ' + f + ', z. B. [ … ] : ' + f + '.' };
+        if (Math.abs(vg * f - vm) < 1e-9) return { ok: false, msg: 'Dein Rechenausdruck ist schon fast richtig – er rechnet aber nur für einen. Gefragt ist für alle zusammen: Setz deinen Ausdruck in Klammern und nimm ihn noch mal ' + f + '.' };
+      }
+    }
+    if (missing.length) return { ok: false, msg: 'Im Rechenausdruck fehlt noch eine Zahl aus dem Text: ' + missing.join(', ') + '.' };
+    if (extra.length) return { ok: false, msg: 'Im Rechenausdruck steht eine Zahl, die nicht im Text vorkommt: ' + extra.join(', ') + '. Schreib die Aufgabe nur mit den Zahlen aus dem Text.' };
+    return { ok: false, msg: sorted(gl) === sorted(ml) ? 'Die Zahlen stimmen, aber Klammern oder Rechenzeichen noch nicht. Überlege: Was muss zuerst gerechnet werden?' : 'Der Rechenausdruck passt noch nicht zur Frage. Lies nochmal genau: Was ist gesucht?' };
+  }
+  window.LU5MathR = { steps: rSteps, eval: rEval, tree: rbShow, way: wayCheck, wayNeed: wayNeed, wayParse: wParse, wayVal: wVal, termCheck: termCheck, _gen: GEN };
 
   GEN.kopf = genKopf; GEN.platz = genPlatz; GEN.wort = genWort; GEN.begriff = genBegriff; GEN.probe = genProbe; GEN.zeichen = genZeichen; GEN.schlange = genSchlange; GEN.sach = genSach; GEN.zahlwort = genZahlwort;
   GEN.stelle = genStelle; GEN.rund = genRund; GEN.add = genAdd; GEN.sub = genSub; GEN.mul = genMul; GEN.div = genDiv; GEN.regel = genRegel; GEN.gesch = genGesch;
@@ -3002,7 +3040,7 @@ window.LU5 = (function () {
   }
 
   /* ---------- Rechenweg: jeden Schritt eintragen ---------- */
-  function wayLines(t) { var R = window.LU5MathR; return R ? R.wayNeed(t.way) : 0; }
+  function wayLines(t) { var R = window.LU5MathR; return R ? R.wayNeed(t.way) + (t.wayTerm ? 1 : 0) : 0; }
   function renderWay(t) {
     var box = document.getElementById('wayBox');
     if (!box) return;
@@ -3013,7 +3051,7 @@ window.LU5 = (function () {
       return '<div class="way-row' + (M[key] ? ' ' + M[key] : '') + '">' + lbl + '<input type="text" data-w="' + key + '" value="' + String(W[key] || '').replace(/"/g, '&quot;') + '" placeholder="' + ph + '" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" enterkeyhint="next" aria-label="' + ph + '"' + dis + '></div>';
     }
     var h = '';
-    if (t.wayTerm) h += '<p class="way-note">Schreib erst die Aufgabe als <b>einen</b> Rechenausdruck auf, dann jeden Rechenschritt.</p>' + inp('t', 'Rechenausdruck, z. B. (3 + 4) · 2', '<span class="way-lbl">Aufgabe:</span>');
+    if (t.wayTerm) h += '<p class="way-note">Schreib erst die Aufgabe als <b>einen</b> Rechenausdruck auf, dann die Rechenschritte. Es gibt oft mehrere richtige Rechenausdrücke. Du darfst auch mehrere Rechnungen in einem Schritt machen – leere Zeilen sind okay.</p>' + inp('t', 'Rechenausdruck, z. B. (3 + 4) · 2', '<span class="way-lbl">Aufgabe:</span>');
     else h += '<p class="way-note">Schreib jeden Rechenschritt auf – wie im Heft. Wenn zwei Rechnungen gleichzeitig dran sind, darfst du beide in einem Schritt rechnen.</p>' + (t.type === 'stolper' ? '<div class="way-start">' + t.way + '</div>' : '');
     for (var j = 0; j < n; j++) h += inp(String(j), (j + 1) + '. Schritt', '<b>=</b>');
     if (!state.resolved) h += '<div class="way-keys" aria-label="Rechenzeichen">' + ['·', ':', '+', '−', '(', ')', '[', ']'].map(function (k) { return '<button type="button" data-key="' + k + '" tabindex="-1">' + k + '</button>'; }).join('') + '</div>';
@@ -3063,11 +3101,8 @@ window.LU5 = (function () {
     for (var j = 0; j < n; j++) lines.push(W[j] || '');
     var start = t.way;
     if (t.wayTerm) {
-      var tr = R.wayParse(W.t || ''), mt = R.wayParse(t.way);
-      var nums = function (x) { return (String(x || '').replace(/\s/g, '').match(/\d+/g) || []).map(Number).sort(function (a, b) { return a - b; }).join(','); };
-      if (!tr) { marks.t = 'bad'; return { ok: false, marks: marks, msg: String(W.t || '').trim() ? 'Dein Rechenausdruck ist noch nicht vollständig – prüfe Zahlen, Rechenzeichen und Klammern.' : 'Schreib zuerst die Aufgabe als Rechenausdruck auf.' }; }
-      var sameV = mt && Math.abs(R.wayVal(tr) - R.wayVal(mt)) < 1e-9, sameN = nums(W.t) === nums(t.way);
-      if (!sameV || !sameN) { marks.t = 'bad'; return { ok: false, marks: marks, msg: sameN ? 'Die Zahlen stimmen, aber Klammern oder Rechenzeichen noch nicht. Überlege: Was muss zuerst gerechnet werden?' : sameV ? 'Schreib die ganze Aufgabe mit allen Zahlen aus dem Text in einen Rechenausdruck.' : 'Der Rechenausdruck passt noch nicht zum Text.' }; }
+      var tc = R.termCheck(W.t || '', t.way, t.q, t.type === 'sach2');
+      if (!tc.ok) { marks.t = 'bad'; return { ok: false, marks: marks, msg: tc.msg }; }
       marks.t = 'ok'; start = W.t;
       var need = R.wayNeed(start);
       if (need > n) for (var q = n; q < need; q++) lines.push('');
@@ -6591,7 +6626,7 @@ window.LU5 = (function () {
 <script src="klassenarbeiten/ek-daten.js?v=1"></script>
 <script src="klassenarbeiten/de-daten.js?v=1"></script>
 <script src="klassenarbeiten/ma-daten.js?v=1"></script>
-<script src="klassenarbeiten/ka-tablet.js?v=4"></script>
+<script src="klassenarbeiten/ka-tablet.js?v=5"></script>
 <script>
 (function () {
   var S = window.LU5Sync; if (!S || !document.getElementById('autoSyncBox')) return;

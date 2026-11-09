@@ -185,19 +185,22 @@
   function calcWay(it) { return it && it[3] && it[3].way && wayN(it[3].way) ? it[3].way : null; }
   function termWay(it) { return it && it[1] && wayN(it[1]) ? it[1] : null; }
   function wayLinesA(A, k, n) { var a = []; for (var j = 0; j < n; j++) a.push(A[k + 's' + j] || ''); return a; }
+  function wayRows(it) { var tw = termWay(it); return tw ? wayN(tw) + 1 : 0; }
   function cmpWay(u, A) {
     var R = MR(), lines = wayLinesA(A, u.base, u.n);
     if (!R) return { s: 0, note: '' };
     if (!lines.some(function (x) { return String(x).trim(); })) return { s: 0, empty: true, note: 'Der Rechenweg fehlt.', marks: [] };
     var start = u.start;
-    if (u.termK && cmpTerm(A[u.termK], u.start).s === 1) start = termNorm(A[u.termK]);
+    if (u.termK && cmpTerm(A[u.termK], u.start, u).s === 1) start = termNorm(A[u.termK]);
     var need = R.wayNeed(start); while (lines.length < need) lines.push('');
     var r = R.way(start, lines);
     return { s: r.ok ? 1 : r.first ? 0.5 : 0, note: r.ok ? '' : r.msg.replace(/<[^>]+>/g, ''), marks: r.marks };
   }
-  function cmpTerm(given, model) {
+  function cmpTerm(given, model, u) {
     var g = termNorm(given);
     if (!g) return { s: 0, empty: true, note: '' };
+    var R = MR();
+    if (R && R.termCheck) { var tc = R.termCheck(g, model, u && u.txt, !!(u && u.flex)); return { s: tc.ok ? 1 : 0, note: tc.ok ? '' : tc.msg.replace(/<[^>]+>/g, '') }; }
     var m = termNorm(model), vg = termEval(g), vm = termEval(m);
     if (vg === null) return { s: 0, note: 'Das ist kein vollständiger Rechenausdruck – prüfe Klammern und Rechenzeichen.' };
     var sameN = numsOf(g) === numsOf(m);
@@ -309,7 +312,7 @@
         else if (p.t === 'open') p.items.forEach(function (it, i) { out.push({ k: base + 'i' + i, ti: ti, p: p, kind: 'open', kw: it[1], ans: it[2], max: 1 }); });
         else if (p.t === 'sent') p.items.forEach(function (it, i) { out.push({ k: base + 'i' + i, ti: ti, p: p, kind: 'sent', ans: it[1], orig: p.strict ? it[0] : null, max: p.pts || 1 }); });
         else if (p.t === 'split') p.items.forEach(function (it, i) { out.push({ k: base + 'i' + i, ti: ti, p: p, kind: 'split', ans: it[1], max: 1 }); });
-        else if (p.t === 'term') p.items.forEach(function (it, i) { if (it[1]) out.push({ k: base + 'i' + i + 't', ti: ti, p: p, kind: 'term', ans: it[1], max: 1 }); var tw = termWay(it); if (tw) out.push({ k: base + 'i' + i + 'w', base: base + 'i' + i, termK: base + 'i' + i + 't', ti: ti, p: p, kind: 'way', start: tw, n: wayN(tw), max: 1 }); out.push({ k: base + 'i' + i + 'r', ti: ti, p: p, kind: 'num', ans: String(it[2]), max: 1 }); });
+        else if (p.t === 'term') p.items.forEach(function (it, i) { var fx = task.topic === 'sach2'; if (it[1]) out.push({ k: base + 'i' + i + 't', ti: ti, p: p, kind: 'term', ans: it[1], txt: it[0], flex: fx, max: 1 }); var tw = termWay(it); if (tw) out.push({ k: base + 'i' + i + 'w', base: base + 'i' + i, termK: base + 'i' + i + 't', txt: it[0], flex: fx, ti: ti, p: p, kind: 'way', start: tw, n: wayRows(it), max: 1 }); out.push({ k: base + 'i' + i + 'r', ti: ti, p: p, kind: 'num', ans: String(it[2]), max: 1 }); });
         else if (p.t === 'write') out.push({ k: base + 'w', ti: ti, p: p, kind: 'write', max: 14 });
       });
     });
@@ -331,7 +334,7 @@
       else if (u.kind === 'sent') r = cmpSent(v, u.ans, u.p, u.orig);
       else if (u.kind === 'split') r = cmpSplit(v, u.ans);
       else if (u.kind === 'calc') r = cmpCalc(v, u.ans);
-      else if (u.kind === 'term') r = cmpTerm(v, u.ans);
+      else if (u.kind === 'term') r = cmpTerm(v, u.ans, u);
       else if (u.kind === 'way') r = cmpWay(u, A);
       else if (u.kind === 'num') { var gn = String(v == null ? '' : v).replace(/[^\d,]/g, '').replace(',', '.'); r = gn ? { s: Number(gn) === Number(u.ans) ? 1 : 0, note: '' } : { s: 0, empty: true, note: '' }; }
       else if (u.kind === 'op') { var adj2 = (run.adj && run.adj[u.k]) || 0; r = cmpOp(v, u.exp, u.max); r.auto = r.s; r.adj = adj2; r.s = Math.max(0, Math.min(u.max, half(r.s + adj2))); }
@@ -403,7 +406,7 @@
       if (p.text) h += readHtml(p.text);
       h += '<ol class="ka-list ka-sents ka-terms">' + p.items.map(function (it, i) {
         var k = base + 'i' + i, tw = termWay(it);
-        if (tw) return '<li><span class="ka-de">' + esc(it[0]) + '</span>' + (it[3] || '') + '<div class="ka-way"><div class="ka-wayrow"><span class="ka-waylbl">Aufgabe:</span><input class="ka-in ka-line ka-term" data-k="' + k + 't" value="' + esc(A[k + 't'] || '') + '" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" enterkeyhint="next" placeholder="Rechenausdruck" aria-label="Rechenausdruck"></div>' + stepRows(k, wayN(tw), A) + '<div class="ka-wayrow"><b>=</b><input class="ka-in ka-calc ka-res" data-k="' + k + 'r" value="' + esc(A[k + 'r'] || '') + '" inputmode="numeric" autocomplete="off" enterkeyhint="next" placeholder="Ergebnis" aria-label="Ergebnis">' + (p.unit ? '<span>' + esc(p.unit) + '</span>' : '') + '</div></div></li>';
+        if (tw) return '<li><span class="ka-de">' + esc(it[0]) + '</span>' + (it[3] || '') + '<div class="ka-way"><div class="ka-wayrow"><span class="ka-waylbl">Aufgabe:</span><input class="ka-in ka-line ka-term" data-k="' + k + 't" value="' + esc(A[k + 't'] || '') + '" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" enterkeyhint="next" placeholder="Rechenausdruck" aria-label="Rechenausdruck"></div>' + stepRows(k, wayRows(it), A) + '<div class="ka-wayrow"><b>=</b><input class="ka-in ka-calc ka-res" data-k="' + k + 'r" value="' + esc(A[k + 'r'] || '') + '" inputmode="numeric" autocomplete="off" enterkeyhint="next" placeholder="Ergebnis" aria-label="Ergebnis">' + (p.unit ? '<span>' + esc(p.unit) + '</span>' : '') + '</div></div></li>';
         return '<li><span class="ka-de">' + esc(it[0]) + '</span>' + (it[3] || '') + '<span class="ka-termrow">' + (it[1] ? '<input class="ka-in ka-line ka-term" data-k="' + k + 't" value="' + esc(A[k + 't'] || '') + '" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" enterkeyhint="next" placeholder="Aufgabe" aria-label="Rechenausdruck"><b>=</b>' : '') + '<input class="ka-in ka-calc ka-res" data-k="' + k + 'r" value="' + esc(A[k + 'r'] || '') + '" inputmode="numeric" autocomplete="off" enterkeyhint="next" placeholder="' + (it[1] ? 'Ergebnis' : '?') + '" aria-label="Ergebnis">' + (p.unit ? '<span>' + esc(p.unit) + '</span>' : '') + '</span></li>';
       }).join('') + '</ol>' + (partHasWay(p) ? keysHtml() : '');
     } else if (p.t === 'words') {
@@ -702,7 +705,7 @@
         var s = '<li><span class="ka-de">' + esc(it[0]) + '</span>' + (it[3] || '');
         if (rt) s += '<span class="ka-ans ' + mark(rt) + '">' + shown(A[k + 't']) + '</span>' + pts(rt) + (rt.note ? '<span class="ka-note">' + esc(rt.note) + '</span>' : '');
         var tw = termWay(it), rw2 = tw ? sc.res[k + 'w'] : null;
-        if (tw) s += wayReview(k, wayN(tw), sc, A);
+        if (tw) s += wayReview(k, wayRows(it), sc, A);
         s += '<span class="ka-ans ' + mark(rr) + '">= ' + shown(A[k + 'r']) + (p.unit ? ' ' + esc(p.unit) : '') + '</span>' + pts(rr);
         var wsol = tw && MR() ? MR().steps(tw).slice(0, -1).join(' = ') : '';
         if ((rt && rt.s < rt.max) || rr.s < rr.max || (rw2 && rw2.s < rw2.max)) s += '<span class="ka-sol">✓ ' + esc((it[1] ? it[1] + ' = ' : '') + (wsol ? wsol + ' = ' : it[4] ? it[4] + ' = ' : '') + it[2] + (p.unit ? ' ' + p.unit : '')) + '</span>';
