@@ -865,6 +865,7 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
 #deProbe .pr-list { margin: 0; }
 .de-plan { margin: 4px 0 12px; padding: 10px 14px; border-radius: 14px; background: var(--tip-fill); font-size: 0.95em; line-height: 1.5; }
 .de-plan b { white-space: nowrap; }
+.de-old { margin-top: 14px; } .de-old > summary { cursor: pointer; font-weight: 700; padding: 8px 0; } .de-old .pr-list { margin-top: 8px; }
 .ek-modes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
 @media (max-width: 380px) { .ek-modes { grid-template-columns: 1fr; } }
 /* Erdkunde-Bilder wie ein ausgedrucktes Blatt: immer weißes Papier mit dunkler Schrift, auch im Dunkelmodus des Tablets */
@@ -928,6 +929,10 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
 .subj-go2 { flex: 1 1 100%; appearance: none; cursor: pointer; border: 2px solid var(--edge, #D5DBE6); background: var(--surface); color: var(--ink); border-radius: 14px; padding: 10px; font: 600 1rem var(--font-display); }
 .subj-sub { display: flex; flex-direction: column; gap: 6px; padding: 10px 12px; border-radius: 16px; background: var(--tip-fill); }
 .subj-subt { margin: 0; font-weight: 700; font-size: 0.92rem; }
+.fit-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; font-size: 0.85rem; }
+.fit-list li { display: grid; grid-template-columns: minmax(0, 1.4fr) 1fr 3.2em; gap: 8px; align-items: center; }
+.fit-list .goalbar { height: 10px; margin: 0; }
+.fit-list b { text-align: right; }
 .subj-tip { margin: 0; font-size: 0.9rem; color: var(--ink-soft); line-height: 1.4; }
 .day .star { font-size: 0.9rem; line-height: 1; min-height: 1em; }
 @media (prefers-color-scheme: dark) {
@@ -1005,7 +1010,7 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
   <div class="ka dka" id="dkaBox">
     <span class="ka-subj">Deutsch</span>
     <span class="ka-num" id="dkaNum">?</span>
-    <p id="dkaText"><b>Deutsch-HÜ am Montag, 9. November.</b> Kurze Vokale.</p>
+    <p id="dkaText"><b>Deutsch-HÜ am Montag, 16. November.</b> Lange Vokale.</p>
   </div>
   </div>
   </section>
@@ -1033,6 +1038,10 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
         <span class="goalbar voc-bar" id="vocTileBar"><i></i></span>
         <span class="subj-status"><b id="vocTileNum">0 grün</b><span id="vocTileState"></span></span>
       </div>
+      <div class="subj-sub" id="fitTile">
+        <p class="subj-subt">💪 Grammatik-Fit · <span id="fitToday"></span></p>
+        <ul class="fit-list" id="fitList"></ul>
+      </div>
       <p class="subj-tip" id="tipBox"><b>Tipp:</b> <span id="tipText">Starte mit einer gemischten Runde.</span> <button type="button" class="linkbtn" id="tipGo">Direkt dorthin</button></p>
       <div class="subj-acts">
         <button type="button" class="subj-go" data-go="en">Englisch üben</button>
@@ -1043,7 +1052,7 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
     <div class="subj deu" id="deTile">
       <div class="subj-top">
         <svg viewBox="0 0 64 64" aria-hidden="true"><ellipse cx="22" cy="20" rx="11" ry="8" fill="#DFF1FF" stroke="#1F2A44" stroke-width="2.5" transform="rotate(-25 22 20)"/><ellipse cx="40" cy="18" rx="11" ry="8" fill="#DFF1FF" stroke="#1F2A44" stroke-width="2.5" transform="rotate(20 40 18)"/><ellipse cx="32" cy="38" rx="20" ry="16" fill="#FFC928" stroke="#1F2A44" stroke-width="2.5"/><path d="M26 23.5 Q24 38 26 53 M36 23 Q38 38 36 53.5" stroke="#1F2A44" stroke-width="5" fill="none"/><circle cx="45" cy="35" r="2.6" fill="#1F2A44"/><path d="M42 43 Q46 46 49 42" stroke="#1F2A44" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M48 25 Q52 18 56 17 M44 24 Q46 16 50 14" stroke="#1F2A44" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
-        <span><span class="subj-name">Deutsch</span><br><span class="subj-what">Rechtschreibung: kurze und lange Vokale · 6 Probe-HÜs</span><span class="subj-ka" id="deKa"></span></span>
+        <span><span class="subj-name">Deutsch</span><br><span class="subj-what">Rechtschreibung: lange Vokale · Merksätze · 6 Probe-HÜs</span><span class="subj-ka" id="deKa"></span></span>
       </div>
       <span class="subj-status"><b id="deMin">0 Min</b><span id="deTileState"></span></span>
       <div class="subj-acts"><button type="button" class="subj-go" data-go="de">Deutsch üben</button></div>
@@ -1235,13 +1244,47 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
     <svg class="de-bee" viewBox="0 0 64 64" aria-hidden="true"><ellipse cx="22" cy="20" rx="11" ry="8" fill="#DFF1FF" stroke="#1F2A44" stroke-width="2.5" transform="rotate(-25 22 20)"/><ellipse cx="40" cy="18" rx="11" ry="8" fill="#DFF1FF" stroke="#1F2A44" stroke-width="2.5" transform="rotate(20 40 18)"/><ellipse cx="32" cy="38" rx="20" ry="16" fill="#FFC928" stroke="#1F2A44" stroke-width="2.5"/><path d="M26 23.5 Q24 38 26 53 M36 23 Q38 38 36 53.5" stroke="#1F2A44" stroke-width="5" fill="none"/><circle cx="45" cy="35" r="2.6" fill="#1F2A44"/><path d="M42 43 Q46 46 49 42" stroke="#1F2A44" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M48 25 Q52 18 56 17 M44 24 Q46 16 50 14" stroke="#1F2A44" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
     <div class="brand">
       <h1>Rechtschreib-Detektiv</h1>
-      <p>Deutsch · HÜ am Montag: kurze Vokale (S. 354–358) · lange Vokale S. 363–371</p>
+      <p>Deutsch · HÜ am Montag, 16.11.: lange Vokale (S. 363–371) · kurze Vokale S. 354–358</p>
     </div>
   </header>
   <section class="card voc-card" id="deProbe">
-    <p class="voc-eyebrow">HÜ am Montag: kurze Vokale · Probe-HÜs zum Ausfüllen</p>
-    <p class="voc-how">Jede Probe-HÜ dauert 20 Minuten, ohne Tipps. Erst nach dem Abgeben gibt es Punkte, Prozent und eine Note. <b>Streng wie in der Schule:</b> Ein falscher Buchstabe ist ein Fehler.</p>
-    <p class="de-plan"><b>Freitag:</b> HÜ 1 und 2 · <b>Samstag:</b> HÜ 3 und 4 · <b>Sonntag:</b> HÜ 5 und die Generalprobe · <b>Montag früh:</b> nur die Fehlerwörter noch einmal ansehen.</p>
+    <p class="voc-eyebrow">HÜ am Montag, 16.11.: lange Vokale · Probe-HÜs zum Ausfüllen</p>
+    <p class="voc-how">Jede Probe-HÜ dauert etwa 15 Minuten, ohne Tipps. Erst nach dem Abgeben gibt es Punkte, Prozent und eine Note. <b>Streng wie in der Schule:</b> Ein falscher Buchstabe ist ein Fehler.</p>
+    <p class="de-plan"><b>Jeden Tag:</b> 5 Minuten „Merksätze lange Vokale“ (unten) · <b>Mittwoch:</b> HÜ 1 · <b>Donnerstag:</b> HÜ 2 · <b>Freitag:</b> HÜ 3 und 4 · <b>Samstag:</b> HÜ 5 · <b>Sonntag:</b> Generalprobe · <b>Montag früh:</b> nur die Merksätze noch einmal lesen.</p>
+    <p class="de-plan"><b>Profi-Trick aus der letzten HÜ:</b> Lies jede Aufgabe zweimal und frag dich: Was genau soll ich hinschreiben – ein Wort, einen Buchstaben oder eine Regel? Wird nach dem Wort gefragt, schreib nur das Wort.</p>
+    <div class="pr-list">
+      <div class="pr-card" style="--pc:#FFD66B">
+        <span class="pr-num">1</span>
+        <div class="pr-txt"><h3>Probe-HÜ 1<span class="pr-lvl">Warm-up</span></h3><p>Die Merksätze mit Wörterkasten, kurz oder lang?, Wörter den Regeln 1–4 zuordnen, eine Begründe-Aufgabe.</p><p class="pr-status" data-ka-status="l1" hidden></p></div>
+        <div class="pr-acts"><button type="button" class="pr-open pr-tab" data-ka="l1">Probe-HÜ schreiben</button></div>
+      </div>
+      <div class="pr-card" style="--pc:#8FD3FF">
+        <span class="pr-num">2</span>
+        <div class="pr-txt"><h3>Probe-HÜ 2<span class="pr-lvl">Normal</span></h3><p>Lückendiktat zum Anhören, mit oder ohne h?, 3. Person (er fährt, er nimmt), Fehler im Satz.</p><p class="pr-status" data-ka-status="l2" hidden></p></div>
+        <div class="pr-acts"><button type="button" class="pr-open pr-tab" data-ka="l2">Probe-HÜ schreiben</button></div>
+      </div>
+      <div class="pr-card" style="--pc:#B9E6B0">
+        <span class="pr-num">3</span>
+        <div class="pr-txt"><h3>Probe-HÜ 3<span class="pr-lvl">Normal+</span></h3><p>Merksätze ohne Hilfe, aa/ee/oo, Härchen und Bötchen, ie, i oder ih?, paar oder Paar.</p><p class="pr-status" data-ka-status="l3" hidden></p></div>
+        <div class="pr-acts"><button type="button" class="pr-open pr-tab" data-ka="l3">Probe-HÜ schreiben</button></div>
+      </div>
+      <div class="pr-card" style="--pc:#FFB3C7">
+        <span class="pr-num">4</span>
+        <div class="pr-txt"><h3>Probe-HÜ 4<span class="pr-lvl">Wie bei Frau Vester</span></h3><p>Aufbau genau wie die echte HÜ: Merksätze + eigene Beispiele, falsche Wörter + Regel, 3. Person, Fehler im Satz.</p><p class="pr-status" data-ka-status="l4" hidden></p></div>
+        <div class="pr-acts"><button type="button" class="pr-open pr-tab" data-ka="l4">Probe-HÜ schreiben</button></div>
+      </div>
+      <div class="pr-card" style="--pc:#9FE3D6">
+        <span class="pr-num">5</span>
+        <div class="pr-txt"><h3>Probe-HÜ 5<span class="pr-lvl">Profi</span></h3><p>Lückendiktat, ganze Wörter selbst schreiben, Vergangenheit (schrieb, fiel), Fehler ohne Hilfe, Erkläre.</p><p class="pr-status" data-ka-status="l5" hidden></p></div>
+        <div class="pr-acts"><button type="button" class="pr-open pr-tab" data-ka="l5">Probe-HÜ schreiben</button></div>
+      </div>
+      <div class="pr-card" style="--pc:#C9B8FF">
+        <span class="pr-num">6</span>
+        <div class="pr-txt"><h3>Probe-HÜ 6<span class="pr-lvl">Generalprobe</span></h3><p>Alles gemischt im Aufbau der echten HÜ. Am besten am Sonntag.</p><p class="pr-status" data-ka-status="l6" hidden></p></div>
+        <div class="pr-acts"><button type="button" class="pr-open pr-tab" data-ka="l6">Probe-HÜ schreiben</button></div>
+      </div>
+    </div>
+    <details class="de-old"><summary>Kurze Vokale (HÜ vom 9.11.) – zum Wiederholen</summary>
     <div class="pr-list">
       <div class="pr-card" style="--pc:#FFD66B">
         <span class="pr-num">1</span>
@@ -1270,10 +1313,11 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
       </div>
       <div class="pr-card" style="--pc:#C9B8FF">
         <span class="pr-num">6</span>
-        <div class="pr-txt"><h3>Probe-HÜ 6<span class="pr-lvl">Generalprobe</span></h3><p>Wie bei der Lehrerin: Diktat, alle Regeln gemischt, Fehler, Wortfamilie, Begründe und Erkläre. Am besten am Sonntag.</p><p class="pr-status" data-ka-status="d6" hidden></p></div>
+        <div class="pr-txt"><h3>Probe-HÜ 6<span class="pr-lvl">Generalprobe</span></h3><p>Wie bei der Lehrerin: Diktat, alle Regeln gemischt, Fehler, Wortfamilie, Begründe und Erkläre. </p><p class="pr-status" data-ka-status="d6" hidden></p></div>
         <div class="pr-acts"><button type="button" class="pr-open pr-tab" data-ka="d6">Probe-HÜ schreiben</button></div>
       </div>
     </div>
+      </details>
   </section>
   <section class="card voc-card" id="deHome">
     <p class="voc-eyebrow">Was möchtest du üben?</p>
@@ -3568,7 +3612,7 @@ window.LU5 = (function () {
   /* ================= Zeit & Startseite ================= */
   var LOG_KEY = 'lern-zeiten', SET_KEY = 'lern-einstellungen';
   var view = 'home', lastAct = Date.now(), dirty = 0;
-  function settings() { var s = store(SET_KEY) || {}; if (s.goal !== 20) s.goal = 15; if (!s.ka1103) { if (s.kaDate === undefined || s.kaDate === '2026-11-05') s.kaDate = '2026-11-03'; s.ka1103 = 1; store(SET_KEY, s); } if (s.mkaDate === undefined) s.mkaDate = '2026-11-25'; if (s.ekaDate === undefined) s.ekaDate = '2026-11-06'; if (s.dkaDate === undefined) s.dkaDate = '2026-11-09'; if (s.mhDate === undefined) s.mhDate = '2026-11-11'; return s; }
+  function settings() { var s = store(SET_KEY) || {}; if (s.goal !== 20) s.goal = 15; if (!s.ka1103) { if (s.kaDate === undefined || s.kaDate === '2026-11-05') s.kaDate = '2026-11-03'; s.ka1103 = 1; store(SET_KEY, s); } if (s.mkaDate === undefined) s.mkaDate = '2026-11-25'; if (s.ekaDate === undefined) s.ekaDate = '2026-11-06'; if (!s.dka1116) { if (s.dkaDate === undefined || s.dkaDate === null || s.dkaDate === '2026-11-09') s.dkaDate = '2026-11-16'; s.dka1116 = 1; store(SET_KEY, s); } if (s.mhDate === undefined) s.mhDate = '2026-11-11'; return s; }
   function log() { return store(LOG_KEY) || {}; }
   function secs(day, subj) { var l = log(); return (l[day] && l[day][subj]) || 0; }
   var logCache = log();
@@ -3652,9 +3696,9 @@ window.LU5 = (function () {
       var box = $('dkaBox'); if (!box) return; box.hidden = !st.dkaDate; if (!st.dkaDate) return;
       var d = new Date(st.dkaDate + 'T00:00:00'), t0 = new Date(now.getFullYear(), now.getMonth(), now.getDate()), days = Math.round((d - t0) / 86400000);
       var when = d.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' });
-      if (days > 1) { $('dkaNum').textContent = days; $('dkaText').innerHTML = '<b>Tage bis zur Deutsch-HÜ</b> am ' + when + '. Thema: kurze Vokale.' + (days <= 4 ? ' Jeden Tag ein bis zwei Probe-HÜs!' : ''); }
-      else if (days === 1) { $('dkaNum').textContent = '1'; $('dkaText').innerHTML = '<b>Morgen ist die Deutsch-HÜ!</b> Heute die Generalprobe und die Fehlerwörter noch einmal schreiben.'; }
-      else if (days === 0) { $('dkaNum').textContent = '★'; $('dkaText').innerHTML = '<b>Heute ist die Deutsch-HÜ.</b> Viel Glück' + esc(kidName(', ')) + '! Kurz oder lang? Dann die Regel. Am Ende jedes Wort prüfen.'; }
+      if (days > 1) { $('dkaNum').textContent = days; $('dkaText').innerHTML = '<b>Tage bis zur Deutsch-HÜ</b> am ' + when + '. Thema: lange Vokale – Merksätze und Anwenden.' + (days <= 5 ? ' Jeden Tag die Merksätze und eine Probe-HÜ!' : ' Jeden Tag 5 Minuten Merksätze.'); }
+      else if (days === 1) { $('dkaNum').textContent = '1'; $('dkaText').innerHTML = '<b>Morgen ist die Deutsch-HÜ!</b> Heute die Generalprobe und die vier Merksätze einmal laut aufsagen.'; }
+      else if (days === 0) { $('dkaNum').textContent = '★'; $('dkaText').innerHTML = '<b>Heute ist die Deutsch-HÜ.</b> Viel Glück' + esc(kidName(', ')) + '! Jede Aufgabe zweimal lesen, Regel 1 bis 4 im Kopf, am Ende jedes Wort prüfen.'; }
       else { $('dkaNum').textContent = '✓'; $('dkaText').innerHTML = '<b>Die Deutsch-HÜ ist vorbei.</b> Neues Datum unten eintragen.'; }
     })();
     (function () {
@@ -3719,6 +3763,7 @@ window.LU5 = (function () {
     }
     $('logTable').querySelector('tbody').innerHTML = rows;
     if (window.LU5Voc) window.LU5Voc.home();
+    if (window.LU5Fit) LU5Fit.home();
     if ($('deMin')) $('deMin').textContent = minText(secs(k, 'de')) + ' heute';
     if (window.LU5De) window.LU5De.home();
     if ($('ekMin')) $('ekMin').textContent = minText(secs(k, 'ek')) + ' heute';
@@ -3729,7 +3774,7 @@ window.LU5 = (function () {
   /* ================= Tagesplan ================= */
   /* Was als Nächstes geschrieben wird, kommt zuerst. Höchstens 2 Probe-HÜs pro Tag. */
   var PROBES = {
-    de: { pre: 'd', n: 6, lv: ['Warm-up', 'Normal', 'Normal+', 'Normal', 'Profi', 'Generalprobe'], min: 15, max: 2, from: 4 },
+    de: { pre: 'l', n: 6, lv: ['Warm-up', 'Normal', 'Normal+', 'Wie bei Frau Vester', 'Profi', 'Generalprobe'], min: 15, max: 2, from: 5, calm: 4 },
     mh: { pre: 'm', n: 4, lv: ['Warm-up', 'Normal', 'Normal+', 'Generalprobe'], min: 15, max: 1, from: 4 },
     ek: { pre: 'g', n: 4, lv: ['Warm-up', 'Normal', 'Normal+', 'Generalprobe'], min: 15, max: 2, from: 4 },
     en: { pre: 'e', n: 6, lv: ['Warm-up', 'Normal', 'Normal', 'Profi', 'Generalprobe', 'Schwerpunkte'], min: 45, max: 1, from: 3 }
@@ -3746,7 +3791,7 @@ window.LU5 = (function () {
     function today(id) { return list(id).some(function (x) { return dayKey(new Date(x.d)) === k; }); }
     function before(id) { return list(id).some(function (x) { return dayKey(new Date(x.d)) < k; }); }
     var open = ids.filter(function (id) { return !before(id); });
-    var target = Math.min(P.max, Math.ceil(open.length / Math.max(1, days)));
+    var target = Math.min(P.calm && days >= P.calm ? 1 : P.max, Math.ceil(open.length / Math.max(1, days)));
     var pickIds;
     if (open.length) {
       var doneT = open.filter(today), rest = open.filter(function (id) { return !today(id); });
@@ -3771,7 +3816,7 @@ window.LU5 = (function () {
     var up = T.filter(function (t) { return t.d !== null && t.d >= 1; }).sort(function (a, b) { return a.d - b.d; });
     var todayT = T.filter(function (t) { return t.d === 0; });
     var focus = up[0] || null, D = {}; T.forEach(function (t) { D[t.s] = t.d; });
-    var items = [], bonus = [];
+    var items = [], bonus = [], extraFit = null;
     function near(s) { return D[s] !== null && D[s] >= 1; }
     var busy = focus && focus.d <= 3;
     /* Fächer in der Reihenfolge der nächsten Termine */
@@ -3779,7 +3824,12 @@ window.LU5 = (function () {
     ['en', 'math', 'de', 'ek', 'mh'].forEach(function (s) { if (order.indexOf(s) < 0) order.push(s); });
     order.forEach(function (s) {
       var d = D[s];
-      if (s === 'de' || s === 'ek') {
+      if (s === 'de' && near('de') && d <= 14) {
+        /* Merksätze jeden Tag kurz, ab 5 Tagen vorher dazu eine Probe-HÜ */
+        var mDone = store('de-merk-day') === k;
+        items.push({ subj: 'de', title: 'Deutsch: Merksätze lange Vokale', sub: 'Regel 1 bis 4 · 10 kurze Aufgaben · ca. 5 Min', min: 5, done: mDone, keep: true, btn: mDone ? 'Nochmal' : 'Los', act: function () { go('de'); if (window.LU5De) LU5De.topic('merk'); } });
+        if (d <= PROBES.de.from) items = items.concat(probeItems('de', d, k));
+      } else if (s === 'de' || s === 'ek') {
         if (near(s) && d <= PROBES[s].from) items = items.concat(probeItems(s, d, k));
         else if (near(s) && d <= 14) items.push(minItem(s, SUBJ_NAME[s] + ' üben', s === 'de' ? 'Rechtschreib-Detektiv' : 'Karteikarten und Übungen', 10, L[s] || 0, function () { go(s); }));
       } else if (s === 'mh') {
@@ -3801,6 +3851,12 @@ window.LU5 = (function () {
         var vIt = minItem('voc', 'Englisch: Vokabel-Check', dueN ? dueN + ' Wörter heute dran' : 'Neue Wörter schreiben', 10, vs, function () { go('voc'); });
         if (dueN === 0 && vs > 0) { vIt.done = true; vIt.btn = 'Weiter'; }
         items.push(vIt);
+        /* Grammatik-Fit: Mo–Fr 5 Minuten Wiederholung der Klassenarbeits-Themen. Vor einer Arbeit am nächsten Tag nur als Bonus. */
+        if (window.LU5Fit && !near('en')) {
+          var fit = LU5Fit.today(), wd = now.getDay(), tomorrow = up.some(function (t) { return t.d === 1; });
+          var fIt = { subj: 'en', title: 'Englisch: Grammatik-Fit', sub: fit.name + ' · 6 Aufgaben · ca. 5 Min', min: 5, done: fit.done, keep: true, btn: fit.done ? 'Nochmal' : 'Los', act: function () { if (window.LU5) LU5.startEn('fit'); } };
+          if (fit.done || (wd >= 1 && wd <= 5 && !tomorrow)) items.push(fIt); else extraFit = fIt;
+        }
         if (near('en') && d <= PROBES.en.from) items = items.concat(probeItems('en', d, k));
         else if (near('en') && d <= 14) items.push(minItem('en', 'Englisch üben', 'Grammatik und Sätze', 10, Math.max(0, (L.en || 0) - vs), function () { go('en'); }));
       }
@@ -3816,10 +3872,11 @@ window.LU5 = (function () {
     /* Was nicht mehr in die Zeit passt, wird Bonus – die Vokabeln und das Wichtigste bleiben immer */
     var keep = [], used = 0, extra = [];
     items.forEach(function (x, i) {
-      if (x.done || i === 0 || x.subj === 'voc' || used + x.min <= budget + 5) { keep.push(x); if (!x.done) used += x.min; }
+      if (x.done || i === 0 || x.subj === 'voc' || x.keep || used + x.min <= budget + 5) { keep.push(x); if (!x.done) used += x.min; }
       else extra.push(x);
     });
     items = keep;
+    if (extraFit) extra.push(extraFit);
     /* Kopfzeile */
     var fe = $('planFocus');
     if (todayT.length) fe.textContent = 'Heute ' + todayT.map(function (t) { return TEST_NAME[t.s]; }).join(' und ') + ' – viel Glück!' + (focus ? ' · Danach: ' + TEST_NAME[focus.s] + (focus.d === 1 ? ' morgen' : ' in ' + focus.d + ' Tagen') : '');
@@ -4816,6 +4873,109 @@ window.LU5 = (function () {
     return lessonBase(k);
   };
 
+  /* ================= Grammatik-Fit: Wiederholung nach der Klassenarbeit vom 3.11. =================
+     Schwächen aus der Arbeit: Kurzformen (he's/she's/we're), my/your/its/their, Fragen mit be, Zahlen -teen/-ty.
+     Jeden Schultag 6 kurze Aufgaben: 4 zum Thema des Tages, 2 aus den anderen Themen (das Schwächste zuerst). */
+  var SHORT = [
+    'Hello, my name is Scout. ___ a seagull.|I\'m', 'My mum\'s name is Coco and ___ a teacher.|she\'s', 'Seagull School? ___ a school for young seagulls.|It\'s',
+    'My dad\'s name is Rocky and ___ from Brighton.|he\'s', 'I have lots of brothers and sisters and ___ all nice.|they\'re', 'Ellie and I like snacks. ___ always hungry!|We\'re',
+    'Hi Tom! ___ my best friend.|You\'re', 'My sister Ellie is cool. ___ really funny.|She\'s', 'Look at my new bike. ___ red and black.|It\'s',
+    'Mr Brown is our teacher. ___ very friendly.|He\'s', 'My grandparents live in Speyer. ___ very nice.|They\'re', 'My friends and I are in Year 5. ___ at the same school.|We\'re',
+    'Lily and her brother? ___ from London.|They\'re', 'This is my cat. ___ three years old.|It\'s', 'My aunt lives in Italy. ___ a doctor.|She\'s',
+    'Are you OK, Mia? ___ late today!|You\'re', 'My brother is twelve. ___ in Year 7.|He\'s', 'My sister and I play the trumpet. ___ in a band.|We\'re',
+    'Brighton is my hometown. ___ by the sea.|It\'s', 'Paul and Andy are my best friends. ___ in Year 8.|They\'re', 'I like my school. ___ in class 5a.|I\'m',
+    'Emilia is my sister. ___ nine years old.|She\'s', 'Leo is my cousin. ___ eleven.|He\'s'
+  ];
+  var SHORT_ALL = ['I\'m', 'you\'re', 'he\'s', 'she\'s', 'it\'s', 'we\'re', 'they\'re'];
+  G.short = function (i) {
+    var it = splitItem(SHORT[i]), a = it.a, opts = SHORT_ALL.map(function (x) { return capLike(x, a); }), mode = choiceOrType(0.65);
+    return { q: (mode === 'type' ? 'Schreib die passende Kurzform: <b>I’m, you’re, he’s, she’s, it’s, we’re, they’re</b>.' : 'Welche Kurzform passt?') + '<br>§', sent: it.s, mode: mode, options: optsFrom(a, opts, 4), answer: [a].concat(it.rest), say: it.s.replace('___', a), explain: RULES.short, lesson: 'short',
+      hints: ['Wer ist gemeint? Schau auf das Wort <b>vor</b> der Lücke: ein Junge/Mann → he’s · ein Mädchen/eine Frau → she’s · ein Ding/eine Schule → it’s · ich und andere → we’re · mehrere → they’re.'], hint: 'Wer ist gemeint? Einer, eine, eins oder mehrere?' };
+  };
+  POSS = POSS.concat(['Mike: “Look, this is ___ new room. Isn’t it nice?”|my', 'John: “I like ___ sofa, Mike.”|your', 'The sofa is new. ___ colour is cool.|Its',
+    'My sister is at university now. I have ___ old computer.|her', 'I have two guinea pigs. ___ names are Fred and Jill.|Their', 'Peter and I are at Brighton School. ___ school is great.|Our',
+    'Paul, is this ___ ruler?|your', 'My brother loves ___ bike.|his']);
+  SIZE.poss = POSS.length;
+  var BEQF = [
+    ['___ mum and dad from the USA? – No, they aren\'t. They are from England.', 'Are your', ['My are', 'Is your', 'Are you']],
+    ['___ at Varndean School? – Yes, I am.', 'Are you', ['Is you', 'Am you', 'You are']],
+    ['___ Mr Brown your English teacher? – No, he isn\'t.', 'Is', ['Are', 'Am', 'His']],
+    ['___ sister ten? – Yes, she is.', 'Is your', ['Are your', 'Is you', 'Your is']],
+    ['___ new teacher nice? – Yes, she is.', 'Is your', ['Are your', 'Is she', 'Is you']],
+    ['___ grandparents from Italy? – No, they aren\'t.', 'Are your', ['Is your', 'Are they', 'Your are']],
+    ['___ eleven? – No, he isn\'t. He\'s ten.', 'Is he', ['Are he', 'Is his', 'He is']],
+    ['___ in Year 5? – Yes, they are.', 'Are they', ['Is they', 'Are their', 'They are']],
+    ['___ dog\'s name Max? – Yes, it is.', 'Is your', ['Are your', 'Is you', 'Is it']],
+    ['___ friends in your class? – Yes, they are.', 'Are your', ['Is your', 'Are you', 'Are they']],
+    ['___ late? – No, you aren\'t.', 'Am I', ['Are I', 'Is I', 'I am']],
+    ['___ favourite colour purple? – Yes, it is.', 'Is your', ['Are your', 'Is you', 'Is it']],
+    ['___ parents at home? – No, they aren\'t.', 'Are your', ['Is your', 'Are their', 'Are they']],
+    ['___ from Scotland? – Yes, she is.', 'Is she', ['Are she', 'Is her', 'She is']],
+    ['___ brother and sister twins? – No, they aren\'t.', 'Are your', ['Is your', 'Are you', 'Your are']],
+    ['___ guinea pigs\' names Fred and Jill? – Yes, they are.', 'Are your', ['Is your', 'Are you', 'Are they']]
+  ];
+  G.beqf = function (i) {
+    var it = BEQF[i], mode = choiceOrType(0.6), two = /\s/.test(it[1]);
+    return { q: (mode === 'type' ? 'Bilde die Frage. Schreib ' + (two ? '<b>zwei Wörter</b>: am / is / are und ein Pronomen oder my, your …' : 'das fehlende Wort') + '.' : 'Was gehört in die Lücke?') + '<br>§', sent: it[0], mode: mode, options: shuffle([it[1]].concat(it[2])), answer: [it[1]], noExpand: true, say: it[0].replace('___', it[1]), explain: RULES.beqf, lesson: 'beqf',
+      hints: ['Lies zuerst die <b>Antwort</b>: they → Are … ? · she / he / it → Is … ? · I → Are you … ?'], hint: 'Fragen beginnen mit Am / Is / Are. Danach kommt wer: you, he, she … oder your, his, her + Nomen.' };
+  };
+  var TF = [13, 30, 14, 40, 15, 50, 16, 60, 17, 70, 18, 80, 19, 90, 27, 46, 75, 91, 52, 34, 12, 20, 11, 44, 99, 68, 83, 15, 40, 18];
+  function badNum(w) {
+    var o = [];
+    if (/^forty/.test(w)) o.push(w.replace('forty', 'fourty'));
+    if (/^fifteen|^fifty/.test(w)) o.push(w.replace('fif', 'five'));
+    if (/^eighteen/.test(w)) o.push('eightteen');
+    if (/^eighty/.test(w)) o.push(w.replace('eighty', 'eigthy'));
+    if (/^thirteen|^thirty/.test(w)) o.push(w.replace('thir', 'three'));
+    if (w === 'twelve') o.push('twelf');
+    if (w === 'eleven') o.push('elefen');
+    if (/-/.test(w)) o.push(w.replace('-', ''));
+    return o;
+  }
+  G.tens = function (i) {
+    var n = TF[i % TF.length], w = numWord(n), r = Math.random();
+    var twin = n > 12 && n < 20 ? numWord((n - 10) * 10) : n >= 30 && n % 10 === 0 ? numWord(n / 10 + 10) : null;
+    if (r < 0.4) return { q: 'Schreibe die Zahl als Wort: <span class="anagram">' + n + '</span>', mode: 'type', answer: [w], numWord: true, explain: RULES.tens, lesson: 'tens', hint: n >= 13 && n <= 19 ? '13 bis 19 enden auf <b>-teen</b>.' : n >= 20 ? 'Zehner enden auf <b>-ty</b>. Zwischen Zehner und Einer kommt ein Bindestrich.' : 'Das ist eine Sonderzahl.' };
+    if (r < 0.75) {
+      var wrong = badNum(w); if (twin && twin !== w) wrong.unshift(twin);
+      wrong = wrong.filter(function (x, k) { return x !== w && wrong.indexOf(x) === k; }).slice(0, 2);
+      if (wrong.length >= 1) return { q: 'Welche Schreibweise ist richtig? <span class="anagram">' + n + '</span>', mode: 'choice', options: shuffle([w].concat(wrong)), answer: [w], explain: RULES.tens, lesson: 'tens', hints: ['Hör genau: <b>-teen</b> (13–19) wird lang und betont am Ende gesprochen, <b>-ty</b> (20, 30 …) betont vorne.'] };
+    }
+    return { listen: true, say: String(n), q: 'Hör gut zu und schreibe die Zahl, die du hörst. <b>-teen</b> oder <b>-ty</b>?', mode: 'type', answer: [String(n), w], numeric: true, explain: 'Die Zahl war: <b>' + n + ' (' + esc(w) + ')</b>. ' + RULES.tens, lesson: 'tens' };
+  };
+  SKILLS.short = { name: 'Kurzformen: I’m, he’s, they’re …', cls: 's-gram' };
+  SKILLS.beqf = { name: 'Fragen mit be bilden', cls: 's-gram' };
+  SKILLS.tens = { name: 'Zahlen: -teen oder -ty?', cls: 's-words' };
+  RULES.short = 'Erst fragen: <b>Wer</b> ist gemeint? I → <span class="ex">I’m</span> · du → <span class="ex">you’re</span> · ein Junge/Mann → <span class="ex">he’s</span> · ein Mädchen/eine Frau (auch Mum, Oma) → <span class="ex">she’s</span> · ein Ding, eine Schule, ein Tier → <span class="ex">it’s</span> · ich und andere (Ellie and I) → <span class="ex">we’re</span> · mehrere (they) → <span class="ex">they’re</span>.';
+  RULES.beqf = 'Frage mit be: <b>Am / Is / Are</b> kommt nach vorne, dann <b>wer</b>: <span class="ex">Are your mum and dad from the USA?</span> · <span class="ex">Is your sister ten?</span> · <span class="ex">Are you at Varndean?</span> Tipp: Die Antwort verrät die Form – they aren’t → <b>Are</b> …? · she is → <b>Is</b> …?';
+  RULES.tens = '<b>13–19 → -teen:</b> thirteen, fourteen, fifteen, sixteen, seventeen, <b>eighteen</b> (nur ein t), nineteen. <b>Zehner → -ty:</b> twenty, thirty, <b>forty</b> (ohne u!), <b>fifty</b>, sixty, seventy, eighty, ninety. Mit Bindestrich: <span class="ex">twenty-seven</span>, <span class="ex">forty-six</span>, <span class="ex">ninety-one</span>.';
+  SIZE.short = SHORT.length; SIZE.beqf = BEQF.length; SIZE.tens = TF.length;
+  ['short', 'beqf', 'tens'].forEach(function (x) { if (ORDER.indexOf(x) === -1) ORDER.unshift(x); });
+  var lessonFit = lessonHtml;
+  lessonHtml = function (k) {
+    if (k === 'short') return '<h3>Kurzformen von <i>be</i></h3><table><tr><th>Wer?</th><th>Kurzform</th><th>Beispiel</th></tr><tr><td>ich</td><td><b>I’m</b></td><td>I’m Scout.</td></tr><tr><td>du</td><td><b>you’re</b></td><td>You’re a student.</td></tr><tr><td>Junge, Mann, Dad</td><td><b>he’s</b></td><td>My dad? He’s from Brighton.</td></tr><tr><td>Mädchen, Frau, Mum</td><td><b>she’s</b></td><td>My mum? She’s a teacher.</td></tr><tr><td>Ding, Schule, Tier</td><td><b>it’s</b></td><td>It’s a school for seagulls.</td></tr><tr><td>ich + andere</td><td><b>we’re</b></td><td>Ellie and I? We’re friends.</td></tr><tr><td>mehrere</td><td><b>they’re</b></td><td>They’re all nice.</td></tr></table><p class="trick"><b>Detektiv-Trick:</b> Zeig mit dem Finger auf das Wort, um das es geht (Mum, school, Ellie and I …). Erst dann die Kurzform wählen.</p>';
+    if (k === 'beqf') return '<h3>Fragen mit <i>be</i></h3><table><tr><th>Aussage</th><th>Frage</th></tr><tr><td>Your mum and dad <b>are</b> from the USA.</td><td><b>Are your</b> mum and dad from the USA?</td></tr><tr><td>Your sister <b>is</b> ten.</td><td><b>Is your</b> sister ten?</td></tr><tr><td>You <b>are</b> at Varndean.</td><td><b>Are you</b> at Varndean?</td></tr></table><p class="trick"><b>Trick:</b> Lies erst die Antwort. „No, they aren’t“ → mehrere → <b>Are</b> … ? „Yes, she is“ → <b>Is</b> … ?</p>';
+    if (k === 'tens') return '<h3>-teen oder -ty?</h3><table><tr><td>13 thirteen</td><td>30 thirty</td></tr><tr><td>14 fourteen</td><td>40 <b>forty</b> (ohne u!)</td></tr><tr><td>15 <b>fifteen</b></td><td>50 <b>fifty</b></td></tr><tr><td>18 <b>eighteen</b></td><td>80 eighty</td></tr><tr><td>19 nineteen</td><td>90 ninety</td></tr></table><p class="trick"><b>Bindestrich:</b> 46 = forty-six · 75 = seventy-five · 91 = ninety-one</p>';
+    return lessonFit(k);
+  };
+  var FIT = ['short', 'poss', 'beqf', 'tens'];
+  var FIT_NAME = { short: 'Kurzformen: I’m, she’s, they’re', poss: 'my, your, its, their', beqf: 'Fragen mit be: Are your …?', tens: 'Zahlen: -teen oder -ty?', mix: 'Alles aus der Woche' };
+  var FIT_DAY = { 1: 'short', 2: 'poss', 3: 'beqf', 4: 'tens' };
+  function fitFocus(d) { d = d || new Date(); return FIT_DAY[d.getDay()] || 'mix'; }
+  function fitPct(sk) { var a = enStats()[sk]; return a && a.length ? Math.round(avg(a) * 100) : null; }
+  window.LU5Fit = {
+    today: function () { var f = fitFocus(); return { focus: f, name: FIT_NAME[f], done: store('en-fit-day') === dayKey() }; },
+    home: function () {
+      var ul = $('fitList'); if (!ul) return;
+      var t = this.today();
+      $('fitToday').textContent = t.done ? 'heute geschafft ✓' : 'heute: ' + t.name;
+      ul.innerHTML = FIT.map(function (sk) {
+        var p = fitPct(sk);
+        return '<li><span>' + esc(FIT_NAME[sk]) + '</span><span class="goalbar voc-bar"><i style="width:' + (p || 0) + '%"></i></span><b>' + (p === null ? 'neu' : p + ' %') + '</b></li>';
+      }).join('');
+    }
+  };
+  setTimeout(function () { if (window.LU5Fit) LU5Fit.home(); if (window.LU5Plan) LU5Plan(); }, 0);
   /* ================= Bewerten ================= */
   var EXP = [[/\bi'm\b/g, 'i am'], [/\byou're\b/g, 'you are'], [/\bwe're\b/g, 'we are'], [/\bthey're\b/g, 'they are'], [/\b(he|she|it|there|what|that)'s\b/g, '$1 is'], [/\bisn't\b/g, 'is not'], [/\baren't\b/g, 'are not'], [/\bcan't\b/g, 'can not'], [/\bcannot\b/g, 'can not'], [/\bdon't\b/g, 'do not'], [/\bdoesn't\b/g, 'does not'], [/\bhaven't\b/g, 'have not']];
   function norm(s, t) {
@@ -4843,7 +5003,8 @@ window.LU5 = (function () {
   function enStats() { return store(EST) || {}; }
   function avg(arr) { if (!arr || !arr.length) return null; return arr.reduce(function (a, b) { return a + b; }, 0) / arr.length; }
   var TOPICS = [
-    ['Klassenarbeit am 3. November', [['ka', 'KA-Training'], ['themen', 'Tiere, Zahlen, Schulsachen, Familie'], ['voc', 'Heft-Vokabeln'], ['hisher', 'he/she ↔ his/her/their'], ['qw', 'Fragewörter'], ['plur', 'Plural'], ['heft', 'Typische Fehler'], ['famsent', 'Familien-Sätze bauen'], ['family', 'Mein Familientext'], ['probe', 'Probe-Klassenarbeit']]],
+    ['Grammatik-Fit: Wiederholung nach der Klassenarbeit', [['fit', 'Grammatik-Fit von heute'], ['short', 'I’m, he’s, they’re …'], ['poss', 'my, your, its, their …'], ['beqf', 'Fragen mit be'], ['tens', 'Zahlen: -teen / -ty'], ['hisher', 'he ↔ his']]],
+    ['Klassenarbeit 1 (3. November)', [['ka', 'KA-Training'], ['themen', 'Tiere, Zahlen, Schulsachen, Familie'], ['voc', 'Heft-Vokabeln'], ['hisher', 'he/she ↔ his/her/their'], ['qw', 'Fragewörter'], ['plur', 'Plural'], ['heft', 'Typische Fehler'], ['famsent', 'Familien-Sätze bauen'], ['family', 'Mein Familientext'], ['probe', 'Probe-Klassenarbeit']]],
     ['Welcome', [['welmix', 'Welcome-Mix'], ['be', 'am / is / are'], ['beneg', 'positiv ↔ negativ'], ['beq', 'Fragen & Kurzantworten'], ['pron', 'I, you, he …'], ['likes', 'Things I like'], ['wwords', 'Tage, Farben, Zahlen'], ['match', 'Paare finden'], ['fix', 'Fehler-Detektiv'], ['order', 'Hör-Puzzle: Sätze bauen'], ['wel', 'Welcome-Sätze']]],
     ['Allgemein', [['mix', 'Alles gemischt'], ['probe', 'Probe-Klassenarbeit'], ['write', 'Schreiben & Sprechen']]],
     ['Detektiv: mutig ohne Übersetzen', [['gapd', 'Lückentext-Detektiv'], ['obj', 'Pronomen-Detektiv'], ['chunk', 'Ohne Übersetzen']]],
@@ -4852,10 +5013,11 @@ window.LU5 = (function () {
     ['Wörter', [['num', 'Zahlen'], ['words', 'Wörter']]]
   ];
   if (window.LU5) TOPICS.forEach(function (g) { g[1].forEach(function (x) { LU5.labels.e[x[0]] = x[1]; }); });
-  function topicName(t) { var n = t === 'welmix' ? 'Welcome-Mix' : t === 'ka' ? 'KA-Training' : t; TOPICS.forEach(function (g) { g[1].forEach(function (x) { if (x[0] === t) n = x[1]; }); }); return n; }
+  function topicName(t) { var n = t === 'welmix' ? 'Welcome-Mix' : t === 'ka' ? 'KA-Training' : t === 'fit' ? 'Grammatik-Fit' : t; TOPICS.forEach(function (g) { g[1].forEach(function (x) { if (x[0] === t) n = x[1]; }); }); return n; }
   function weights(stats) { var w = {}; ORDER.forEach(function (s) { var a = avg(stats[s]); w[s] = (a === null ? 2.2 : 1 + 3 * (1 - a)) * (s === 'listen' || s === 'phr' ? 1.3 : 1) * (s === 'words' ? 0.6 : 1) * (WEL_SET.indexOf(s) !== -1 ? 1.8 : 1) * (['aan', 'can', 'gen', 'there'].indexOf(s) !== -1 ? 0.35 : 1) * (KA_SET.indexOf(s) !== -1 ? 2 : 1); }); return w; }
   function wpick(w) { var tot = 0, k; for (k in w) tot += w[k]; var r = Math.random() * tot; for (k in w) { r -= w[k]; if (r <= 0) return k; } return ORDER[0]; }
   function buildRound(topic) {
+    if (topic === 'fit') return buildRound0(topic);
     var lv = window.LU5 ? LU5.get('e', topic) : 2, tasks = buildRound0(topic);
     if (topic === 'probe' || lv === 2) return tasks;
     if (lv === 1) {
@@ -4883,6 +5045,15 @@ window.LU5 = (function () {
       for (var tries = 0; tries < 25; tries++) if (add(make(s))) return;
       for (var t2 = 0; t2 < 10; t2++) { var x = make(s); if (!x.ref || !used[x.ref]) { if (x.ref) used[x.ref] = 1; tasks.push(x); return; } }
       tasks.push(make(s));
+    }
+    if (topic === 'fit') {
+      var ff = fitFocus(), fw = {}, fall = weights(stats);
+      FIT.forEach(function (x) { fw[x] = fall[x] || 2; });
+      shuffle(missed.filter(function (r) { return FIT.indexOf(r.split(':')[0]) !== -1; })).slice(0, 2).forEach(function (ref) { var p = ref.split(':'); if (G[p[0]] && Number(p[1]) < SIZE[p[0]]) addAgain(make(p[0], Number(p[1]))); });
+      if (ff !== 'mix') while (tasks.length < 4) addSkill(ff);
+      var fc = {}, fg = 0;
+      while (tasks.length < 6 && fg++ < 100) { var fs = wpick(fw); if (fs === ff && fg < 60) continue; if ((fc[fs] || 0) >= 2 && fg < 80) continue; fc[fs] = (fc[fs] || 0) + 1; addSkill(fs); }
+      return shuffle(tasks);
     }
     if (topic === 'probe') {
       ['themen', 'themen', 'themen', 'themen', 'voc', 'voc', 'voc', 'hisher', 'hisher', 'hisher', 'qw', 'qw', 'plur', 'heft', 'famsent', 'famsent', 'be', 'beneg', 'beq', 'pron', 'poss', 'wel', 'wwords', 'listen'].forEach(addSkill);
@@ -4913,6 +5084,8 @@ window.LU5 = (function () {
     return shuffle(tasks);
   }
   function recommend() {
+    var kd = settings().kaDate, kdays = kd ? Math.round((new Date(kd + 'T00:00:00') - new Date(new Date().toDateString())) / 86400000) : -1;
+    if (kdays < 0 && window.LU5Fit) { var ft = LU5Fit.today(); return ft.done ? { topic: 'mix', text: 'Grammatik-Fit für heute geschafft! Wenn du Lust hast: eine <b>gemischte Runde</b>.', btn: 'Gemischt üben' } : { topic: 'fit', text: 'Heute im <b>Grammatik-Fit</b>: ' + esc(ft.name) + '. Nur 6 kurze Aufgaben.', btn: 'Grammatik-Fit starten' }; }
     var st = enStats(), best = null, bestA = 2;
     for (var i = 0; i < ORDER.length; i++) { var s = ORDER[i]; if (KA_SET.indexOf(s) === -1 && settings().kaDate) continue; if (!st[s] || !st[s].length) return { topic: s, text: 'Neu für dich: <b>' + esc(SKILLS[s].name) + '</b>. Probier es aus!', btn: SKILLS[s].name + ' üben' }; var a = avg(st[s]); if (a < bestA) { bestA = a; best = s; } }
     var settingsK = settings().kaDate, near = false;
@@ -4930,7 +5103,7 @@ window.LU5 = (function () {
   function enStart() {
     var s = store(ERUN);
     if (s && s.v === 2 && Array.isArray(s.tasks) && s.tasks.length && !s.done && s.tasks.every(function (t) { return t && t.mode; })) enState = s;
-    else newEnRound('ka');
+    else newEnRound(window.LU5Fit ? 'fit' : 'ka');
     if (!store('en-ka-nov')) { store('en-ka-nov', 1); newEnRound('ka'); }
   }
   function record(t, score) {
@@ -5099,7 +5272,7 @@ window.LU5 = (function () {
     finish(t, 0, wrongFb(t));
   }
   function nextTask() {
-    if (enState.i + 1 >= enState.tasks.length) { enState.done = true; }
+    if (enState.i + 1 >= enState.tasks.length) { enState.done = true; if (enState.topic === 'fit') { store('en-fit-day', dayKey()); if (window.LU5Fit) LU5Fit.home(); } }
     else { enState.i++; }
     enState.attempts = 0; enState.hint = false; enState.resolved = false; enState.fb = null; enState.chosen = null; enState.built = []; enState.input = ''; enState.showScript = false; enState.hintN = 0; enState.tried = []; enState.mSel = null; enState.mL = []; enState.mR = []; enState.mErr = 0; enState.mBad = null; enState.lessonOpen = false;
     saveEn(); renderEn(); window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -5119,7 +5292,7 @@ window.LU5 = (function () {
     $('enAgain').onclick = function () { newEnRound(enState.topic); renderEn(); window.scrollTo(0, 0); }; }
   function renderRules() {
     if ($('enRules').childElementCount) return;
-    $('enRules').innerHTML = ['hisher', 'qw', 'plur', 'voc', 'be', 'beneg', 'beq', 'pron', 'likes', 'wwords', 'wel', 'gapd', 'obj', 'chunk', 'aan', 'poss', 'can', 'gen', 'there', 'order', 'num', 'phr', 'listen'].map(function (s) { return '<div class="rule"><h3>' + esc(SKILLS[s].name) + '</h3><p>' + RULES[s] + '</p></div>'; }).join('');
+    $('enRules').innerHTML = ['short', 'beqf', 'tens', 'hisher', 'qw', 'plur', 'voc', 'be', 'beneg', 'beq', 'pron', 'likes', 'wwords', 'wel', 'gapd', 'obj', 'chunk', 'aan', 'poss', 'can', 'gen', 'there', 'order', 'num', 'phr', 'listen'].map(function (s) { return '<div class="rule"><h3>' + esc(SKILLS[s].name) + '</h3><p>' + RULES[s] + '</p></div>'; }).join('');
   }
   function renderLevels() {
     var st = enStats(), good = 0;
@@ -5854,6 +6027,34 @@ window.LU5 = (function () {
   var SATZ = ['Der Imker hebt den [Deckel|Dekel] vom Kasten.', 'Im Sommer [summen|sumen] die Bienen im Garten.', 'Die Königin [sitzt|sizt] in der Mitte.', 'Die Bienen [sammeln|sameln] den Pollen.', 'Im Winter bleiben die Bienen im [Stock|Stok].', 'Der Honig schmeckt [lecker|leker].', 'Die Katze liegt in der [Sonne|Sone].', 'Ein [Spatz|Spaz] sitzt auf dem Dach.', 'Der Bäcker [backt|bakt] frische Brötchen.', 'Im [Park|Parck] steht eine Bank.', 'Mein Herz klopft [ganz|gantz] schnell.', 'Der Falke fliegt über den [Wald|Walld].', 'Das Kind trinkt eine Tasse [Tee|Te].', 'Wir fahren mit dem [Boot|Bot] über den See.', 'Auf der [Wiese|Wise] wachsen Blumen.', 'Der [Tiger|Tieger] schleicht durch das Gras.', 'Ich gebe [ihm|im] das Buch.', 'Der Zug fährt auf der [Bahn|Ban].', 'Das [Huhn|Hun] legt ein Ei.', 'Der Lehrer [zählt|zält] die Hefte.', 'Im Winter fällt viel [Schnee|Schne].', 'Sieben [Riesen|Risen] niesen laut.', 'Ich habe ein [paar|Paar] Äpfel gekauft.', 'Lena trägt ein neues [Paar|paar] Schuhe.', 'Der Hase hat lange [Ohren|Oren].', 'Die Ziege frisst [Moos|Mos] und Gras.', 'Das Nashorn [wühlt|wült] im Schlamm.', 'Die Kinder [rennen|renen] über den Hof.', 'Am Morgen ist der [Himmel|Himel] blau.', 'Die Bienen [fliegen|fligen] zum Stock zurück.', 'Vier [Spatzen|Spazen] sitzen auf dem Zaun.', 'Die Schnecke kriecht über das [Blatt|Blat].', 'Der Imker [stellt|stelt] die Kästen auf.', 'Der [Imker|Immker] trägt einen Hut.', 'Im [Winter|Wintter] ist es kalt.', 'Der Zug hält am [Bahnhof|Banhof].', 'Der Arzt hilft dem [kranken|krancken] Kind.', 'Mein Bruder isst gern [Kuchen|Kuhchen].'];
   var FORM = ['stellen → er …|stellt', 'rollen → es …|rollt', 'brummen → der Bär …|brummt', 'summen → die Biene …|summt', 'sammeln → sie …|sammelt', 'rennen → er …|rennt', 'fallen → es …|fällt', 'kennen → sie …|kennt', 'schwimmen → er …|schwimmt', 'kommen → sie …|kommt', 'packen → er …|packt', 'sitzen → sie …|sitzt', 'putzen → er …|putzt', 'schmecken → es …|schmeckt', 'kratzen → die Katze …|kratzt', 'wohnen → sie …|wohnt', 'fahren → er …|fährt', 'zählen → sie …|zählt', 'fühlen → er …|fühlt', 'fliegen → die Biene …|fliegt', 'frieren → sie …|friert', 'nehmen → er …|nimmt|Ausnahme: nehmen → er nimmt (kurzes i, doppeltes m)', 'sehen → sie …|sieht',
     'Heute: ich nehme. Gestern: ich …|nahm', 'Heute: ich sehe. Gestern: ich …|sah', 'Heute: ich stehle. Gestern: ich …|stahl', 'Heute: ich fehle. Gestern: ich …|fehlte', 'Heute: ich stehe. Gestern: ich …|stand', 'Heute: ich fliehe. Gestern: ich …|floh', 'Heute: ich falle. Gestern: ich …|fiel', 'Heute: ich schreie. Gestern: ich …|schrie', 'Heute: ich rufe. Gestern: ich …|rief', 'Heute: ich halte. Gestern: ich …|hielt', 'Heute: ich schlafe. Gestern: ich …|schlief', 'Heute: ich schreibe. Gestern: ich …|schrieb', 'Heute: ich laufe. Gestern: ich …|lief', 'Heute: ich fliege. Gestern: ich …|flog'];
+  /* Merksätze lange Vokale (HÜ 16.11.): 'Satz mit ___|richtig|falsch|falsch' – Regel 1–4 wie in den Probe-HÜs */
+  var MERK = [
+    'Regel 1: Die meisten Wörter mit lang gesprochenem Vokal schreibt man ___ besonderes Zeichen.|ohne|mit|immer mit',
+    'Regel 1: Nach einem langen Vokal wird der Konsonant ___ verdoppelt.|nicht|immer|meistens',
+    'Regel 1: Beispiel für ein Wort mit langem Vokal ohne Zeichen: ___|Hose|Hohse|Hoose',
+    'Regel 2: Manchmal steht nach dem langen Vokal ein ___.|Dehnungs-h|Doppelvokal|ck',
+    'Regel 2: Das Dehnungs-h steht fast immer vor ___.|l, m, n, r|ck und tz|ei, au, eu',
+    'Regel 2: Für das Dehnungs-h gibt es keine feste Regel. Solche Wörter muss man sich ___.|merken|nicht merken|abschreiben',
+    'Regel 2: Beispiel für ein Wort mit Dehnungs-h: ___|Bahn|Ban|Baan',
+    'Regel 3: Nur wenige Wörter haben einen ___: aa, ee oder oo.|Doppelvokal|Doppelkonsonanten|Dehnungs-h',
+    'Regel 3: Die Umlaute ä, ö und ü werden ___ verdoppelt.|nie|immer|meistens',
+    'Regel 3: Das Haar → das kleine ___|Härchen|Häärchen|Hahrchen',
+    'Regel 3: Beispiel für ein Wort mit Doppelvokal: ___|Boot|Bot|Boht',
+    'Regel 4: Das lang gesprochene i schreibt man meistens ___.|ie|i|ih',
+    'Regel 4: Wörter aus anderen Sprachen wie Tiger, Kino und Maschine schreibt man nur mit ___.|i|ie|ih',
+    'Regel 4: Auch mir, dir und wir schreibt man nur mit ___.|i|ie|ih',
+    'Regel 4: Mit ih schreibt man nur ihr, ihm, ___ und ihnen.|ihn|ien|in',
+    'Regel 4: Beispiel für ein Wort mit ie: ___|Biene|Bine|Bihne',
+    'Kurz oder lang? Beim ___ Vokal kann man den Laut ziehen: Hoooose.|langen|kurzen|doppelten',
+    'ein paar Äpfel (= einige) schreibt man ___.|klein|groß|mit ee',
+    'ein Paar Schuhe (= zwei, die zusammengehören) schreibt man ___.|groß|klein|mit aa'
+  ];
+  /* Welche Regel? 'Wort|Regel (1–4)' */
+  var REGEL = ['Nase|1', 'Hose|1', 'Blume|1', 'Tafel|1', 'Schule|1', 'Name|1', 'Honig|1', 'Brot|1', 'Igel|1', 'Kamel|1', 'Rabe|1', 'Krone|1',
+    'Bahn|2', 'Zahl|2', 'Uhr|2', 'Stuhl|2', 'Kohl|2', 'wohnen|2', 'Lehrer|2', 'Fehler|2', 'fahren|2', 'Huhn|2', 'Zahn|2', 'fühlen|2', 'Mehl|2', 'Sohn|2',
+    'Haar|3', 'Boot|3', 'Tee|3', 'Zoo|3', 'Schnee|3', 'Moos|3', 'See|3', 'Waage|3', 'Klee|3', 'Saal|3', 'Meer|3', 'Idee|3',
+    'Biene|4', 'Wiese|4', 'Brief|4', 'Spiegel|4', 'Riese|4', 'Fliege|4', 'Ziege|4', 'vier|4', 'tief|4', 'Dienstag|4', 'Papier|4', 'Lied|4'];
+  var REGEL_N = ['Regel 1: einfach', 'Regel 2: Dehnungs-h', 'Regel 3: aa, ee, oo', 'Regel 4: ie'];
   /* Diktat: alle richtigen Wörter aus den Listen, ohne gleich klingende Wörter */
   var NODIKT = { Rad: 1, Weg: 1, Kamm: 1, Saat: 1, Uhr: 1, Ruhe: 1, Mühle: 1, Teer: 1, Stahl: 1, Sohn: 1, Zeh: 1, Moos: 1, wir: 1, mir: 1, dir: 1, Ale: 1 };
   function gap(s) { var m = s.match(/^(.*)\{([^}]*)\}(.*)$/); var o = m[2].split('|'); return { pre: m[1], opts: o, post: m[3], word: m[1] + o[0] + m[3], variants: o.map(function (x) { return m[1] + x + m[3]; }) }; }
@@ -5861,13 +6062,16 @@ window.LU5 = (function () {
   [DK, CKZ, VK, H, AEO, IE].forEach(function (L) { L.forEach(function (s) { var w = gap(s).word; if (!NODIKT[w] && !/ä?rchen|tchen|Säle/.test(w) && DIKT.indexOf(w) === -1) DIKT.push(w); }); });
 
   var TOPICS = [
+    ['merk', 'Merksätze lange Vokale', 'HÜ 16.11.'], ['regel', 'Welche Regel? (1–4)', 'HÜ 16.11.'],
     ['kl', 'Kurz oder lang?', 'S. 354'], ['dk', 'Doppelter Konsonant', 'S. 355'], ['ckz', 'ck oder k? tz oder z?', 'S. 356–357'], ['vk', 'Verschiedene Konsonanten', 'S. 358'],
     ['h', 'Dehnungs-h oder nicht?', 'S. 363–366'], ['aeo', 'aa, ee, oo und paar/Paar', 'S. 367–368'], ['ie', 'ie, i oder ih?', 'S. 366, 369–370'],
     ['satz', 'Fehler-Detektiv', 'Sätze prüfen'], ['dikt', 'Hör-Diktat', 'Wörter schreiben'], ['formen', 'Verbformen', 'S. 355, 366, 370']];
   var TNAME = {}; TOPICS.forEach(function (t) { TNAME[t[0]] = t[1]; });
-  var SIZE = { kl: KL.length, dk: DK.length, ckz: CKZ.length, vk: VK.length, h: H.length, aeo: AEO.length + PAAR.length, ie: IE.length + IH.length, satz: SATZ.length, dikt: DIKT.length, formen: FORM.length };
+  var SIZE = { merk: MERK.length, regel: REGEL.length, kl: KL.length, dk: DK.length, ckz: CKZ.length, vk: VK.length, h: H.length, aeo: AEO.length + PAAR.length, ie: IE.length + IH.length, satz: SATZ.length, dikt: DIKT.length, formen: FORM.length };
 
   var RULE = {
+    merk: '<b>Die vier Merksätze für lange Vokale</b><br><b>Regel 1:</b> Die meisten Wörter mit lang gesprochenem Vokal schreibt man <b>ohne</b> besonderes Zeichen. Nach dem langen Vokal wird <b>nicht</b> verdoppelt: H<u>o</u>se, N<u>a</u>se, Bl<u>u</u>me.<br><b>Regel 2:</b> Manchmal steht nach dem langen Vokal ein <b>Dehnungs-h</b>, fast immer vor <b>l, m, n, r</b>: Za<b>h</b>l, ne<b>h</b>men, Ba<b>h</b>n, U<b>h</b>r. Merkwörter!<br><b>Regel 3:</b> Nur wenige Wörter haben einen <b>Doppelvokal</b>: H<b>aa</b>r, T<b>ee</b>, B<b>oo</b>t. ä, ö, ü werden <b>nie</b> verdoppelt: Härchen.<br><b>Regel 4:</b> Das lange i schreibt man meistens <b>ie</b>: B<b>ie</b>ne. Nur <b>i</b>: Tiger, Kino, mir, dir, wir. Nur <b>ih</b>: ihr, ihm, ihn, ihnen.',
+    regel: '<b>So findest du die Regel:</b> Sprich das Wort. Ist der Vokal lang? Dann schau hin:<br>kein Zeichen → <b>Regel 1</b> (Hose) · ein h nach dem Vokal → <b>Regel 2</b> (Bahn) · aa, ee, oo → <b>Regel 3</b> (Boot) · ie → <b>Regel 4</b> (Biene)',
     kl: '<b>Kurz oder lang?</b> Sprich das Wort laut und deutlich. Beim kurzen Vokal klingt die Silbe knapp: <b>Ịmker, Mụtter</b>. Beim langen Vokal kannst du den Laut ziehen: <b>H<u>o</u>se, B<u>ie</u>ne</b>.<br>Kurzer Vokal → danach meist zwei Konsonanten (Zelle, Wald). Langer Vokal → oft nur ein Konsonant (Hose).',
     dk: '<b>Regel:</b> Hörst du nach einem <b>kurz</b> gesprochenen Vokal nur <b>einen</b> Konsonanten, wird er meistens <b>verdoppelt</b>: ste<b>ll</b>en, Ka<b>mm</b>, Bu<b>tt</b>er, Ze<b>ll</b>e.<br>Nach einem <b>langen</b> Vokal wird nicht verdoppelt: Ho<b>s</b>e, Ta<b>f</b>el.<br><b>Trick:</b> Das Doppelte bleibt in der ganzen Wortfamilie: stellen → er stellt → die Stelle.',
     ckz: '<b>Regel:</b> <b>k</b> und <b>z</b> werden nicht verdoppelt (nie kk, nie zz). Nach kurzem Vokal schreibt man <b>ck</b> und <b>tz</b>: La<b>ck</b>, me<b>ck</b>ern, Bli<b>tz</b>, pla<b>tz</b>en.<br><b>Merkvers:</b> Nach l, m, n, r, das merke ja, steht nie tz und nie ck: Ban<b>k</b>, Im<b>k</b>er, Kran<b>z</b>, Ar<b>z</b>t.<br>Nach langem Vokal und nach ei, au, eu: nur <b>k</b> und <b>z</b>: E<b>k</b>el, Hei<b>z</b>ung, Kreu<b>z</b>.',
@@ -5939,6 +6143,18 @@ window.LU5 = (function () {
     var g = gap(IE[i]), t = gapTask('ie', IE[i], Math.random() < 0.6 ? 'full' : 'gap');
     t.explain = g.opts[0] === 'ie' ? 'Langes i → meistens <b>ie</b>: <b>' + esc(g.word) + '</b>.' : /^(mir|dir|wir)$/.test(g.word) ? '<b>' + g.word + '</b> schreibt man nur mit i.' : 'Merkwort mit einfachem <b>i</b>: <b>' + esc(g.word) + '</b>' + (/^Igel$/.test(g.word) ? '.' : ' (kommt aus einer anderen Sprache).');
     return t;
+  };
+  G.merk = function (i) {
+    var p = MERK[i].split('|'), sent = p[0], a = p[1], full = sent.replace('___', a);
+    var type = Math.random() < 0.35 && a.length <= 12 && !/,/.test(a);
+    var t = { topic: 'merk', full: full, q: type ? 'Schreib das fehlende Wort.' : 'Welches Wort fehlt im Merksatz?', sent: sent, answer: a, say: full.replace(/^Regel \d: /, ''), explain: 'Der ganze Merksatz: <b>' + esc(full) + '</b>' };
+    if (type) { t.kind = 'type'; t.big = ''; } else { t.kind = 'choice'; t.big = ''; t.options = shuffle(p.slice(1)); }
+    return t;
+  };
+  G.regel = function (i) {
+    var p = REGEL[i].split('|'), w = p[0], n = Number(p[1]) - 1;
+    var why = ['Langer Vokal, ganz <b>einfach</b> geschrieben', 'Langer Vokal mit <b>Dehnungs-h</b>', 'Merkwort mit <b>Doppelvokal</b>', 'Langes i → <b>ie</b>'][n];
+    return { topic: 'regel', kind: 'choice', full: w, q: 'Welche Regel passt zu diesem Wort?', big: esc(w), options: REGEL_N.slice(), answer: REGEL_N[n], keep: true, say: w, explain: why + ': <b>' + esc(w) + '</b> → ' + REGEL_N[n] + '.' };
   };
   G.satz = function (i) {
     var s = SATZ[i], m = s.match(/\[([^|\]]+)\|([^\]]+)\]/), right = m[1], wrong = m[2];
@@ -6106,6 +6322,7 @@ window.LU5 = (function () {
   function end() {
     var n = run.done || 1, p = run.first / n, h = '';
     $('deRun').hidden = true; $('deEnd').hidden = false;
+    if (run.mode === 'topic' && run.topic === 'merk') { try { var d0 = new Date(); localStorage.setItem('de-merk-day', JSON.stringify(d0.getFullYear() + '-' + String(d0.getMonth() + 1).padStart(2, '0') + '-' + String(d0.getDate()).padStart(2, '0'))); } catch (e) {} }
     var words = run.wrong.filter(function (w, i, a) { return a.indexOf(w) === i; });
     if (run.mode === 'test') {
       var note = grade(p); db.tests.push({ d: Date.now(), n: note, p: Math.round(p * 100) }); db.tests = db.tests.slice(-10); save();
@@ -6624,7 +6841,7 @@ window.LU5 = (function () {
 </script>
 <script src="klassenarbeiten/ka-daten.js?v=1"></script>
 <script src="klassenarbeiten/ek-daten.js?v=1"></script>
-<script src="klassenarbeiten/de-daten.js?v=1"></script>
+<script src="klassenarbeiten/de-daten.js?v=2"></script>
 <script src="klassenarbeiten/ma-daten.js?v=1"></script>
 <script src="klassenarbeiten/ka-tablet.js?v=5"></script>
 <script>
