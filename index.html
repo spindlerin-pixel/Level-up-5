@@ -865,6 +865,13 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
 #deProbe .pr-list { margin: 0; }
 .de-plan { margin: 4px 0 12px; padding: 10px 14px; border-radius: 14px; background: var(--tip-fill); font-size: 0.95em; line-height: 1.5; }
 .de-plan b { white-space: nowrap; }
+.dk-where { font-size: 1.4rem; font-weight: 800; margin: 6px 0; }
+.dk-sol { font-size: 1.1rem; line-height: 1.8; padding: 12px 14px; border-radius: 14px; background: var(--tip-fill); }
+.dk-sol mark { background: #FFE58A; border-radius: 4px; padding: 0 2px; }
+.dk-form { display: grid; gap: 10px; margin: 12px 0; } .dk-form label { display: grid; gap: 4px; font-weight: 700; } .dk-form input { font: inherit; padding: 10px 12px; border-radius: 12px; border: 2px solid #C9B8FF; }
+.dk-tempo { margin-top: 10px; } .dk-rules { margin: 10px 0; } .dk-rules summary { font-weight: 700; cursor: pointer; }
+.pr-card.dk-hl { outline: 3px solid #7A4FD6; } a.pr-open { text-decoration: none; text-align: center; }
+#deDikt .pr-acts { flex-wrap: wrap; } #deDikt .pr-acts > * { flex: 1 1 auto; min-width: 0; }
 .de-old { margin-top: 14px; } .de-old > summary { cursor: pointer; font-weight: 700; padding: 8px 0; } .de-old .pr-list { margin-top: 8px; }
 .ek-modes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
 @media (max-width: 380px) { .ek-modes { grid-template-columns: 1fr; } }
@@ -1001,6 +1008,12 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
     <p id="mkaText"><b>Mathe-Klassenarbeit am 25. November.</b></p>
   </div>
 
+  <div class="ka dka" id="dikBox">
+    <span class="ka-subj">Diktat</span>
+    <span class="ka-num" id="dikNum">?</span>
+    <p id="dikText"><b>Übungsdiktat am Mittwoch, 25. November.</b></p>
+  </div>
+
   <div class="ka eka" id="ekaBox">
     <span class="ka-subj">Erdkunde</span>
     <span class="ka-num" id="ekaNum">?</span>
@@ -1052,7 +1065,7 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
     <div class="subj deu" id="deTile">
       <div class="subj-top">
         <svg viewBox="0 0 64 64" aria-hidden="true"><ellipse cx="22" cy="20" rx="11" ry="8" fill="#DFF1FF" stroke="#1F2A44" stroke-width="2.5" transform="rotate(-25 22 20)"/><ellipse cx="40" cy="18" rx="11" ry="8" fill="#DFF1FF" stroke="#1F2A44" stroke-width="2.5" transform="rotate(20 40 18)"/><ellipse cx="32" cy="38" rx="20" ry="16" fill="#FFC928" stroke="#1F2A44" stroke-width="2.5"/><path d="M26 23.5 Q24 38 26 53 M36 23 Q38 38 36 53.5" stroke="#1F2A44" stroke-width="5" fill="none"/><circle cx="45" cy="35" r="2.6" fill="#1F2A44"/><path d="M42 43 Q46 46 49 42" stroke="#1F2A44" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M48 25 Q52 18 56 17 M44 24 Q46 16 50 14" stroke="#1F2A44" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
-        <span><span class="subj-name">Deutsch</span><br><span class="subj-what">Rechtschreibung: lange Vokale · Merksätze · 6 Probe-HÜs</span><span class="subj-ka" id="deKa"></span></span>
+        <span><span class="subj-name">Deutsch</span><br><span class="subj-what">Lange Vokale · Merksätze · 6 Probe-HÜs · 6 Übungsdiktate</span><span class="subj-ka" id="deKa"></span></span>
       </div>
       <span class="subj-status"><b id="deMin">0 Min</b><span id="deTileState"></span></span>
       <div class="subj-acts"><button type="button" class="subj-go" data-go="de">Deutsch üben</button></div>
@@ -1125,6 +1138,9 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
       </label>
       <label class="lv-setting" for="dkaDate">Datum der Deutsch-HÜ:
         <input type="date" id="dkaDate">
+      </label>
+      <label class="lv-setting" for="dikDate">Datum des Übungsdiktats:
+        <input type="date" id="dikDate">
       </label>
       <label class="lv-setting" for="goalMin">Tagesziel pro Fach:
         <select id="goalMin"><option value="15">15 Minuten</option><option value="20">20 Minuten</option></select>
@@ -1250,7 +1266,7 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
   <section class="card voc-card" id="deProbe">
     <p class="voc-eyebrow">HÜ am Montag, 16.11.: lange Vokale · Probe-HÜs zum Ausfüllen</p>
     <p class="voc-how">Jede Probe-HÜ dauert etwa 15 Minuten, ohne Tipps. Erst nach dem Abgeben gibt es Punkte, Prozent und eine Note. <b>Streng wie in der Schule:</b> Ein falscher Buchstabe ist ein Fehler.</p>
-    <p class="de-plan"><b>Jeden Tag:</b> 5 Minuten „Merksätze lange Vokale“ (unten) · <b>Mittwoch:</b> HÜ 1 · <b>Donnerstag:</b> HÜ 2 · <b>Freitag:</b> HÜ 3 und 4 · <b>Samstag:</b> HÜ 5 · <b>Sonntag:</b> Generalprobe · <b>Montag früh:</b> nur die Merksätze noch einmal lesen.</p>
+    <p class="de-plan"><b>Jeden Tag außer Mittwoch:</b> 5 Minuten „Merksätze lange Vokale“ (unten) · <b>Donnerstag:</b> HÜ 1 · <b>Freitag:</b> HÜ 2 und 3 · <b>Samstag:</b> HÜ 4 und 5 · <b>Sonntag:</b> Generalprobe · <b>Montag früh:</b> nur die Merksätze noch einmal lesen.</p>
     <p class="de-plan"><b>Profi-Trick aus der letzten HÜ:</b> Lies jede Aufgabe zweimal und frag dich: Was genau soll ich hinschreiben – ein Wort, einen Buchstaben oder eine Regel? Wird nach dem Wort gefragt, schreib nur das Wort.</p>
     <div class="pr-list">
       <div class="pr-card" style="--pc:#FFD66B">
@@ -1319,6 +1335,7 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
     </div>
       </details>
   </section>
+  <section class="card voc-card" id="deDikt" aria-live="polite"></section>
   <section class="card voc-card" id="deHome">
     <p class="voc-eyebrow">Was möchtest du üben?</p>
     <div class="de-topics" id="deTopics"></div>
@@ -3612,7 +3629,7 @@ window.LU5 = (function () {
   /* ================= Zeit & Startseite ================= */
   var LOG_KEY = 'lern-zeiten', SET_KEY = 'lern-einstellungen';
   var view = 'home', lastAct = Date.now(), dirty = 0;
-  function settings() { var s = store(SET_KEY) || {}; if (s.goal !== 20) s.goal = 15; if (!s.ka1103) { if (s.kaDate === undefined || s.kaDate === '2026-11-05') s.kaDate = '2026-11-03'; s.ka1103 = 1; store(SET_KEY, s); } if (s.mkaDate === undefined) s.mkaDate = '2026-11-25'; if (s.ekaDate === undefined) s.ekaDate = '2026-11-06'; if (!s.dka1116) { if (s.dkaDate === undefined || s.dkaDate === null || s.dkaDate === '2026-11-09') s.dkaDate = '2026-11-16'; s.dka1116 = 1; store(SET_KEY, s); } if (s.mhDate === undefined) s.mhDate = '2026-11-11'; return s; }
+  function settings() { var s = store(SET_KEY) || {}; if (s.goal !== 20) s.goal = 15; if (!s.ka1103) { if (s.kaDate === undefined || s.kaDate === '2026-11-05') s.kaDate = '2026-11-03'; s.ka1103 = 1; store(SET_KEY, s); } if (s.mkaDate === undefined) s.mkaDate = '2026-11-25'; if (s.ekaDate === undefined) s.ekaDate = '2026-11-06'; if (s.dikDate === undefined) s.dikDate = '2026-11-25'; if (!s.dka1116) { if (s.dkaDate === undefined || s.dkaDate === null || s.dkaDate === '2026-11-09') s.dkaDate = '2026-11-16'; s.dka1116 = 1; store(SET_KEY, s); } if (s.mhDate === undefined) s.mhDate = '2026-11-11'; return s; }
   function log() { return store(LOG_KEY) || {}; }
   function secs(day, subj) { var l = log(); return (l[day] && l[day][subj]) || 0; }
   var logCache = log();
@@ -3682,6 +3699,16 @@ window.LU5 = (function () {
     if (st.mkaDate) $('mkaDate').value = st.mkaDate;
     if (st.ekaDate) $('ekaDate').value = st.ekaDate;
     if (st.dkaDate) $('dkaDate').value = st.dkaDate;
+    if (st.dikDate) $('dikDate').value = st.dikDate;
+    (function () {
+      var box = $('dikBox'); if (!box) return; box.hidden = !st.dikDate; if (!st.dikDate) return;
+      var d = new Date(st.dikDate + 'T00:00:00'), t0 = new Date(now.getFullYear(), now.getMonth(), now.getDate()), days = Math.round((d - t0) / 86400000);
+      var when = d.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' });
+      if (days > 1) { $('dikNum').textContent = days; $('dikText').innerHTML = '<b>Tage bis zum Übungsdiktat</b> am ' + when + '.' + (days <= 8 ? ' Jeden Tag ein Diktat (mittwochs frei)!' : ' Die Übungsdiktate starten nach der Deutsch-HÜ.'); }
+      else if (days === 1) { $('dikNum').textContent = '1'; $('dikText').innerHTML = '<b>Morgen ist das Übungsdiktat!</b> Heute das schwächste Diktat noch einmal und die Fehlerwörter.'; }
+      else if (days === 0) { $('dikNum').textContent = '★'; $('dikText').innerHTML = '<b>Heute ist das Übungsdiktat.</b> Viel Glück' + esc(kidName(', ')) + '! Genau hinhören, am Ende alles durchlesen.'; }
+      else { $('dikNum').textContent = '✓'; $('dikText').innerHTML = '<b>Das Übungsdiktat ist vorbei.</b> Neues Datum unten eintragen.'; }
+    })();
     if (st.mhDate) $('mhDate').value = st.mhDate;
     (function () {
       var box = $('mhBox'); if (!box) return; box.hidden = !st.mhDate; if (!st.mhDate) return;
@@ -3731,7 +3758,7 @@ window.LU5 = (function () {
     // Countdown: Vorbei oder ohne Datum ausblenden, das Nächste zuerst
     (function () {
       var t0 = new Date(now.getFullYear(), now.getMonth(), now.getDate()), any = false;
-      [['kaBox', st.kaDate], ['mhBox', st.mhDate], ['mkaBox', st.mkaDate], ['ekaBox', st.ekaDate], ['dkaBox', st.dkaDate]].forEach(function (b) {
+      [['kaBox', st.kaDate], ['mhBox', st.mhDate], ['mkaBox', st.mkaDate], ['ekaBox', st.ekaDate], ['dkaBox', st.dkaDate], ['dikBox', st.dikDate]].forEach(function (b) {
         var el = $(b[0]); if (!el) return;
         var dd = b[1] ? Math.round((new Date(b[1] + 'T00:00:00') - t0) / 86400000) : -1;
         el.style.display = dd < 0 ? 'none' : ''; el.style.order = String(Math.max(0, dd));
@@ -3774,13 +3801,13 @@ window.LU5 = (function () {
   /* ================= Tagesplan ================= */
   /* Was als Nächstes geschrieben wird, kommt zuerst. Höchstens 2 Probe-HÜs pro Tag. */
   var PROBES = {
-    de: { pre: 'l', n: 6, lv: ['Warm-up', 'Normal', 'Normal+', 'Wie bei Frau Vester', 'Profi', 'Generalprobe'], min: 15, max: 2, from: 5, calm: 4 },
+    de: { pre: 'l', n: 6, lv: ['Warm-up', 'Normal', 'Normal+', 'Wie bei Frau Vester', 'Profi', 'Generalprobe'], min: 15, max: 2, from: 4, calm: 4 },
     mh: { pre: 'm', n: 4, lv: ['Warm-up', 'Normal', 'Normal+', 'Generalprobe'], min: 15, max: 1, from: 4 },
     ek: { pre: 'g', n: 4, lv: ['Warm-up', 'Normal', 'Normal+', 'Generalprobe'], min: 15, max: 2, from: 4 },
     en: { pre: 'e', n: 6, lv: ['Warm-up', 'Normal', 'Normal', 'Profi', 'Generalprobe', 'Schwerpunkte'], min: 45, max: 1, from: 3 }
   };
-  var SUBJ_NAME = { mh: 'Mathe', de: 'Deutsch', ek: 'Erdkunde', en: 'Englisch', math: 'Mathe', voc: 'Englisch' };
-  var TEST_NAME = { mh: 'Mathe-HÜ', de: 'Deutsch-HÜ', ek: 'Erdkunde-HÜ', en: 'Englisch-Klassenarbeit', math: 'Mathe-Klassenarbeit' };
+  var SUBJ_NAME = { dik: 'Deutsch', mh: 'Mathe', de: 'Deutsch', ek: 'Erdkunde', en: 'Englisch', math: 'Mathe', voc: 'Englisch' };
+  var TEST_NAME = { dik: 'Übungsdiktat', mh: 'Mathe-HÜ', de: 'Deutsch-HÜ', ek: 'Erdkunde-HÜ', en: 'Englisch-Klassenarbeit', math: 'Mathe-Klassenarbeit' };
   var planActs = [];
   function kaRes() { try { var d = JSON.parse(localStorage.getItem('ka-tablet') || 'null'); return (d && d.res) || {}; } catch (e) { return {}; } }
   function daysTo(ds, now) { if (!ds) return null; var d = new Date(ds + 'T00:00:00'), t0 = new Date(now.getFullYear(), now.getMonth(), now.getDate()); return Math.round((d - t0) / 86400000); }
@@ -3812,7 +3839,7 @@ window.LU5 = (function () {
   function renderPlan() {
     var box = $('planList'); if (!box) return;
     var now = new Date(), k = dayKey(now), st = settings(), L = logCache[k] || {};
-    var T = [['de', st.dkaDate], ['ek', st.ekaDate], ['mh', st.mhDate], ['math', st.mkaDate], ['en', st.kaDate]].map(function (t) { return { s: t[0], d: daysTo(t[1], now), date: t[1] }; });
+    var T = [['de', st.dkaDate], ['dik', st.dikDate], ['ek', st.ekaDate], ['mh', st.mhDate], ['math', st.mkaDate], ['en', st.kaDate]].map(function (t) { return { s: t[0], d: daysTo(t[1], now), date: t[1] }; });
     var up = T.filter(function (t) { return t.d !== null && t.d >= 1; }).sort(function (a, b) { return a.d - b.d; });
     var todayT = T.filter(function (t) { return t.d === 0; });
     var focus = up[0] || null, D = {}; T.forEach(function (t) { D[t.s] = t.d; });
@@ -3821,10 +3848,15 @@ window.LU5 = (function () {
     var busy = focus && focus.d <= 3;
     /* Fächer in der Reihenfolge der nächsten Termine */
     var order = up.map(function (t) { return t.s; });
-    ['en', 'math', 'de', 'ek', 'mh'].forEach(function (s) { if (order.indexOf(s) < 0) order.push(s); });
+    ['en', 'math', 'de', 'dik', 'ek', 'mh'].forEach(function (s) { if (order.indexOf(s) < 0) order.push(s); });
     order.forEach(function (s) {
       var d = D[s];
-      if (s === 'de' && near('de') && d <= 14) {
+      if (s === 'dik') {
+        if (near('dik') && d <= 8 && window.LU5Dikt) {
+          var dp = LU5Dikt.plan(d), did = dp.d.id;
+          items.push({ subj: 'de', title: 'Deutsch: Übungsdiktat ' + dp.nr + (dp.again ? ' noch einmal' : ''), sub: dp.d.title + ' · diktieren, kontrollieren, Note · ca. 15 Min', min: 15, done: dp.done, btn: dp.done ? 'Ansehen' : 'Los', act: function () { go('de'); LU5Dikt.open(did); } });
+        }
+      } else if (s === 'de' && near('de') && d <= 14) {
         /* Merksätze jeden Tag kurz, ab 5 Tagen vorher dazu eine Probe-HÜ */
         var mDone = store('de-merk-day') === k;
         items.push({ subj: 'de', title: 'Deutsch: Merksätze lange Vokale', sub: 'Regel 1 bis 4 · 10 kurze Aufgaben · ca. 5 Min', min: 5, done: mDone, keep: true, btn: mDone ? 'Nochmal' : 'Los', act: function () { go('de'); if (window.LU5De) LU5De.topic('merk'); } });
@@ -3842,7 +3874,7 @@ window.LU5 = (function () {
         if (near('mh') && D.mh <= 10) { /* erst die HÜ */ }
         else if (near('math')) {
           var mm = d <= 7 ? 20 : d <= 14 ? 15 : 10;
-          if (busy && focus.s !== 'math') mm = 10;
+          if (busy && focus.s !== 'math' && d > focus.d) mm = 10;
           items.push(minItem('math', 'Mathe: Klassenarbeit-Mix', d <= 7 ? 'Jetzt jeden Tag, die Arbeit kommt bald' : 'Schon mal anfangen, ganz entspannt', mm, L.math || 0, function () { go('math'); }));
         } else bonus.push(['Mathe', 'math']);
       } else if (s === 'en') {
@@ -3868,6 +3900,7 @@ window.LU5 = (function () {
     var wkend = now.getDay() === 0 || now.getDay() === 6;
     var budget = load < 1 ? 20 : load < 3 ? 30 : load < 6 ? 40 : 50;
     if (wkend && load >= 1) budget += 15;
+    var restDay = now.getDay() === 3;
     var why = load < 1 ? 'Ruhiger Tag: kurz und knackig reicht.' : wkend && load >= 3 ? 'Wochenende vor den Arbeiten: heute etwas mehr.' : load >= 6 ? 'Viele Arbeiten stehen an: heute etwas mehr.' : '';
     /* Was nicht mehr in die Zeit passt, wird Bonus – die Vokabeln und das Wichtigste bleiben immer */
     var keep = [], used = 0, extra = [];
@@ -3877,6 +3910,8 @@ window.LU5 = (function () {
     });
     items = keep;
     if (extraFit) extra.push(extraFit);
+    /* Mittwoch: Schule bis 15:30 und Hausaufgaben – kein zusätzliches Lernen, alles nur als Bonus */
+    if (restDay) { extra = items.filter(function (x) { return !x.done; }).concat(extra); items = items.filter(function (x) { return x.done; }); }
     /* Kopfzeile */
     var fe = $('planFocus');
     if (todayT.length) fe.textContent = 'Heute ' + todayT.map(function (t) { return TEST_NAME[t.s]; }).join(' und ') + ' – viel Glück!' + (focus ? ' · Danach: ' + TEST_NAME[focus.s] + (focus.d === 1 ? ' morgen' : ' in ' + focus.d + ' Tagen') : '');
@@ -3888,8 +3923,9 @@ window.LU5 = (function () {
     $('planRing').setAttribute('aria-label', done + ' von ' + items.length + ' erledigt');
     var all = items.length && done === items.length;
     $('planBox').classList.toggle('all', !!all);
-    $('planSum').innerHTML = all ? '' : items.length + ' Aufgaben · noch etwa ' + mins + ' Minuten. Die erste ist am wichtigsten.' + (why ? ' <span class="plan-why">' + why + '</span>' : '');
-    $('planSum').hidden = !!all;
+    if (restDay && !items.length) { $('planCount').textContent = '🌙'; $('planRing').style.setProperty('--p', 100); }
+    $('planSum').innerHTML = restDay && !items.length ? 'Mittwoch: Schule bis 15:30 und Hausaufgaben – heute gibt es kein Zusatz-Lernen. Erhol dich gut!' : all ? '' : items.length + ' Aufgaben · noch etwa ' + mins + ' Minuten. Die erste ist am wichtigsten.' + (why ? ' <span class="plan-why">' + why + '</span>' : '');
+    $('planSum').hidden = !!all && !restDay;
     planActs = items.map(function (x) { return x.act; });
     extra.forEach(function (x) { planActs.push(x.act); });
     box.innerHTML = items.map(function (x, i) {
@@ -3931,10 +3967,11 @@ window.LU5 = (function () {
     $('weekRow').innerHTML = row;
     for (var j = 0; j < 60; j++) {
       var d2 = dayKey(new Date(now.getFullYear(), now.getMonth(), now.getDate() - j));
-      if ((log()[d2] || {}).plan) streak++; else if (j > 0) break;
+      if ((log()[d2] || {}).plan) streak++; else if (j > 0 && new Date(d2 + 'T00:00:00').getDay() !== 3) break;
     }
     $('streakText').textContent = streak > 1 ? streak + ' Tage am Stück den Tagesplan geschafft!' : streak === 1 ? 'Heute Tagesplan geschafft. Morgen weiter!' : 'Deine Lern-Woche';
   }
+  $('dikDate').addEventListener('change', function () { var s = settings(); s.dikDate = this.value || null; store(SET_KEY, s); renderHome(); });
   $('dkaDate').addEventListener('change', function () { var s = settings(); s.dkaDate = this.value || null; store(SET_KEY, s); renderHome(); });
   $('ekaDate').addEventListener('change', function () { var s = settings(); s.ekaDate = this.value || null; store(SET_KEY, s); renderHome(); });
   $('mhDate').addEventListener('change', function () { var s = settings(); s.mhDate = this.value || null; store(SET_KEY, s); renderHome(); });
@@ -3957,6 +3994,7 @@ window.LU5 = (function () {
     var katV = $('katView'); if (katV) katV.hidden = v !== 'kat';
     if (v === 'print' && window.LU5Ka) window.LU5Ka.cards();
     if (v === 'de' && window.LU5De) window.LU5De.open();
+    if (v === 'de' && window.LU5Dikt) window.LU5Dikt.open();
     if (v === 'de' && window.LU5Ka) window.LU5Ka.cards();
     if (v === 'math' && window.LU5Ka) window.LU5Ka.cards();
     if (v === 'home') renderHome();
@@ -4943,6 +4981,25 @@ window.LU5 = (function () {
     }
     return { listen: true, say: String(n), q: 'Hör gut zu und schreibe die Zahl, die du hörst. <b>-teen</b> oder <b>-ty</b>?', mode: 'type', answer: [String(n), w], numeric: true, explain: 'Die Zahl war: <b>' + n + ' (' + esc(w) + ')</b>. ' + RULES.tens, lesson: 'tens' };
   };
+  /* there is / there are / Is there …? / Are there any …? (Hausaufgabe Nov. 2026) */
+  var THQ = [
+    ['___ a big garden behind our house.', 'There is'], ['___ two bedrooms upstairs.', 'There are'], ['___ a park near your school? – Yes, there is.', 'Is there'],
+    ['___ any shops in your street? – No, there aren\'t.', 'Are there any'], ['___ any cats in our house. We have a dog.', 'There aren\'t any'], ['___ a TV in my room. I read books.', 'There isn\'t a'],
+    ['___ lots of seagulls on the beach.', 'There are'], ['___ a pool at your school? – No, there isn\'t.', 'Is there'], ['___ any good films on TV tonight?', 'Are there any'],
+    ['___ any milk in the fridge? – No, there isn\'t.', 'Is there any'], ['___ thirty students in my class.', 'There are'], ['___ an old computer on my desk.', 'There is'],
+    ['___ any posters on your wall? – Yes, there are.', 'Are there any'], ['___ any bananas left. Let\'s buy some!', 'There aren\'t any'], ['___ a library in Brighton? – Yes, there is.', 'Is there'],
+    ['___ a bike in the garden, but it isn\'t mine.', 'There is'], ['Is there a sofa in the living room? – Yes, ___.', 'there is'], ['Are there any rabbits in your garden? – No, ___.', 'there aren\'t'],
+    ['Is there a cinema in your town? – No, ___.', 'there isn\'t'], ['Are there any trees in your street? – Yes, ___.', 'there are']
+  ];
+  var THQ_POOL = ['There is', 'There are', 'Is there', 'Are there', 'Are there any', 'There isn\'t a', 'There aren\'t any', 'Is there any', 'there is', 'there are', 'there isn\'t', 'there aren\'t'];
+  G.thereq = function (i) {
+    var it = THQ[i], a = it[1], low = /^[a-z]/.test(a), pool = THQ_POOL.filter(function (x) { return x !== a && /^[a-z]/.test(x) === low; }), mode = choiceOrType(0.7);
+    return { q: (mode === 'type' ? 'Schreib, was in die Lücke gehört.' : 'Was passt in die Lücke?') + '<br>§', sent: it[0], mode: mode, options: shuffle([a].concat(shuffle(pool).slice(0, 3))), answer: [a], noExpand: true, say: it[0].replace('___', a), explain: RULES.thereq, lesson: 'thereq',
+      hints: ['Eins oder mehrere? Eins → <b>is</b>, mehrere → <b>are</b>. Frage → <b>Is there / Are there</b> vorne. Bei Fragen und „nicht“ mit Mehrzahl kommt <b>any</b> dazu.'], hint: 'Eins → is · mehrere → are · Frage: Is/Are vorne · Mehrzahl in Frage oder Verneinung: any' };
+  };
+  SKILLS.thereq = { name: 'there is / are, Is there …? Are there any …?', cls: 's-gram' };
+  RULES.thereq = '<b>Eins:</b> <span class="ex">There is a park.</span> · Frage: <span class="ex">Is there a park?</span> · nicht: <span class="ex">There isn’t a park.</span><br><b>Mehrere:</b> <span class="ex">There are two parks.</span> · Frage: <span class="ex">Are there any shops?</span> · nicht: <span class="ex">There aren’t any shops.</span><br><b>any</b> steht bei Mehrzahl (und bei milk, water …) in <b>Fragen</b> und <b>Verneinungen</b>. Kurzantwort: <span class="ex">Yes, there is. / No, there aren’t.</span>';
+  SIZE.thereq = THQ.length;
   SKILLS.short = { name: 'Kurzformen: I’m, he’s, they’re …', cls: 's-gram' };
   SKILLS.beqf = { name: 'Fragen mit be bilden', cls: 's-gram' };
   SKILLS.tens = { name: 'Zahlen: -teen oder -ty?', cls: 's-words' };
@@ -4950,18 +5007,20 @@ window.LU5 = (function () {
   RULES.beqf = 'Frage mit be: <b>Am / Is / Are</b> kommt nach vorne, dann <b>wer</b>: <span class="ex">Are your mum and dad from the USA?</span> · <span class="ex">Is your sister ten?</span> · <span class="ex">Are you at Varndean?</span> Tipp: Die Antwort verrät die Form – they aren’t → <b>Are</b> …? · she is → <b>Is</b> …?';
   RULES.tens = '<b>13–19 → -teen:</b> thirteen, fourteen, fifteen, sixteen, seventeen, <b>eighteen</b> (nur ein t), nineteen. <b>Zehner → -ty:</b> twenty, thirty, <b>forty</b> (ohne u!), <b>fifty</b>, sixty, seventy, eighty, ninety. Mit Bindestrich: <span class="ex">twenty-seven</span>, <span class="ex">forty-six</span>, <span class="ex">ninety-one</span>.';
   SIZE.short = SHORT.length; SIZE.beqf = BEQF.length; SIZE.tens = TF.length;
-  ['short', 'beqf', 'tens'].forEach(function (x) { if (ORDER.indexOf(x) === -1) ORDER.unshift(x); });
+  ['short', 'beqf', 'tens', 'thereq'].forEach(function (x) { if (ORDER.indexOf(x) === -1) ORDER.unshift(x); });
   var lessonFit = lessonHtml;
   lessonHtml = function (k) {
     if (k === 'short') return '<h3>Kurzformen von <i>be</i></h3><table><tr><th>Wer?</th><th>Kurzform</th><th>Beispiel</th></tr><tr><td>ich</td><td><b>I’m</b></td><td>I’m Scout.</td></tr><tr><td>du</td><td><b>you’re</b></td><td>You’re a student.</td></tr><tr><td>Junge, Mann, Dad</td><td><b>he’s</b></td><td>My dad? He’s from Brighton.</td></tr><tr><td>Mädchen, Frau, Mum</td><td><b>she’s</b></td><td>My mum? She’s a teacher.</td></tr><tr><td>Ding, Schule, Tier</td><td><b>it’s</b></td><td>It’s a school for seagulls.</td></tr><tr><td>ich + andere</td><td><b>we’re</b></td><td>Ellie and I? We’re friends.</td></tr><tr><td>mehrere</td><td><b>they’re</b></td><td>They’re all nice.</td></tr></table><p class="trick"><b>Detektiv-Trick:</b> Zeig mit dem Finger auf das Wort, um das es geht (Mum, school, Ellie and I …). Erst dann die Kurzform wählen.</p>';
     if (k === 'beqf') return '<h3>Fragen mit <i>be</i></h3><table><tr><th>Aussage</th><th>Frage</th></tr><tr><td>Your mum and dad <b>are</b> from the USA.</td><td><b>Are your</b> mum and dad from the USA?</td></tr><tr><td>Your sister <b>is</b> ten.</td><td><b>Is your</b> sister ten?</td></tr><tr><td>You <b>are</b> at Varndean.</td><td><b>Are you</b> at Varndean?</td></tr></table><p class="trick"><b>Trick:</b> Lies erst die Antwort. „No, they aren’t“ → mehrere → <b>Are</b> … ? „Yes, she is“ → <b>Is</b> … ?</p>';
+    if (k === 'thereq') return '<h3>there is / there are</h3><table><tr><th></th><th>eins</th><th>mehrere</th></tr><tr><td>Aussage</td><td>There <b>is</b> a park.</td><td>There <b>are</b> two parks.</td></tr><tr><td>Frage</td><td><b>Is there</b> a park?</td><td><b>Are there any</b> shops?</td></tr><tr><td>nicht</td><td>There <b>isn’t a</b> park.</td><td>There <b>aren’t any</b> shops.</td></tr><tr><td>Kurzantwort</td><td>Yes, there is. / No, there isn’t.</td><td>Yes, there are. / No, there aren’t.</td></tr></table><p class="trick"><b>any</b> = irgendwelche / keine – nur bei Mehrzahl in Fragen und mit not.</p>';
     if (k === 'tens') return '<h3>-teen oder -ty?</h3><table><tr><td>13 thirteen</td><td>30 thirty</td></tr><tr><td>14 fourteen</td><td>40 <b>forty</b> (ohne u!)</td></tr><tr><td>15 <b>fifteen</b></td><td>50 <b>fifty</b></td></tr><tr><td>18 <b>eighteen</b></td><td>80 eighty</td></tr><tr><td>19 nineteen</td><td>90 ninety</td></tr></table><p class="trick"><b>Bindestrich:</b> 46 = forty-six · 75 = seventy-five · 91 = ninety-one</p>';
     return lessonFit(k);
   };
-  var FIT = ['short', 'poss', 'beqf', 'tens'];
-  var FIT_NAME = { short: 'Kurzformen: I’m, she’s, they’re', poss: 'my, your, its, their', beqf: 'Fragen mit be: Are your …?', tens: 'Zahlen: -teen oder -ty?', mix: 'Alles aus der Woche' };
-  var FIT_DAY = { 1: 'short', 2: 'poss', 3: 'beqf', 4: 'tens' };
-  function fitFocus(d) { d = d || new Date(); return FIT_DAY[d.getDay()] || 'mix'; }
+  var FIT = ['short', 'thereq', 'beqf', 'poss', 'tens'];
+  var FIT_NAME = { short: 'Kurzformen: I’m, she’s, they’re', thereq: 'there is / Are there any …?', poss: 'my, your, its, their', beqf: 'Fragen mit be: Are your …?', tens: 'Zahlen: -teen oder -ty?', mix: 'Alles aus der Woche' };
+  /* Mittwoch ist lernfrei. Freitag wechselt wochenweise zwischen my/your und Zahlen. */
+  var FIT_DAY = { 1: 'short', 2: 'thereq', 4: 'beqf' };
+  function fitFocus(d) { d = d || new Date(); var wd = d.getDay(); if (wd === 5) { var wk = Math.floor((d - new Date(d.getFullYear(), 0, 1)) / 604800000); return wk % 2 ? 'tens' : 'poss'; } return FIT_DAY[wd] || 'mix'; }
   function fitPct(sk) { var a = enStats()[sk]; return a && a.length ? Math.round(avg(a) * 100) : null; }
   window.LU5Fit = {
     today: function () { var f = fitFocus(); return { focus: f, name: FIT_NAME[f], done: store('en-fit-day') === dayKey() }; },
@@ -5003,7 +5062,7 @@ window.LU5 = (function () {
   function enStats() { return store(EST) || {}; }
   function avg(arr) { if (!arr || !arr.length) return null; return arr.reduce(function (a, b) { return a + b; }, 0) / arr.length; }
   var TOPICS = [
-    ['Grammatik-Fit: Wiederholung nach der Klassenarbeit', [['fit', 'Grammatik-Fit von heute'], ['short', 'I’m, he’s, they’re …'], ['poss', 'my, your, its, their …'], ['beqf', 'Fragen mit be'], ['tens', 'Zahlen: -teen / -ty'], ['hisher', 'he ↔ his']]],
+    ['Grammatik-Fit: Wiederholung nach der Klassenarbeit', [['fit', 'Grammatik-Fit von heute'], ['short', 'I’m, he’s, they’re …'], ['thereq', 'there is / Are there any?'], ['poss', 'my, your, its, their …'], ['beqf', 'Fragen mit be'], ['tens', 'Zahlen: -teen / -ty'], ['hisher', 'he ↔ his']]],
     ['Klassenarbeit 1 (3. November)', [['ka', 'KA-Training'], ['themen', 'Tiere, Zahlen, Schulsachen, Familie'], ['voc', 'Heft-Vokabeln'], ['hisher', 'he/she ↔ his/her/their'], ['qw', 'Fragewörter'], ['plur', 'Plural'], ['heft', 'Typische Fehler'], ['famsent', 'Familien-Sätze bauen'], ['family', 'Mein Familientext'], ['probe', 'Probe-Klassenarbeit']]],
     ['Welcome', [['welmix', 'Welcome-Mix'], ['be', 'am / is / are'], ['beneg', 'positiv ↔ negativ'], ['beq', 'Fragen & Kurzantworten'], ['pron', 'I, you, he …'], ['likes', 'Things I like'], ['wwords', 'Tage, Farben, Zahlen'], ['match', 'Paare finden'], ['fix', 'Fehler-Detektiv'], ['order', 'Hör-Puzzle: Sätze bauen'], ['wel', 'Welcome-Sätze']]],
     ['Allgemein', [['mix', 'Alles gemischt'], ['probe', 'Probe-Klassenarbeit'], ['write', 'Schreiben & Sprechen']]],
@@ -5292,7 +5351,7 @@ window.LU5 = (function () {
     $('enAgain').onclick = function () { newEnRound(enState.topic); renderEn(); window.scrollTo(0, 0); }; }
   function renderRules() {
     if ($('enRules').childElementCount) return;
-    $('enRules').innerHTML = ['short', 'beqf', 'tens', 'hisher', 'qw', 'plur', 'voc', 'be', 'beneg', 'beq', 'pron', 'likes', 'wwords', 'wel', 'gapd', 'obj', 'chunk', 'aan', 'poss', 'can', 'gen', 'there', 'order', 'num', 'phr', 'listen'].map(function (s) { return '<div class="rule"><h3>' + esc(SKILLS[s].name) + '</h3><p>' + RULES[s] + '</p></div>'; }).join('');
+    $('enRules').innerHTML = ['short', 'thereq', 'beqf', 'tens', 'hisher', 'qw', 'plur', 'voc', 'be', 'beneg', 'beq', 'pron', 'likes', 'wwords', 'wel', 'gapd', 'obj', 'chunk', 'aan', 'poss', 'can', 'gen', 'there', 'order', 'num', 'phr', 'listen'].map(function (s) { return '<div class="rule"><h3>' + esc(SKILLS[s].name) + '</h3><p>' + RULES[s] + '</p></div>'; }).join('');
   }
   function renderLevels() {
     var st = enStats(), good = 0;
@@ -6224,7 +6283,7 @@ window.LU5 = (function () {
   }
   function start(mode, topic) {
     run = { mode: mode, topic: topic, tasks: buildTasks(mode, topic), i: 0, first: 0, done: 0, wrong: [], requeued: {} };
-    $('deHome').hidden = true; $('deRules').hidden = true; $('deEnd').hidden = true; $('deRun').hidden = false; if ($('deProbe')) $('deProbe').hidden = true;
+    $('deHome').hidden = true; $('deRules').hidden = true; $('deEnd').hidden = true; $('deRun').hidden = false; if ($('deProbe')) $('deProbe').hidden = true; if ($('deDikt')) $('deDikt').hidden = true;
     newTask(); window.scrollTo(0, 0);
   }
   function cur() { return run.tasks[run.i]; }
@@ -6340,7 +6399,7 @@ window.LU5 = (function () {
   }
   function overview() {
     run = null;
-    $('deRun').hidden = true; $('deEnd').hidden = true; $('deHome').hidden = false; $('deRules').hidden = false; if ($('deProbe')) $('deProbe').hidden = false;
+    $('deRun').hidden = true; $('deEnd').hidden = true; $('deHome').hidden = false; $('deRules').hidden = false; if ($('deProbe')) $('deProbe').hidden = false; if ($('deDikt')) $('deDikt').hidden = false;
     $('deTopics').innerHTML = TOPICS.map(function (t) { var l = lvl(t[0]); return '<button type="button" class="de-topic" data-topic="' + t[0] + '"><span class="de-tn">' + esc(t[1]) + '</span><span class="de-tp">' + esc(t[2]) + '</span><span class="pill de-l ' + (l === 'sicher' ? 'good' : l === 'gut' ? 'ok' : l === 'üben' ? 'weak' : '') + '">' + LVL_TXT[l] + '</span></button>'; }).join('');
     var last = db.tests[db.tests.length - 1];
     $('deInfo').innerHTML = '⭐ ' + db.stars + ' Sterne in Deutsch' + (last ? ' · letzter Test: Note ' + last.n : '') + (db.miss.length ? ' · ' + db.miss.length + ' Wörter zum Wiederholen' : '');
@@ -6842,6 +6901,8 @@ window.LU5 = (function () {
 <script src="klassenarbeiten/ka-daten.js?v=1"></script>
 <script src="klassenarbeiten/ek-daten.js?v=1"></script>
 <script src="klassenarbeiten/de-daten.js?v=2"></script>
+<script src="klassenarbeiten/diktate.js?v=1"></script>
+<script src="klassenarbeiten/diktat-player.js?v=2"></script>
 <script src="klassenarbeiten/ma-daten.js?v=1"></script>
 <script src="klassenarbeiten/ka-tablet.js?v=5"></script>
 <script>
