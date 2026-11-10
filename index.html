@@ -871,7 +871,12 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
 .dk-form { display: grid; gap: 10px; margin: 12px 0; } .dk-form label { display: grid; gap: 4px; font-weight: 700; } .dk-form input { font: inherit; padding: 10px 12px; border-radius: 12px; border: 2px solid #C9B8FF; }
 .dk-tempo { margin-top: 10px; } .dk-rules { margin: 10px 0; } .dk-rules summary { font-weight: 700; cursor: pointer; }
 .pr-card.dk-hl { outline: 3px solid #7A4FD6; } a.pr-open { text-decoration: none; text-align: center; }
-#deDikt .pr-acts { flex-wrap: wrap; } #deDikt .pr-acts > * { flex: 1 1 auto; min-width: 0; }
+#deDikt .pr-acts { flex-wrap: wrap; }
+.dk-in { width: 100%; box-sizing: border-box; font: inherit; font-size: 1.15rem; line-height: 1.5; padding: 10px 12px; border-radius: 14px; border: 2px solid #C9B8FF; margin: 6px 0 4px; resize: vertical; }
+.dk-done { font-size: 0.95rem; color: #555B6E; padding: 8px 12px; border-radius: 12px; background: #F6F7FB; margin: 8px 0; line-height: 1.6; }
+.dk-lbl { margin: 10px 0 0; font-weight: 700; font-size: 0.9rem; }
+.dk-res { line-height: 2.4; } .dk-ok { color: #1E7B4F; } .dk-bad { color: #C0392B; text-decoration: line-through; } .dk-extra { opacity: .8; }
+.dk-fix { display: inline-flex; flex-direction: column; align-items: center; line-height: 1.15; vertical-align: top; } .dk-right { color: #1E7B4F; font-weight: 800; font-size: 0.9em; } #deDikt .pr-acts > * { flex: 1 1 auto; min-width: 0; }
 .de-old { margin-top: 14px; } .de-old > summary { cursor: pointer; font-weight: 700; padding: 8px 0; } .de-old .pr-list { margin-top: 8px; }
 .ek-modes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
 @media (max-width: 380px) { .ek-modes { grid-template-columns: 1fr; } }
@@ -6902,7 +6907,7 @@ window.LU5 = (function () {
 <script src="klassenarbeiten/ek-daten.js?v=1"></script>
 <script src="klassenarbeiten/de-daten.js?v=2"></script>
 <script src="klassenarbeiten/diktate.js?v=1"></script>
-<script src="klassenarbeiten/diktat-player.js?v=2"></script>
+<script src="klassenarbeiten/diktat-player.js?v=3"></script>
 <script src="klassenarbeiten/ma-daten.js?v=1"></script>
 <script src="klassenarbeiten/ka-tablet.js?v=5"></script>
 <script>
