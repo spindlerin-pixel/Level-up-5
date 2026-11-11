@@ -1,4 +1,4 @@
-/* Level Up 5 · Übungsdiktate für das Diktat am 25.11.2026. Erzeugt aus einer Vorlage, Text mit | = Satzende, / = Diktier-Pause. */
+/* Level Up 5 · Übungsdiktate für das Diktat am 23.11.2026. Erzeugt aus einer Vorlage, Text mit | = Satzende, / = Diktier-Pause. */
 window.LU5DIKTATE = [
  {
   "id": "k1",

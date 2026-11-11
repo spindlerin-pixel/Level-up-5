@@ -1016,7 +1016,7 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
   <div class="ka dka" id="dikBox">
     <span class="ka-subj">Diktat</span>
     <span class="ka-num" id="dikNum">?</span>
-    <p id="dikText"><b>Übungsdiktat am Mittwoch, 25. November.</b></p>
+    <p id="dikText"><b>Übungsdiktat am Montag, 23. November.</b></p>
   </div>
 
   <div class="ka eka" id="ekaBox">
@@ -3634,7 +3634,7 @@ window.LU5 = (function () {
   /* ================= Zeit & Startseite ================= */
   var LOG_KEY = 'lern-zeiten', SET_KEY = 'lern-einstellungen';
   var view = 'home', lastAct = Date.now(), dirty = 0;
-  function settings() { var s = store(SET_KEY) || {}; if (s.goal !== 20) s.goal = 15; if (!s.ka1103) { if (s.kaDate === undefined || s.kaDate === '2026-11-05') s.kaDate = '2026-11-03'; s.ka1103 = 1; store(SET_KEY, s); } if (s.mkaDate === undefined) s.mkaDate = '2026-11-25'; if (s.ekaDate === undefined) s.ekaDate = '2026-11-06'; if (s.dikDate === undefined) s.dikDate = '2026-11-25'; if (!s.dka1116) { if (s.dkaDate === undefined || s.dkaDate === null || s.dkaDate === '2026-11-09') s.dkaDate = '2026-11-16'; s.dka1116 = 1; store(SET_KEY, s); } if (s.mhDate === undefined) s.mhDate = '2026-11-11'; return s; }
+  function settings() { var s = store(SET_KEY) || {}; if (s.goal !== 20) s.goal = 15; if (!s.ka1103) { if (s.kaDate === undefined || s.kaDate === '2026-11-05') s.kaDate = '2026-11-03'; s.ka1103 = 1; store(SET_KEY, s); } if (s.mkaDate === undefined) s.mkaDate = '2026-11-25'; if (s.ekaDate === undefined) s.ekaDate = '2026-11-06'; if (!s.dik1123) { if (s.dikDate === undefined || s.dikDate === null || s.dikDate === '2026-11-25') s.dikDate = '2026-11-23'; s.dik1123 = 1; store(SET_KEY, s); } if (!s.dka1116) { if (s.dkaDate === undefined || s.dkaDate === null || s.dkaDate === '2026-11-09') s.dkaDate = '2026-11-16'; s.dka1116 = 1; store(SET_KEY, s); } if (s.mhDate === undefined) s.mhDate = '2026-11-11'; return s; }
   function log() { return store(LOG_KEY) || {}; }
   function secs(day, subj) { var l = log(); return (l[day] && l[day][subj]) || 0; }
   var logCache = log();
@@ -3709,7 +3709,7 @@ window.LU5 = (function () {
       var box = $('dikBox'); if (!box) return; box.hidden = !st.dikDate; if (!st.dikDate) return;
       var d = new Date(st.dikDate + 'T00:00:00'), t0 = new Date(now.getFullYear(), now.getMonth(), now.getDate()), days = Math.round((d - t0) / 86400000);
       var when = d.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' });
-      if (days > 1) { $('dikNum').textContent = days; $('dikText').innerHTML = '<b>Tage bis zum Übungsdiktat</b> am ' + when + '.' + (days <= 8 ? ' Jeden Tag ein Diktat (mittwochs frei)!' : ' Die Übungsdiktate starten nach der Deutsch-HÜ.'); }
+      if (days > 1) { $('dikNum').textContent = days; $('dikText').innerHTML = '<b>Tage bis zum Übungsdiktat</b> am ' + when + '.' + (days <= 6 ? ' Jeden Tag ein Diktat (mittwochs frei), samstags zwei!' : ' Die Übungsdiktate starten nach der Deutsch-HÜ.'); }
       else if (days === 1) { $('dikNum').textContent = '1'; $('dikText').innerHTML = '<b>Morgen ist das Übungsdiktat!</b> Heute das schwächste Diktat noch einmal und die Fehlerwörter.'; }
       else if (days === 0) { $('dikNum').textContent = '★'; $('dikText').innerHTML = '<b>Heute ist das Übungsdiktat.</b> Viel Glück' + esc(kidName(', ')) + '! Genau hinhören, am Ende alles durchlesen.'; }
       else { $('dikNum').textContent = '✓'; $('dikText').innerHTML = '<b>Das Übungsdiktat ist vorbei.</b> Neues Datum unten eintragen.'; }
@@ -3857,9 +3857,14 @@ window.LU5 = (function () {
     order.forEach(function (s) {
       var d = D[s];
       if (s === 'dik') {
-        if (near('dik') && d <= 8 && window.LU5Dikt) {
-          var dp = LU5Dikt.plan(d), did = dp.d.id;
-          items.push({ subj: 'de', title: 'Deutsch: Übungsdiktat ' + dp.nr + (dp.again ? ' noch einmal' : ''), sub: dp.d.title + ' · diktieren, kontrollieren, Note · ca. 15 Min', min: 15, done: dp.done, btn: dp.done ? 'Ansehen' : 'Los', act: function () { go('de'); LU5Dikt.open(did); } });
+        /* Diktate erst nach der Deutsch-HÜ, dann jeden Tag eins (Mittwoch frei), samstags zwei, am Tag davor das schwächste noch einmal */
+        var deFirst = D.de !== null && D.de >= 0 && st.dkaDate < st.dikDate;
+        if (near('dik') && d <= 7 && !deFirst && window.LU5Dikt) {
+          var dn = now.getDay() === 6 && d >= 2 ? 2 : 1;
+          (LU5Dikt.planList ? LU5Dikt.planList(d, dn) : [LU5Dikt.plan(d)]).forEach(function (dp) {
+            var did = dp.d.id;
+            items.push({ subj: 'de', title: 'Deutsch: Übungsdiktat ' + dp.nr + (dp.again ? ' noch einmal' : ''), sub: dp.d.title + ' · diktieren, kontrollieren, Note · ca. 15 Min', min: 15, done: dp.done, btn: dp.done ? 'Ansehen' : 'Los', act: function () { go('de'); LU5Dikt.open(did); } });
+          });
         }
       } else if (s === 'de' && near('de') && d <= 14) {
         /* Merksätze jeden Tag kurz, ab 5 Tagen vorher dazu eine Probe-HÜ */
@@ -6907,7 +6912,7 @@ window.LU5 = (function () {
 <script src="klassenarbeiten/ek-daten.js?v=1"></script>
 <script src="klassenarbeiten/de-daten.js?v=2"></script>
 <script src="klassenarbeiten/diktate.js?v=1"></script>
-<script src="klassenarbeiten/diktat-player.js?v=3"></script>
+<script src="klassenarbeiten/diktat-player.js?v=4"></script>
 <script src="klassenarbeiten/ma-daten.js?v=1"></script>
 <script src="klassenarbeiten/ka-tablet.js?v=5"></script>
 <script>

@@ -1,5 +1,5 @@
 /* =====================================================================
-   Level Up 5 · Übungsdiktate (Diktat am 25.11.2026)
+   Level Up 5 · Übungsdiktate (Diktat am 23.11.2026)
    Die App diktiert langsam wie eine Lehrerin (Satz ganz, dann in Stücken mit Schreibpausen,
    Satzzeichen werden angesagt), danach Kontrolle mit Lösung, Fehlerzahl → Note.
    Das Kind schreibt von Hand ins Heft. Daten: klassenarbeiten/diktate.js
@@ -67,9 +67,9 @@
   function statusTxt(id) { var r = results()[id] || []; if (!r.length) return ''; var l = r[r.length - 1]; return 'Zuletzt: ' + l.f + ' Fehler · Note ' + l.n + (r.length > 1 ? ' · ' + r.length + '× geschrieben' : ''); }
   function renderList() {
     mode = 'list'; curId = null; if (!box) return;
-    var h = '<p class="voc-eyebrow">Übungsdiktat am Mittwoch, 25.11. · diktieren, kontrollieren, Note</p>';
+    var h = '<p class="voc-eyebrow">Übungsdiktat am Montag, 23.11. · diktieren, kontrollieren, Note</p>';
     h += '<p class="voc-how">So geht’s: Heft und Stift bereitlegen. Die App diktiert langsam wie deine Lehrerin: erst den ganzen Satz, dann in kleinen Stücken mit Pausen zum Schreiben. Satzzeichen werden angesagt. Danach kontrolliert ihr mit der Lösung und tragt die Fehler ein. Mama oder Papa können auch aus dem PDF vorlesen.</p>';
-    h += '<p class="de-plan"><b>Plan:</b> ab Dienstag, 17.11. jeden Tag ein Diktat (mittwochs frei) · Dienstag, 24.11.: das schwächste noch einmal · <b>Fehlerwörter</b> danach 3× ins Heft.</p>';
+    h += '<p class="de-plan"><b>Plan:</b> ab Dienstag, 17.11. jeden Tag ein Diktat (mittwochs frei), Samstag, 21.11.: zwei · Sonntag, 22.11.: das schwächste noch einmal · <b>Fehlerwörter</b> danach 3× ins Heft.</p>';
     var fw = words();
     if (fw.length) h += '<p class="de-plan"><b>📌 ' + fw.length + ' Fehlerwörter aus deinen Diktaten</b> warten aufs Üben. <button type="button" class="btn small primary" data-dk-words="1">Fehlerwörter üben</button></p>';
     h += '<p class="voc-how"><b>🔊 Ins Heft:</b> du schreibst mit der Hand wie im echten Diktat, danach kontrolliert ihr mit der Lösung. <b>⌨️ In der App:</b> du tippst Satz für Satz, die App kontrolliert alles selbst und merkt sich deine Fehlerwörter.</p>';
@@ -325,19 +325,27 @@
   document.addEventListener('submit', function (e) { if (e.target && e.target.id === 'dkForm') { e.preventDefault(); submit(); } });
 
   /* ---------- für den Tagesplan ---------- */
-  function planPick(daysLeft) {
-    var db = load(), k = dayKey();
+  function planList(daysLeft, n) {
+    var db = load(), k = dayKey(), out = [];
     function doneBefore(id) { return (db[id] || []).some(function (r) { return r.day < k; }); }
     function today(id) { return (db[id] || []).some(function (r) { return r.day === k; }); }
-    var t = DATA.filter(function (d) { return today(d.id); })[0]; if (t) return { d: t, nr: DATA.indexOf(t) + 1, done: true, again: doneBefore(t.id) };
-    var open = DATA.filter(function (d) { return !doneBefore(d.id); });
-    if (open.length && !(daysLeft === 1 && open.length < DATA.length)) return { d: open[0], nr: DATA.indexOf(open[0]) + 1, done: false };
-    var worst = DATA.slice().sort(function (a, b) { var la = (db[a.id] || []).slice(-1)[0], lb = (db[b.id] || []).slice(-1)[0]; return (lb ? lb.f : -1) - (la ? la.f : -1); })[0];
-    return { d: worst, nr: DATA.indexOf(worst) + 1, done: false, again: true };
+    function has(d) { return out.some(function (o) { return o.d === d; }); }
+    DATA.filter(function (d) { return today(d.id); }).forEach(function (t) { out.push({ d: t, nr: DATA.indexOf(t) + 1, done: true, again: doneBefore(t.id) }); });
+    while (out.length < n) {
+      var open = DATA.filter(function (d) { return !doneBefore(d.id) && !today(d.id) && !has(d); });
+      var anyDone = DATA.some(function (d) { return doneBefore(d.id); });
+      if (open.length && !(daysLeft === 1 && anyDone)) { out.push({ d: open[0], nr: DATA.indexOf(open[0]) + 1, done: false }); continue; }
+      var rest = DATA.filter(function (d) { return !has(d) && !today(d.id); });
+      if (!rest.length) break;
+      var worst = rest.sort(function (a, b) { var la = (db[a.id] || []).slice(-1)[0], lb = (db[b.id] || []).slice(-1)[0]; return (lb ? lb.f : -1) - (la ? la.f : -1); })[0];
+      out.push({ d: worst, nr: DATA.indexOf(worst) + 1, done: false, again: true });
+    }
+    return out;
   }
+  function planPick(daysLeft) { return planList(daysLeft, 1)[0]; }
   window.LU5Dikt = {
     open: function (id) { box = $('deDikt'); if (!box) return; if (id) { renderList(); var el = box.querySelector('[data-dk-start="' + id + '"]'); if (el) el.closest('.pr-card').classList.add('dk-hl'); box.scrollIntoView({ behavior: 'smooth', block: 'start' }); } else if (mode === 'list' || !P) renderList(); },
-    plan: planPick, count: DATA.length, _eval: function (id, inputs) { return evaluate(byId(id), inputs); }, words: words
+    plan: planPick, planList: planList, count: DATA.length, _eval: function (id, inputs) { return evaluate(byId(id), inputs); }, words: words
   };
   box = $('deDikt'); renderList();
   if (window.LU5Plan) window.LU5Plan();
