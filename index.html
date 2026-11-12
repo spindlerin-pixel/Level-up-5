@@ -839,6 +839,9 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
 .de-opts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
 .de-opts.three { grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); }
 .de-opts .opt { text-align: center; font-size: 1.35rem; font-weight: 700; }
+.de-multi .opt { font-size: 1.15rem; }
+.de-multi .opt.on { background: var(--karte-fill); border-color: var(--primary); color: var(--ink); }
+.de-multi .opt.miss { border: 3px dashed #E0A800; color: var(--ink); }
 .de-tapline { margin: 0; font-size: 1.3rem; line-height: 2.3; }
 .de-w { font: inherit; font-weight: 600; padding: 2px 8px; border: 2px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--ink); cursor: pointer; }
 .de-w.bad { border-color: #E0794F; background: #FFE6DA; text-decoration: line-through; }
@@ -846,8 +849,9 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
 .de-punct { margin-left: -6px; }
 .de-dikt { display: flex; justify-content: center; min-height: 64px; align-items: center; }
 .de-hidden { font-size: 1rem; color: var(--ink-soft); font-weight: 500; }
-.de-rule { padding: 12px 14px; border-radius: 16px; background: #FFF6DC; line-height: 1.5; font-size: 0.98rem; }
-:root[data-theme="dark"] .de-rule { background: #3A3218; }
+.de-rule { padding: 12px 14px; border-radius: 16px; background: #FFF6DC; color: #2B2616; line-height: 1.5; font-size: 0.98rem; }
+:root[data-theme="dark"] .de-rule { background: #3A3218; color: var(--ink); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .de-rule { background: #3A3218; color: var(--ink); } }
 .de-rt { font-family: var(--font-display); font-size: 1.05rem; }
 .de-quit { margin-left: auto; }
 #deEnd { align-items: center; text-align: center; }
@@ -953,7 +957,14 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
   :root:not([data-theme="light"]) .subj.print .subj-top { background: #4A1F2E; }
   :root:not([data-theme="light"]) .plan-yay { background: #173D29; color: #BFF0D2; }
   :root:not([data-theme="light"]) .linkbtn { color: var(--primary); }
+  :root:not([data-theme="light"]) .plan-item:not(.done) .plan-go { color: #1F2A44; }
 }
+:root[data-theme="dark"] .subj.deu .subj-top { background: #4A3A12; }
+:root[data-theme="dark"] .subj.ek .subj-top { background: #173D29; }
+:root[data-theme="dark"] .subj.print .subj-top { background: #4A1F2E; }
+:root[data-theme="dark"] .plan-yay { background: #173D29; color: #BFF0D2; }
+:root[data-theme="dark"] .linkbtn { color: var(--primary); }
+:root[data-theme="dark"] .plan-item:not(.done) .plan-go { color: #1F2A44; }
 .subjects { align-items: start; }
 @media (max-width: 699px) { .subjects { grid-template-columns: 1fr; } }
 @media (min-width: 760px) {
@@ -1276,7 +1287,7 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
     <div class="pr-list">
       <div class="pr-card" style="--pc:#FFD66B">
         <span class="pr-num">1</span>
-        <div class="pr-txt"><h3>Probe-HÜ 1<span class="pr-lvl">Warm-up</span></h3><p>Die Merksätze mit Wörterkasten, kurz oder lang?, Wörter den Regeln 1–4 zuordnen, eine Begründe-Aufgabe.</p><p class="pr-status" data-ka-status="l1" hidden></p></div>
+        <div class="pr-txt"><h3>Probe-HÜ 1<span class="pr-lvl">Warm-up</span></h3><p>Die Merksätze mit Wörterkasten, kurz oder lang?, Wörter den Regeln 5–8 zuordnen, eine Begründe-Aufgabe.</p><p class="pr-status" data-ka-status="l1" hidden></p></div>
         <div class="pr-acts"><button type="button" class="pr-open pr-tab" data-ka="l1">Probe-HÜ schreiben</button></div>
       </div>
       <div class="pr-card" style="--pc:#8FD3FF">
@@ -1296,7 +1307,7 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
       </div>
       <div class="pr-card" style="--pc:#9FE3D6">
         <span class="pr-num">5</span>
-        <div class="pr-txt"><h3>Probe-HÜ 5<span class="pr-lvl">Profi</span></h3><p>Lückendiktat, ganze Wörter selbst schreiben, Vergangenheit (schrieb, fiel), Fehler ohne Hilfe, Erkläre.</p><p class="pr-status" data-ka-status="l5" hidden></p></div>
+        <div class="pr-txt"><h3>Probe-HÜ 5<span class="pr-lvl">Profi</span></h3><p>Lückendiktat, ganze Wörter selbst schreiben, Silben-Trick (ge-hen, nä-hen), Vergangenheit (schrieb, fiel), Fehler ohne Hilfe, Erkläre.</p><p class="pr-status" data-ka-status="l5" hidden></p></div>
         <div class="pr-acts"><button type="button" class="pr-open pr-tab" data-ka="l5">Probe-HÜ schreiben</button></div>
       </div>
       <div class="pr-card" style="--pc:#C9B8FF">
@@ -3730,7 +3741,7 @@ window.LU5 = (function () {
       var when = d.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' });
       if (days > 1) { $('dkaNum').textContent = days; $('dkaText').innerHTML = '<b>Tage bis zur Deutsch-HÜ</b> am ' + when + '. Thema: lange Vokale – Merksätze und Anwenden.' + (days <= 5 ? ' Jeden Tag die Merksätze und eine Probe-HÜ!' : ' Jeden Tag 5 Minuten Merksätze.'); }
       else if (days === 1) { $('dkaNum').textContent = '1'; $('dkaText').innerHTML = '<b>Morgen ist die Deutsch-HÜ!</b> Heute die Generalprobe und die vier Merksätze einmal laut aufsagen.'; }
-      else if (days === 0) { $('dkaNum').textContent = '★'; $('dkaText').innerHTML = '<b>Heute ist die Deutsch-HÜ.</b> Viel Glück' + esc(kidName(', ')) + '! Jede Aufgabe zweimal lesen, Regel 1 bis 4 im Kopf, am Ende jedes Wort prüfen.'; }
+      else if (days === 0) { $('dkaNum').textContent = '★'; $('dkaText').innerHTML = '<b>Heute ist die Deutsch-HÜ.</b> Viel Glück' + esc(kidName(', ')) + '! Jede Aufgabe zweimal lesen, Regel 5 bis 8 im Kopf, am Ende jedes Wort prüfen.'; }
       else { $('dkaNum').textContent = '✓'; $('dkaText').innerHTML = '<b>Die Deutsch-HÜ ist vorbei.</b> Neues Datum unten eintragen.'; }
     })();
     (function () {
@@ -3869,7 +3880,7 @@ window.LU5 = (function () {
       } else if (s === 'de' && near('de') && d <= 14) {
         /* Merksätze jeden Tag kurz, ab 5 Tagen vorher dazu eine Probe-HÜ */
         var mDone = store('de-merk-day') === k;
-        items.push({ subj: 'de', title: 'Deutsch: Merksätze lange Vokale', sub: 'Regel 1 bis 4 · 10 kurze Aufgaben · ca. 5 Min', min: 5, done: mDone, keep: true, btn: mDone ? 'Nochmal' : 'Los', act: function () { go('de'); if (window.LU5De) LU5De.topic('merk'); } });
+        items.push({ subj: 'de', title: 'Deutsch: Merksätze lange Vokale', sub: 'Regel 5 bis 8 wie im Heft · 10 kurze Aufgaben · ca. 5 Min', min: 5, done: mDone, keep: true, btn: mDone ? 'Nochmal' : 'Los', act: function () { go('de'); if (window.LU5De) LU5De.topic('merk'); } });
         if (d <= PROBES.de.from) items = items.concat(probeItems('de', d, k));
       } else if (s === 'de' || s === 'ek') {
         if (near(s) && d <= PROBES[s].from) items = items.concat(probeItems(s, d, k));
@@ -6110,34 +6121,41 @@ window.LU5 = (function () {
   var SATZ = ['Der Imker hebt den [Deckel|Dekel] vom Kasten.', 'Im Sommer [summen|sumen] die Bienen im Garten.', 'Die Königin [sitzt|sizt] in der Mitte.', 'Die Bienen [sammeln|sameln] den Pollen.', 'Im Winter bleiben die Bienen im [Stock|Stok].', 'Der Honig schmeckt [lecker|leker].', 'Die Katze liegt in der [Sonne|Sone].', 'Ein [Spatz|Spaz] sitzt auf dem Dach.', 'Der Bäcker [backt|bakt] frische Brötchen.', 'Im [Park|Parck] steht eine Bank.', 'Mein Herz klopft [ganz|gantz] schnell.', 'Der Falke fliegt über den [Wald|Walld].', 'Das Kind trinkt eine Tasse [Tee|Te].', 'Wir fahren mit dem [Boot|Bot] über den See.', 'Auf der [Wiese|Wise] wachsen Blumen.', 'Der [Tiger|Tieger] schleicht durch das Gras.', 'Ich gebe [ihm|im] das Buch.', 'Der Zug fährt auf der [Bahn|Ban].', 'Das [Huhn|Hun] legt ein Ei.', 'Der Lehrer [zählt|zält] die Hefte.', 'Im Winter fällt viel [Schnee|Schne].', 'Sieben [Riesen|Risen] niesen laut.', 'Ich habe ein [paar|Paar] Äpfel gekauft.', 'Lena trägt ein neues [Paar|paar] Schuhe.', 'Der Hase hat lange [Ohren|Oren].', 'Die Ziege frisst [Moos|Mos] und Gras.', 'Das Nashorn [wühlt|wült] im Schlamm.', 'Die Kinder [rennen|renen] über den Hof.', 'Am Morgen ist der [Himmel|Himel] blau.', 'Die Bienen [fliegen|fligen] zum Stock zurück.', 'Vier [Spatzen|Spazen] sitzen auf dem Zaun.', 'Die Schnecke kriecht über das [Blatt|Blat].', 'Der Imker [stellt|stelt] die Kästen auf.', 'Der [Imker|Immker] trägt einen Hut.', 'Im [Winter|Wintter] ist es kalt.', 'Der Zug hält am [Bahnhof|Banhof].', 'Der Arzt hilft dem [kranken|krancken] Kind.', 'Mein Bruder isst gern [Kuchen|Kuhchen].'];
   var FORM = ['stellen → er …|stellt', 'rollen → es …|rollt', 'brummen → der Bär …|brummt', 'summen → die Biene …|summt', 'sammeln → sie …|sammelt', 'rennen → er …|rennt', 'fallen → es …|fällt', 'kennen → sie …|kennt', 'schwimmen → er …|schwimmt', 'kommen → sie …|kommt', 'packen → er …|packt', 'sitzen → sie …|sitzt', 'putzen → er …|putzt', 'schmecken → es …|schmeckt', 'kratzen → die Katze …|kratzt', 'wohnen → sie …|wohnt', 'fahren → er …|fährt', 'zählen → sie …|zählt', 'fühlen → er …|fühlt', 'fliegen → die Biene …|fliegt', 'frieren → sie …|friert', 'nehmen → er …|nimmt|Ausnahme: nehmen → er nimmt (kurzes i, doppeltes m)', 'sehen → sie …|sieht',
     'Heute: ich nehme. Gestern: ich …|nahm', 'Heute: ich sehe. Gestern: ich …|sah', 'Heute: ich stehle. Gestern: ich …|stahl', 'Heute: ich fehle. Gestern: ich …|fehlte', 'Heute: ich stehe. Gestern: ich …|stand', 'Heute: ich fliehe. Gestern: ich …|floh', 'Heute: ich falle. Gestern: ich …|fiel', 'Heute: ich schreie. Gestern: ich …|schrie', 'Heute: ich rufe. Gestern: ich …|rief', 'Heute: ich halte. Gestern: ich …|hielt', 'Heute: ich schlafe. Gestern: ich …|schlief', 'Heute: ich schreibe. Gestern: ich …|schrieb', 'Heute: ich laufe. Gestern: ich …|lief', 'Heute: ich fliege. Gestern: ich …|flog'];
-  /* Merksätze lange Vokale (HÜ 16.11.): 'Satz mit ___|richtig|falsch|falsch' – Regel 1–4 wie in den Probe-HÜs */
+  /* Merksätze lange Vokale (HÜ 16.11.) – Wortlaut wie im Heft, Regel 5–8: 'Satz mit ___|richtig|falsch|falsch' */
   var MERK = [
-    'Regel 1: Die meisten Wörter mit lang gesprochenem Vokal schreibt man ___ besonderes Zeichen.|ohne|mit|immer mit',
-    'Regel 1: Nach einem langen Vokal wird der Konsonant ___ verdoppelt.|nicht|immer|meistens',
-    'Regel 1: Beispiel für ein Wort mit langem Vokal ohne Zeichen: ___|Hose|Hohse|Hoose',
-    'Regel 2: Manchmal steht nach dem langen Vokal ein ___.|Dehnungs-h|Doppelvokal|ck',
-    'Regel 2: Das Dehnungs-h steht fast immer vor ___.|l, m, n, r|ck und tz|ei, au, eu',
-    'Regel 2: Für das Dehnungs-h gibt es keine feste Regel. Solche Wörter muss man sich ___.|merken|nicht merken|abschreiben',
-    'Regel 2: Beispiel für ein Wort mit Dehnungs-h: ___|Bahn|Ban|Baan',
-    'Regel 3: Nur wenige Wörter haben einen ___: aa, ee oder oo.|Doppelvokal|Doppelkonsonanten|Dehnungs-h',
-    'Regel 3: Die Umlaute ä, ö und ü werden ___ verdoppelt.|nie|immer|meistens',
-    'Regel 3: Das Haar → das kleine ___|Härchen|Häärchen|Hahrchen',
-    'Regel 3: Beispiel für ein Wort mit Doppelvokal: ___|Boot|Bot|Boht',
-    'Regel 4: Das lang gesprochene i schreibt man meistens ___.|ie|i|ih',
-    'Regel 4: Wörter aus anderen Sprachen wie Tiger, Kino und Maschine schreibt man nur mit ___.|i|ie|ih',
-    'Regel 4: Auch mir, dir und wir schreibt man nur mit ___.|i|ie|ih',
-    'Regel 4: Mit ih schreibt man nur ihr, ihm, ___ und ihnen.|ihn|ien|in',
-    'Regel 4: Beispiel für ein Wort mit ie: ___|Biene|Bine|Bihne',
+    'Regel 5: Lang ausgesprochener Vokal – ___ geschrieben.|einfach|doppelt|mit h',
+    'Regel 5: Die meisten Wörter mit einem lang ausgesprochenen Vokal schreibt man mit ___ Buchstaben.|einfachen|doppelten|großen',
+    'Regel 6: Lange Vokale mit ___ als Dehnungszeichen.|h|e|ck',
+    'Regel 6: In einigen Wörtern steht hinter dem lang ausgesprochenen Vokal ein ___ als Dehnungszeichen.|h|e|tz',
+    'Regel 6: Bei Verben kann man das Dehnungs-h häufig hören, wenn man das Verb im ___ in Silben trennt.|Infinitiv|Präteritum|Plural',
+    'Regel 6: Bei Verben hört man das Dehnungs-h, wenn man den Infinitiv in ___ trennt: ge-hen, se-hen.|Silben|Buchstaben|Sätze',
+    'Regel 6: „nähen“ in Silben getrennt: ___|nä-hen|n-ähen|näh-en',
+    'Regel 6: „blühen“ in Silben getrennt: ___|blü-hen|bl-ühen|blüh-en',
+    'Regel 7: Manche Wörter werden mit ___ Vokal geschrieben.|verdoppeltem|einfachem|stummem',
+    'Regel 7: Wörter mit verdoppeltem Vokal lernt man am besten ___.|auswendig|gar nicht|rückwärts',
+    'Regel 7: Wichtig: ___ gibt es im Deutschen nicht.|ää und üü|aa und ee|ee und oo',
+    'Regel 7: Das Haar → das kleine ___|Härchen|Häärchen|Hahrchen',
+    'Regel 8: Die meisten Wörter mit lang ausgesprochenem i werden mit ___ geschrieben.|ie|i|ih',
+    'Zusatz aus dem Buch: Wörter aus anderen Sprachen wie Tiger, Kino und Maschine schreibt man nur mit ___.|i|ie|ih',
+    'Zusatz aus dem Buch: Auch mir, dir und wir schreibt man nur mit ___.|i|ie|ih',
+    'Zusatz aus dem Buch: Mit ih schreibt man nur ihr, ihm, ___ und ihnen.|ihn|ien|in',
     'Kurz oder lang? Beim ___ Vokal kann man den Laut ziehen: Hoooose.|langen|kurzen|doppelten',
     'ein paar Äpfel (= einige) schreibt man ___.|klein|groß|mit ee',
     'ein Paar Schuhe (= zwei, die zusammengehören) schreibt man ___.|groß|klein|mit aa'
   ];
-  /* Welche Regel? 'Wort|Regel (1–4)' */
+  /* Beispiele: mehrere richtige Antworten – „Tippe ALLE passenden Wörter an“ (Wörter aus dem Heft zuerst) */
+  var MERK_BSP = [
+    ['Regel 5', 'mit langem Vokal, die man <b>einfach</b> schreibt (ohne h, ohne doppelten Vokal)', ['Vase', 'Dose', 'Nashorn', 'holen', 'Besen', 'nämlich', 'Rose', 'Säge', 'Hose', 'Nase', 'Blume', 'Tafel'], ['Bahn', 'Uhr', 'Boot', 'Biene', 'Tee', 'Zahl', 'Fee', 'Ziel']],
+    ['Regel 6', 'mit <b>Dehnungs-h</b>', ['Zahl', 'Ruhm', 'Huhn', 'Ohr', 'Uhr', 'Bohne', 'gehen', 'sehen', 'nähen', 'blühen', 'Bahn', 'Stuhl'], ['Hose', 'Boot', 'Wiese', 'Nase', 'Fee', 'Moos', 'Vase', 'Ziel']],
+    ['Regel 7', 'mit <b>verdoppeltem Vokal</b>', ['Fee', 'Kaffee', 'Moor', 'Moos', 'Staat', 'Allee', 'Aal', 'Boot', 'Tee', 'Haar', 'Zoo', 'Schnee'], ['Bahn', 'Hose', 'Wiese', 'Uhr', 'Nase', 'Ziel', 'Huhn', 'Dose']],
+    ['Regel 8', 'mit <b>ie</b>', ['Ziel', 'Dienstag', 'niemand', 'viel', 'schwierig', 'Wiese', 'Biene', 'Brief'], ['Tiger', 'Kino', 'Bahn', 'Boot', 'Hose', 'Uhr', 'Igel', 'Kaffee']]
+  ];
+  /* Welche Regel? 'Wort|Regel (1–4 = Regel 5–8 im Heft)' */
   var REGEL = ['Nase|1', 'Hose|1', 'Blume|1', 'Tafel|1', 'Schule|1', 'Name|1', 'Honig|1', 'Brot|1', 'Igel|1', 'Kamel|1', 'Rabe|1', 'Krone|1',
     'Bahn|2', 'Zahl|2', 'Uhr|2', 'Stuhl|2', 'Kohl|2', 'wohnen|2', 'Lehrer|2', 'Fehler|2', 'fahren|2', 'Huhn|2', 'Zahn|2', 'fühlen|2', 'Mehl|2', 'Sohn|2',
     'Haar|3', 'Boot|3', 'Tee|3', 'Zoo|3', 'Schnee|3', 'Moos|3', 'See|3', 'Waage|3', 'Klee|3', 'Saal|3', 'Meer|3', 'Idee|3',
     'Biene|4', 'Wiese|4', 'Brief|4', 'Spiegel|4', 'Riese|4', 'Fliege|4', 'Ziege|4', 'vier|4', 'tief|4', 'Dienstag|4', 'Papier|4', 'Lied|4'];
-  var REGEL_N = ['Regel 1: einfach', 'Regel 2: Dehnungs-h', 'Regel 3: aa, ee, oo', 'Regel 4: ie'];
+  var REGEL_N = ['Regel 5: einfach', 'Regel 6: Dehnungs-h', 'Regel 7: aa, ee, oo', 'Regel 8: ie'];
   /* Diktat: alle richtigen Wörter aus den Listen, ohne gleich klingende Wörter */
   var NODIKT = { Rad: 1, Weg: 1, Kamm: 1, Saat: 1, Uhr: 1, Ruhe: 1, Mühle: 1, Teer: 1, Stahl: 1, Sohn: 1, Zeh: 1, Moos: 1, wir: 1, mir: 1, dir: 1, Ale: 1 };
   function gap(s) { var m = s.match(/^(.*)\{([^}]*)\}(.*)$/); var o = m[2].split('|'); return { pre: m[1], opts: o, post: m[3], word: m[1] + o[0] + m[3], variants: o.map(function (x) { return m[1] + x + m[3]; }) }; }
@@ -6145,22 +6163,22 @@ window.LU5 = (function () {
   [DK, CKZ, VK, H, AEO, IE].forEach(function (L) { L.forEach(function (s) { var w = gap(s).word; if (!NODIKT[w] && !/ä?rchen|tchen|Säle/.test(w) && DIKT.indexOf(w) === -1) DIKT.push(w); }); });
 
   var TOPICS = [
-    ['merk', 'Merksätze lange Vokale', 'HÜ 16.11.'], ['regel', 'Welche Regel? (1–4)', 'HÜ 16.11.'],
+    ['merk', 'Merksätze lange Vokale', 'HÜ 16.11.'], ['regel', 'Welche Regel? (5–8)', 'HÜ 16.11.'],
     ['kl', 'Kurz oder lang?', 'S. 354'], ['dk', 'Doppelter Konsonant', 'S. 355'], ['ckz', 'ck oder k? tz oder z?', 'S. 356–357'], ['vk', 'Verschiedene Konsonanten', 'S. 358'],
     ['h', 'Dehnungs-h oder nicht?', 'S. 363–366'], ['aeo', 'aa, ee, oo und paar/Paar', 'S. 367–368'], ['ie', 'ie, i oder ih?', 'S. 366, 369–370'],
     ['satz', 'Fehler-Detektiv', 'Sätze prüfen'], ['dikt', 'Hör-Diktat', 'Wörter schreiben'], ['formen', 'Verbformen', 'S. 355, 366, 370']];
   var TNAME = {}; TOPICS.forEach(function (t) { TNAME[t[0]] = t[1]; });
-  var SIZE = { merk: MERK.length, regel: REGEL.length, kl: KL.length, dk: DK.length, ckz: CKZ.length, vk: VK.length, h: H.length, aeo: AEO.length + PAAR.length, ie: IE.length + IH.length, satz: SATZ.length, dikt: DIKT.length, formen: FORM.length };
+  var SIZE = { merk: MERK.length + MERK_BSP.length, regel: REGEL.length, kl: KL.length, dk: DK.length, ckz: CKZ.length, vk: VK.length, h: H.length, aeo: AEO.length + PAAR.length, ie: IE.length + IH.length, satz: SATZ.length, dikt: DIKT.length, formen: FORM.length };
 
   var RULE = {
-    merk: '<b>Die vier Merksätze für lange Vokale</b><br><b>Regel 1:</b> Die meisten Wörter mit lang gesprochenem Vokal schreibt man <b>ohne</b> besonderes Zeichen. Nach dem langen Vokal wird <b>nicht</b> verdoppelt: H<u>o</u>se, N<u>a</u>se, Bl<u>u</u>me.<br><b>Regel 2:</b> Manchmal steht nach dem langen Vokal ein <b>Dehnungs-h</b>, fast immer vor <b>l, m, n, r</b>: Za<b>h</b>l, ne<b>h</b>men, Ba<b>h</b>n, U<b>h</b>r. Merkwörter!<br><b>Regel 3:</b> Nur wenige Wörter haben einen <b>Doppelvokal</b>: H<b>aa</b>r, T<b>ee</b>, B<b>oo</b>t. ä, ö, ü werden <b>nie</b> verdoppelt: Härchen.<br><b>Regel 4:</b> Das lange i schreibt man meistens <b>ie</b>: B<b>ie</b>ne. Nur <b>i</b>: Tiger, Kino, mir, dir, wir. Nur <b>ih</b>: ihr, ihm, ihn, ihnen.',
-    regel: '<b>So findest du die Regel:</b> Sprich das Wort. Ist der Vokal lang? Dann schau hin:<br>kein Zeichen → <b>Regel 1</b> (Hose) · ein h nach dem Vokal → <b>Regel 2</b> (Bahn) · aa, ee, oo → <b>Regel 3</b> (Boot) · ie → <b>Regel 4</b> (Biene)',
+    merk: '<b>Die Merksätze für lange Vokale (wie im Heft)</b><br><b>Regel 5: Lang ausgesprochener Vokal – einfach geschrieben.</b> Die meisten Wörter mit einem lang ausgesprochenen Vokal schreibt man mit <b>einfachen</b> Buchstaben: V<u>a</u>se, D<u>o</u>se, h<u>o</u>len, B<u>e</u>sen, n<u>ä</u>mlich, S<u>ä</u>ge.<br><b>Regel 6: Lange Vokale mit h als Dehnungszeichen.</b> In einigen Wörtern steht hinter dem lang ausgesprochenen Vokal ein <b>h</b> als Dehnungszeichen: Za<b>h</b>l, Hu<b>h</b>n, O<b>h</b>r, U<b>h</b>r, Bo<b>h</b>ne. Bei Verben kann man das Dehnungs-h häufig hören, wenn man das Verb im <b>Infinitiv</b> in <b>Silben</b> trennt: ge-<b>h</b>en, se-<b>h</b>en, nä-<b>h</b>en, blü-<b>h</b>en.<br><b>Regel 7: Wörter mit verdoppeltem Vokal.</b> Manche Wörter werden mit <b>verdoppeltem</b> Vokal geschrieben. Am besten lernt man diese Wörter <b>auswendig</b>: F<b>ee</b>, Kaff<b>ee</b>, M<b>oo</b>r, M<b>oo</b>s, St<b>aa</b>t, All<b>ee</b>, <b>Aa</b>l. <b>Wichtig:</b> ää und üü gibt es im Deutschen nicht.<br><b>Regel 8: Wörter mit ie.</b> Die meisten Wörter mit lang ausgesprochenem i werden mit <b>ie</b> geschrieben: Z<b>ie</b>l, D<b>ie</b>nstag, n<b>ie</b>mand, v<b>ie</b>l, schw<b>ie</b>rig, W<b>ie</b>se.<br><i>Zusatz aus dem Buch:</i> Nur i bei Tiger, Kino, mir, dir, wir · ih nur bei ihr, ihm, ihn, ihnen.',
+    regel: '<b>So findest du die Regel:</b> Sprich das Wort. Ist der Vokal lang? Dann schau hin:<br>einfach geschrieben → <b>Regel 5</b> (Vase) · ein h hinter dem Vokal → <b>Regel 6</b> (Zahl) · verdoppelter Vokal aa, ee, oo → <b>Regel 7</b> (Fee) · ie → <b>Regel 8</b> (Ziel)',
     kl: '<b>Kurz oder lang?</b> Sprich das Wort laut und deutlich. Beim kurzen Vokal klingt die Silbe knapp: <b>Ịmker, Mụtter</b>. Beim langen Vokal kannst du den Laut ziehen: <b>H<u>o</u>se, B<u>ie</u>ne</b>.<br>Kurzer Vokal → danach meist zwei Konsonanten (Zelle, Wald). Langer Vokal → oft nur ein Konsonant (Hose).',
     dk: '<b>Regel:</b> Hörst du nach einem <b>kurz</b> gesprochenen Vokal nur <b>einen</b> Konsonanten, wird er meistens <b>verdoppelt</b>: ste<b>ll</b>en, Ka<b>mm</b>, Bu<b>tt</b>er, Ze<b>ll</b>e.<br>Nach einem <b>langen</b> Vokal wird nicht verdoppelt: Ho<b>s</b>e, Ta<b>f</b>el.<br><b>Trick:</b> Das Doppelte bleibt in der ganzen Wortfamilie: stellen → er stellt → die Stelle.',
     ckz: '<b>Regel:</b> <b>k</b> und <b>z</b> werden nicht verdoppelt (nie kk, nie zz). Nach kurzem Vokal schreibt man <b>ck</b> und <b>tz</b>: La<b>ck</b>, me<b>ck</b>ern, Bli<b>tz</b>, pla<b>tz</b>en.<br><b>Merkvers:</b> Nach l, m, n, r, das merke ja, steht nie tz und nie ck: Ban<b>k</b>, Im<b>k</b>er, Kran<b>z</b>, Ar<b>z</b>t.<br>Nach langem Vokal und nach ei, au, eu: nur <b>k</b> und <b>z</b>: E<b>k</b>el, Hei<b>z</b>ung, Kreu<b>z</b>.',
     vk: '<b>Regel:</b> Hörst du nach einem kurzen, betonten Vokal <b>zwei oder mehr verschiedene</b> Konsonanten, wird <b>keiner</b> verdoppelt: La<b>nd</b>, ru<b>tsch</b>en, Wa<b>ld</b>, Wi<b>nt</b>er.<br>Hörst du nur einen Konsonanten, wird er verdoppelt: So<b>nn</b>e.',
-    h: '<b>Gut zu wissen:</b> Die meisten Wörter mit langem Vokal schreibt man <b>ganz einfach</b>: D<b>o</b>se, N<b>a</b>se, Bl<b>u</b>me.<br>Manche haben ein <b>Dehnungs-h</b>: B<b>ah</b>n, Z<b>ah</b>l, St<b>uh</b>l. Dafür gibt es keine feste Regel, du musst sie dir merken.<br><b>Tipp:</b> Das Dehnungs-h steht fast immer vor <b>l, m, n</b> oder <b>r</b>: Kohl, nehmen, Bahn, Uhr.',
-    aeo: '<b>Doppelvokal:</b> Nur wenige Wörter haben <b>aa, ee</b> oder <b>oo</b>: Haar, Saal, Tee, Schnee, Boot, Zoo. Die musst du dir merken.<br><b>Achtung:</b> ä, ö, ü werden nie verdoppelt: Haar → H<b>ä</b>rchen, Boot → B<b>ö</b>tchen.<br><b>paar oder Paar?</b> ein <b>paar</b> (klein) = einige: ein paar Äpfel. Ein <b>Paar</b> (groß) = zwei, die zusammengehören: ein Paar Schuhe.',
+    h: '<b>Gut zu wissen:</b> Die meisten Wörter mit langem Vokal schreibt man <b>ganz einfach</b>: D<b>o</b>se, N<b>a</b>se, Bl<b>u</b>me.<br>Manche haben ein <b>Dehnungs-h</b>: B<b>ah</b>n, Z<b>ah</b>l, St<b>uh</b>l. Dafür gibt es keine feste Regel, du musst sie dir merken.<br><b>Silben-Trick bei Verben:</b> Trenne den Infinitiv in Silben, dann hörst du das h: ge-<b>h</b>en, se-<b>h</b>en, nä-<b>h</b>en, blü-<b>h</b>en.<br><b>Zusatz aus dem Buch:</b> Das Dehnungs-h steht oft vor <b>l, m, n</b> oder <b>r</b>: Kohl, nehmen, Bahn, Uhr.',
+    aeo: '<b>Verdoppelter Vokal (Regel 7):</b> Nur wenige Wörter haben <b>aa, ee</b> oder <b>oo</b>: Haar, Saal, Tee, Schnee, Boot, Zoo. Am besten lernst du sie auswendig.<br><b>Wichtig:</b> ää und üü gibt es im Deutschen nicht: Haar → H<b>ä</b>rchen, Boot → B<b>ö</b>tchen.<br><b>paar oder Paar?</b> ein <b>paar</b> (klein) = einige: ein paar Äpfel. Ein <b>Paar</b> (groß) = zwei, die zusammengehören: ein Paar Schuhe.',
     ie: '<b>Langes i:</b> Die meisten Wörter schreibt man mit <b>ie</b>: B<b>ie</b>ne, W<b>ie</b>se, v<b>ie</b>r. Das e hört man nicht, es zeigt nur: Das i ist lang.<br><b>Nur i:</b> viele Wörter aus anderen Sprachen (T<b>i</b>ger, K<b>i</b>no, Masch<b>i</b>ne) und m<b>i</b>r, d<b>i</b>r, w<b>i</b>r.<br><b>ih:</b> nur bei <b>ihr, ihm, ihn, ihnen, ihre</b>.<br>Achtung: <b>im</b> Garten (= in dem), aber: Ich gebe <b>ihm</b> das Buch.',
     satz: '<b>So findest du Fehler:</b> Lies den Satz Wort für Wort. Sprich jedes Wort deutlich: kurz oder lang? Dann prüfe die Regeln: Doppelkonsonant, ck/tz, Dehnungs-h, ie.',
     dikt: '<b>So schreibst du ein Wort richtig:</b> 1. Genau hinhören (auch zweimal). 2. Kurz oder lang? 3. Regel anwenden: verdoppeln, ck/tz, ie … 4. Nach dem Schreiben noch einmal Buchstabe für Buchstabe prüfen.',
@@ -6228,15 +6246,20 @@ window.LU5 = (function () {
     return t;
   };
   G.merk = function (i) {
+    if (i >= MERK.length) {
+      var b = MERK_BSP[i - MERK.length], nr = 2 + rnd(3), right = shuffle(b[2]).slice(0, nr), wrong = shuffle(b[3]).slice(0, 6 - nr);
+      return { topic: 'merk', kind: 'multi', full: b[0] + ': ' + right.join(', '), q: b[0] + ': Tippe <b>alle</b> Wörter an, ' + b[1] + '. Es sind <b>mehrere</b> richtig!', options: shuffle(right.concat(wrong)), answers: right,
+        say: right.join(', '), explain: 'Passend sind: <b>' + right.map(esc).join(', ') + '</b>.' };
+    }
     var p = MERK[i].split('|'), sent = p[0], a = p[1], full = sent.replace('___', a);
-    var type = Math.random() < 0.35 && a.length <= 12 && !/,/.test(a);
-    var t = { topic: 'merk', full: full, q: type ? 'Schreib das fehlende Wort.' : 'Welches Wort fehlt im Merksatz?', sent: sent, answer: a, say: full.replace(/^Regel \d: /, ''), explain: 'Der ganze Merksatz: <b>' + esc(full) + '</b>' };
+    var type = Math.random() < 0.35 && a.length <= 12 && !/[,-]| und /.test(a);
+    var t = { topic: 'merk', full: full, q: type ? 'Schreib das fehlende Wort.' : 'Welches Wort fehlt im Merksatz?', sent: sent, answer: a, say: full.replace(/^(Regel \d|Zusatz aus dem Buch): /, ''), explain: 'Der ganze Merksatz: <b>' + esc(full) + '</b>' };
     if (type) { t.kind = 'type'; t.big = ''; } else { t.kind = 'choice'; t.big = ''; t.options = shuffle(p.slice(1)); }
     return t;
   };
   G.regel = function (i) {
     var p = REGEL[i].split('|'), w = p[0], n = Number(p[1]) - 1;
-    var why = ['Langer Vokal, ganz <b>einfach</b> geschrieben', 'Langer Vokal mit <b>Dehnungs-h</b>', 'Merkwort mit <b>Doppelvokal</b>', 'Langes i → <b>ie</b>'][n];
+    var why = ['Langer Vokal, ganz <b>einfach</b> geschrieben', 'Langer Vokal mit <b>h als Dehnungszeichen</b>', 'Merkwort mit <b>verdoppeltem Vokal</b>', 'Langes i → <b>ie</b>'][n];
     return { topic: 'regel', kind: 'choice', full: w, q: 'Welche Regel passt zu diesem Wort?', big: esc(w), options: REGEL_N.slice(), answer: REGEL_N[n], keep: true, say: w, explain: why + ': <b>' + esc(w) + '</b> → ' + REGEL_N[n] + '.' };
   };
   G.satz = function (i) {
@@ -6255,7 +6278,7 @@ window.LU5 = (function () {
     if (/ck|tz/.test(wl)) return 'Nach l, m, n, r steht nie tz und nie ck.';
     if (/ie/.test(rl) && !/ie/.test(wl)) return 'Langes i → meistens <b>ie</b>.';
     if (/ie/.test(wl)) return 'Dieses Wort schreibt man nur mit <b>i</b>.';
-    if (/(aa|ee|oo)/.test(rl) && !/(aa|ee|oo)/.test(wl)) return 'Merkwort mit <b>Doppelvokal</b>.';
+    if (/(aa|ee|oo)/.test(rl) && !/(aa|ee|oo)/.test(wl)) return 'Merkwort mit <b>verdoppeltem Vokal</b>.';
     if ((rl.match(/h/g) || []).length > (wl.match(/h/g) || []).length) return 'Merkwort mit <b>Dehnungs-h</b>.';
     if (/(.)\1/.test(rl) && !/(.)\1/.test(wl)) return 'Kurzer Vokal, nur ein Konsonant zu hören → <b>verdoppeln</b>.';
     if (/(.)\1/.test(wl)) return 'Zwei verschiedene Konsonanten oder langer Vokal → <b>nicht</b> verdoppeln.';
@@ -6326,6 +6349,15 @@ window.LU5 = (function () {
         var c = 'opt'; if (s.resolved) { if (o === t.answer) c += ' good'; else if (s.chosen === k) c += ' bad'; }
         return '<button type="button" class="' + c + '" data-opt="' + k + '"' + (s.resolved ? ' disabled' : '') + '>' + esc(o) + '</button>';
       }).join('') + '</div>';
+    } else if (t.kind === 'multi') {
+      var sel = s.sel || [];
+      h += '<div class="de-opts three de-multi">' + t.options.map(function (o, k) {
+        var on = sel.indexOf(k) !== -1, good = t.answers.indexOf(o) !== -1, c = 'opt';
+        if (s.resolved) { if (good && on) c += ' good'; else if (good) c += ' miss'; else if (on) c += ' bad'; }
+        else if (on) c += ' on';
+        return '<button type="button" class="' + c + '" data-mopt="' + k + '" aria-pressed="' + on + '"' + (s.resolved ? ' disabled' : '') + '>' + (on && !s.resolved ? '✓ ' : '') + esc(o) + '</button>';
+      }).join('') + '</div>';
+      if (!s.resolved) h += '<div class="voc-row"><button type="button" class="btn primary" id="deMultiOk"' + (sel.length ? '' : ' disabled') + '>Prüfen</button></div>';
     } else if (t.kind === 'tap') {
       h += '<p class="de-tapline">' + t.toks.map(function (tk, k) {
         if (/^[.,!?]$/.test(tk)) return '<span class="de-punct">' + tk + '</span>';
@@ -6389,6 +6421,17 @@ window.LU5 = (function () {
     finishTask(ok, ok ? '' : 'Richtig ist <b>' + esc(t.answer) + '</b>. ' + (t.explain || ''));
     if (ok && t.explain && run.mode !== 'test') { run.st.fb = ['good', '✓ ' + t.explain]; render(); }
   }
+  function onMulti() {
+    var t = cur(), s = run.st, sel = (s.sel || []).map(function (k) { return t.options[k]; });
+    var hit = sel.filter(function (o) { return t.answers.indexOf(o) !== -1; }).length, bad = sel.length - hit;
+    if (hit === t.answers.length && !bad) { finishTask(s.tries === 0, t.explain); return; }
+    if (run.mode !== 'test' && s.tries < 1) {
+      s.tries++;
+      s.fb = ['soft', 'Noch nicht ganz. ' + (bad ? 'Mindestens ein Wort passt <b>nicht</b>. ' : '') + (hit < t.answers.length ? 'Es fehlt noch mindestens ein richtiges Wort. ' : '') + 'Schau nochmal genau hin!'];
+      render(); return;
+    }
+    finishTask(false, t.explain + ' Gelb umrandet = hast du übersehen.');
+  }
   function onTok(k) {
     var t = cur(), s = run.st; if (s.resolved || s.phase) return;
     if (k === t.wi) { s.phase = 1; s.fb = ['good', 'Gefunden! Jetzt schreib das Wort richtig.']; render(); return; }
@@ -6442,6 +6485,8 @@ window.LU5 = (function () {
     if (b.id === 'deTest') { start('test'); return; }
     if (!run) { if (b.id === 'deBack') overview(); return; }
     if (b.dataset.opt !== undefined) { onOpt(Number(b.dataset.opt)); return; }
+    if (b.dataset.mopt !== undefined) { if (run.st.resolved) return; var mk = Number(b.dataset.mopt), sl = run.st.sel = run.st.sel || [], pi = sl.indexOf(mk); if (pi === -1) sl.push(mk); else sl.splice(pi, 1); run.st.fb = null; render(); return; }
+    if (b.id === 'deMultiOk') { onMulti(); return; }
     if (b.dataset.tok !== undefined) { onTok(Number(b.dataset.tok)); return; }
     if (b.id === 'deRuleBtn') { run.st.ruleOpen = !run.st.ruleOpen; render(); return; }
     if (b.id === 'deSay' || b.id === 'deSay2') { speak(cur().say); return; }

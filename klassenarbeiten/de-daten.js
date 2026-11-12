@@ -182,7 +182,8 @@
 
 /* =====================================================================
    Level Up 5 · Deutsch · 6 Probe-HÜs „lange Vokale“ (HÜ am Montag, 16.11.2026)
-   Buch S. 363–371: einfach (Regel 1) · Dehnungs-h (Regel 2) · aa/ee/oo (Regel 3) · ie/i/ih (Regel 4)
+   Regeln wie im Heft (Hefteintrag vom 4.11.): Regel 5 einfach · Regel 6 Dehnungs-h (Verben: Infinitiv in Silben trennen)
+   · Regel 7 verdoppelter Vokal (auswendig lernen, ää/üü gibt es nicht) · Regel 8 ie  (Buch S. 363–371 als Zusatz)
    Aufbau wie die HÜ von Frau Vester am 9.11.: Merksätze als Lückentext, falsche Wörter + Regel,
    3. Person Singular, Fehler im Satz finden und NUR das Wort richtig schreiben.
    ===================================================================== */
@@ -196,7 +197,7 @@
   };
   function de(o) { for (var k in DE) if (!(k in o)) o[k] = DE[k]; return o; }
   var RF = ['richtig', 'falsch'], KL = ['kurz', 'lang'];
-  var REGELN = ['Regel 1: einfach', 'Regel 2: Dehnungs-h', 'Regel 3: aa, ee, oo', 'Regel 4: ie'];
+  var REGELN = ['Regel 5: einfach', 'Regel 6: Dehnungs-h', 'Regel 7: aa, ee, oo', 'Regel 8: ie'];
   var GAP_TIP = 'Der Hinweis in Klammern verrät dir, welches Wort gemeint ist. Schreib nur die fehlenden Buchstaben in die Lücke.';
   var FIX_TIP = 'Lies genau: Schreib nur das verbesserte Wort – nicht den ganzen Satz!';
   var VERB_TIP = 'Schreib nur die Verbform (z. B. fällt). „er, sie, es“ davor darfst du auch schreiben.';
@@ -204,31 +205,35 @@
   /* 3. Person: nur die Form oder mit „er, sie, es“ davor */
   function V(inf, form) { return [inf + ' = er, sie, es …', form + '|er, sie, es ' + form + '|er,sie,es ' + form + '|er sie es ' + form, form]; }
 
-  /* Merksätze: Lücken (alle sinnvollen Schreibweisen zählen) */
+  /* Merksätze: Lücken – Wortlaut wie im Heft (Regel 5–8), alle sinnvollen Schreibweisen zählen */
   var M = {
-    ohne: ['Die meisten Wörter mit lang gesprochenem Vokal schreibt man {} besonderes Zeichen.', 'ohne'],
-    nicht: ['Nach einem langen Vokal wird der Konsonant {} verdoppelt.', 'nicht|nie'],
-    dehn: ['Manchmal steht nach dem langen Vokal ein {}.', 'Dehnungs-h|h|Dehnungs h|Dehnungsh'],
-    lmnr: ['Das Dehnungs-h steht fast immer vor den Buchstaben {}.', 'l, m, n, r|l, m, n und r|l, m, n oder r|l,m,n,r|l m n r|lmnr'],
-    doppel: ['Nur wenige Wörter haben einen {}: aa, ee oder oo.', 'Doppelvokal|doppelten Vokal|Doppelvokale'],
-    uml: ['Die Umlaute ä, ö und ü werden {} verdoppelt.', 'nie|nicht'],
-    ie: ['Das lang gesprochene i schreibt man meistens {}.', 'ie|als ie|mit ie'],
-    fremd: ['Wörter aus anderen Sprachen wie Tiger und Kino schreibt man nur mit {}.', 'i'],
-    ih: ['Mit ih schreibt man nur ihr, ihm, {} und ihnen.', 'ihn']
+    r5: ['Regel 5: Lang ausgesprochener Vokal – {} geschrieben.', 'einfach'],
+    r5a: ['Die meisten Wörter mit einem lang ausgesprochenen Vokal schreibt man mit {} Buchstaben.', 'einfachen|einfachem'],
+    r6a: ['In einigen Wörtern steht hinter dem lang ausgesprochenen Vokal ein {} als Dehnungszeichen.', 'h|Dehnungs-h|Dehnungs h'],
+    r6b: ['Bei Verben kann man das Dehnungs-h häufig hören, wenn man das Verb im {} in Silben trennt.', 'Infinitiv|Infinitiv (Grundform)|Grundform'],
+    r6c: ['Bei Verben kann man das Dehnungs-h häufig hören, wenn man das Verb im {} in {} trennt.', 'Infinitiv|Infinitiv (Grundform)|Grundform', 'Silben'],
+    r7a: ['Manche Wörter werden mit {} Vokal geschrieben.', 'verdoppeltem|doppeltem|verdoppelten|doppelten'],
+    r7b: ['Am besten lernt man diese Wörter {}.', 'auswendig'],
+    r7c: ['Wichtig: ää und üü gibt es im Deutschen {}.', 'nicht|nie'],
+    r8a: ['Die meisten Wörter mit lang ausgesprochenem i werden mit {} geschrieben.', 'ie'],
+    fremd: ['Zusatz aus dem Buch: Wörter aus anderen Sprachen wie Tiger und Kino schreibt man nur mit {}.', 'i'],
+    ih: ['Zusatz aus dem Buch: Mit ih schreibt man nur ihr, ihm, {} und ihnen.', 'ihn']
   };
+  /* Silben: se-hen, auch mit Leerzeichen oder langem Strich */
+  function S(w, x, y) { return [w, [x + '-' + y, x + ' - ' + y, x + ' – ' + y, x + '–' + y, x + ' -' + y, x + '- ' + y].join('|'), x + '-' + y]; }
   function ML(keys) { return keys.map(function (k) { return M[k]; }); }
 
   /* Beispiele: die App erkennt passende Wörter an ihrer Schreibweise */
-  var BSP_H = ['Ein Wort mit Dehnungs-h, z. B. Bahn, Uhr, Zahl, wohnen.', /[aeiouäöü]h[lmnr]/];
-  var BSP_AEO = ['Ein Wort mit aa, ee oder oo, z. B. Haar, Tee, Boot.', /aa|ee|oo/];
+  var BSP_H = ['Ein Wort mit Dehnungs-h, z. B. Zahl, Huhn, Ohr, Uhr, Bohne, gehen, sehen.', /[aeiouäöü]h/];
+  var BSP_AEO = ['Ein Wort mit verdoppeltem Vokal, z. B. Fee, Kaffee, Moor, Moos, Staat, Allee, Aal (jedes passende Wort zählt).', /aa|ee|oo/];
   var BSP_IE = ['Ein Wort mit ie, z. B. Biene, Wiese, Brief.', /ie/];
-  var BSP_1 = ['Ein Wort mit langem Vokal ohne Zeichen, z. B. Hose, Nase, Blume, Tafel.', /(hose|nase|blume|tafel|schule|name|nudel|gabel|ofen|igel|hase|rose|dose|krone|brot|tag|zug|mut|regen|lesen|besen|plan|rabe|wabe|honig|tomate|schal|tor|rot|not|kamel|bluse|lama|sofa|zebra|schaf|grab|weg|rad|bär|käse|säge|öl|öfen|hüte|übel|tür|grün|schön|hören|lügen|fragen|sagen|malen|holen|leben|geben|reden|baden|loben|fegen|legen|wagen)/];
+  var BSP_1 = ['Ein Wort mit langem Vokal ohne Zeichen, z. B. Vase, Dose, Nashorn, holen, Besen, nämlich, Rose, Säge.', /(vase|nashorn|nämlich|dämlich|hose|nase|blume|tafel|schule|name|nudel|gabel|ofen|igel|hase|rose|dose|krone|brot|tag|zug|mut|regen|lesen|besen|plan|rabe|wabe|honig|tomate|schal|tor|rot|not|kamel|bluse|lama|sofa|zebra|schaf|grab|weg|rad|bär|käse|säge|öl|öfen|hüte|übel|tür|grün|schön|hören|lügen|fragen|sagen|malen|holen|leben|geben|reden|baden|loben|fegen|legen|wagen)/];
 
   /* ------------------------------------------------------------ 1 */
   D.push(de({ id: 'l1', nr: 1, name: 'Probe-HÜ 1', lvl: 'Warm-up', pc: '#FFD66B', sub: 'Merksätze mit Wörterkasten · kurz oder lang? · Welche Regel? · Begründe',
     tasks: [
     { h: 'Merksätze', de: 'Fülle den Lückentext aus. Die Wörter im Kasten helfen dir.', topic: 'merk', parts: [
-      { t: 'gaps', box: 'ohne nicht Dehnungs-h Doppelvokal nie ie', lines: ML(['ohne', 'nicht', 'dehn', 'doppel', 'uml', 'ie']) }
+      { t: 'gaps', box: 'einfachen h Infinitiv verdoppeltem auswendig ie', lines: ML(['r5a', 'r6a', 'r6b', 'r7a', 'r7b', 'r8a']) }
     ]},
     { h: 'Kurz oder lang?', de: 'Sprich das Wort leise. Ist der betonte Vokal kurz oder lang?', topic: 'kl', parts: [
       { t: 'pick', opts: KL, items: [['Schal', 1], ['Schall', 0], ['Miete', 1], ['Mitte', 0], ['Ofen', 1], ['offen', 0], ['Wahl', 1], ['Wall', 0]] }
@@ -239,15 +244,15 @@
     { h: 'Stimmt die Regel?', de: 'Richtig oder falsch?', topic: 'merk', parts: [
       { t: 'tf', labels: RF, items: [
         ['Die meisten Wörter mit langem Vokal haben ein Dehnungs-h.', false],
-        ['Das Dehnungs-h steht fast immer vor l, m, n oder r.', true],
-        ['Haar, Tee und Boot sind Wörter mit Doppelvokal.', true],
+        ['Bei Verben hört man das Dehnungs-h oft, wenn man den Infinitiv in Silben trennt: ge-hen, se-hen.', true],
+        ['Fee, Kaffee und Moos sind Wörter mit verdoppeltem Vokal.', true],
         ['Das lange i schreibt man meistens nur mit i.', false],
-        ['ä, ö und ü werden nie verdoppelt.', true]] }
+        ['ää und üü gibt es im Deutschen nicht.', true]] }
     ]},
     { h: 'Begründe', de: 'In einem ganzen Satz.', topic: 'ie', parts: [
       { t: 'op', items: [['Begründe', 'Warum schreibt man „Wiese“ mit ie?', 2, [
         ['Das i ist lang (langer Vokal).', /lang/],
-        ['Das lange i schreibt man meistens als ie (Regel 4).', /ie|meistens|regel 4|4\. regel/]]]] }
+        ['Die meisten Wörter mit lang ausgesprochenem i schreibt man mit ie (Regel 8).', /ie|meistens|regel 8|8\. regel/]]]] }
     ]}
   ]}));
 
@@ -270,15 +275,15 @@
     { h: 'Begründe', de: 'In einem ganzen Satz.', topic: 'h', parts: [
       { t: 'op', items: [['Begründe', 'Warum schreibt man „Stuhl“ mit h?', 2, [
         ['Das u ist lang (langer Vokal).', /lang/],
-        ['Es ist ein Dehnungs-h, es steht vor l (vor l, m, n, r).', /dehnung|vor (dem )?l|l, ?m, ?n|lmnr|l m n r|regel 2|2\. regel/]]]] }
+        ['Hinter dem lang ausgesprochenen u steht ein h als Dehnungszeichen (Regel 6).', /dehnung|h als|regel 6|6\. regel|merk|auswendig/]]]] }
     ]}
   ]}));
 
   /* ------------------------------------------------------------ 3 */
-  D.push(de({ id: 'l3', nr: 3, name: 'Probe-HÜ 3', lvl: 'Normal+', pc: '#B9E6B0', sub: 'Merksätze ohne Hilfe · aa, ee, oo · Härchen und Bötchen · ie, i oder ih? · paar/Paar',
+  D.push(de({ id: 'l3', nr: 3, name: 'Probe-HÜ 3', lvl: 'Normal+', pc: '#B9E6B0', sub: 'Merksätze ohne Hilfe · verdoppelter Vokal · Härchen und Bötchen · ie, i oder ih? · paar/Paar',
     tasks: [
     { h: 'Merksätze', de: 'Fülle den Lückentext zu unseren Regeln aus. Achte auf die Rechtschreibung.', topic: 'merk', parts: [
-      { t: 'gaps', lines: ML(['doppel', 'uml', 'ie', 'fremd', 'ih']) }
+      { t: 'gaps', lines: ML(['r6c', 'r7a', 'r7b', 'r7c', 'r8a']) }
     ]},
     { h: 'Doppelvokal oder nicht?', de: 'Setze die fehlenden Buchstaben ein.', topic: 'aeo', parts: [
       { t: 'gaps', tip: GAP_TIP, lines: [[W('B{}t', 'fährt auf dem Wasser'), 'oo'], [W('Schn{}', 'fällt im Winter'), 'ee'], [W('H{}r', 'wächst auf dem Kopf'), 'aa'], [W('N{}se', 'damit riechst du'), 'a'], [W('S{}', 'großes Gewässer, z. B. der Boden…'), 'ee'], [W('M{}s', 'wächst grün im Wald'), 'oo'], [W('W{}ge', 'damit misst man das Gewicht'), 'aa'], [W('Br{}t', 'beim Bäcker'), 'o']] }
@@ -304,14 +309,14 @@
   D.push(de({ id: 'l4', nr: 4, name: 'Probe-HÜ 4', lvl: 'Wie bei Frau Vester', pc: '#FFB3C7', sub: 'Genau wie die echte HÜ: Merksätze + Beispiele · falsche Wörter + Regel · 3. Person · Fehler im Satz',
     tasks: [
     { h: 'Aufgabe 1: Merksätze', de: 'Fülle den Lückentext zu unseren erlernten Regeln aus und finde zu jeder Regel ein eigenes Beispiel.', topic: 'merk', parts: [
-      { t: 'gaps', lines: ML(['ohne', 'dehn', 'lmnr', 'doppel', 'ie', 'ih']) },
-      { t: 'op', q: 'Jeweils ein eigenes Beispiel:', items: [
-        ['Regel 1', 'Ein Wort mit langem Vokal ohne Zeichen:', 1, [BSP_1]],
-        ['Regel 2', 'Ein Wort mit Dehnungs-h:', 1, [BSP_H]],
-        ['Regel 3', 'Ein Wort mit Doppelvokal:', 1, [BSP_AEO]],
-        ['Regel 4', 'Ein Wort mit ie:', 1, [BSP_IE]]] }
+      { t: 'gaps', lines: ML(['r5a', 'r6a', 'r6c', 'r7a', 'r7b', 'r8a']) },
+      { t: 'op', q: 'Jeweils ein eigenes Beispiel (jedes passende Wort zählt):', items: [
+        ['Regel 5', 'Ein Wort mit langem Vokal, einfach geschrieben:', 1, [BSP_1]],
+        ['Regel 6', 'Ein Wort mit Dehnungs-h:', 1, [BSP_H]],
+        ['Regel 7', 'Ein Wort mit verdoppeltem Vokal:', 1, [BSP_AEO]],
+        ['Regel 8', 'Ein Wort mit ie:', 1, [BSP_IE]]] }
     ]},
-    { h: 'Aufgabe 2: Falsch geschriebene Wörter', de: 'Tippe jeweils das richtig geschriebene Wort an. Dann notiere, welche Regel (1, 2, 3 oder 4) zutrifft.', topic: 'regel', parts: [
+    { h: 'Aufgabe 2: Falsch geschriebene Wörter', de: 'Tippe jeweils das richtig geschriebene Wort an. Dann notiere, welche Regel (5, 6, 7 oder 8) zutrifft.', topic: 'regel', parts: [
       { t: 'pick', items: [['a)', ['Bahn', 'Ban', 'Baan'], 0], ['b)', ['Biebel', 'Bibel', 'Bihbel'], 1], ['c)', ['Scheere', 'Schehre', 'Schere'], 2], ['d)', ['Moos', 'Mos', 'Mohs'], 0], ['e)', ['Riese', 'Rise', 'Rihse'], 0]] },
       { t: 'sort', q: 'Welche Regel trifft zu?', groups: REGELN, words: [['a) Bahn', 1], ['c) Schere', 0], ['d) Moos', 2], ['e) Riese', 3]] }
     ]},
@@ -324,14 +329,17 @@
   ]}));
 
   /* ------------------------------------------------------------ 5 */
-  D.push(de({ id: 'l5', nr: 5, name: 'Probe-HÜ 5', lvl: 'Profi', pc: '#9FE3D6', sub: 'Lückendiktat · ganze Wörter selbst schreiben · Vergangenheit (schrieb, fiel) · Fehler ohne Hilfe · Erkläre',
+  D.push(de({ id: 'l5', nr: 5, name: 'Probe-HÜ 5', lvl: 'Profi', pc: '#9FE3D6', sub: 'Lückendiktat · ganze Wörter selbst schreiben · Silben-Trick · Vergangenheit (schrieb, fiel) · Fehler ohne Hilfe · Erkläre',
     tasks: [
     { h: 'Lückendiktat', de: 'Hör zu und schreib die fehlenden Wörter.', topic: 'dikt', parts: [
       { t: 'listen', q: 'Tippe auf „Anhören“. Du hörst den Text zweimal, Satz für Satz. Schreib die fehlenden Wörter in die Lücken.',
         text: 'Lena {wohnt} am {See}. Jeden {Morgen} {fährt} sie mit ihrem {Boot} hinaus. Das {Wasser} ist {kühl}. Am {Ufer} {spielen} die Kinder. Abends {zählt} sie die {Sterne}.' }
     ]},
-    { h: 'Ganze Wörter', de: 'Schreib das ganze Wort richtig. Denk an die vier Regeln!', topic: 'h', parts: [
+    { h: 'Ganze Wörter', de: 'Schreib das ganze Wort richtig. Denk an die Regeln 5 bis 8!', topic: 'h', parts: [
       { t: 'words', items: [['Z_n (damit beißt du)', 'Zahn'], ['T_ (heißes Getränk)', 'Tee'], ['Br_f (kommt mit der Post)', 'Brief'], ['Sch_le (dort lernst du)', 'Schule'], ['St_l (darauf sitzt du)', 'Stuhl'], ['B_t (fährt auf dem Wasser)', 'Boot'], ['K_no (dort schaust du Filme)', 'Kino'], ['N_del (isst man mit Soße)', 'Nudel']] }
+    ]},
+    { h: 'Der Silben-Trick', de: 'Trenne das Verb im Infinitiv in Silben. Dann hörst du das h. Beispiel: gehen = ge-hen', topic: 'h', parts: [
+      { t: 'words', tip: 'Schreib das Wort mit Bindestrich zwischen den Silben, z. B. se-hen.', items: [S('sehen', 'se', 'hen'), S('nähen', 'nä', 'hen'), S('blühen', 'blü', 'hen'), S('drehen', 'dre', 'hen'), S('mähen', 'mä', 'hen'), S('ruhen', 'ru', 'hen')] }
     ]},
     { h: 'Gestern war es so', de: 'Schreib die Vergangenheit. Oft wird aus ei oder a ein ie!', topic: 'formen', parts: [
       { t: 'words', items: [['Heute: ich schreibe. Gestern: ich …', 'schrieb'], ['Heute: ich falle. Gestern: ich …', 'fiel'], ['Heute: ich rufe. Gestern: ich …', 'rief'], ['Heute: ich schlafe. Gestern: ich …', 'schlief'], ['Heute: ich nehme. Gestern: ich …', 'nahm'], ['Heute: ich sehe. Gestern: ich …', 'sah']] }
@@ -350,12 +358,13 @@
   D.push(de({ id: 'l6', nr: 6, name: 'Probe-HÜ 6', lvl: 'Generalprobe', pc: '#C9B8FF', sub: 'Wie bei Frau Vester, alles gemischt: Merksätze + Beispiele, Wörter + Regel, 3. Person, Fehler im Satz',
     tasks: [
     { h: 'Aufgabe 1: Merksätze', de: 'Fülle den Lückentext zu unseren erlernten Regeln aus. Achte auf die Rechtschreibung.', topic: 'merk', parts: [
-      { t: 'gaps', lines: ML(['ohne', 'nicht', 'dehn', 'lmnr', 'doppel', 'uml', 'ie', 'fremd']) },
-      { t: 'op', q: 'Jeweils ein eigenes Beispiel:', items: [
-        ['Regel 2', 'Ein Wort mit Dehnungs-h:', 1, [BSP_H]],
-        ['Regel 4', 'Ein Wort mit ie:', 1, [BSP_IE]]] }
+      { t: 'gaps', lines: ML(['r5', 'r5a', 'r6a', 'r6c', 'r7a', 'r7b', 'r7c', 'r8a']) },
+      { t: 'op', q: 'Jeweils ein eigenes Beispiel (jedes passende Wort zählt):', items: [
+        ['Regel 6', 'Ein Verb mit Dehnungs-h, in Silben getrennt (wie ge-hen):', 1, [['Ein Verb mit h, in Silben getrennt, z. B. se-hen, nä-hen, blü-hen, dre-hen.', /[aeiouäöü]-h/]]],
+        ['Regel 7', 'Ein Wort mit verdoppeltem Vokal:', 1, [BSP_AEO]],
+        ['Regel 8', 'Ein Wort mit ie:', 1, [BSP_IE]]] }
     ]},
-    { h: 'Aufgabe 2: Falsch geschriebene Wörter', de: 'Tippe jeweils das richtig geschriebene Wort an. Dann notiere, welche Regel (1, 2, 3 oder 4) zutrifft.', topic: 'regel', parts: [
+    { h: 'Aufgabe 2: Falsch geschriebene Wörter', de: 'Tippe jeweils das richtig geschriebene Wort an. Dann notiere, welche Regel (5, 6, 7 oder 8) zutrifft.', topic: 'regel', parts: [
       { t: 'pick', items: [['a)', ['Hohnig', 'Honig', 'Hoonig'], 1], ['b)', ['Feer', 'Fehr', 'Fee'], 2], ['c)', ['Spigel', 'Spiegel', 'Spihgel'], 1], ['d)', ['Ur', 'Uhr', 'Uur'], 1], ['e)', ['Kamehl', 'Kaamel', 'Kamel'], 2]] },
       { t: 'sort', q: 'Welche Regel trifft zu?', groups: REGELN, words: [['a) Honig', 0], ['b) Fee', 2], ['c) Spiegel', 3], ['d) Uhr', 1], ['e) Kamel', 0]] }
     ]},
@@ -367,7 +376,7 @@
     ]},
     { h: 'Begründe', de: 'In einem ganzen Satz.', topic: 'aeo', parts: [
       { t: 'op', items: [['Begründe', 'Warum schreibt man „Härchen“ nicht mit ää, obwohl „Haar“ aa hat?', 2, [
-        ['Umlaute (ä, ö, ü) werden nie verdoppelt.', /umlaut|ä, ?ö|nie|nicht verdopp|kein/],
+        ['ää und üü gibt es im Deutschen nicht (Umlaute werden nie verdoppelt).', /umlaut|ää|üü|ä, ?ö|nie|nicht|kein/],
         ['Darum wird aus aa ein einfaches ä.', /einfach|ein ä|nur ein|aa wird|aus aa/]]]] }
     ]}
   ]}));
