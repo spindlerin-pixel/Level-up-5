@@ -3824,9 +3824,9 @@ window.LU5 = (function () {
   /* ================= Tagesplan ================= */
   /* Was als Nächstes geschrieben wird, kommt zuerst. Höchstens 2 Probe-HÜs pro Tag. */
   var PROBES = {
-    de: { pre: 'l', n: 6, lv: ['Warm-up', 'Normal', 'Normal+', 'Wie bei Frau Vester', 'Profi', 'Generalprobe'], min: 10, max: 2, from: 4, calm: 4 },
-    mh: { pre: 'm', n: 4, lv: ['Warm-up', 'Normal', 'Normal+', 'Generalprobe'], min: 10, max: 1, from: 4 },
-    ek: { pre: 'g', n: 4, lv: ['Warm-up', 'Normal', 'Normal+', 'Generalprobe'], min: 10, max: 2, from: 4 },
+    de: { pre: 'l', n: 6, lv: ['Warm-up', 'Normal', 'Normal+', 'Wie bei Frau Vester', 'Profi', 'Generalprobe'], min: 15, max: 2, from: 4, calm: 4 },
+    mh: { pre: 'm', n: 4, lv: ['Warm-up', 'Normal', 'Normal+', 'Generalprobe'], min: 15, max: 1, from: 4 },
+    ek: { pre: 'g', n: 4, lv: ['Warm-up', 'Normal', 'Normal+', 'Generalprobe'], min: 15, max: 2, from: 4 },
     en: { pre: 'e', n: 6, lv: ['Warm-up', 'Normal', 'Normal', 'Profi', 'Generalprobe', 'Schwerpunkte'], min: 45, max: 1, from: 3 }
   };
   var SUBJ_NAME = { dik: 'Deutsch', mh: 'Mathe', de: 'Deutsch', ek: 'Erdkunde', en: 'Englisch', math: 'Mathe', voc: 'Englisch' };
@@ -3853,7 +3853,7 @@ window.LU5 = (function () {
     }
     return pickIds.map(function (id) {
       var n = Number(id.slice(1)), again = !open.length;
-      return { subj: subj, title: SUBJ_NAME[subj] + ': Probe-HÜ ' + n + (again ? ' noch einmal' : ''), sub: (subj === 'en' ? 'Probe-Klassenarbeit ' + n + ' · ' : P.lv[n - 1] + ' · ') + (subj === 'en' ? P.min + ' Min' : 'ca. ' + P.min + ' Min') + ', mit Note', min: P.min, done: today(id), btn: today(id) ? 'Ansehen' : 'Schreiben', act: function () { if (window.LU5Ka) LU5Ka.start(id); } };
+      return { subj: subj, title: SUBJ_NAME[subj] + ': Probe-HÜ ' + n + (again ? ' noch einmal' : ''), sub: (subj === 'en' ? 'Probe-Klassenarbeit ' + n + ' · ' : P.lv[n - 1] + ' · ') + P.min + '–' + (subj === 'en' ? 45 : subj === 'mh' ? 30 : 20) + ' Min, mit Note', min: P.min, done: today(id), btn: today(id) ? 'Ansehen' : 'Schreiben', act: function () { if (window.LU5Ka) LU5Ka.start(id); } };
     });
   }
   function minItem(subj, title, sub, mins, have, act) {
