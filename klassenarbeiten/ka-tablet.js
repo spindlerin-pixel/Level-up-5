@@ -863,7 +863,7 @@
       if (r && !r.done) s = '<b>Angefangen</b> · noch ' + mmss(Math.max(0, ex.min * 60 - (r.secs || 0))) + ' Min';
       else if (last) s = 'Zuletzt: <b>Note ' + last.g + '</b> (' + Math.round(last.p / last.m * 100) + ' %)' + (best && best !== last ? ' · beste: Note ' + best.g : '');
       el.innerHTML = s; el.hidden = !s;
-      btn.textContent = r && !r.done ? 'Weiterschreiben' : r && r.done ? 'Korrektur ansehen' : (ex.back === 'ek' || ex.back === 'de' || ex.back === 'math' ? 'Probe-HÜ schreiben' : 'Am Tablet schreiben');
+      btn.textContent = r && !r.done ? 'Weiterschreiben' : r && r.done ? 'Korrektur ansehen' : (/^a\d/.test(ex.id) ? 'Probe-Arbeit schreiben' : ex.back === 'ek' || ex.back === 'de' || ex.back === 'math' ? 'Probe-HÜ schreiben' : 'Am Tablet schreiben');
     });
   }
 
