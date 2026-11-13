@@ -933,6 +933,11 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
 .plan-item.voc .plan-go, .plan-item.de .plan-go { color: #1F2A44; }
 .plan-item.done .plan-go { background: var(--surface); color: var(--ink-soft); box-shadow: none; border: 2px solid var(--edge, #D5DBE6); }
 .plan-bonus { padding: 10px 14px; border-radius: 16px; border: 2px dashed var(--edge, #D5DBE6); font-size: 0.92rem; color: var(--ink-soft); line-height: 1.45; }
+.plan-et { grid-column: 1 / -1; margin: 6px 0 -2px; font-family: var(--font-display); font-weight: 800; font-size: 0.95rem; letter-spacing: 0.02em; color: var(--ink); }
+.plan-et:first-child { margin-top: 0; }
+.plan-et.done { color: #2E9E5B; font-weight: 700; }
+.plan-et.later { color: var(--ink-soft); font-weight: 700; }
+.plan-later { grid-column: 1 / -1; padding: 10px 14px; border-radius: 16px; border: 2px dashed var(--edge, #D5DBE6); color: var(--ink-soft); font-size: 0.92rem; line-height: 1.4; }
 .plan-yay { margin: 0; padding: 10px 14px; border-radius: 16px; background: #DFF3E4; color: #17603A; font-weight: 700; }
 .linkbtn { appearance: none; background: none; border: 0; padding: 0; cursor: pointer; color: var(--primary-dark, #0B7A6E); font: inherit; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
 .subj { cursor: default; }
@@ -956,6 +961,7 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
   :root:not([data-theme="light"]) .subj.ek .subj-top { background: #173D29; }
   :root:not([data-theme="light"]) .subj.print .subj-top { background: #4A1F2E; }
   :root:not([data-theme="light"]) .plan-yay { background: #173D29; color: #BFF0D2; }
+  :root:not([data-theme="light"]) .plan-et.done { color: #8FE0AE; }
   :root:not([data-theme="light"]) .linkbtn { color: var(--primary); }
   :root:not([data-theme="light"]) .plan-item:not(.done) .plan-go { color: #1F2A44; }
 }
@@ -963,6 +969,7 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
 :root[data-theme="dark"] .subj.ek .subj-top { background: #173D29; }
 :root[data-theme="dark"] .subj.print .subj-top { background: #4A1F2E; }
 :root[data-theme="dark"] .plan-yay { background: #173D29; color: #BFF0D2; }
+:root[data-theme="dark"] .plan-et.done { color: #8FE0AE; }
 :root[data-theme="dark"] .linkbtn { color: var(--primary); }
 :root[data-theme="dark"] .plan-item:not(.done) .plan-go { color: #1F2A44; }
 .subjects { align-items: start; }
@@ -3817,9 +3824,9 @@ window.LU5 = (function () {
   /* ================= Tagesplan ================= */
   /* Was als Nächstes geschrieben wird, kommt zuerst. Höchstens 2 Probe-HÜs pro Tag. */
   var PROBES = {
-    de: { pre: 'l', n: 6, lv: ['Warm-up', 'Normal', 'Normal+', 'Wie bei Frau Vester', 'Profi', 'Generalprobe'], min: 15, max: 2, from: 4, calm: 4 },
-    mh: { pre: 'm', n: 4, lv: ['Warm-up', 'Normal', 'Normal+', 'Generalprobe'], min: 15, max: 1, from: 4 },
-    ek: { pre: 'g', n: 4, lv: ['Warm-up', 'Normal', 'Normal+', 'Generalprobe'], min: 15, max: 2, from: 4 },
+    de: { pre: 'l', n: 6, lv: ['Warm-up', 'Normal', 'Normal+', 'Wie bei Frau Vester', 'Profi', 'Generalprobe'], min: 10, max: 2, from: 4, calm: 4 },
+    mh: { pre: 'm', n: 4, lv: ['Warm-up', 'Normal', 'Normal+', 'Generalprobe'], min: 10, max: 1, from: 4 },
+    ek: { pre: 'g', n: 4, lv: ['Warm-up', 'Normal', 'Normal+', 'Generalprobe'], min: 10, max: 2, from: 4 },
     en: { pre: 'e', n: 6, lv: ['Warm-up', 'Normal', 'Normal', 'Profi', 'Generalprobe', 'Schwerpunkte'], min: 45, max: 1, from: 3 }
   };
   var SUBJ_NAME = { dik: 'Deutsch', mh: 'Mathe', de: 'Deutsch', ek: 'Erdkunde', en: 'Englisch', math: 'Mathe', voc: 'Englisch' };
@@ -3846,7 +3853,7 @@ window.LU5 = (function () {
     }
     return pickIds.map(function (id) {
       var n = Number(id.slice(1)), again = !open.length;
-      return { subj: subj, title: SUBJ_NAME[subj] + ': Probe-HÜ ' + n + (again ? ' noch einmal' : ''), sub: (subj === 'en' ? 'Probe-Klassenarbeit ' + n + ' · ' : P.lv[n - 1] + ' · ') + P.min + '–' + (subj === 'en' ? 45 : 20) + ' Min, mit Note', min: P.min, done: today(id), btn: today(id) ? 'Ansehen' : 'Schreiben', act: function () { if (window.LU5Ka) LU5Ka.start(id); } };
+      return { subj: subj, title: SUBJ_NAME[subj] + ': Probe-HÜ ' + n + (again ? ' noch einmal' : ''), sub: (subj === 'en' ? 'Probe-Klassenarbeit ' + n + ' · ' : P.lv[n - 1] + ' · ') + (subj === 'en' ? P.min + ' Min' : 'ca. ' + P.min + ' Min') + ', mit Note', min: P.min, done: today(id), btn: today(id) ? 'Ansehen' : 'Schreiben', act: function () { if (window.LU5Ka) LU5Ka.start(id); } };
     });
   }
   function minItem(subj, title, sub, mins, have, act) {
@@ -3919,8 +3926,8 @@ window.LU5 = (function () {
     var load = 0;
     up.forEach(function (t) { var w = (t.s === 'math' || t.s === 'en') ? 2 : 1, u = t.d <= 2 ? 3 : t.d <= 4 ? 2 : t.d <= 7 ? 1 : t.d <= 14 ? 0.4 : 0; load += w * u; });
     var wkend = now.getDay() === 0 || now.getDay() === 6;
-    var budget = load < 1 ? 20 : load < 3 ? 30 : load < 6 ? 40 : 50;
-    if (wkend && load >= 1) budget += 15;
+    var budget = load < 1 ? 20 : load < 3 ? 30 : load < 6 ? 35 : 45;
+    if (wkend && load >= 1) budget += 10;
     var restDay = now.getDay() === 3;
     var why = load < 1 ? 'Ruhiger Tag: kurz und knackig reicht.' : wkend && load >= 3 ? 'Wochenende vor den Arbeiten: heute etwas mehr.' : load >= 6 ? 'Viele Arbeiten stehen an: heute etwas mehr.' : '';
     /* Was nicht mehr in die Zeit passt, wird Bonus – die Vokabeln und das Wichtigste bleiben immer */
@@ -3938,19 +3945,38 @@ window.LU5 = (function () {
     if (todayT.length) fe.textContent = 'Heute ' + todayT.map(function (t) { return TEST_NAME[t.s]; }).join(' und ') + ' – viel Glück!' + (focus ? ' · Danach: ' + TEST_NAME[focus.s] + (focus.d === 1 ? ' morgen' : ' in ' + focus.d + ' Tagen') : '');
     else if (focus) fe.textContent = 'Fokus: ' + TEST_NAME[focus.s] + (focus.d === 1 ? ' morgen' : ' in ' + focus.d + ' Tagen');
     else fe.textContent = 'Heute';
-    var done = items.filter(function (x) { return x.done; }).length, mins = items.reduce(function (a, x) { return a + (x.done ? 0 : x.min); }, 0);
-    $('planCount').textContent = done + '/' + items.length;
+    var done = items.filter(function (x) { return x.done; }).length;
+    /* Etappen: der Plan wird in kleine Häppchen von ca. 20 Minuten geteilt. Sichtbar ist immer nur die aktuelle Etappe, der Rest kommt danach. */
+    var ET = [], cur = null;
+    items.forEach(function (x, i) {
+      if (!cur || (cur.items.length && cur.min + x.min > 20)) { cur = { items: [], min: 0 }; ET.push(cur); }
+      x.idx = i; cur.items.push(x); cur.min += x.min;
+    });
+    ET.forEach(function (e) { e.done = e.items.every(function (x) { return x.done; }); e.left = e.items.reduce(function (a, x) { return a + (x.done ? 0 : x.min); }, 0); });
+    var curE = -1; for (var ei = 0; ei < ET.length; ei++) if (!ET[ei].done) { curE = ei; break; }
+    var etDone = ET.filter(function (e) { return e.done; }).length;
+    $('planCount').textContent = etDone + '/' + ET.length;
+    $('planRing').querySelector('span').textContent = ET.length === 1 ? 'Etappe' : 'Etappen';
     $('planRing').style.setProperty('--p', items.length ? Math.round(done / items.length * 100) : 0);
-    $('planRing').setAttribute('aria-label', done + ' von ' + items.length + ' erledigt');
+    $('planRing').setAttribute('aria-label', etDone + ' von ' + ET.length + ' Etappen geschafft');
     var all = items.length && done === items.length;
     $('planBox').classList.toggle('all', !!all);
-    if (restDay && !items.length) { $('planCount').textContent = '🌙'; $('planRing').style.setProperty('--p', 100); }
-    $('planSum').innerHTML = restDay && !items.length ? 'Mittwoch: Schule bis 15:30 und Hausaufgaben – heute gibt es kein Zusatz-Lernen. Erhol dich gut!' : all ? '' : items.length + ' Aufgaben · noch etwa ' + mins + ' Minuten. Die erste ist am wichtigsten.' + (why ? ' <span class="plan-why">' + why + '</span>' : '');
+    if (restDay && !items.length) { $('planCount').textContent = '🌙'; $('planRing').style.setProperty('--p', 100); $('planRing').querySelector('span').textContent = 'frei'; }
+    var ce = curE >= 0 ? ET[curE] : null, cOpen = ce ? ce.items.filter(function (x) { return !x.done; }).length : 0;
+    $('planSum').innerHTML = restDay && !items.length ? 'Mittwoch: Schule bis 15:30 und Hausaufgaben – heute gibt es kein Zusatz-Lernen. Erhol dich gut!' : all || !ce ? '' : '<b>Etappe ' + (curE + 1) + (ET.length > 1 ? ' von ' + ET.length : '') + ':</b> ' + (cOpen === 1 ? 'nur noch 1 Aufgabe' : cOpen + ' Aufgaben') + ' · ca. ' + ce.left + ' Min.' + (curE < ET.length - 1 ? ' Danach kurz Pause, dann geht’s weiter.' : ' Dann bist du fertig!') + (why ? ' <span class="plan-why">' + why + '</span>' : '');
     $('planSum').hidden = !!all && !restDay;
+    /* Etappe geschafft: einmal feiern */
+    if (etDone && !all && (L.et || 0) < etDone) { L.et = etDone; logCache[k] = L; flushLog(); toast(pick(['💪 Etappe ' + etDone + ' geschafft! Kurz Pause machen?', '🏃‍♀️ Etappe ' + etDone + ' geschafft – stark' + kidName(', ') + '!', '⭐ Etappe ' + etDone + ' im Kasten! Trink was, dann weiter.'])); }
     planActs = items.map(function (x) { return x.act; });
     extra.forEach(function (x) { planActs.push(x.act); });
-    box.innerHTML = items.map(function (x, i) {
-      return '<li class="plan-item ' + x.subj + (x.done ? ' done' : '') + '"><span class="plan-check" aria-hidden="true">' + (x.done ? '✓' : '') + '</span><span class="plan-txt"><b>' + esc(x.title) + '</b><small>' + esc(x.sub) + '</small></span><button type="button" class="plan-go" data-plan="' + i + '">' + x.btn + '</button></li>';
+    function itemHtml(x) {
+      return '<li class="plan-item ' + x.subj + (x.done ? ' done' : '') + '"><span class="plan-check" aria-hidden="true">' + (x.done ? '✓' : '') + '</span><span class="plan-txt"><b>' + esc(x.title) + '</b><small>' + esc(x.sub) + '</small></span><button type="button" class="plan-go" data-plan="' + x.idx + '">' + x.btn + '</button></li>';
+    }
+    box.innerHTML = ET.map(function (e, n) {
+      var head = ET.length > 1 ? '<li class="plan-et' + (e.done ? ' done' : n === curE ? ' now' : ' later') + '">' + (e.done ? '✓ ' : '') + 'Etappe ' + (n + 1) + (e.done ? ' geschafft' : n === curE ? ' · jetzt dran' : ' · ca. ' + e.left + ' Min') + '</li>' : '';
+      if (n === curE || all || ET.length === 1) return head + e.items.map(itemHtml).join('');
+      if (e.done) return head;
+      return head + '<li class="plan-later">' + e.items.map(function (x) { return (x.done ? '✓ ' : '') + esc(x.title); }).join(' · ') + '</li>';
     }).join('');
     var bh = all ? '<p class="plan-yay">⭐ Tagesplan geschafft' + esc(kidName(', ')) + '! Alles Weitere ist Bonus.</p>' : '';
     var bl = extra.map(function (x, j) { return '<button type="button" class="linkbtn" data-plan="' + (items.length + j) + '">' + esc(x.title) + '</button>'; }).concat(bonus.map(function (b) { return '<button type="button" class="linkbtn" data-go="' + b[1] + '">' + b[0] + '</button>'; }));
@@ -5897,6 +5923,7 @@ window.LU5 = (function () {
     var r = stats(ids);
     $('vocWeek').innerHTML = '<p class="voc-big">' + r.p + ' % <small>klappen schon</small></p>' + segBar(r) +
       '<ul class="voc-legend"><li><i class="lg s-sure"></i>' + r.sure + ' sitzen sicher</li><li><i class="lg s-ok"></i>' + r.ok + ' klappen schon</li><li><i class="lg s-learn"></i>' + r.learn + ' üben wir noch</li><li><i class="lg s-new"></i>' + r.neu + ' neu</li></ul>' +
+      '<p class="voc-note"><b>🏆 Insgesamt sitzen schon ' + stats(idsOf(ORDER)).sure + ' Wörter sicher</b> – aus allen Listen zusammen. Die Zahl wächst mit jeder neuen Liste.</p>' +
       '<p class="voc-note">„Klappt schon“: zuletzt ohne Hilfe richtig. „Sitzt sicher“: an verschiedenen Tagen richtig – das dauert ein paar Tage, ganz normal.</p>';
     var n = buildRound().length;
     $('vocStart').textContent = due > 0 ? 'Vokabel-Check starten: ' + n + ' Wörter' : 'Extra-Runde üben';
@@ -5918,7 +5945,8 @@ window.LU5 = (function () {
 
   function startRun(ids, practice, label) {
     if (!ids.length) { renderOverview(); return; }
-    run = { q: ids.slice(), total: ids.length, done: 0, practice: !!practice, label: label, flags: {}, clean: 0, helped: {}, rep: {}, before: klappt(sel()) };
+    run = { q: ids.slice(), total: ids.length, done: 0, practice: !!practice, label: label, flags: {}, clean: 0, helped: {}, rep: {}, before: klappt(sel()), fresh: {}, learned: {} };
+    if (!practice) ids.forEach(function (id) { if (!st(id)) run.fresh[id] = 1; });
     show('vocRun'); next();
   }
   function next() {
@@ -5934,6 +5962,7 @@ window.LU5 = (function () {
   function tagFor(id) {
     var s = st(id), f = run.flags[id];
     if (f.again) return '<span class="tag again-tag">Nochmal – jetzt schaffst du es!</span>';
+    if (run.fresh[id] && !s) return '<span class="tag">' + esc(listOf(WORDS[id].list).name) + ' · neues Wort ✨</span>';
     return '<span class="tag">' + esc(listOf(WORDS[id].list).name) + ' · ' + (!s ? 'neu' : s.l >= 2 ? 'Wiederholung' : 'üben') + '</span>';
   }
   function renderAsk(msg, cls) {
@@ -5941,12 +5970,12 @@ window.LU5 = (function () {
     $('vocRun').innerHTML = '<div class="voc-prog">' + segs() + '<span>' + (run.done + 1 > run.total ? run.total : run.done + 1) + ' / ' + run.total + '</span></div>' +
       tagFor(run.cur) +
       '<p class="voc-de">' + esc(w.de) + '</p>' +
-      (run.mode === 'reveal' ? '<div class="voc-show"><button type="button" class="say big" data-vsay="' + esc(w.en) + '" aria-label="Nochmal anhören">' + SPK + '</button><b>' + esc(w.en) + '</b><button type="button" class="btn small" data-vslow="1">Langsam</button></div><p class="voc-help">Schau es dir genau an, hör zu und sprich es laut nach. Dann tipp auf „Jetzt selbst schreiben“.</p><button type="button" class="btn primary" id="vocWrite">Jetzt selbst schreiben</button>'
+      (run.mode === 'reveal' ? '<div class="voc-show"><button type="button" class="say big" data-vsay="' + esc(w.en) + '" aria-label="Nochmal anhören">' + SPK + '</button><b>' + esc(w.en) + '</b><button type="button" class="btn small" data-vslow="1">Langsam</button></div><p class="voc-help">' + (run.fresh[run.cur] ? '<b>Neues Wort – ganz normal, dass du es noch nicht kennst!</b> ' : '') + 'Schau es dir genau an, hör zu und sprich es laut nach. Dann tipp auf „Jetzt selbst schreiben“.</p><button type="button" class="btn primary" id="vocWrite">Jetzt selbst schreiben</button>'
         : (run.hint ? '<p class="voc-pattern" aria-label="Tipp">' + pattern(w.en) + '</p>' : '') +
         '<form id="vocForm" class="voc-form" autocomplete="off"><input id="vocIn" type="text" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" enterkeyhint="done" aria-label="Englisches Wort" placeholder="auf Englisch …"><button type="submit" class="btn primary">Prüfen</button></form>' +
         '<p class="voc-fb ' + (cls || '') + '" role="status">' + (msg || '') + '</p>' +
         '<div class="voc-row">' + (run.hint || run.mode === 'retype' ? '' : '<button type="button" class="btn tip small" id="vocHint">Tipp: Anfangsbuchstabe</button>') +
-        (run.mode === 'retype' ? '' : '<button type="button" class="btn small" id="vocShow">Weiß ich nicht – zeig’s mir</button>') + '</div>');
+        (run.mode === 'retype' ? '' : '<button type="button" class="btn small" id="vocShow">' + (run.fresh[run.cur] && !run.flags[run.cur].again ? 'Neu für mich – zeig’s mir' : 'Weiß ich nicht – zeig’s mir') + '</button>') + '</div>');
     var inp = $('vocIn');
     if (inp) { setTimeout(function () { try { inp.focus(); } catch (e) {} }, 30); }
     if (run.mode === 'reveal') $('vocWrite').onclick = function () { run.mode = 'retype'; renderAsk('Schreib es jetzt aus dem Kopf.', ''); };
@@ -5971,6 +6000,8 @@ window.LU5 = (function () {
   function success() {
     var id = run.cur, w = WORDS[id], f = run.flags[id], kind = f.help ? 'help' : f.near ? 'near' : 'clean';
     if (!f.again) { record(id, kind, run.practice); if (kind === 'clean') run.clean++; }
+    /* Neues Wort kennengelernt und danach ohne Hilfe aus dem Kopf geschrieben: zählt als „klappt schon“ (morgen kommt es trotzdem wieder) */
+    else if (run.fresh[id] && !f.help && !f.near && db.w[id]) { db.w[id].ok = 1; save(); run.learned[id] = 1; }
     var requeue = (f.help || f.near) && !f.again && (run.rep[id] || 0) < 2;
     if (f.help) run.helped[id] = 1;
     if (requeue) { run.rep[id] = (run.rep[id] || 0) + 1; f.again = true; f.help = false; f.near = false; run.q.splice(Math.min(3, run.q.length), 0, id); }
@@ -5997,10 +6028,11 @@ window.LU5 = (function () {
         '<button type="button" class="btn primary" id="vocBack">Zur Übersicht</button>';
       show('vocEnd'); $('vocBack').onclick = renderOverview; run = null; return;
     }
-    var helped = Object.keys(run.helped).length, sids = idsOf(sel()), g = sids.filter(isGreen).length, tot = sids.length, more = dueCount();
+    var learned = Object.keys(run.learned).length, helped = Object.keys(run.helped).filter(function (id) { return !run.learned[id]; }).length, sids = idsOf(sel()), g = sids.filter(isGreen).length, tot = sids.length, more = dueCount();
     $('vocEnd').innerHTML = '<svg class="lina" viewBox="0 0 110 140" aria-hidden="true"><use href="#pennyArt"></use></svg><h2>' + (more ? 'Runde geschafft!' : 'Fertig für heute!') + '</h2>' +
-      '<p class="end-score">' + run.clean + ' von ' + run.total + ' ohne Hilfe</p><p class="end-msg"><b>' + praise(run.clean / run.total) + '</b></p>' +
-      (helped ? '<p class="end-msg">' + helped + (helped === 1 ? ' Wort hast du' : ' Wörter hast du') + ' mit Hilfe geschrieben – ' + (helped === 1 ? 'es kommt' : 'sie kommen') + ' morgen nochmal. So lernt man!</p>' : '<p class="end-msg">Alles ohne Hilfe – stark!</p>') +
+      (learned ? '<p class="end-score">✨ ' + learned + (learned === 1 ? ' neues Wort' : ' neue Wörter') + ' gelernt' + (run.clean ? ' · ' + run.clean + ' konntest du schon' : '') + '</p><p class="end-msg"><b>Klasse! Neue Wörter kennenlernen und gleich aus dem Kopf schreiben – genau so geht Vokabeln lernen.</b> Morgen kommen sie nochmal, dann sitzen sie bald sicher.</p>'
+        : '<p class="end-score">' + run.clean + ' von ' + run.total + ' ohne Hilfe</p><p class="end-msg"><b>' + praise(run.clean / run.total) + '</b></p>') +
+      (learned && !helped ? '' : helped ? '<p class="end-msg">' + helped + (helped === 1 ? ' Wort hast du' : ' Wörter hast du') + ' mit Hilfe geschrieben – ' + (helped === 1 ? 'es kommt' : 'sie kommen') + ' morgen nochmal. So lernt man!</p>' : '<p class="end-msg">Alles ohne Hilfe – stark!</p>') +
       (function () { var r = stats(sids), up = r.p - run.before; return '<p class="voc-big">' + r.p + ' % <small>klappen schon' + (up > 0 ? ' <span class="voc-up">(+' + up + ' %)</span>' : '') + '</small></p>' + segBar(r) + '<p class="record">' + esc(selLabel()) + ': ' + (r.sure + r.ok) + ' von ' + tot + ' Wörtern klappen schon, ' + r.sure + ' sitzen sicher</p>'; })() +
       (more ? '<button type="button" class="btn primary" id="vocMore">Noch eine Runde</button>' : '<p class="end-msg"><b>Du darfst jetzt aufhören.</b></p>') +
       '<button type="button" class="btn" id="vocBack">Zur Übersicht</button>';
@@ -6032,7 +6064,7 @@ window.LU5 = (function () {
     $('vocTileWhat').textContent = 'Diese Woche: ' + wl.name + ' (' + wl.pages + ')';
     $('vocTileBar').querySelector('i').style.width = r.p + '%';
     $('vocTileBar').classList.toggle('done', r.p >= 100);
-    $('vocTileNum').textContent = r.p + ' % klappen · ' + r.sure + ' sicher';
+    $('vocTileNum').textContent = r.p + ' % klappen · insgesamt ' + stats(idsOf(ORDER)).sure + ' Wörter sicher 🏆';
     $('vocTileState').textContent = due > 0 ? 'heute ' + due + ' Wörter dran' : 'für heute geschafft ✓';
     if (window.LU5Plan) window.LU5Plan();
   }
