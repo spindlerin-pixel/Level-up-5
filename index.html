@@ -933,11 +933,6 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
 .plan-item.voc .plan-go, .plan-item.de .plan-go { color: #1F2A44; }
 .plan-item.done .plan-go { background: var(--surface); color: var(--ink-soft); box-shadow: none; border: 2px solid var(--edge, #D5DBE6); }
 .plan-bonus { padding: 10px 14px; border-radius: 16px; border: 2px dashed var(--edge, #D5DBE6); font-size: 0.92rem; color: var(--ink-soft); line-height: 1.45; }
-.plan-et { grid-column: 1 / -1; margin: 6px 0 -2px; font-family: var(--font-display); font-weight: 800; font-size: 0.95rem; letter-spacing: 0.02em; color: var(--ink); }
-.plan-et:first-child { margin-top: 0; }
-.plan-et.done { color: #2E9E5B; font-weight: 700; }
-.plan-et.later { color: var(--ink-soft); font-weight: 700; }
-.plan-later { grid-column: 1 / -1; padding: 10px 14px; border-radius: 16px; border: 2px dashed var(--edge, #D5DBE6); color: var(--ink-soft); font-size: 0.92rem; line-height: 1.4; }
 .plan-yay { margin: 0; padding: 10px 14px; border-radius: 16px; background: #DFF3E4; color: #17603A; font-weight: 700; }
 .linkbtn { appearance: none; background: none; border: 0; padding: 0; cursor: pointer; color: var(--primary-dark, #0B7A6E); font: inherit; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
 .subj { cursor: default; }
@@ -961,16 +956,14 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
   :root:not([data-theme="light"]) .subj.ek .subj-top { background: #173D29; }
   :root:not([data-theme="light"]) .subj.print .subj-top { background: #4A1F2E; }
   :root:not([data-theme="light"]) .plan-yay { background: #173D29; color: #BFF0D2; }
-  :root:not([data-theme="light"]) .plan-et.done { color: #8FE0AE; }
-  :root:not([data-theme="light"]) .linkbtn { color: var(--primary); }
+  :root:not([data-theme="light"])   :root:not([data-theme="light"]) .linkbtn { color: var(--primary); }
   :root:not([data-theme="light"]) .plan-item:not(.done) .plan-go { color: #1F2A44; }
 }
 :root[data-theme="dark"] .subj.deu .subj-top { background: #4A3A12; }
 :root[data-theme="dark"] .subj.ek .subj-top { background: #173D29; }
 :root[data-theme="dark"] .subj.print .subj-top { background: #4A1F2E; }
 :root[data-theme="dark"] .plan-yay { background: #173D29; color: #BFF0D2; }
-:root[data-theme="dark"] .plan-et.done { color: #8FE0AE; }
-:root[data-theme="dark"] .linkbtn { color: var(--primary); }
+:root[data-theme="dark"] :root[data-theme="dark"] .linkbtn { color: var(--primary); }
 :root[data-theme="dark"] .plan-item:not(.done) .plan-go { color: #1F2A44; }
 .subjects { align-items: start; }
 @media (max-width: 699px) { .subjects { grid-template-columns: 1fr; } }
@@ -4056,38 +4049,20 @@ window.LU5 = (function () {
     if (todayT.length) fe.textContent = 'Heute ' + todayT.map(function (t) { return TEST_NAME[t.s]; }).join(' und ') + ' – viel Glück!' + (focus ? ' · Danach: ' + TEST_NAME[focus.s] + (focus.d === 1 ? ' morgen' : ' in ' + focus.d + ' Tagen') : '');
     else if (focus) fe.textContent = 'Fokus: ' + TEST_NAME[focus.s] + (focus.d === 1 ? ' morgen' : ' in ' + focus.d + ' Tagen');
     else fe.textContent = 'Heute';
-    var done = items.filter(function (x) { return x.done; }).length;
-    /* Etappen: der Plan wird in kleine Häppchen von ca. 20 Minuten geteilt. Sichtbar ist immer nur die aktuelle Etappe, der Rest kommt danach. */
-    var ET = [], cur = null;
-    items.forEach(function (x, i) {
-      if (!cur || (cur.items.length && cur.min + x.min > 20)) { cur = { items: [], min: 0 }; ET.push(cur); }
-      x.idx = i; cur.items.push(x); cur.min += x.min;
-    });
-    ET.forEach(function (e) { e.done = e.items.every(function (x) { return x.done; }); e.left = e.items.reduce(function (a, x) { return a + (x.done ? 0 : x.min); }, 0); });
-    var curE = -1; for (var ei = 0; ei < ET.length; ei++) if (!ET[ei].done) { curE = ei; break; }
-    var etDone = ET.filter(function (e) { return e.done; }).length;
-    $('planCount').textContent = etDone + '/' + ET.length;
-    $('planRing').querySelector('span').textContent = ET.length === 1 ? 'Etappe' : 'Etappen';
+    var done = items.filter(function (x) { return x.done; }).length, mins = items.reduce(function (a, x) { return a + (x.done ? 0 : x.min); }, 0);
+    $('planCount').textContent = done + '/' + items.length;
+    $('planRing').querySelector('span').textContent = 'erledigt';
     $('planRing').style.setProperty('--p', items.length ? Math.round(done / items.length * 100) : 0);
-    $('planRing').setAttribute('aria-label', etDone + ' von ' + ET.length + ' Etappen geschafft');
+    $('planRing').setAttribute('aria-label', done + ' von ' + items.length + ' erledigt');
     var all = items.length && done === items.length;
     $('planBox').classList.toggle('all', !!all);
     if (restDay && !items.length) { $('planCount').textContent = '🌙'; $('planRing').style.setProperty('--p', 100); $('planRing').querySelector('span').textContent = 'frei'; }
-    var ce = curE >= 0 ? ET[curE] : null, cOpen = ce ? ce.items.filter(function (x) { return !x.done; }).length : 0;
-    $('planSum').innerHTML = restDay && !items.length ? 'Mittwoch: Schule bis 15:30 und Hausaufgaben – heute gibt es kein Zusatz-Lernen. Erhol dich gut!' : all || !ce ? '' : '<b>Etappe ' + (curE + 1) + (ET.length > 1 ? ' von ' + ET.length : '') + ':</b> ' + (cOpen === 1 ? 'nur noch 1 Aufgabe' : cOpen + ' Aufgaben') + ' · ca. ' + ce.left + ' Min.' + (curE < ET.length - 1 ? ' Danach kurz Pause, dann geht’s weiter.' : ' Dann bist du fertig!') + (why ? ' <span class="plan-why">' + why + '</span>' : '');
+    $('planSum').innerHTML = restDay && !items.length ? 'Mittwoch: Schule bis 15:30 und Hausaufgaben – heute gibt es kein Zusatz-Lernen. Erhol dich gut!' : all ? '' : items.length + ' Aufgaben · noch etwa ' + mins + ' Minuten. Die erste ist am wichtigsten.' + (why ? ' <span class="plan-why">' + why + '</span>' : '');
     $('planSum').hidden = !!all && !restDay;
-    /* Etappe geschafft: einmal feiern */
-    if (etDone && !all && (L.et || 0) < etDone) { L.et = etDone; logCache[k] = L; flushLog(); toast(pick(['💪 Etappe ' + etDone + ' geschafft! Kurz Pause machen?', '🏃‍♀️ Etappe ' + etDone + ' geschafft – stark' + kidName(', ') + '!', '⭐ Etappe ' + etDone + ' im Kasten! Trink was, dann weiter.'])); }
     planActs = items.map(function (x) { return x.act; });
     extra.forEach(function (x) { planActs.push(x.act); });
-    function itemHtml(x) {
-      return '<li class="plan-item ' + x.subj + (x.done ? ' done' : '') + '"><span class="plan-check" aria-hidden="true">' + (x.done ? '✓' : '') + '</span><span class="plan-txt"><b>' + esc(x.title) + '</b><small>' + esc(x.sub) + '</small></span><button type="button" class="plan-go" data-plan="' + x.idx + '">' + x.btn + '</button></li>';
-    }
-    box.innerHTML = ET.map(function (e, n) {
-      var head = ET.length > 1 ? '<li class="plan-et' + (e.done ? ' done' : n === curE ? ' now' : ' later') + '">' + (e.done ? '✓ ' : '') + 'Etappe ' + (n + 1) + (e.done ? ' geschafft' : n === curE ? ' · jetzt dran' : ' · ca. ' + e.left + ' Min') + '</li>' : '';
-      if (n === curE || all || ET.length === 1) return head + e.items.map(itemHtml).join('');
-      if (e.done) return head;
-      return head + '<li class="plan-later">' + e.items.map(function (x) { return (x.done ? '✓ ' : '') + esc(x.title); }).join(' · ') + '</li>';
+    box.innerHTML = items.map(function (x, i) {
+      return '<li class="plan-item ' + x.subj + (x.done ? ' done' : '') + '"><span class="plan-check" aria-hidden="true">' + (x.done ? '✓' : '') + '</span><span class="plan-txt"><b>' + esc(x.title) + '</b><small>' + esc(x.sub) + '</small></span><button type="button" class="plan-go" data-plan="' + i + '">' + x.btn + '</button></li>';
     }).join('');
     var bh = all ? '<p class="plan-yay">⭐ Tagesplan geschafft' + esc(kidName(', ')) + '! Alles Weitere ist Bonus.</p>' : '';
     var bl = extra.map(function (x, j) { return '<button type="button" class="linkbtn" data-plan="' + (items.length + j) + '">' + esc(x.title) + '</button>'; }).concat(bonus.map(function (b) { return '<button type="button" class="linkbtn" data-go="' + b[1] + '">' + b[0] + '</button>'; }));
