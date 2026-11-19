@@ -2,7 +2,8 @@
    Level Up 5 · Mathe · 4 Probe-Klassenarbeiten für den 25. November
    Stoff: alles seit der letzten Arbeit – Maßstab, natürliche Zahlen
    (Stellenwerte, Runden, Kopfrechnen, schriftlich), Vorrangregeln und
-   Rechengesetze der Addition und Multiplikation (Buch S. 58–59).
+   Rechengesetze der Addition und Multiplikation (Buch S. 58–59)
+   und Distributivgesetz (ausklammern / ausmultiplizieren).
    Läuft mit dem Klassenarbeits-Modus (ka-tablet.js), Rücksprung zu „Mathe“.
 
    Teile wie in ma-daten.js und ek-daten.js:
@@ -25,10 +26,10 @@
   }
   /* geschickt rechnen: Musterweg mit Vertauschen und Klammern */
   function G(expr, weg) { var v = R ? R.eval(expr) : weg.split('=').pop().trim().replace(/\s/g, ''); return [expr + ' =', String(v), expr + ' = ' + weg, { way: expr }]; }
-  var RF = ['richtig', 'falsch'], LAW = ['Kommutativgesetz', 'Assoziativgesetz'];
+  var RF = ['richtig', 'falsch'], LAW = ['Kommutativgesetz', 'Assoziativgesetz'], LAW3 = ['Kommutativgesetz', 'Assoziativgesetz', 'Distributivgesetz'];
 
   /* ------------------------------------------------------------ 1 */
-  D.push(mk({ id: 'a1', nr: 1, name: 'Probe-Klassenarbeit 1', lvl: 'Warm-up', pc: '#FFD66B', sub: 'Maßstab · Einheiten · Kopfrechnen · Fachbegriffe · Vorrangregeln · Rechengesetze',
+  D.push(mk({ id: 'a1', nr: 1, name: 'Probe-Klassenarbeit 1', lvl: 'Warm-up', pc: '#FFD66B', sub: 'Maßstab · Einheiten · Kopfrechnen · Fachbegriffe · Vorrangregeln · Rechengesetze · Distributivgesetz',
     tasks: [
     { h: 'Maßstab', de: 'Berechne. Schreib die Einheit dazu.', topic: 'k2w', parts: [
       { t: 'calc', items: [
@@ -65,11 +66,19 @@
     ]},
     { h: 'Sachaufgabe', de: 'Stelle einen Rechenausdruck auf und berechne.', topic: 'sach2', parts: [
       { t: 'term', unit: '€', items: [['Tim kauft 3 Hefte zu je 2 € und einen Füller für 12 €. Wie viel bezahlt er?', '3 · 2 + 12', 18]] }
+    ]},
+    { h: 'Distributivgesetz', de: 'Rechne geschickt mit dem Distributivgesetz (ausklammern oder ausmultiplizieren). Schreib den Rechenweg auf.', topic: 'dist', parts: [
+      { t: 'calc', items: [
+        G('6 · 13 + 6 · 7', '6 · (13 + 7) = 6 · 20 = 120'),
+        G('9 · 42 − 9 · 33', '9 · (42 − 33) = 9 · 9 = 81')] },
+      { t: 'tf', labels: RF, items: [
+        ['a · (b + c) = a · b + a · c heißt Distributivgesetz.', true],
+        ['4 · (10 + 3) = 4 · 10 + 3', false]] }
     ]}
   ]}));
 
   /* ------------------------------------------------------------ 2 */
-  D.push(mk({ id: 'a2', nr: 2, name: 'Probe-Klassenarbeit 2', lvl: 'Normal', pc: '#8FD3FF', sub: 'Maßstab finden · große Zahlen & Runden · schriftlich · Vorrang · Gesetze erkennen',
+  D.push(mk({ id: 'a2', nr: 2, name: 'Probe-Klassenarbeit 2', lvl: 'Normal', pc: '#8FD3FF', sub: 'Maßstab finden · große Zahlen & Runden · schriftlich · Vorrang · Gesetze erkennen · Distributivgesetz',
     tasks: [
     { h: 'Maßstab', de: 'Berechne. Schreib die Einheit dazu.', topic: 'find', parts: [
       { t: 'calc', items: [
@@ -110,11 +119,18 @@
     ]},
     { h: 'Sachaufgabe', de: 'Stelle einen Rechenausdruck auf und berechne.', topic: 'sach2', parts: [
       { t: 'term', unit: '€', items: [['Die 28 Kinder der 5b fahren ins Schwimmbad. Der Eintritt kostet 4 € pro Kind, der Bus 150 € für alle. Wie viel kostet der Ausflug insgesamt?', '28 · 4 + 150', 262]] }
+    ]},
+    { h: 'Distributivgesetz', de: 'Rechne geschickt mit dem Distributivgesetz (ausklammern oder ausmultiplizieren). Schreib den Rechenweg auf.', topic: 'dist', parts: [
+      { t: 'calc', items: [
+        G('7 · 24 + 7 · 16', '7 · (24 + 16) = 7 · 40 = 280'),
+        G('(1000 + 30 + 5) · 4', '1000 · 4 + 30 · 4 + 5 · 4 = 4 000 + 120 + 20 = 4 140')] },
+      { t: 'pick', q: 'Welches Rechengesetz ist das?', opts: LAW3, items: [
+        ['5 · (8 + 2) = 5 · 8 + 5 · 2', 2], ['13 · 6 = 6 · 13', 0], ['(3 · 4) · 5 = 3 · (4 · 5)', 1]] }
     ]}
   ]}));
 
   /* ------------------------------------------------------------ 3 */
-  D.push(mk({ id: 'a3', nr: 3, name: 'Probe-Klassenarbeit 3', lvl: 'Normal+', pc: '#B9E6B0', sub: 'Wegstrecken & Modelle · Zahlwörter · große Rechnungen · eckige Klammern · Gesetze begründen',
+  D.push(mk({ id: 'a3', nr: 3, name: 'Probe-Klassenarbeit 3', lvl: 'Normal+', pc: '#B9E6B0', sub: 'Wegstrecken & Modelle · Zahlwörter · große Rechnungen · eckige Klammern · Gesetze begründen · Distributivgesetz',
     tasks: [
     { h: 'Maßstab', de: 'Berechne. Schreib die Einheit dazu.', topic: 'sum', parts: [
       { t: 'calc', items: [
@@ -157,6 +173,17 @@
     { h: 'Sachaufgaben', de: 'Stelle einen Rechenausdruck auf und berechne.', topic: 'sach2', parts: [
       { t: 'term', unit: 'Plätze', items: [['Ein Kino hat 18 Reihen mit je 25 Plätzen. Bei der Vorstellung bleiben 47 Plätze frei. Wie viele Plätze sind besetzt?', '18 · 25 − 47', 403]] },
       { t: 'term', items: [['Multipliziere die Summe aus 25 und 15 mit 4 und subtrahiere dann 60.', '(25 + 15) · 4 − 60', 100]] }
+    ]},
+    { h: 'Distributivgesetz', de: 'Rechne geschickt mit dem Distributivgesetz (ausklammern oder ausmultiplizieren). Schreib den Rechenweg auf.', topic: 'dist', parts: [
+      { t: 'calc', items: [
+        G('4 · 24 + 4 · 27', '4 · (24 + 27) = 4 · 51 = 204'),
+        G('8 · 57 − 8 · 17', '8 · (57 − 17) = 8 · 40 = 320'),
+        G('(100 − 10 − 1) · 15', '100 · 15 − 10 · 15 − 1 · 15 = 1 500 − 150 − 15 = 1 335')] },
+      { t: 'op', items: [
+        ['Erkläre', 'Erkläre, wie du 7 · 98 geschickt im Kopf rechnest und welches Rechengesetz du nutzt.', 3, [
+          ['98 = 100 − 2, also 7 · (100 − 2)', /100 ?[−-] ?2|\(100/],
+          ['ausmultiplizieren: 7 · 100 − 7 · 2 = 700 − 14 (Distributivgesetz)', /700|distributiv|ausmultipl/],
+          ['Ergebnis 686', /686/]]]] }
     ]}
   ]}));
 
@@ -204,6 +231,16 @@
     ]},
     { h: 'Sachaufgabe', de: 'Stelle einen Rechenausdruck auf und berechne.', topic: 'sach2', parts: [
       { t: 'term', unit: '€', items: [['Familie Berger macht Urlaub. 4 Übernachtungen kosten je 85 €. Dazu kommen 2 Eintrittskarten für Erwachsene zu je 15 € und 3 Kinderkarten zu je 9 €. Wie viel kostet alles zusammen?', '4 · 85 + 2 · 15 + 3 · 9', 397]] }
+    ]},
+    { h: 'Distributivgesetz', de: 'Rechne geschickt mit dem Distributivgesetz (ausklammern oder ausmultiplizieren). Schreib den Rechenweg auf.', topic: 'dist', parts: [
+      { t: 'calc', items: [
+        G('12 · 35 + 12 · 65', '12 · (35 + 65) = 12 · 100 = 1 200'),
+        G('25 · 46 − 25 · 6', '25 · (46 − 6) = 25 · 40 = 1 000'),
+        G('(200 + 40 + 3) · 6', '200 · 6 + 40 · 6 + 3 · 6 = 1 200 + 240 + 18 = 1 458')] },
+      { t: 'pick', q: 'Ausklammern oder Ausmultiplizieren?', opts: ['Ausklammern', 'Ausmultiplizieren'], items: [
+        ['8 · 17 + 8 · 3 = 8 · (17 + 3)', 0], ['6 · (20 − 1) = 6 · 20 − 6 · 1', 1], ['9 · 45 − 9 · 5 = 9 · (45 − 5)', 0]] },
+      { t: 'pick', q: 'Welches Rechengesetz ist das?', opts: LAW3, items: [
+        ['3 · (40 + 7) = 3 · 40 + 3 · 7', 2], ['(25 + 18) + 2 = 25 + (18 + 2)', 1]] }
     ]}
   ]}));
 })();
