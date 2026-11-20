@@ -323,7 +323,7 @@
 
   function score(ex, run) {
     var us = units(ex), A = run.a || {}, res = {}, tot = 0, max = 0, perTask = ex.tasks.map(function () { return { got: 0, max: 0 }; });
-    var noListen = !run.tts;
+    var noListen = !run.tts, emptyMax = 0, doneGot = 0, doneMax = 0;
     us.forEach(function (u) {
       var v = A[u.k], r;
       if (u.listen && noListen) { res[u.k] = { s: 0, max: 0, skip: true }; return; }
@@ -344,11 +344,12 @@
       }
       r.s = r.s * (u.max / (u.kind === 'sent' || u.kind === 'write' || u.kind === 'op' ? u.max : 1));
       r.max = u.max;
+      if (unitEmpty(u, A)) emptyMax += u.max; else { doneGot += r.s; doneMax += u.max; }
       res[u.k] = r; tot += r.s; max += u.max;
       perTask[u.ti].got += r.s; perTask[u.ti].max += u.max;
     });
     var pct = max ? tot / max : 0;
-    return { res: res, pts: half(tot), max: max, pct: pct, grade: gradeOf(ex, pct), perTask: perTask };
+    return { res: res, pts: half(tot), max: max, pct: pct, grade: gradeOf(ex, pct), perTask: perTask, emptyMax: emptyMax, doneGot: half(doneGot), doneMax: doneMax };
   }
   function gradeOf(ex, pct) {
     for (var i = 0; i < ex.bands.length; i++) if (pct >= ex.bands[i] / ex.pdfMax - 1e-9) return i + 1;
@@ -653,12 +654,30 @@
     setTimeout(next, 150);
   }
 
+  /* Ist ein Feld leer? Beim Rechenweg stehen die Zeilen unter eigenen Schlüsseln (…s0, …s1) */
+  function unitEmpty(u, A) {
+    if (u.kind === 'way') return !wayLinesA(A, u.base, u.n).some(function (x) { return String(x).trim(); });
+    var v = A[u.k]; return v === undefined || v === null || String(v).trim() === '';
+  }
+  /* Aufgaben (Nummer + Überschrift), in denen noch etwas leer ist */
+  function emptyTasks(ex, A, r) {
+    var seen = {}, out = [];
+    units(ex).forEach(function (u) { if (u.listen && !r.tts) return; if (unitEmpty(u, A) && !seen[u.ti]) { seen[u.ti] = 1; out.push(u.ti); } });
+    return out.sort(function (a, b) { return a - b; }).map(function (ti) { return (ti + 1) + ' ' + esc(ex.tasks[ti].h); });
+  }
   function askSubmit() {
     var us = units(cur), A = run().a || {}, empty = 0;
-    us.forEach(function (u) { var v = A[u.k]; if (u.listen && !run().tts) return; if (v === undefined || v === null || String(v).trim() === '') empty++; });
-    $('katConfirmText').innerHTML = empty ? '<b>Noch ' + empty + (empty === 1 ? ' Lücke ist' : ' Lücken sind') + ' leer.</b> Willst du wirklich schon abgeben?' : '<b>Alles ausgefüllt.</b> Hast du alles noch einmal durchgelesen? Dann abgeben!';
+    us.forEach(function (u) { if (u.listen && !run().tts) return; if (unitEmpty(u, A)) empty++; });
+    var et = emptyTasks(cur, A, run());
+    $('katConfirmText').innerHTML = empty
+      ? '<b>Noch ' + empty + (empty === 1 ? ' Feld ist' : ' Felder sind') + ' leer</b> – in Aufgabe ' + et.join(', ') + '.<br>Leere Felder geben 0 Punkte. Hast du noch Zeit? Dann rechne lieber weiter!'
+      : '<b>Alles ausgefüllt.</b> Hast du alles noch einmal durchgelesen? Dann abgeben!';
+    $('katConfirmYes').textContent = empty ? 'Trotzdem abgeben' : 'Abgeben';
+    $('katConfirmYes').className = empty ? 'btn small' : 'btn primary';
+    $('katConfirmNo').className = empty ? 'btn primary' : 'btn small';
+    $('katConfirmNo').textContent = empty ? 'Weiterrechnen' : 'Weiterschreiben';
     $('katConfirm').hidden = false;
-    $('katConfirmYes').focus();
+    (empty ? $('katConfirmNo') : $('katConfirmYes')).focus();
   }
   function submit() {
     stopPlay();
@@ -803,6 +822,14 @@
       : g === 3 ? 'Ordentlich! Jetzt weißt du genau, was du noch üben kannst. Unten gibt es zu jeder Aufgabe die passende Übung.'
       : 'Gut, dass du das jetzt geübt hast und nicht erst in der echten Arbeit. Schau dir unten die Fehler an und übe die Aufgaben mit den meisten roten Stellen.';
   }
+  /* Unvollständig abgegeben: zeigen, wie gut das Bearbeitete war – die Note allein täuscht dann */
+  function doneHtml(ex, sc, r, A) {
+    if (!sc.emptyMax || !sc.doneMax || sc.emptyMax < 2) return '';
+    var dp = sc.doneGot / sc.doneMax, g = gradeOf(ex, dp), et = emptyTasks(ex, A, r);
+    return '<div class="ka-done"><p><b>Nicht fertig geworden?</b> ' + fmtP(sc.emptyMax) + ' Punkte waren leer' + (et.length ? ' (Aufgabe ' + et.join(', ') + ')' : '') + '.</p>' +
+      '<p>Von dem, was du <b>bearbeitet</b> hast, waren <b>' + Math.round(dp * 100) + ' %</b> richtig (' + fmtP(sc.doneGot) + ' von ' + fmtP(sc.doneMax) + ' Punkten). Das wäre eine <b>' + g + '</b>.' + (g <= 3 ? ' Das Können ist also da – jetzt geht es ums Tempo.' : '') + '</p>' +
+      '<p class="ka-done-tip">Tipp für die echte Arbeit: Erst alle Aufgaben anschauen, die leichten zuerst rechnen und nirgends zu lange hängen bleiben.</p></div>';
+  }
   function renderResult(fresh) {
     var ex = cur, r = run(), sc = score(ex, r), A = r.a || {}, host = $('katBody');
     var pct = Math.round(sc.pct * 100), th = thresholds(ex);
@@ -814,7 +841,7 @@
       '<p class="ka-score"><b>' + fmtP(sc.pts) + ' von ' + fmtP(sc.max) + ' Punkten</b> · ' + pct + ' %</p>' +
       '<div class="ka-bar" role="img" aria-label="' + pct + ' Prozent"><i style="width:' + pct + '%"></i></div>' +
       '<p class="ka-time">Zeit: ' + mmss(r.secs || 0) + ' Minuten' + ((r.secs || 0) > ex.min * 60 ? ' (länger als ' + ex.min + ' Minuten)' : '') + '</p>' +
-      '<p class="ka-msg">' + msgFor(sc.grade) + '</p>' +
+      '<p class="ka-msg">' + msgFor(sc.grade) + '</p>' + doneHtml(ex, sc, r, A) +
       '<details class="ka-scale"><summary>Notenschlüssel</summary><p>1 ab ' + th[0] + ' % · 2 ab ' + th[1] + ' % · 3 ab ' + th[2] + ' % · 4 ab ' + th[3] + ' % · 5 ab ' + th[4] + ' % · darunter 6. ' + esc(ex.scaleNote || 'Das ist eine übliche Staffelung – die Lehrerin kann anders gewichten. Bei der Hör-Aufgabe und beim Text kann die App sich irren; Eltern können die Punkte beim Text anpassen.') + '</p></details>' +
       '<div class="ka-sum">' + ex.tasks.map(function (t, ti) { var pt = sc.perTask[ti], ok = pt.got >= pt.max; return '<a href="#ka-t' + ti + '" class="' + (ok ? 'ok' : pt.got / Math.max(1, pt.max) >= 0.5 ? 'half' : 'bad') + '"><span>' + (ti + 1) + ' ' + esc(t.h) + '</span><b>' + fmtP(pt.got) + '/' + fmtP(pt.max) + '</b></a>'; }).join('') + '</div>' +
       '</section>';
