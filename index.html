@@ -922,7 +922,8 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
 .plan-ring span { font-size: 0.68rem; color: var(--ink-soft); }
 .plan.all .plan-ring { background: #2E9E5B; }
 .plan-sum { margin: 0; color: var(--ink-soft); font-size: 0.95rem; }
-.plan-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.plan-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; grid-template-columns: minmax(0, 1fr); }
+.plan-item .plan-txt { min-width: 0; }
 .plan-item { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 18px; background: rgba(128,128,128,0.10); border-left: 8px solid var(--pc, var(--primary)); }
 .plan-item.math, .plan-item.mh { --pc: var(--primary); } .plan-item.en { --pc: var(--post); } .plan-item.voc { --pc: #E5B800; } .plan-item.de { --pc: #E8A317; } .plan-item.ek { --pc: #2E9E5B; }
 .plan-check { flex-shrink: 0; width: 30px; height: 30px; box-sizing: border-box; border-radius: 50%; border: 3px solid var(--pc); display: flex; align-items: center; justify-content: center; font-weight: 800; color: #fff; }
@@ -934,6 +935,12 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
 .plan-go { flex-shrink: 0; appearance: none; cursor: pointer; border: 0; border-radius: 12px; padding: 10px 14px; font: 600 0.95rem var(--font-display); background: var(--pc); color: #fff; box-shadow: 0 3px 0 rgba(0,0,0,0.18); }
 .plan-item.voc .plan-go, .plan-item.de .plan-go { color: #1F2A44; }
 .plan-item.done .plan-go { background: var(--surface); color: var(--ink-soft); box-shadow: none; border: 2px solid var(--edge, #D5DBE6); }
+.plan-swap { flex: none; width: 40px; height: 40px; padding: 0; border-radius: 12px; border: 2px solid var(--edge, #D5DBE6); background: var(--surface); color: var(--ink, #1F2937); font-size: 1.1rem; font-weight: 700; cursor: pointer; margin-right: -4px; }
+.plan-swapbox { grid-column: 1 / -1; box-sizing: border-box; min-width: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; padding: 12px; border-radius: 16px; border: 2px dashed var(--edge, #D5DBE6); margin: -2px 0 8px; color: var(--ink, #1F2937); }
+.plan-swapbox p { margin: 0; font-size: 0.95rem; }
+.plan-opt { text-align: left; padding: 10px 12px; border-radius: 12px; border: 2px solid var(--edge, #D5DBE6); background: var(--surface); color: var(--ink, #1F2937); font: inherit; cursor: pointer; display: flex; flex-direction: column; gap: 2px; }
+.plan-opt small { color: var(--ink-soft, #4B5563); }
+.plan-tag { font-style: normal; font-size: 0.75rem; font-weight: 700; padding: 1px 7px; border-radius: 999px; background: var(--edge, #D5DBE6); color: var(--ink, #1F2937); margin-left: 4px; }
 .plan-bonus { padding: 10px 14px; border-radius: 16px; border: 2px dashed var(--edge, #D5DBE6); font-size: 0.92rem; color: var(--ink-soft); line-height: 1.45; }
 .plan-yay { margin: 0; padding: 10px 14px; border-radius: 16px; background: #DFF3E4; color: #17603A; font-weight: 700; }
 .linkbtn { appearance: none; background: none; border: 0; padding: 0; cursor: pointer; color: var(--primary-dark, #0B7A6E); font: inherit; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
@@ -1248,7 +1255,7 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
   </section>
 
   <div class="progress" id="enProg">
-    <div class="progress-text"><span id="enProgLabel">Aufgabe 1 von 10</span><span id="enTopicLabel">Gemischt</span></div>
+    <div class="progress-text"><span id="enProgLabel">Aufgabe 1 von 14</span><span id="enTopicLabel">Gemischt</span></div>
     <ol class="segments" id="enSeg" aria-hidden="true"></ol>
   </div>
 
@@ -1262,7 +1269,7 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
   <details class="levels" id="enLevelsBox">
     <summary><span class="lv-title">Mein Lernstand Englisch</span><span class="lv-sum" id="enLvSum"></span></summary>
     <div class="lv-body">
-      <p class="lv-legend">Grün: beim ersten Mal richtig. Gelb: mit Tipp oder im zweiten Versuch. Rot: falsch. Was noch nicht sitzt, kommt bei „Gemischt“ öfter dran. Gelbe und rote Aufgaben kommen als „Nochmal üben“ wieder, bis sie beim ersten Versuch klappen. Was auf Anhieb richtig war, ist 3 Tage Pause.</p>
+      <p class="lv-legend">Grün: beim ersten Mal richtig – auch wenn du vorher einen Tipp oder „Kurz erklärt“ angeschaut hast. Hilfe holen ist erlaubt! Gelb: erst im zweiten Versuch. Rot: falsch. Was noch nicht sitzt, kommt bei „Gemischt“ öfter dran. Gelbe und rote Aufgaben kommen als „Nochmal üben“ wieder, bis sie beim ersten Versuch klappen. Was auf Anhieb richtig war, ist 3 Tage Pause.</p>
       <ul class="lv-list" id="enLevels"></ul>
       <button type="button" class="btn small" id="enReset">Lernstand Englisch löschen</button>
       <p class="lv-legend" id="enResetAsk" hidden></p>
@@ -1704,7 +1711,7 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
   <details class="levels" id="levels">
     <summary><span class="lv-title">Mein Lernstand</span><span class="lv-sum" id="levelSum"></span></summary>
     <div class="lv-body">
-      <p class="lv-legend">Die Punkte zeigen deine letzten Versuche: grün beim ersten Mal richtig, gelb mit Tipp, rot falsch. Was noch nicht sitzt, kommt bei „Gemischt“, „Bild &amp; Original“ und „Profi“ öfter dran.</p>
+      <p class="lv-legend">Die Punkte zeigen deine letzten Versuche: grün beim ersten Mal richtig (Tipp, „Kurz erklärt“ und Merkzettel sind erlaubt und bleiben grün), gelb erst im zweiten Versuch, rot falsch. Was noch nicht sitzt, kommt bei „Gemischt“, „Bild &amp; Original“ und „Profi“ öfter dran.</p>
       <div id="levelBody"></div>
       <label class="lv-setting" for="breakLen">Länge der Pause (für Eltern):
         <select id="breakLen"><option value="5">5 Minuten</option><option value="7">7 Minuten</option><option value="10">10 Minuten</option></select>
@@ -1731,7 +1738,7 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
     </div>
   </div>
 
-  <p class="note">Jede Runde hat 10 neue Aufgaben. Schriftliche Aufgaben am besten auf einem Blatt rechnen. Bei Vorrangregeln, Klammern und Sachaufgaben trägst du jeden Rechenschritt ein – der Rechenweg zählt wie in der Schule. Sterne, Abzeichen, Lernstand und deine angefangene Runde werden auf diesem Gerät gespeichert.</p>
+  <p class="note">Jede Runde hat 10 neue Aufgaben. Ein Tipp ist erlaubt – die Aufgabe bleibt trotzdem grün. Schriftliche Aufgaben am besten auf einem Blatt rechnen. Bei Vorrangregeln, Klammern und Sachaufgaben trägst du jeden Rechenschritt ein – der Rechenweg zählt wie in der Schule. Sterne, Abzeichen, Lernstand und deine angefangene Runde werden auf diesem Gerät gespeichert.</p>
 </div>
 
 </div>
@@ -3544,7 +3551,7 @@ window.LU5 = (function () {
       : right >= 8 ? 'Super gemacht! Fast alles richtig.'
       : right >= 5 ? 'Gut gemacht! Mit etwas Übung klappt es noch besser.'
       : 'Dranbleiben! Schau dir die Tipps an und probier es gleich nochmal.';
-    if (second > 0) msg += ' ' + second + (second === 1 ? ' Aufgabe hast du' : ' Aufgaben hast du') + ' mit Tipp geschafft.';
+    if (second > 0) msg += ' ' + second + (second === 1 ? ' Aufgabe hast du' : ' Aufgaben hast du') + ' im zweiten Versuch geschafft.';
     var weakNow = weakLabels();
     if (weakNow.length && (state.topic === 'mix' || state.topic === 'profi' || state.topic === 'heft' || state.topic === 'nat' || state.topic === 'natplus' || state.topic === 'gesetz' || state.topic === 'mka' || state.topic === 'hue' || state.topic === 'fokus')) msg += ' Nächstes Mal üben wir extra: ' + weakNow.slice(0, 3).join(', ') + '.';
     el.endMsg.textContent = msg;
@@ -3978,7 +3985,7 @@ window.LU5 = (function () {
     if (state.resolved) return;
     state.hintUsed = true;
     state.input = el.answer.value;
-    state.feedback = { tone: 'tip', title: 'Linas Tipp', text: t.hint };
+    state.feedback = { tone: 'tip', title: 'Linas Tipp', text: t.hint + ' <i>(Tipp holen ist erlaubt – die Aufgabe bleibt grün.)</i>' };
     renderTask();
     el.answer.focus();
   }
@@ -4022,7 +4029,7 @@ window.LU5 = (function () {
     document.getElementById('mcHintBtn').addEventListener('click', function () {
       var t = state.tasks[state.i]; if (state.resolved) return;
       state.hintUsed = true;
-      if (t.hint) state.feedback = { tone: 'tip', title: 'Linas Tipp', text: t.hint };
+      if (t.hint) state.feedback = { tone: 'tip', title: 'Linas Tipp', text: t.hint + ' <i>(Tipp holen ist erlaubt – die Aufgabe bleibt grün.)</i>' };
       else state.lessonOpen = true;
       saveRound(); renderTask();
     });
@@ -4304,7 +4311,11 @@ window.LU5 = (function () {
     });
   }
   function minItem(subj, title, sub, mins, have, act) {
-    return { subj: subj, title: title, sub: sub + ' · ' + Math.min(mins, Math.floor(have / 60)) + ' / ' + mins + ' Min', min: mins, done: have >= mins * 60, btn: have >= mins * 60 ? 'Weiter' : 'Los', act: act };
+    var x = { subj: subj, title: title, min: mins, act: act };
+    function set(m) { x.min = m; x.sub = sub + ' · ' + Math.min(m, Math.floor(have / 60)) + ' / ' + m + ' Min'; x.done = have >= m * 60; x.btn = x.done ? 'Weiter' : 'Los'; }
+    set(mins);
+    if (subj !== 'voc') x.bump = function () { set(x.min + 10); };
+    return x;
   }
   function renderPlan() {
     var box = $('planList'); if (!box) return;
@@ -4320,6 +4331,10 @@ window.LU5 = (function () {
     var order = up.map(function (t) { return t.s; });
     ['en', 'math', 'de', 'dik', 'ek', 'mh'].forEach(function (s) { if (order.indexOf(s) < 0) order.push(s); });
     order.forEach(function (s) {
+      var n0 = items.length; planSubj(s);
+      items.slice(n0).forEach(function (x) { x.ts = s; });
+    });
+    function planSubj(s) {
       var d = D[s];
       if (s === 'dik') {
         /* Diktate erst nach der Deutsch-HÜ, dann jeden Tag eins (Mittwoch frei), samstags zwei, am Tag davor das schwächste noch einmal */
@@ -4356,6 +4371,7 @@ window.LU5 = (function () {
             var fo = store('massstab-fokus-day') || {}, fn = fo.day === k ? (fo.n || 0) : 0, fneed = now.getDay() === 0 ? 2 : 1;
             var wn = window.LU5Math && LU5Math.weakNames ? LU5Math.weakNames() : [];
             items.push({ subj: 'math', title: 'Mathe: Meine Baustellen', sub: (wn.length ? 'Heute dran: ' + wn.slice(0, 3).join(', ') : 'Was noch nicht sitzt') + ' · ' + (fneed === 2 ? '2 Runden · ca. 20 Min · ' + Math.min(fn, 2) + ' / 2 geschafft' : '10 Aufgaben · ca. 10 Min'), min: fneed * 10, done: fn >= fneed, keep: true, btn: fn >= fneed ? 'Nochmal' : 'Los', act: function () { go('math'); if (window.LU5Math) LU5Math.topic('fokus'); } });
+            (function (bIt) { bIt.bump = function () { var need = fneed + 1; bIt.min = need * 10; bIt.done = fn >= need; bIt.btn = bIt.done ? 'Nochmal' : 'Los'; bIt.sub = (wn.length ? 'Heute dran: ' + wn.slice(0, 3).join(', ') : 'Was noch nicht sitzt') + ' · ' + need + ' Runden · ca. ' + need * 10 + ' Min · ' + Math.min(fn, need) + ' / ' + need + ' geschafft'; }; })(items[items.length - 1]);
             mm = 10;
             items.push({ subj: 'math', title: 'Mathe: Maßstab-Comeback', sub: 'Großer oder kleiner Maßstab? Mal oder geteilt? Kann das stimmen? · 10 Aufgaben · ca. 5 Min', min: 5, done: cbDone, keep: true, btn: cbDone ? 'Nochmal' : 'Los', act: function () { go('math'); if (window.LU5Math) LU5Math.topic('comeback'); } });
           }
@@ -4385,7 +4401,7 @@ window.LU5 = (function () {
         if (near('en') && d <= PROBES.en.from) items = items.concat(probeItems('en', d, k));
         else if (near('en') && d <= 14) items.push(minItem('en', 'Englisch üben', 'Grammatik und Sätze', 10, Math.max(0, (L.en || 0) - vs), function () { go('en'); }));
       }
-    });
+    }
     if (!near('de')) bonus.push(['Deutsch', 'de']);
     /* Lernzeit nach Terminlage: je näher und je mehr Arbeiten, desto mehr Zeit; ruhige Tage kürzer, Wochenende vor Arbeiten länger */
     var load = 0;
@@ -4405,6 +4421,46 @@ window.LU5 = (function () {
     if (extraFit) extra.push(extraFit);
     /* Mittwoch: Schule bis 15:30 und Hausaufgaben – kein zusätzliches Lernen, alles nur als Bonus */
     if (restDay) { extra = items.filter(function (x) { return !x.done; }).concat(extra); items = items.filter(function (x) { return x.done; }); }
+    /* Tausch-Joker: einmal am Tag eine Aufgabe gegen eine andere tauschen.
+       Nicht tauschbar: die erste (wichtigste) Aufgabe, die Vokabeln und alles für eine Arbeit/HÜ morgen. */
+    var swap = store('plan-swap'); if (!swap || swap.day !== k) swap = null;
+    function grp(sj) { return sj === 'voc' ? 'en' : sj === 'mh' ? 'math' : sj; }
+    function locked(x, i) { return i === 0 || x.subj === 'voc' || x.done || (x.ts && D[x.ts] === 1); }
+    var GNAME = { math: 'Mathe', en: 'Englisch', de: 'Deutsch', ek: 'Erdkunde' };
+    var GACT = { math: function () { go('math'); if (window.LU5Math) LU5Math.topic(near('math') && D.math <= 7 ? 'fokus' : 'mix'); }, en: function () { go('en'); }, de: function () { go('de'); }, ek: function () { go('ek'); } };
+    function swapOpts(from) {
+      var o = [];
+      extra.forEach(function (x) { if (!x.done && x !== from) o.push({ key: 'x:' + x.title, label: x.title, sub: x.sub }); });
+      ['math', 'en', 'de', 'ek'].forEach(function (g) {
+        if (g === 'ek' && !near('ek')) return;
+        var tgt = items.filter(function (x) { return x !== from && x.bump && grp(x.subj) === g && !x.done; })[0];
+        if (tgt) o.push({ key: 'b:' + g, label: 'Mehr ' + GNAME[g] + ': ' + tgt.title.replace(/^[^:]+: /, '') + ' +10 Min', sub: 'Du verlängerst diese Aufgabe' });
+        else if (!(from && grp(from.subj) === g && from.bump)) o.push({ key: 'g:' + g, label: GNAME[g] + ': Extra-Runde', sub: 'ca. 10 Min, selbst gewählt' });
+      });
+      return o;
+    }
+    var swapInfo = '';
+    if (swap && !restDay) {
+      var fi = -1; items.forEach(function (x, i) { if (fi < 0 && x.title === swap.from && !locked(x, i)) fi = i; });
+      var fromIt = fi >= 0 ? items[fi] : null, ok = false;
+      if (fromIt) {
+        var kk = swap.to, g = kk.slice(2), rep;
+        if (kk.indexOf('x:') === 0) {
+          var xi = -1; extra.forEach(function (x, j) { if (xi < 0 && 'x:' + x.title === kk) xi = j; });
+          if (xi >= 0) { rep = extra.splice(xi, 1)[0]; items[fi] = rep; ok = true; }
+        } else if (kk.indexOf('b:') === 0) {
+          var bt = items.filter(function (x) { return x !== fromIt && x.bump && grp(x.subj) === g; })[0];
+          if (bt) { bt.bump(); bt.swapped = true; items.splice(fi, 1); ok = true; }
+        } else if (kk.indexOf('g:') === 0 && GNAME[g]) {
+          var have = Math.max(0, (L[g] || 0) - (swap.base || 0) - (swap.need || 0) * 60);
+          rep = { subj: g, title: GNAME[g] + ': Extra-Runde', sub: 'Selbst gewählt · ' + Math.min(10, Math.floor(have / 60)) + ' / 10 Min', min: 10, done: have >= 600, act: GACT[g] };
+          rep.btn = rep.done ? 'Weiter' : 'Los'; items[fi] = rep; ok = true;
+        }
+        if (ok) { if (rep) rep.swapped = true; extra.unshift(fromIt); swapInfo = '🔄 Joker eingesetzt: „' + swap.from + '“ ist heute Bonus.'; }
+      }
+      if (!ok) swap = null;
+    }
+    var canSwap = !swap && !restDay && items.some(function (x, i) { return !locked(x, i); });
     /* Kopfzeile */
     var fe = $('planFocus');
     if (todayT.length) fe.textContent = 'Heute ' + todayT.map(function (t) { return TEST_NAME[t.s]; }).join(' und ') + ' – viel Glück!' + (focus ? ' · Danach: ' + TEST_NAME[focus.s] + (focus.d === 1 ? ' morgen' : ' in ' + focus.d + ' Tagen') : '');
@@ -4418,13 +4474,23 @@ window.LU5 = (function () {
     var all = items.length && done === items.length;
     $('planBox').classList.toggle('all', !!all);
     if (restDay && !items.length) { $('planCount').textContent = '🌙'; $('planRing').style.setProperty('--p', 100); $('planRing').querySelector('span').textContent = 'frei'; }
-    $('planSum').innerHTML = restDay && !items.length ? 'Mittwoch: Schule bis 15:30 und Hausaufgaben – heute gibt es kein Zusatz-Lernen. Erhol dich gut!' : all ? '' : items.length + ' Aufgaben · noch etwa ' + mins + ' Minuten. Die erste ist am wichtigsten.' + (why ? ' <span class="plan-why">' + why + '</span>' : '');
+    $('planSum').innerHTML = restDay && !items.length ? 'Mittwoch: Schule bis 15:30 und Hausaufgaben – heute gibt es kein Zusatz-Lernen. Erhol dich gut!' : all ? '' : items.length + ' Aufgaben · noch etwa ' + mins + ' Minuten. Die erste ist am wichtigsten.' + (why ? ' <span class="plan-why">' + why + '</span>' : '') + (canSwap ? ' <span class="plan-why">🔄 Dein Joker: Eine Aufgabe darfst du heute gegen eine andere tauschen – tippe auf ⇄.</span>' : swapInfo ? ' <span class="plan-why">' + esc(swapInfo) + (swap.undo !== false ? ' <button type="button" class="linkbtn" id="swapUndo">Rückgängig</button>' : '') + '</span>' : '');
     $('planSum').hidden = !!all && !restDay;
     planActs = items.map(function (x) { return x.act; });
     extra.forEach(function (x) { planActs.push(x.act); });
+    var optList = [];
     box.innerHTML = items.map(function (x, i) {
-      return '<li class="plan-item ' + x.subj + (x.done ? ' done' : '') + '"><span class="plan-check" aria-hidden="true">' + (x.done ? '✓' : '') + '</span><span class="plan-txt"><b>' + esc(x.title) + '</b><small>' + esc(x.sub) + '</small></span><button type="button" class="plan-go" data-plan="' + i + '">' + x.btn + '</button></li>';
+      var sw = canSwap && !locked(x, i) ? '<button type="button" class="plan-swap" data-swap="' + i + '" aria-label="' + esc(x.title) + ' tauschen" aria-expanded="' + (swapOpen === x.title) + '">⇄</button>' : '';
+      var h = '<li class="plan-item ' + x.subj + (x.done ? ' done' : '') + (x.swapped ? ' swapped' : '') + '"><span class="plan-check" aria-hidden="true">' + (x.done ? '✓' : '') + '</span><span class="plan-txt"><b>' + esc(x.title) + (x.swapped ? ' <em class="plan-tag">getauscht</em>' : '') + '</b><small>' + esc(x.sub) + '</small></span>' + sw + '<button type="button" class="plan-go" data-plan="' + i + '">' + x.btn + '</button></li>';
+      if (canSwap && swapOpen === x.title) {
+        var os = swapOpts(x);
+        h += '<li class="plan-swapbox"><p>Statt <b>' + esc(x.title) + '</b> lieber …</p>' + (os.length ? os.map(function (o) { optList.push({ from: x, o: o }); return '<button type="button" class="plan-opt" data-swapto="' + (optList.length - 1) + '"><b>' + esc(o.label) + '</b><small>' + esc(o.sub || '') + '</small></button>'; }).join('') : '<p>Heute gibt es nichts zum Tauschen.</p>') + '<button type="button" class="linkbtn" data-swapclose="1">Doch nicht tauschen</button></li>';
+      }
+      return h;
     }).join('');
+    swapChoices = optList;
+    swapItemsRef = items;
+    var ub = $('swapUndo'); if (ub) ub.onclick = function () { localStorage.removeItem('plan-swap'); swapOpen = null; renderPlan(); };
     var bh = all ? '<p class="plan-yay">⭐ Tagesplan geschafft' + esc(kidName(', ')) + '! Alles Weitere ist Bonus.</p>' : '';
     var bl = extra.map(function (x, j) { return '<button type="button" class="linkbtn" data-plan="' + (items.length + j) + '">' + esc(x.title) + '</button>'; }).concat(bonus.map(function (b) { return '<button type="button" class="linkbtn" data-go="' + b[1] + '">' + b[0] + '</button>'; }));
     if (bl.length) bh += '<span>Bonus, wenn du noch Lust hast: ' + bl.join(' · ') + '</span>';
@@ -4447,6 +4513,21 @@ window.LU5 = (function () {
     });
   }
   window.LU5Plan = function () { if (view === 'home') renderPlan(); };
+  var swapOpen = null, swapChoices = [], swapItemsRef = [];
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest && e.target.closest('[data-swap],[data-swapto],[data-swapclose]'); if (!t) return;
+    if (t.hasAttribute('data-swapclose')) { swapOpen = null; renderPlan(); return; }
+    if (t.hasAttribute('data-swap')) { var it = swapItemsRef[Number(t.getAttribute('data-swap'))]; swapOpen = it && swapOpen !== it.title ? it.title : null; renderPlan(); return; }
+    var c = swapChoices[Number(t.getAttribute('data-swapto'))]; if (!c) return;
+    var now = new Date(), k = dayKey(now), L = logCache[k] || {}, g = c.o.key.slice(2), rec = { day: k, from: c.from.title, to: c.o.key };
+    if (c.o.key.indexOf('g:') === 0) {
+      /* Zeit ab jetzt – was für andere offene Aufgaben im selben Fach noch nötig ist, zählt nicht mit */
+      rec.base = L[g] || 0;
+      rec.need = swapItemsRef.reduce(function (a, x) { var xg = x.subj === 'voc' ? 'en' : x.subj === 'mh' ? 'math' : x.subj; return a + (x !== c.from && !x.done && xg === g && x.subj !== 'voc' ? x.min : 0); }, 0);
+    }
+    store('plan-swap', rec); swapOpen = null; renderPlan();
+    toast('🔄 Getauscht! „' + c.from.title + '“ ist heute Bonus.');
+  });
   document.addEventListener('click', function (e) {
     var b = e.target.closest && e.target.closest('[data-plan]'); if (!b) return;
     var f = planActs[Number(b.getAttribute('data-plan'))]; if (f) f();
@@ -5616,24 +5697,24 @@ window.LU5 = (function () {
       shuffle(missed.filter(function (r) { return KA_SET.indexOf(r.split(':')[0]) !== -1; })).slice(0, 3).forEach(function (ref) { var p = ref.split(':'); if (G[p[0]] && Number(p[1]) < SIZE[p[0]]) addAgain(make(p[0], Number(p[1]))); });
       var kw = {}, allw = weights(stats), kc = {}, kg = 0; KA_SET.forEach(function (s) { kw[s] = allw[s]; });
       addSkill('themen'); addSkill('themen'); addSkill('voc'); addSkill('hisher');
-      while (tasks.length < 12 && kg++ < 200) { var ks = wpick(kw); if ((kc[ks] || 0) >= 3 && kg < 150) continue; kc[ks] = (kc[ks] || 0) + 1; addSkill(ks); }
+      while (tasks.length < 14 && kg++ < 200) { var ks = wpick(kw); if ((kc[ks] || 0) >= 3 && kg < 150) continue; kc[ks] = (kc[ks] || 0) + 1; addSkill(ks); }
       return shuffle(tasks);
     }
     if (topic === 'welmix') {
       shuffle(missed.filter(function (r) { return WEL_SET.indexOf(r.split(':')[0]) !== -1; })).slice(0, 3).forEach(function (ref) { var p = ref.split(':'); if (G[p[0]] && Number(p[1]) < SIZE[p[0]]) addAgain(make(p[0], Number(p[1]))); });
       var ww = {}, all = weights(stats), cnt = {}, guard = 0; WEL_SET.forEach(function (s) { ww[s] = all[s]; });
-      while (tasks.length < 10 && guard++ < 200) { var s = wpick(ww); if ((cnt[s] || 0) >= 2 && guard < 150) continue; cnt[s] = (cnt[s] || 0) + 1; addSkill(s); }
+      while (tasks.length < 14 && guard++ < 200) { var s = wpick(ww); if ((cnt[s] || 0) >= 2 && guard < 150) continue; cnt[s] = (cnt[s] || 0) + 1; addSkill(s); }
       return shuffle(tasks);
     }
     if (topic === 'mix') {
       shuffle(missed).slice(0, 3).forEach(function (ref) { var p = ref.split(':'); if (G[p[0]] && Number(p[1]) < SIZE[p[0]]) addAgain(make(p[0], Number(p[1]))); });
       var w = weights(stats);
-      while (tasks.length < 10) addSkill(wpick(w));
+      while (tasks.length < 14) addSkill(wpick(w));
       return shuffle(tasks);
     }
     var mine = missed.filter(function (r) { return r.indexOf(topic + ':') === 0; });
     shuffle(mine).slice(0, 3).forEach(function (ref) { addAgain(make(topic, Number(ref.split(':')[1]))); });
-    while (tasks.length < 10) addSkill(topic);
+    while (tasks.length < 14) addSkill(topic);
     return shuffle(tasks);
   }
   function recommend() {
@@ -5750,8 +5831,8 @@ window.LU5 = (function () {
     }
     var hb = $('enHint'); if (hb) hb.onclick = function () {
       enState.hint = true;
-      if (t.hints) { enState.hintN = (enState.hintN || 0) + 1; enState.fb = { cls: 'tip', title: 'Detektiv-Tipp', body: t.hints.slice(0, enState.hintN).map(function (x, j) { return (j + 1) + '. ' + x; }).join('<br>') }; }
-      else enState.fb = { cls: 'tip', title: 'Tipp', body: t.hint || 'Lies den Satz noch einmal genau.' };
+      if (t.hints) { enState.hintN = (enState.hintN || 0) + 1; enState.fb = { cls: 'tip', title: 'Detektiv-Tipp – bleibt grün', body: t.hints.slice(0, enState.hintN).map(function (x, j) { return (j + 1) + '. ' + x; }).join('<br>') }; }
+      else enState.fb = { cls: 'tip', title: 'Tipp – bleibt grün', body: t.hint || 'Lies den Satz noch einmal genau.' };
       saveEn(); renderEn(); };
     $('enCard').querySelectorAll('[data-opt]').forEach(function (b) { b.onclick = function () { chooseOpt(t, t.options[Number(b.getAttribute('data-opt'))]); }; });
     $('enCard').querySelectorAll('[data-tile]').forEach(function (b) { b.onclick = function () { enState.built.push(Number(b.getAttribute('data-tile'))); enState.fb = null; renderEn(); }; });
@@ -6465,7 +6546,7 @@ window.LU5 = (function () {
     if (inp) { setTimeout(function () { try { inp.focus(); } catch (e) {} }, 30); }
     if (run.mode === 'reveal') $('vocWrite').onclick = function () { run.mode = 'retype'; renderAsk('Schreib es jetzt aus dem Kopf.', ''); };
     var fm = $('vocForm'); if (fm) fm.onsubmit = function (e) { e.preventDefault(); check($('vocIn').value); };
-    var hb = $('vocHint'); if (hb) hb.onclick = function () { run.flags[run.cur].help = true; run.hint = true; renderAsk('Der erste Buchstabe ist da. Jeder Strich ist ein Buchstabe.', ''); };
+    var hb = $('vocHint'); if (hb) hb.onclick = function () { run.flags[run.cur].near = true; run.hint = true; renderAsk('Der erste Buchstabe ist da. Jeder Strich ist ein Buchstabe. (Der Tipp ist erlaubt – das Wort rutscht dadurch nicht zurück.)', ''); };
     var sb = $('vocShow'); if (sb) sb.onclick = reveal;
   }
   function reveal() { run.flags[run.cur].help = true; run.mode = 'reveal'; run.hint = false; renderAsk(); sayNow(WORDS[run.cur].en); }
