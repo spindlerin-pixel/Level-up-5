@@ -968,11 +968,12 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
 :root[data-theme="dark"] :root[data-theme="dark"] .linkbtn { color: var(--primary); }
 :root[data-theme="dark"] .plan-item:not(.done) .plan-go { color: #1F2A44; }
 .subjects { align-items: start; }
-@media (max-width: 699px) { .subjects { grid-template-columns: 1fr; } }
-@media (min-width: 760px) {
-  .app, .backbar { max-width: 1000px; }
-  #mathView, #enView, #vocView { max-width: 820px; }
-  .ka-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+@media (max-width: 599px) { .subjects { grid-template-columns: 1fr; } }
+/* Tablet (auch iPad mini hochkant, ab 640 px): zweispaltig, alles mittig */
+@media (min-width: 640px) {
+  .app, .backbar { max-width: 1000px; margin-inline: auto; }
+  #mathView, #enView, #vocView { max-width: 1000px; margin-inline: auto; }
+  .ka-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .plan-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .pr-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
   .pr-card { flex-wrap: wrap; align-content: flex-start; }
@@ -982,6 +983,7 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
   .de-topics { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .subj-name { font-size: 1.6rem; }
 }
+@media (min-width: 900px) { .ka-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 </style>
 
 <div class="app view-wrap" id="homeView">
