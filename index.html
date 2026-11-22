@@ -4422,10 +4422,10 @@ window.LU5 = (function () {
     /* Mittwoch: Schule bis 15:30 und Hausaufgaben – kein zusätzliches Lernen, alles nur als Bonus */
     if (restDay) { extra = items.filter(function (x) { return !x.done; }).concat(extra); items = items.filter(function (x) { return x.done; }); }
     /* Tausch-Joker: einmal am Tag eine Aufgabe gegen eine andere tauschen.
-       Nicht tauschbar: die erste (wichtigste) Aufgabe, die Vokabeln und alles für eine Arbeit/HÜ morgen. */
+       Nicht tauschbar: die erste (wichtigste) Aufgabe, die Vokabeln und alles für eine Arbeit/HÜ in den nächsten 7 Tagen. */
     var swap = store('plan-swap'); if (!swap || swap.day !== k) swap = null;
     function grp(sj) { return sj === 'voc' ? 'en' : sj === 'mh' ? 'math' : sj; }
-    function locked(x, i) { return i === 0 || x.subj === 'voc' || x.done || (x.ts && D[x.ts] === 1); }
+    function locked(x, i) { return i === 0 || x.subj === 'voc' || x.done || (x.ts && D[x.ts] !== null && D[x.ts] >= 1 && D[x.ts] <= 7); }
     var GNAME = { math: 'Mathe', en: 'Englisch', de: 'Deutsch', ek: 'Erdkunde' };
     var GACT = { math: function () { go('math'); if (window.LU5Math) LU5Math.topic(near('math') && D.math <= 7 ? 'fokus' : 'mix'); }, en: function () { go('en'); }, de: function () { go('de'); }, ek: function () { go('ek'); } };
     function swapOpts(from) {
