@@ -982,6 +982,34 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
   .de-topics { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .subj-name { font-size: 1.6rem; }
 }
+/* ---- Stufen nach dem Regenbogen: Effekte ---- */
+.mfx-tw { fill: #FFF6C9; stroke: #C98A1E; stroke-width: 0.6; animation: mfxTw 1.8s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+.mfx-dot { fill: #FFFFFF; }
+.mfx-crown { fill: #FFD54A; stroke: #7A4E00; stroke-width: 1.3; stroke-linejoin: round; }
+@keyframes mfxTw { 0%, 100% { opacity: 0.25; transform: scale(0.6); } 50% { opacity: 1; transform: scale(1.15); } }
+.fx1 .rank { background-image: radial-gradient(circle at 12% 30%, rgba(255, 213, 74, 0.18) 0 3px, transparent 4px), radial-gradient(circle at 88% 70%, rgba(127, 211, 238, 0.2) 0 3px, transparent 4px); }
+.fx-comet { position: fixed; left: -180px; width: 150px; height: 5px; border-radius: 3px; z-index: 70; pointer-events: none;
+  background: linear-gradient(90deg, rgba(255, 224, 138, 0), #FFE08A 65%, #FFFFFF); box-shadow: 0 0 14px #FFD54A;
+  animation: fxComet 1.3s cubic-bezier(.3, .1, .6, 1) forwards; }
+.fx-comet::after { content: ''; position: absolute; right: -7px; top: -6px; width: 17px; height: 17px; border-radius: 50%; background: #FFFFFF; box-shadow: 0 0 16px 5px #FFE08A; }
+@keyframes fxComet { from { transform: translate(0, 0) rotate(9deg); opacity: 1; } 85% { opacity: 1; } to { transform: translate(calc(100vw + 360px), 16vh) rotate(9deg); opacity: 0; } }
+.fx3 .plan, .fx3 .rank { animation: fxAurora 7s linear infinite; }
+@keyframes fxAurora {
+  0%, 100% { border-color: #3DDC97; box-shadow: 0 0 0 1px #3DDC97, 0 0 24px rgba(61, 220, 151, 0.45); }
+  33% { border-color: #5EC8F2; box-shadow: 0 0 0 1px #5EC8F2, 0 0 24px rgba(94, 200, 242, 0.45); }
+  66% { border-color: #B57BEE; box-shadow: 0 0 0 1px #B57BEE, 0 0 24px rgba(181, 123, 238, 0.45); }
+}
+.fx-conf { position: fixed; top: -24px; width: 10px; height: 14px; border-radius: 2px; z-index: 75; pointer-events: none; animation: fxFall 1.8s ease-in forwards; }
+.fx-conf.st, .fx4 .confetti { width: 17px; height: 17px; border-radius: 0; clip-path: polygon(50% 0, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); }
+@keyframes fxFall { to { transform: translateY(110vh) rotate(540deg); } }
+.fx-spark { position: fixed; width: 8px; height: 8px; border-radius: 50%; z-index: 75; pointer-events: none; box-shadow: 0 0 10px currentColor; animation: fxSpark 1.2s ease-out forwards; }
+@keyframes fxSpark { from { transform: translate(0, 0) scale(1); opacity: 1; } to { transform: translate(var(--dx), var(--dy)) scale(0.3); opacity: 0; } }
+.fx-toast { position: fixed; left: 50%; top: 18px; transform: translateX(-50%); z-index: 80; max-width: min(92vw, 460px); padding: 14px 18px; border-radius: 18px; text-align: center;
+  background: linear-gradient(135deg, #2B1E5C, #14123A); color: #FFF6C9; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35), 0 0 0 2px #FFD54A; font-size: 1rem; line-height: 1.4; animation: fxIn 0.4s ease-out; }
+.fx-toast b { color: #FFD54A; font-size: 1.1rem; }
+.fx-toast.out { opacity: 0; transition: opacity 0.5s; }
+@keyframes fxIn { from { transform: translate(-50%, -20px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .mfx-tw, .fx3 .plan, .fx3 .rank { animation: none; } .fx-comet, .fx-conf, .fx-spark { display: none; } }
 </style>
 
 <div class="app view-wrap" id="homeView">
@@ -3551,7 +3579,10 @@ window.LU5 = (function () {
     { id: 'tage3', n: 'Drei Tage am Stück', d: '3 Tage hintereinander geübt' },
     { id: 'tage7', n: 'Eine ganze Woche', d: '7 Tage hintereinander geübt' },
     { id: 'sterne50', n: '50 Sterne', d: '50 Sterne gesammelt' },
-    { id: 'sterne150', n: '150 Sterne', d: '150 Sterne gesammelt' }
+    { id: 'sterne150', n: '150 Sterne', d: '150 Sterne gesammelt' },
+    { id: 'sterne300', n: '300 Sterne', d: '300 Sterne gesammelt' },
+    { id: 'sterne600', n: '600 Sterne', d: '600 Sterne gesammelt' },
+    { id: 'sterne1000', n: 'Tausend Sterne', d: '1000 Sterne gesammelt' }
   ];
   function loadPts() {
     var p = store(PTS_KEY) || {};
@@ -3573,7 +3604,7 @@ window.LU5 = (function () {
   function newsHtml(news) {
     return news.map(function (x) {
       if (x.kind === 'break') return '<div class="fb-badge"><svg viewBox="0 0 40 40" aria-hidden="true"><circle class="bd-ring" cx="20" cy="20" r="17"></circle><path class="ic-line" d="M20 11 V 20 L 26 24"></path></svg><span><b>Pause verdient!</b><br>Oben kannst du jetzt ' + breakLen() + ' Minuten Memory spielen.</span></div>';
-      if (x.kind === 'rank') return '<div class="fb-badge"><svg viewBox="0 0 40 40" aria-hidden="true">' + medalSvg(RANKS[x.idx].c) + '</svg><span>Aufgestiegen! Du hast jetzt das <b>' + RANKS[x.idx].n + '</b>.</span></div>';
+      if (x.kind === 'rank') return '<div class="fb-badge"><svg viewBox="0 0 40 40" aria-hidden="true">' + medalSvg(RANKS[x.idx].c) + '</svg><span>Aufgestiegen! Du hast jetzt das <b>' + RANKS[x.idx].n + '</b>.' + (RANKS[x.idx].u ? '<br>Neu freigeschaltet: ' + RANKS[x.idx].u : '') + '</span></div>';
       return '<div class="fb-badge">' + badgeSvg(true) + '<span>Neues Abzeichen: <b>' + x.b.n + '</b><br>' + x.b.d + '</span></div>';
     }).join('');
   }
@@ -3594,6 +3625,9 @@ window.LU5 = (function () {
       if (p.dayStreak >= 7) give('tage7');
       if (p.total >= 50) give('sterne50');
       if (p.total >= 150) give('sterne150');
+      if (p.total >= 300) give('sterne300');
+      if (p.total >= 600) give('sterne600');
+      if (p.total >= 1000) give('sterne1000');
       var st = loadStats(), e = st[state.tasks[state.i].type];
       if (e && e.wasWeak && levelOf(e) === 'good') give('comeback');
       if (BASIC.every(function (t) { return levelOf(st[t]) === 'good'; })) give('grund');
@@ -3753,6 +3787,111 @@ window.LU5 = (function () {
   }
   function saveRound() { var copy = {}; for (var key in state) copy[key] = state[key]; copy.resumed = false; store(ROUND_KEY, copy); }
 
+
+  /* ---------- Nach dem Regenbogen geht es weiter: neue Stufen mit Belohnungen ----------
+     Jede neue Stufe schaltet einen Effekt frei, der ab dann dauerhaft bleibt:
+     1 Funkel-Medaille · 2 Kometenschweif bei Sofort-Richtig · 3 Polarlicht um den Tagesplan
+     4 Sternenregen statt Konfetti · 5 Krone und Legenden-Stufen ohne Ende (jede mit Feuerwerk) */
+  var RANK_TOP = RANKS.length - 1;
+  (function () {
+    var N = 'Lineal', A = [350, 475, 625, 800, 1000], LEG = 250;
+    var fx = [
+      ['Sternen', 'url(#rkStern)', 'Funkel-Medaille', 'Funkel-Medaille – deine Medaille glitzert jetzt.'],
+      ['Kometen', 'url(#rkKomet)', 'Kometenschweif', 'Kometenschweif – bei jeder Aufgabe, die sofort richtig ist, saust ein Komet über den Bildschirm.'],
+      ['Polarlicht', 'url(#rkPolar)', 'Polarlicht', 'Polarlicht – dein Tagesplan leuchtet in Nordlicht-Farben.'],
+      ['Galaxie', 'url(#rkGalax)', 'Sternenregen', 'Sternenregen – zum Feiern regnet es jetzt Sterne statt Konfetti.'],
+      ['Legenden', 'url(#rkLeg)', 'Krone', 'Krone auf der Medaille – und ab jetzt gibt es Legenden-Stufen ohne Ende, jede mit Feuerwerk.']
+    ];
+    fx.forEach(function (f, i) { RANKS.push({ min: A[i], n: f[0] + '-' + N, c: f[1], k: f[2], u: f[3], fx: i + 1 }); });
+    for (var k = 2; k <= 60; k++) RANKS.push({ min: A[4] + (k - 1) * LEG, n: 'Legenden-' + N + ' · Stufe ' + k, c: 'url(#rkLeg)', k: 'Feuerwerk', u: 'Feuerwerk – Legenden-Stufe ' + k + '!', fx: 5 });
+  })();
+  function fxLevel() { var p = loadPts(), r = RANKS[rankIdx(p.total)]; return r.fx || 0; }
+  (function () {
+    var d = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    d.setAttribute('width', '0'); d.setAttribute('height', '0'); d.setAttribute('aria-hidden', 'true'); d.style.position = 'absolute';
+    d.innerHTML = '<defs>' +
+      '<radialGradient id="rkStern" cx="35%" cy="30%" r="80%"><stop offset="0" stop-color="#FFF6C9"/><stop offset=".45" stop-color="#F2C230"/><stop offset="1" stop-color="#2B3A8C"/></radialGradient>' +
+      '<linearGradient id="rkKomet" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFE08A"/><stop offset=".5" stop-color="#FF8A3D"/><stop offset="1" stop-color="#C2185B"/></linearGradient>' +
+      '<linearGradient id="rkPolar" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#3DDC97"/><stop offset=".5" stop-color="#5EC8F2"/><stop offset="1" stop-color="#B57BEE"/></linearGradient>' +
+      '<radialGradient id="rkGalax" cx="50%" cy="50%" r="60%"><stop offset="0" stop-color="#E9D7FF"/><stop offset=".35" stop-color="#7B4FD6"/><stop offset="1" stop-color="#14123A"/></radialGradient>' +
+      '<radialGradient id="rkLeg" cx="40%" cy="35%" r="75%"><stop offset="0" stop-color="#FFFBE6"/><stop offset=".5" stop-color="#FFD54A"/><stop offset="1" stop-color="#C98A1E"/></radialGradient>' +
+      '</defs>';
+    document.body.appendChild(d);
+  })();
+  var _medalSvg = medalSvg;
+  medalSvg = function (color) {
+    var h = _medalSvg(color), m = /#rk(\w+)/.exec(String(color)); if (!m) return h;
+    var lv = { Stern: 1, Komet: 2, Polar: 3, Galax: 4, Leg: 5 }[m[1]] || 0;
+    var star = function (x, y, r, dl) { return '<path class="mfx-tw" style="animation-delay:' + dl + 's" d="M' + x + ' ' + (y - r) + ' L' + (x + r * 0.3) + ' ' + (y - r * 0.3) + ' L' + (x + r) + ' ' + y + ' L' + (x + r * 0.3) + ' ' + (y + r * 0.3) + ' L' + x + ' ' + (y + r) + ' L' + (x - r * 0.3) + ' ' + (y + r * 0.3) + ' L' + (x - r) + ' ' + y + ' L' + (x - r * 0.3) + ' ' + (y - r * 0.3) + ' Z"></path>'; };
+    h += star(6, 16, 4, 0) + star(35, 33, 3.5, 0.7) + star(33, 14, 2.6, 1.3);
+    if (lv >= 4) h += '<circle class="mfx-dot" cx="15" cy="21" r="0.9"></circle><circle class="mfx-dot" cx="25" cy="30" r="0.7"></circle><circle class="mfx-dot" cx="24" cy="20" r="0.6"></circle>';
+    if (lv >= 5) h += '<path class="mfx-crown" d="M13 30 L13 22 L16.6 25.4 L20 19.5 L23.4 25.4 L27 22 L27 30 Z"></path>';
+    return h;
+  };
+  /* Feiern: Konfetti bzw. Sternenregen, ab Legende als Feuerwerk */
+  function fxBurst(n) {
+    if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var cols = ['#FFD54A', '#FF8A7D', '#7FD3EE', '#3DDC97', '#C792EA', '#FFFFFF'], starOn = fxLevel() >= 4;
+    for (var i = 0; i < (n || 50); i++) {
+      var c = document.createElement('div');
+      c.className = 'fx-conf' + (starOn ? ' st' : '');
+      c.style.left = Math.random() * 100 + 'vw'; c.style.background = cols[i % cols.length];
+      c.style.animationDelay = (Math.random() * 0.6) + 's'; c.style.animationDuration = (1.4 + Math.random()) + 's';
+      document.body.appendChild(c); (function (x) { setTimeout(function () { x.remove(); }, 3200); })(c);
+    }
+  }
+  function fxFirework() {
+    if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    [0, 450, 900].forEach(function (dl, j) {
+      setTimeout(function () {
+        var cx = 20 + Math.random() * 60, cy = 18 + Math.random() * 30;
+        for (var i = 0; i < 26; i++) {
+          var s = document.createElement('div'), a = i / 26 * Math.PI * 2, r = 90 + Math.random() * 60;
+          s.className = 'fx-spark'; s.style.left = cx + 'vw'; s.style.top = cy + 'vh';
+          s.style.background = ['#FFD54A', '#FF8A7D', '#7FD3EE', '#C792EA'][(i + j) % 4];
+          s.style.setProperty('--dx', Math.cos(a) * r + 'px'); s.style.setProperty('--dy', Math.sin(a) * r + 'px');
+          document.body.appendChild(s); (function (x) { setTimeout(function () { x.remove(); }, 1400); })(s);
+        }
+      }, dl);
+    });
+  }
+  function fxComet() {
+    if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var c = document.createElement('div'); c.className = 'fx-comet'; c.style.top = (8 + Math.random() * 30) + 'vh';
+    document.body.appendChild(c); setTimeout(function () { c.remove(); }, 1500);
+  }
+  function fxToast(html) {
+    var t = document.createElement('div'); t.className = 'fx-toast'; t.innerHTML = html; t.setAttribute('role', 'status');
+    document.body.appendChild(t); setTimeout(function () { t.classList.add('out'); }, 5200); setTimeout(function () { t.remove(); }, 5800);
+  }
+  var _award = award;
+  award = function (result, roundEnd) {
+    var r = _award.apply(this, arguments);
+    try { if (!roundEnd && result === 'right' && fxLevel() >= 2) fxComet(); } catch (e) {}
+    return r;
+  };
+  var SEEN = 'massstab-rang-gesehen';
+  var _renderPoints = renderPoints;
+  renderPoints = function () {
+    _renderPoints.apply(this, arguments);
+    try {
+      var p = loadPts(), ri = rankIdx(p.total), r = RANKS[ri], nx = RANKS[ri + 1], lv = r.fx || 0;
+      for (var k = 1; k <= 5; k++) document.body.classList.toggle('fx' + k, lv >= k);
+      if (nx && nx.k) el.rankNext.textContent = 'noch ' + (nx.min - p.total) + ' Sterne bis ' + nx.n + ' · Belohnung: ' + nx.k;
+      var seen = +(localStorage.getItem(SEEN) || -1);
+      if (seen < 0) seen = Math.min(ri, RANK_TOP);
+      if (ri > seen) {
+        localStorage.setItem(SEEN, String(ri));
+        if (ri > RANK_TOP) {
+          setTimeout(function () {
+            var got = RANKS.slice(Math.max(seen + 1, RANK_TOP + 1), ri + 1);
+            fxToast('<b>Aufgestiegen: ' + r.n + '!</b><br>' + (got.length > 1 ? 'Neu freigeschaltet: ' + got.map(function (x) { return x.k; }).filter(function (x, i, A) { return A.indexOf(x) === i; }).join(', ') + '.' : 'Neu freigeschaltet: ' + r.u));
+            if (r.fx >= 5) fxFirework(); else fxBurst(70);
+          }, 400);
+        } else setTimeout(function () { fxBurst(50); }, 400);
+      } else if (seen !== +(localStorage.getItem(SEEN) || -1)) localStorage.setItem(SEEN, String(seen));
+    } catch (e) {}
+  };
   function render() {
     renderChrome();
     renderPoints();
