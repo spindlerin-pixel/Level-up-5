@@ -859,6 +859,73 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
 #deEnd { align-items: center; text-align: center; }
 #deRulesBody { display: flex; flex-direction: column; gap: 10px; }
 /* ===== Erdkunde: Maßstab ===== */
+.subj.nw .subj-top { background: #EEE7FF; }
+.subj.nw .subj-go { background: #6A3FC9; color: #FFFFFF; box-shadow: 0 4px 0 #4B2A96; }
+.subj.nw .subj-top svg, .top .nw-icon { width: 52px; height: 52px; flex-shrink: 0; }
+.ka-wrap .ka.nwa { border-color: rgba(176,140,255,0.85); box-shadow: 0 0 0 1px rgba(176,140,255,0.15), 0 0 18px rgba(176,140,255,0.25) inset; }
+.ka-wrap .nwa .ka-subj { color: #D8C8FF; }
+.ka-wrap .nwa .ka-num { text-shadow: 0 0 14px rgba(176,140,255,0.9), 0 0 2px #fff; }
+.plan-item.nw { --pc: #6A3FC9; }
+.nw-card { gap: 12px; }
+.nw-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+.nw-ttl { font-family: var(--font-display); font-weight: 700; font-size: 1.15rem; color: var(--ink); display: flex; flex-direction: column; }
+.nw-ttl small, .nw-small { font-size: 0.85rem; color: var(--ink-soft); font-weight: 400; }
+.nw-prog { display: flex; align-items: center; gap: 14px; color: var(--ink); }
+.nw-ring { --p: 0; flex-shrink: 0; width: 76px; height: 76px; border-radius: 50%; display: grid; place-items: center; background: conic-gradient(#6A3FC9 calc(var(--p) * 1%), var(--muted-fill) 0); }
+.nw-ring b { width: 58px; height: 58px; border-radius: 50%; background: var(--surface); color: var(--ink); display: grid; place-items: center; font-size: 1rem; }
+.nw-big { min-height: 60px; font-size: 1.15rem; }
+.nw-areas { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; color: var(--ink); }
+.nw-areas li { display: grid; grid-template-columns: 1fr 90px 44px; gap: 8px; align-items: center; font-size: 0.95rem; }
+.nw-bar { display: block; height: 10px; border-radius: 6px; background: var(--muted-fill); overflow: hidden; }
+.nw-bar i { display: block; height: 100%; background: #6A3FC9; border-radius: 6px; }
+.nw-bar.nw-top { height: 8px; }
+.nw-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+@media (max-width: 420px) { .nw-grid { grid-template-columns: 1fr; } }
+.nw-txt { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; text-align: left; line-height: 1.2; }
+.nw-txt small { font-size: 0.8rem; font-weight: 400; color: var(--ink-soft); }
+.nw-fig { background: #FFFFFF; border-radius: 16px; padding: 4px; border: 2px solid #D3DAE6; }
+.nw-svg { display: block; width: 100%; max-width: 460px; height: auto; margin: 0 auto; }
+.nw-q { font-size: 1.1rem; font-weight: 700; color: var(--ink); margin: 6px 0 0; line-height: 1.4; }
+.nw-say { font-size: 1.1rem; line-height: 1.5; color: var(--ink); background: var(--tip-fill); border-radius: 14px; padding: 12px 14px; margin: 0; }
+.nw-gapmark { display: inline-block; min-width: 3.5em; border-bottom: 3px solid #6A3FC9; text-align: center; font-weight: 800; color: #6A3FC9; }
+.nw-in, .nw-gin { font: inherit; font-size: 1.1rem; padding: 10px 12px; border-radius: 12px; border: 2.5px solid #A893E0; background: var(--surface); color: var(--ink); }
+.nw-in { width: 100%; box-sizing: border-box; }
+.nw-gin { padding: 4px 8px; margin: 2px 2px; max-width: 100%; font-size: 1rem; }
+.nw-in.ok, .nw-gin.ok { border-color: var(--good); background: var(--good-fill); }
+.nw-in.half, .nw-gin.half { border-color: #C99A00; background: var(--tip-fill); }
+.nw-in.bad, .nw-gin.bad { border-color: var(--bug); background: var(--echt-fill); }
+.nw-sol { font-weight: 700; color: var(--good); margin-right: 6px; }
+.nw-row { display: flex; align-items: center; gap: 8px; color: var(--ink); font-weight: 700; } .nw-row .nw-in { max-width: 160px; }
+.nw-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.nw-opts { display: grid; gap: 8px; }
+.nw-opt, .nw-step { font: inherit; font-size: 1.02rem; text-align: left; line-height: 1.35; padding: 12px 14px; border-radius: 14px; border: 2.5px solid #C9B8FF; background: var(--surface); color: var(--ink); cursor: pointer; }
+.nw-opt.ok { border-color: var(--good); background: var(--good-fill); font-weight: 700; }
+.nw-opt.bad { border-color: var(--bug); background: var(--echt-fill); }
+.nw-opt:disabled { cursor: default; color: var(--ink); }
+.nw-ord { display: grid; gap: 8px; }
+.nw-ord-done { margin: 0; padding-left: 1.6em; display: grid; gap: 4px; color: var(--ink); } .nw-ord-done li { background: var(--good-fill); border-radius: 10px; padding: 6px 10px; }
+.nw-step.shake { animation: nwShake 0.35s; border-color: var(--bug); }
+@keyframes nwShake { 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+.nw-fb { border-radius: 14px; padding: 12px 14px; color: var(--ink); line-height: 1.45; }
+.nw-fb .btn { margin-top: 10px; margin-right: 8px; }
+#nwView .btn.primary { flex: 0 0 auto; }
+.nw-fb.ok { background: var(--good-fill); } .nw-fb.half { background: var(--tip-fill); } .nw-fb.bad { background: var(--echt-fill); }
+.nw-seg { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.nw-segb { font: inherit; font-weight: 700; padding: 10px; border-radius: 12px; border: 2px solid #C9B8FF; background: var(--surface); color: var(--ink); cursor: pointer; }
+.nw-segb[aria-pressed="true"] { background: #6A3FC9; border-color: #6A3FC9; color: #FFFFFF; }
+.nw-box { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 10px; border: 2px dashed #A893E0; border-radius: 12px; }
+.nw-box span { background: var(--muted-fill); color: var(--ink); border-radius: 8px; padding: 3px 8px; font-weight: 700; }
+.nw-para { font-size: 1.05rem; line-height: 2.1; color: var(--ink); }
+.nw-lablist { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+@media (max-width: 420px) { .nw-lablist { grid-template-columns: 1fr; } }
+.nw-lablist li { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; color: var(--ink); } .nw-lablist b { min-width: 1.6em; } .nw-lablist .nw-gin { flex: 1 1 120px; }
+.nw-flash { font: inherit; min-height: 180px; border-radius: 18px; border: 2.5px solid #C9B8FF; background: var(--surface); color: var(--ink); display: flex; flex-direction: column; justify-content: center; gap: 10px; padding: 18px; cursor: pointer; text-align: center; }
+.nw-fq { font-size: 1.2rem; line-height: 1.45; }
+.nw-big-txt { font-family: var(--font-display); font-size: 1.3rem; font-weight: 700; color: var(--ink); margin: 0; }
+.nw-end p { color: var(--ink); }
+.nw-tab { width: 100%; border-collapse: collapse; font-size: 0.95rem; color: var(--ink); } .nw-tab td { border-top: 1px solid var(--muted-fill); padding: 6px 4px; vertical-align: top; } .nw-tab td:first-child { white-space: nowrap; }
+.nw-rules { color: var(--ink); } .nw-rules p { line-height: 1.5; }
+.ka-task .nw-fig { margin-bottom: 8px; }
 .subj.ek .subj-top { background: #DFF3E4; }
 .subj.ek .subj-go { background: #2E9E5B; color: #FFFFFF; box-shadow: 0 4px 0 #1E7442; }
 .subj.ek .subj-top svg, .top .ek-globe { width: 52px; height: 52px; flex-shrink: 0; }
@@ -963,6 +1030,7 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) .subj.deu .subj-top { background: #4A3A12; }
   :root:not([data-theme="light"]) .subj.ek .subj-top { background: #173D29; }
+  :root:not([data-theme="light"]) .subj.nw .subj-top { background: #2E2350; }
   :root:not([data-theme="light"]) .subj.print .subj-top { background: #4A1F2E; }
   :root:not([data-theme="light"]) .plan-yay { background: #173D29; color: #BFF0D2; }
   :root:not([data-theme="light"])   :root:not([data-theme="light"]) .linkbtn { color: var(--primary); }
@@ -970,6 +1038,7 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
 }
 :root[data-theme="dark"] .subj.deu .subj-top { background: #4A3A12; }
 :root[data-theme="dark"] .subj.ek .subj-top { background: #173D29; }
+:root[data-theme="dark"] .subj.nw .subj-top { background: #2E2350; }
 :root[data-theme="dark"] .subj.print .subj-top { background: #4A1F2E; }
 :root[data-theme="dark"] .plan-yay { background: #173D29; color: #BFF0D2; }
 :root[data-theme="dark"] :root[data-theme="dark"] .linkbtn { color: var(--primary); }
@@ -1067,6 +1136,12 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
     <p id="dikText"><b>Übungsdiktat am Montag, 23. November.</b></p>
   </div>
 
+  <div class="ka nwa" id="nwBox">
+    <span class="ka-subj">NaWi</span>
+    <span class="ka-num" id="nwNum">?</span>
+    <p id="nwText"><b>NaWi-Überprüfung: Termin noch offen.</b> Mikroskop, Lupen und Linsen.</p>
+  </div>
+
   <div class="ka eka" id="ekaBox">
     <span class="ka-subj">Erdkunde</span>
     <span class="ka-num" id="ekaNum">?</span>
@@ -1131,6 +1206,14 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
       <span class="subj-status"><b id="ekMin">0 Min</b><span id="ekTileState"></span></span>
       <div class="subj-acts"><button type="button" class="subj-go" data-go="ek">Erdkunde üben</button></div>
     </div>
+    <div class="subj nw" id="nwTile">
+      <div class="subj-top">
+        <svg viewBox="0 0 64 64" aria-hidden="true"><rect x="12" y="54" width="40" height="7" rx="3" fill="#D5DAE4" stroke="#1F2A44" stroke-width="2.5"/><path d="M22 54 V36 Q22 20 34 16" fill="none" stroke="#1F2A44" stroke-width="6" stroke-linecap="round"/><path d="M22 54 V36 Q22 20 34 16" fill="none" stroke="#C9B8FF" stroke-width="2.5" stroke-linecap="round"/><path d="M31 22 L44 6 L50 11 L37 27 Z" fill="#7A4FD6" stroke="#1F2A44" stroke-width="2.2"/><rect x="34" y="27" width="7" height="9" rx="1.5" fill="#D5DAE4" stroke="#1F2A44" stroke-width="2"/><rect x="28" y="38" width="24" height="5" rx="1.5" fill="#1F2A44"/><circle cx="22" cy="44" r="5" fill="#FFD54A" stroke="#1F2A44" stroke-width="2"/></svg>
+        <span><span class="subj-name">NaWi</span><br><span class="subj-what">Mikroskop · Lupen und Linsen · tägliche Häppchen</span><span class="subj-ka" id="nwKa"></span></span>
+      </div>
+      <span class="subj-status"><b id="nwMin">0 Min</b><span id="nwTileState"></span></span>
+      <div class="subj-acts"><button type="button" class="subj-go" data-go="nw">NaWi üben</button></div>
+    </div>
   </section>
 
   <section class="week" aria-label="Diese Woche">
@@ -1189,6 +1272,9 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
       <label class="lv-setting" for="ekaDate">Datum der Erdkunde-HÜ:
         <input type="date" id="ekaDate">
       </label>
+      <label class="lv-setting" for="nwDate">Datum der NaWi-Überprüfung:
+        <input type="date" id="nwDate">
+      </label>
       <label class="lv-setting" for="dkaDate">Datum der Deutsch-HÜ:
         <input type="date" id="dkaDate">
       </label>
@@ -1205,7 +1291,7 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
         <div class="voice-row"><button type="button" class="btn small" id="stufeReset">Alle auf „Normal“ setzen</button></div>
       </div>
       <p class="lv-legend">Gezählt wird nur aktive Zeit: Die Uhr hält an, wenn eine Minute lang nichts angetippt wird oder die App im Hintergrund ist.</p>
-      <div style="overflow-x:auto"><table id="logTable"><thead><tr><th>Tag</th><th>Mathe</th><th>Englisch</th><th>Deutsch</th><th>Erdkunde</th></tr></thead><tbody></tbody></table></div>
+      <div style="overflow-x:auto"><table id="logTable"><thead><tr><th>Tag</th><th>Mathe</th><th>Englisch</th><th>Deutsch</th><th>Erdkunde</th><th>NaWi</th></tr></thead><tbody></tbody></table></div>
     </div>
   </details>
   <p class="note" id="saveNote">Alles wird nur auf diesem Gerät gespeichert. Handy und Tablet verbinden: unter „Für Eltern“.</p>
@@ -1404,6 +1490,27 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
   <section class="card voc-card" id="deRun" aria-live="polite" hidden></section>
   <section class="card voc-card" id="deEnd" hidden></section>
   <p class="note">Tipp: Schreib schwierige Wörter mit Silbenbögen ins Heft und markiere den kurzen Vokal mit einem Punkt, den langen mit einem Strich.</p>
+</div>
+
+<div class="app view-wrap" id="nwView" hidden>
+  <div class="backbar"><button type="button" class="btn small" data-go="home">← Start</button><span class="timepill" id="nwTime"></span></div>
+  <header class="top">
+    <svg class="nw-icon" viewBox="0 0 64 64" aria-hidden="true"><rect x="12" y="54" width="40" height="7" rx="3" fill="#D5DAE4" stroke="#1F2A44" stroke-width="2.5"/><path d="M22 54 V36 Q22 20 34 16" fill="none" stroke="#1F2A44" stroke-width="6" stroke-linecap="round"/><path d="M22 54 V36 Q22 20 34 16" fill="none" stroke="#C9B8FF" stroke-width="2.5" stroke-linecap="round"/><path d="M31 22 L44 6 L50 11 L37 27 Z" fill="#7A4FD6" stroke="#1F2A44" stroke-width="2.2"/><rect x="34" y="27" width="7" height="9" rx="1.5" fill="#D5DAE4" stroke="#1F2A44" stroke-width="2"/><rect x="28" y="38" width="24" height="5" rx="1.5" fill="#1F2A44"/><circle cx="22" cy="44" r="5" fill="#FFD54A" stroke="#1F2A44" stroke-width="2"/></svg>
+    <div class="brand">
+      <h1>Mikroskop-Profi</h1>
+      <p>NaWi · Buch S. 74 „Bau und Funktion des Mikroskops“, Arbeitsblätter und Heft „Lupen und Linsen“</p>
+    </div>
+  </header>
+  <div id="nwMain"></div>
+  <section class="card voc-card" id="nwProbe">
+    <p class="voc-eyebrow">Probe-HÜs zum Ausfüllen</p>
+    <p class="voc-how">Drei Probe-HÜs wie in der Überprüfung: 20 Minuten, keine Tipps, mit Lückentexten. Nach dem Abgeben gibt es Punkte, Prozent und eine Note. Sobald der Termin feststeht, kommen sie automatisch in den Tagesplan.</p>
+    <div class="pr-list">
+      <div class="pr-card" style="--pc:#FFD66B"><span class="pr-num">1</span><div class="pr-txt"><h3>Probe-HÜ 1<span class="pr-lvl">Warm-up</span></h3><p>Beschriften, Lückentext mit Wortkasten, Richtig/Falsch, Vergrößerung rechnen.</p><p class="pr-status" data-ka-status="n1" hidden></p></div><div class="pr-acts"><button type="button" class="pr-open pr-tab" data-ka="n1">Probe-HÜ schreiben</button></div></div>
+      <div class="pr-card" style="--pc:#8FD3FF"><span class="pr-num">2</span><div class="pr-txt"><h3>Probe-HÜ 2<span class="pr-lvl">Normal</span></h3><p>Bauteile erkennen, Reihenfolge, Lupen und Linsen ohne Wortkasten, „Beurteile“.</p><p class="pr-status" data-ka-status="n2" hidden></p></div><div class="pr-acts"><button type="button" class="pr-open pr-tab" data-ka="n2">Probe-HÜ schreiben</button></div></div>
+      <div class="pr-card" style="--pc:#C9B8FF"><span class="pr-num">3</span><div class="pr-txt"><h3>Probe-HÜ 3<span class="pr-lvl">Generalprobe</span></h3><p>Alles gemischt: Regeln ohne Wortkasten, Erkläre und Beschreibe.</p><p class="pr-status" data-ka-status="n3" hidden></p></div><div class="pr-acts"><button type="button" class="pr-open pr-tab" data-ka="n3">Probe-HÜ schreiben</button></div></div>
+    </div>
+  </section>
 </div>
 
 <div class="app view-wrap" id="ekView" hidden>
@@ -4130,7 +4237,7 @@ window.LU5 = (function () {
     logCache[k][subj] = (logCache[k][subj] || 0) + 1;
     if (view === 'voc') logCache[k].voc = (logCache[k].voc || 0) + 1;
     var goal = settings().goal * 60, v = logCache[k][subj];
-    if (v === goal) toast(subj === 'math' ? 'Mathe-Ziel geschafft! Super' + kidName(', ') + '!' : subj === 'de' ? 'Deutsch: ' + settings().goal + ' Minuten geschafft! Klasse' + kidName(', ') + '!' : subj === 'ek' ? 'Erdkunde: ' + settings().goal + ' Minuten geschafft! Stark' + kidName(', ') + '!' : 'Englisch-Ziel geschafft! Well done' + kidName(', ') + '!');
+    if (v === goal) toast(subj === 'math' ? 'Mathe-Ziel geschafft! Super' + kidName(', ') + '!' : subj === 'de' ? 'Deutsch: ' + settings().goal + ' Minuten geschafft! Klasse' + kidName(', ') + '!' : subj === 'ek' ? 'Erdkunde: ' + settings().goal + ' Minuten geschafft! Stark' + kidName(', ') + '!' : subj === 'nw' ? 'NaWi: ' + settings().goal + ' Minuten geschafft! Spitze' + kidName(', ') + '!' : 'Englisch-Ziel geschafft! Well done' + kidName(', ') + '!');
     if (v === 20 * 60 && goal < 1200) toast('20 Minuten! Du darfst jetzt aufhören.');
     if (++dirty >= 5) { flushLog(); }
     renderTimePills();
@@ -4158,7 +4265,7 @@ window.LU5 = (function () {
   function minText(s) { return Math.floor(s / 60) + ' Min'; }
   function renderTimePills() {
     var k = dayKey(), goal = settings().goal;
-    [['math', 'mathTime'], ['en', 'enTime'], ['en', 'vocTime'], ['de', 'deTime'], ['ek', 'ekTime']].forEach(function (p) {
+    [['math', 'mathTime'], ['en', 'enTime'], ['en', 'vocTime'], ['de', 'deTime'], ['ek', 'ekTime'], ['nw', 'nwTime']].forEach(function (p) {
       var el = $(p[1]); if (!el) return;
       var s = (logCache[k] && logCache[k][p[0]]) || 0;
       el.innerHTML = CLOCK + '<span>' + Math.floor(s / 60) + ' / ' + goal + ' Min heute</span>';
@@ -4174,6 +4281,17 @@ window.LU5 = (function () {
     if (st.kaDate) $('kaDate').value = st.kaDate;
     if (st.mkaDate) $('mkaDate').value = st.mkaDate;
     if (st.ekaDate) $('ekaDate').value = st.ekaDate;
+    $('nwDate').value = st.nwDate || '';
+    (function () {
+      var box = $('nwBox'); if (!box) return;
+      if (!st.nwDate) { $('nwNum').textContent = '?'; $('nwText').innerHTML = '<b>NaWi-Überprüfung: Termin noch offen.</b> Mikroskop, Lupen und Linsen. Bis dahin jeden Tag ein kurzes Häppchen.'; return; }
+      var d = new Date(st.nwDate + 'T00:00:00'), t0 = new Date(now.getFullYear(), now.getMonth(), now.getDate()), days = Math.round((d - t0) / 86400000);
+      var when = d.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' });
+      if (days > 1) { $('nwNum').textContent = days; $('nwText').innerHTML = '<b>Tage bis zur NaWi-Überprüfung</b> am ' + when + '. Thema: Mikroskop, Lupen und Linsen.' + (days <= 4 ? ' Jeden Tag das Häppchen und eine Probe-HÜ!' : ''); }
+      else if (days === 1) { $('nwNum').textContent = '1'; $('nwText').innerHTML = '<b>Morgen ist die NaWi-Überprüfung!</b> Heute nur noch das Häppchen und einmal den Merkzettel lesen.'; }
+      else if (days === 0) { $('nwNum').textContent = '★'; $('nwText').innerHTML = '<b>Heute ist die NaWi-Überprüfung.</b> Viel Glück' + esc(kidName(', ')) + '! Fachwörter sauber schreiben: Objektträger mit ä.'; }
+      else { $('nwNum').textContent = '✓'; $('nwText').innerHTML = '<b>Die NaWi-Überprüfung ist vorbei.</b> Neues Datum unten eintragen.'; }
+    })();
     if (st.dkaDate) $('dkaDate').value = st.dkaDate;
     if (st.dikDate) $('dikDate').value = st.dikDate;
     (function () {
@@ -4234,9 +4352,10 @@ window.LU5 = (function () {
     // Countdown: Vorbei oder ohne Datum ausblenden, das Nächste zuerst
     (function () {
       var t0 = new Date(now.getFullYear(), now.getMonth(), now.getDate()), any = false;
-      [['kaBox', st.kaDate], ['mhBox', st.mhDate], ['mkaBox', st.mkaDate], ['ekaBox', st.ekaDate], ['dkaBox', st.dkaDate], ['dikBox', st.dikDate]].forEach(function (b) {
+      [['kaBox', st.kaDate], ['mhBox', st.mhDate], ['mkaBox', st.mkaDate], ['ekaBox', st.ekaDate], ['dkaBox', st.dkaDate], ['dikBox', st.dikDate], ['nwBox', st.nwDate]].forEach(function (b) {
         var el = $(b[0]); if (!el) return;
         var dd = b[1] ? Math.round((new Date(b[1] + 'T00:00:00') - t0) / 86400000) : -1;
+        if (b[0] === 'nwBox' && !b[1]) dd = 999;
         el.style.display = dd < 0 ? 'none' : ''; el.style.order = String(Math.max(0, dd));
         if (dd >= 0) any = true;
       });
@@ -4262,7 +4381,7 @@ window.LU5 = (function () {
     var rows = '';
     for (var n = 0; n < 14; n++) {
       var d3 = new Date(now.getFullYear(), now.getMonth(), now.getDate() - n), k3 = dayKey(d3);
-      rows += '<tr><td>' + WD[d3.getDay()] + ', ' + d3.getDate() + '.' + (d3.getMonth() + 1) + '.</td><td>' + minText(secs(k3, 'math')) + '</td><td>' + minText(secs(k3, 'en')) + '</td><td>' + minText(secs(k3, 'de')) + '</td><td>' + minText(secs(k3, 'ek')) + '</td></tr>';
+      rows += '<tr><td>' + WD[d3.getDay()] + ', ' + d3.getDate() + '.' + (d3.getMonth() + 1) + '.</td><td>' + minText(secs(k3, 'math')) + '</td><td>' + minText(secs(k3, 'en')) + '</td><td>' + minText(secs(k3, 'de')) + '</td><td>' + minText(secs(k3, 'ek')) + '</td><td>' + minText(secs(k3, 'nw')) + '</td></tr>';
     }
     $('logTable').querySelector('tbody').innerHTML = rows;
     if (window.LU5Voc) window.LU5Voc.home();
@@ -4271,6 +4390,8 @@ window.LU5 = (function () {
     if (window.LU5De) window.LU5De.home();
     if ($('ekMin')) $('ekMin').textContent = minText(secs(k, 'ek')) + ' heute';
     if (window.LU5Ek) window.LU5Ek.home();
+    if ($('nwMin')) $('nwMin').textContent = minText(secs(k, 'nw')) + ' heute';
+    if (window.LU5Nw) window.LU5Nw.home();
     renderPlan();
   }
 
@@ -4280,11 +4401,12 @@ window.LU5 = (function () {
     de: { pre: 'l', n: 6, lv: ['Warm-up', 'Normal', 'Normal+', 'Wie bei Frau Vester', 'Profi', 'Generalprobe'], min: 15, max: 2, from: 4, calm: 4 },
     mh: { pre: 'm', n: 4, lv: ['Warm-up', 'Normal', 'Normal+', 'Generalprobe'], min: 15, max: 1, from: 4 },
     ek: { pre: 'g', n: 4, lv: ['Warm-up', 'Normal', 'Normal+', 'Generalprobe'], min: 15, max: 2, from: 4 },
+    nw: { pre: 'n', n: 3, lv: ['Warm-up', 'Normal', 'Generalprobe'], min: 15, max: 1, from: 4 },
     math: { pre: 'a', n: 4, lv: ['Warm-up', 'Normal', 'Normal+', 'Generalprobe'], min: 45, max: 1, from: 8 },
     en: { pre: 'e', n: 6, lv: ['Warm-up', 'Normal', 'Normal', 'Profi', 'Generalprobe', 'Schwerpunkte'], min: 45, max: 1, from: 3 }
   };
-  var SUBJ_NAME = { dik: 'Deutsch', mh: 'Mathe', de: 'Deutsch', ek: 'Erdkunde', en: 'Englisch', math: 'Mathe', voc: 'Englisch' };
-  var TEST_NAME = { dik: 'Übungsdiktat', mh: 'Mathe-HÜ', de: 'Deutsch-HÜ', ek: 'Erdkunde-HÜ', en: 'Englisch-Klassenarbeit', math: 'Mathe-Klassenarbeit' };
+  var SUBJ_NAME = { nw: 'NaWi', dik: 'Deutsch', mh: 'Mathe', de: 'Deutsch', ek: 'Erdkunde', en: 'Englisch', math: 'Mathe', voc: 'Englisch' };
+  var TEST_NAME = { nw: 'NaWi-Überprüfung', dik: 'Übungsdiktat', mh: 'Mathe-HÜ', de: 'Deutsch-HÜ', ek: 'Erdkunde-HÜ', en: 'Englisch-Klassenarbeit', math: 'Mathe-Klassenarbeit' };
   var planActs = [];
   function kaRes() { try { var d = JSON.parse(localStorage.getItem('ka-tablet') || 'null'); return (d && d.res) || {}; } catch (e) { return {}; } }
   function daysTo(ds, now) { if (!ds) return null; var d = new Date(ds + 'T00:00:00'), t0 = new Date(now.getFullYear(), now.getMonth(), now.getDate()); return Math.round((d - t0) / 86400000); }
@@ -4320,7 +4442,7 @@ window.LU5 = (function () {
   function renderPlan() {
     var box = $('planList'); if (!box) return;
     var now = new Date(), k = dayKey(now), st = settings(), L = logCache[k] || {};
-    var T = [['de', st.dkaDate], ['dik', st.dikDate], ['ek', st.ekaDate], ['mh', st.mhDate], ['math', st.mkaDate], ['en', st.kaDate]].map(function (t) { return { s: t[0], d: daysTo(t[1], now), date: t[1] }; });
+    var T = [['de', st.dkaDate], ['dik', st.dikDate], ['ek', st.ekaDate], ['nw', st.nwDate], ['mh', st.mhDate], ['math', st.mkaDate], ['en', st.kaDate]].map(function (t) { return { s: t[0], d: daysTo(t[1], now), date: t[1] }; });
     var up = T.filter(function (t) { return t.d !== null && t.d >= 1; }).sort(function (a, b) { return a.d - b.d; });
     var todayT = T.filter(function (t) { return t.d === 0; });
     var focus = up[0] || null, D = {}; T.forEach(function (t) { D[t.s] = t.d; });
@@ -4329,14 +4451,23 @@ window.LU5 = (function () {
     var busy = focus && focus.d <= 3;
     /* Fächer in der Reihenfolge der nächsten Termine */
     var order = up.map(function (t) { return t.s; });
-    ['en', 'math', 'de', 'dik', 'ek', 'mh'].forEach(function (s) { if (order.indexOf(s) < 0) order.push(s); });
+    ['en', 'math', 'de', 'dik', 'ek', 'mh', 'nw'].forEach(function (s) { if (order.indexOf(s) < 0) order.push(s); });
     order.forEach(function (s) {
       var n0 = items.length; planSubj(s);
       items.slice(n0).forEach(function (x) { x.ts = s; });
     });
     function planSubj(s) {
       var d = D[s];
-      if (s === 'dik') {
+      if (s === 'nw') {
+        /* NaWi: jeden Tag ein kurzes Häppchen (ca. 5 Min). Mit Termin: ab 14 Tagen vorher dazu 10 Min üben, ab 4 Tagen eine Probe-HÜ.
+           Ohne Termin und wenn morgen etwas anderes geschrieben wird, ist das Häppchen nur Bonus. */
+        if (window.LU5Nw && (d === null || d >= 1)) {
+          var hDone = LU5Nw.doneToday(), tmw = up.some(function (t) { return t.d === 1 && t.s !== 'nw'; });
+          items.push({ subj: 'nw', title: 'NaWi: Mikroskop-Häppchen', sub: '10 kurze Aufgaben · ca. 5 Min · klappt schon ' + LU5Nw.pct() + ' %', min: 5, done: hDone, keep: !tmw || near('nw'), btn: hDone ? 'Nochmal' : 'Los', act: function () { go('nw'); LU5Nw.hap(); } });
+          if (near('nw') && d <= PROBES.nw.from) items = items.concat(probeItems('nw', d, k));
+          else if (near('nw') && d <= 14) items.push(minItem('nw', 'NaWi üben', 'Lückentexte, Beschriften, Karteikarten', 10, L.nw || 0, function () { go('nw'); }));
+        }
+      } else if (s === 'dik') {
         /* Diktate erst nach der Deutsch-HÜ, dann jeden Tag eins (Mittwoch frei), samstags zwei, am Tag davor das schwächste noch einmal */
         var deFirst = D.de !== null && D.de >= 0 && st.dkaDate < st.dikDate;
         if (near('dik') && d <= 7 && !deFirst && window.LU5Dikt) {
@@ -4426,13 +4557,13 @@ window.LU5 = (function () {
     var swap = store('plan-swap'); if (!swap || swap.day !== k) swap = null;
     function grp(sj) { return sj === 'voc' ? 'en' : sj === 'mh' ? 'math' : sj; }
     function locked(x, i) { return i === 0 || x.subj === 'voc' || x.done || (x.ts && D[x.ts] !== null && D[x.ts] >= 1 && D[x.ts] <= 7); }
-    var GNAME = { math: 'Mathe', en: 'Englisch', de: 'Deutsch', ek: 'Erdkunde' };
-    var GACT = { math: function () { go('math'); if (window.LU5Math) LU5Math.topic(near('math') && D.math <= 7 ? 'fokus' : 'mix'); }, en: function () { go('en'); }, de: function () { go('de'); }, ek: function () { go('ek'); } };
+    var GNAME = { math: 'Mathe', en: 'Englisch', de: 'Deutsch', ek: 'Erdkunde', nw: 'NaWi' };
+    var GACT = { math: function () { go('math'); if (window.LU5Math) LU5Math.topic(near('math') && D.math <= 7 ? 'fokus' : 'mix'); }, en: function () { go('en'); }, de: function () { go('de'); }, ek: function () { go('ek'); }, nw: function () { go('nw'); } };
     function swapOpts(from) {
       var o = [];
       extra.forEach(function (x) { if (!x.done && x !== from) o.push({ key: 'x:' + x.title, label: x.title, sub: x.sub }); });
-      ['math', 'en', 'de', 'ek'].forEach(function (g) {
-        if (g === 'ek' && !near('ek')) return;
+      ['math', 'en', 'de', 'ek', 'nw'].forEach(function (g) {
+        if ((g === 'ek' || g === 'nw') && !near(g)) return;
         var tgt = items.filter(function (x) { return x !== from && x.bump && grp(x.subj) === g && !x.done; })[0];
         if (tgt) o.push({ key: 'b:' + g, label: 'Mehr ' + GNAME[g] + ': ' + tgt.title.replace(/^[^:]+: /, '') + ' +10 Min', sub: 'Du verlängerst diese Aufgabe' });
         else if (!(from && grp(from.subj) === g && from.bump)) o.push({ key: 'g:' + g, label: GNAME[g] + ': Extra-Runde', sub: 'ca. 10 Min, selbst gewählt' });
@@ -4497,7 +4628,7 @@ window.LU5 = (function () {
     $('planBonus').innerHTML = bh; $('planBonus').hidden = !bh;
     if (all && !L.plan) { L.plan = 1; logCache[k] = L; flushLog(); toast('⭐ Tagesplan geschafft! Super' + kidName(', ') + '!'); renderWeek(); }
     /* Fächer-Karten: Termin-Hinweis und Reihenfolge */
-    var cards = { math: 'subjMath', en: 'subjEn', de: 'deTile', ek: 'ekTile' }, chips = { math: 'mathKa', en: 'enKa', de: 'deKa', ek: 'ekKa' };
+    var cards = { math: 'subjMath', en: 'subjEn', de: 'deTile', ek: 'ekTile', nw: 'nwTile' }, chips = { math: 'mathKa', en: 'enKa', de: 'deKa', ek: 'ekKa', nw: 'nwKa' };
     order.forEach(function (s, i) {
       if (s === 'mh' && !near('mh')) return;
       if (s === 'math' && near('mh')) return;
@@ -4548,6 +4679,7 @@ window.LU5 = (function () {
   }
   $('dikDate').addEventListener('change', function () { var s = settings(); s.dikDate = this.value || null; store(SET_KEY, s); renderHome(); });
   $('dkaDate').addEventListener('change', function () { var s = settings(); s.dkaDate = this.value || null; store(SET_KEY, s); renderHome(); });
+  $('nwDate').addEventListener('change', function () { var s = settings(); s.nwDate = this.value || null; store(SET_KEY, s); renderHome(); });
   $('ekaDate').addEventListener('change', function () { var s = settings(); s.ekaDate = this.value || null; store(SET_KEY, s); renderHome(); });
   $('mhDate').addEventListener('change', function () { var s = settings(); s.mhDate = this.value || null; store(SET_KEY, s); renderHome(); });
   $('mkaDate').addEventListener('change', function () { var s = settings(); s.mkaDate = this.value || null; store(SET_KEY, s); renderHome(); });
@@ -4565,6 +4697,9 @@ window.LU5 = (function () {
     $('deView').hidden = v !== 'de';
     $('ekView').hidden = v !== 'ek';
     if (v === 'ek' && window.LU5Ek) window.LU5Ek.open();
+    $('nwView').hidden = v !== 'nw';
+    if (v === 'nw' && window.LU5Nw) window.LU5Nw.open();
+    if (v === 'nw' && window.LU5Ka) window.LU5Ka.cards();
     if (v === 'ek' && window.LU5Ka) window.LU5Ka.cards();
     var katV = $('katView'); if (katV) katV.hidden = v !== 'kat';
     if (v === 'print' && window.LU5Ka) window.LU5Ka.cards();
@@ -7573,7 +7708,9 @@ window.LU5 = (function () {
 <script src="klassenarbeiten/diktat-player.js?v=4"></script>
 <script src="klassenarbeiten/ma-daten.js?v=1"></script>
 <script src="klassenarbeiten/mka-daten.js?v=2"></script>
-<script src="klassenarbeiten/ka-tablet.js?v=6"></script>
+<script src="klassenarbeiten/nw-daten.js?v=1"></script>
+<script src="klassenarbeiten/ka-tablet.js?v=7"></script>
+<script src="klassenarbeiten/nw.js?v=1"></script>
 <script>
 (function () {
   var S = window.LU5Sync; if (!S || !document.getElementById('autoSyncBox')) return;
