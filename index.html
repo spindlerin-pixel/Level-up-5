@@ -1045,6 +1045,17 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
 :root[data-theme="dark"] .plan-item:not(.done) .plan-go { color: #1F2A44; }
 .subjects { align-items: start; }
 @media (max-width: 699px) { .subjects { grid-template-columns: 1fr; } }
+/* Tablet/Desktop: Englisch (mit Vokabel-Check und Grammatik-Fit) über die ganze Breite, die anderen Fächer gleich hoch in zwei Spalten – keine Lücken */
+@media (min-width: 700px) {
+  .subjects { align-items: stretch; grid-auto-flow: row dense; }
+  .subjects > .subj .subj-acts { margin-top: auto; }
+  #subjEn { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 14px; align-items: start; }
+  #subjEn > * { grid-column: 1 / -1; }
+  #subjEn > #vocTile { grid-column: 1; align-self: stretch; }
+  #subjEn > #fitTile { grid-column: 2; align-self: stretch; }
+  #subjEn > .subj-acts { display: flex; flex-wrap: wrap; gap: 10px; }
+  #subjEn > .subj-acts > * { flex: 1 1 0; }
+}
 @media (min-width: 760px) {
   .app, .backbar { max-width: 1000px; }
   #mathView, #enView, #vocView { max-width: 820px; }
