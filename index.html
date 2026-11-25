@@ -1045,6 +1045,17 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
 :root[data-theme="dark"] .plan-item:not(.done) .plan-go { color: #1F2A44; }
 .subjects { align-items: start; }
 @media (max-width: 699px) { .subjects { grid-template-columns: 1fr; } }
+.hello-card { background: var(--surface); color: var(--ink); border: 3px solid #FFD54A; border-radius: 22px; padding: 16px 18px; margin: 0 0 14px; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 6px 20px rgba(29, 36, 64, 0.08); animation: helloIn 0.45s ease-out; }
+@keyframes helloIn { from { transform: translateY(-10px); opacity: 0; } to { transform: none; opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .hello-card { animation: none; } }
+.hello-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.hello-hi { font-family: var(--font-display); font-size: 1.45rem; font-weight: 700; margin: 0; color: var(--ink); }
+.hello-x { font: inherit; font-size: 1.1rem; background: none; border: 0; color: var(--ink-soft); cursor: pointer; padding: 4px 8px; }
+.hello-list { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; line-height: 1.45; }
+.hello-today { margin: 0; padding: 10px 12px; border-radius: 14px; background: var(--tip-fill); color: var(--ink); line-height: 1.45; }
+.hello-motto { margin: 0; font-style: italic; color: var(--ink-soft); line-height: 1.45; }
+.hello-go { align-self: flex-start; flex: 0 0 auto !important; min-width: 160px; }
+
 /* Tablet/Desktop: Englisch (mit Vokabel-Check und Grammatik-Fit) über die ganze Breite, die anderen Fächer gleich hoch in zwei Spalten – keine Lücken */
 @media (min-width: 700px) {
   .subjects { align-items: stretch; grid-auto-flow: row dense; }
@@ -7721,7 +7732,8 @@ window.LU5 = (function () {
 <script src="klassenarbeiten/mka-daten.js?v=2"></script>
 <script src="klassenarbeiten/nw-daten.js?v=1"></script>
 <script src="klassenarbeiten/ka-tablet.js?v=7"></script>
-<script src="klassenarbeiten/nw.js?v=1"></script>
+<script src="klassenarbeiten/nw.js?v=2"></script>
+<script src="klassenarbeiten/morgen.js?v=1"></script>
 <script>
 (function () {
   var S = window.LU5Sync; if (!S || !document.getElementById('autoSyncBox')) return;
