@@ -866,6 +866,39 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
 .ka-wrap .nwa .ka-subj { color: #D8C8FF; }
 .ka-wrap .nwa .ka-num { text-shadow: 0 0 14px rgba(176,140,255,0.9), 0 0 2px #fff; }
 .plan-item.nw { --pc: #6A3FC9; }
+/* ===== Religion: Glaubensbekenntnis ===== */
+.subj.rel .subj-top { background: #FFEBD6; }
+.subj.rel .subj-go { background: #A8470C; color: #FFFFFF; box-shadow: 0 4px 0 #7A3208; }
+.subj.rel .subj-top svg, .top .rel-icon { width: 52px; height: 52px; flex-shrink: 0; }
+.ka-wrap .ka.rela { border-color: rgba(255,170,100,0.85); box-shadow: 0 0 0 1px rgba(255,170,100,0.15), 0 0 18px rgba(255,170,100,0.25) inset; }
+.ka-wrap .rela .ka-subj { color: #FFD2AE; }
+.ka-wrap .rela .ka-num { text-shadow: 0 0 14px rgba(255,170,100,0.9), 0 0 2px #fff; }
+.plan-item.rel { --pc: #A8470C; }
+.nw-ring.rel-ring { background: conic-gradient(#A8470C calc(var(--p) * 1%), var(--muted-fill) 0); }
+.nw-bar.rel-bar i { background: #A8470C; }
+.rel-text { display: flex; flex-direction: column; gap: 2px; font-size: 1.12rem; line-height: 1.55; color: var(--ink); background: var(--tip-fill); border-radius: 14px; padding: 12px 14px; }
+.rel-line { display: block; }
+.rel-gap { display: block; height: 10px; }
+.rel-para .rel-line { line-height: 2.2; }
+.rel-tips { display: grid; gap: 8px; }
+.rel-acts { display: flex; gap: 8px; flex-wrap: wrap; }
+.rel-lines { display: grid; gap: 8px; }
+.rel-lrow { display: grid; grid-template-columns: 2em minmax(0, 1fr); gap: 4px 8px; align-items: center; }
+.rel-ln { font-weight: 700; color: var(--ink-soft); text-align: right; }
+.rel-in { font-size: 1.02rem; padding: 8px 10px; }
+.rel-in::placeholder { color: var(--ink-soft); opacity: 0.85; }
+.rel-res { grid-column: 2; font-size: 0.98rem; line-height: 1.6; color: var(--ink); }
+.rel-w { border-radius: 6px; padding: 1px 4px; }
+.rel-w.ok { background: var(--good-fill); } .rel-w.half { background: var(--tip-fill); outline: 2px solid #C99A00; } .rel-w.bad { background: var(--echt-fill); outline: 2px solid var(--bug); font-weight: 700; }
+.rel-plan { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; color: var(--ink); }
+.rel-plan li { display: grid; grid-template-columns: 5.5em 1fr; gap: 8px; padding: 6px 10px; border-radius: 10px; background: var(--muted-fill); }
+.rel-plan li.now { background: #FFEBD6; color: #1F2A44; font-weight: 700; }
+.rel-chk { display: grid; gap: 6px; }
+.rel-cl { font: inherit; font-size: 1.02rem; text-align: left; display: flex; gap: 10px; align-items: center; padding: 10px 12px; border-radius: 12px; border: 2px solid var(--good); background: var(--good-fill); color: var(--ink); cursor: pointer; }
+.rel-cl[aria-pressed="true"] { border-color: var(--bug); background: var(--echt-fill); }
+.rel-cl:disabled { cursor: default; color: var(--ink); }
+.rel-ci { font-weight: 800; width: 1.2em; flex-shrink: 0; }
+#relView .btn.primary { flex: 0 0 auto; }
 .nw-card { gap: 12px; }
 .nw-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
 .nw-ttl { font-family: var(--font-display); font-weight: 700; font-size: 1.15rem; color: var(--ink); display: flex; flex-direction: column; }
@@ -1047,6 +1080,7 @@ button.nw-pathb { cursor: pointer; }
   :root:not([data-theme="light"]) .subj.deu .subj-top { background: #4A3A12; }
   :root:not([data-theme="light"]) .subj.ek .subj-top { background: #173D29; }
   :root:not([data-theme="light"]) .subj.nw .subj-top { background: #2E2350; }
+  :root:not([data-theme="light"]) .subj.rel .subj-top { background: #4A2A12; }
   :root:not([data-theme="light"]) .subj.print .subj-top { background: #4A1F2E; }
   :root:not([data-theme="light"]) .plan-yay { background: #173D29; color: #BFF0D2; }
   :root:not([data-theme="light"])   :root:not([data-theme="light"]) .linkbtn { color: var(--primary); }
@@ -1055,6 +1089,7 @@ button.nw-pathb { cursor: pointer; }
 :root[data-theme="dark"] .subj.deu .subj-top { background: #4A3A12; }
 :root[data-theme="dark"] .subj.ek .subj-top { background: #173D29; }
 :root[data-theme="dark"] .subj.nw .subj-top { background: #2E2350; }
+:root[data-theme="dark"] .subj.rel .subj-top { background: #4A2A12; }
 :root[data-theme="dark"] .subj.print .subj-top { background: #4A1F2E; }
 :root[data-theme="dark"] .plan-yay { background: #173D29; color: #BFF0D2; }
 :root[data-theme="dark"] :root[data-theme="dark"] .linkbtn { color: var(--primary); }
@@ -1180,6 +1215,12 @@ button.nw-pathb { cursor: pointer; }
     <p id="nwText"><b>NaWi-Überprüfung: Termin noch offen.</b> Mikroskop, Lupen und Linsen.</p>
   </div>
 
+  <div class="ka rela" id="relBox">
+    <span class="ka-subj">Religion</span>
+    <span class="ka-num" id="relNum">?</span>
+    <p id="relText"><b>Glaubensbekenntnis: Termin noch offen.</b></p>
+  </div>
+
   <div class="ka eka" id="ekaBox">
     <span class="ka-subj">Erdkunde</span>
     <span class="ka-num" id="ekaNum">?</span>
@@ -1252,6 +1293,14 @@ button.nw-pathb { cursor: pointer; }
       <span class="subj-status"><b id="nwMin">0 Min</b><span id="nwTileState"></span></span>
       <div class="subj-acts"><button type="button" class="subj-go" data-go="nw">NaWi üben</button></div>
     </div>
+    <div class="subj rel" id="relTile">
+      <div class="subj-top">
+        <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M8 18 Q20 13 32 19 Q44 13 56 18 V54 Q44 49 32 55 Q20 49 8 54 Z" fill="#FFF7EC" stroke="#1F2A44" stroke-width="2.5" stroke-linejoin="round"/><path d="M32 19 V55" stroke="#1F2A44" stroke-width="2.2"/><path d="M19 25 V43 M13 31 H25" stroke="#A8470C" stroke-width="4" stroke-linecap="round"/><path d="M38 27 H50 M38 33 H50 M38 39 H47 M38 45 H50" stroke="#1F2A44" stroke-width="2" stroke-linecap="round"/><path d="M45 8 Q48 3 51 8 Q51 12 48 12 Q45 12 45 8 Z" fill="#FFC928" stroke="#1F2A44" stroke-width="1.6"/></svg>
+        <span><span class="subj-name">Religion</span><br><span class="subj-what">Glaubensbekenntnis auswendig · 4 Etappen + Generalprobe</span><span class="subj-ka" id="relKa"></span></span>
+      </div>
+      <span class="subj-status"><b id="relMin">0 Min</b><span id="relTileState"></span></span>
+      <div class="subj-acts"><button type="button" class="subj-go" data-go="rel">Religion üben</button></div>
+    </div>
   </section>
 
   <section class="week" aria-label="Diese Woche">
@@ -1313,6 +1362,9 @@ button.nw-pathb { cursor: pointer; }
       <label class="lv-setting" for="nwDate">Datum der NaWi-Überprüfung:
         <input type="date" id="nwDate">
       </label>
+      <label class="lv-setting" for="relDate">Datum der Religion-Überprüfung (Glaubensbekenntnis):
+        <input type="date" id="relDate">
+      </label>
       <label class="lv-setting" for="dkaDate">Datum der Deutsch-HÜ:
         <input type="date" id="dkaDate">
       </label>
@@ -1329,7 +1381,7 @@ button.nw-pathb { cursor: pointer; }
         <div class="voice-row"><button type="button" class="btn small" id="stufeReset">Alle auf „Normal“ setzen</button></div>
       </div>
       <p class="lv-legend">Gezählt wird nur aktive Zeit: Die Uhr hält an, wenn eine Minute lang nichts angetippt wird oder die App im Hintergrund ist.</p>
-      <div style="overflow-x:auto"><table id="logTable"><thead><tr><th>Tag</th><th>Mathe</th><th>Englisch</th><th>Deutsch</th><th>Erdkunde</th><th>NaWi</th></tr></thead><tbody></tbody></table></div>
+      <div style="overflow-x:auto"><table id="logTable"><thead><tr><th>Tag</th><th>Mathe</th><th>Englisch</th><th>Deutsch</th><th>Erdkunde</th><th>NaWi</th><th>Reli</th></tr></thead><tbody></tbody></table></div>
     </div>
   </details>
   <p class="note" id="saveNote">Alles wird nur auf diesem Gerät gespeichert. Handy und Tablet verbinden: unter „Für Eltern“.</p>
@@ -1549,6 +1601,18 @@ button.nw-pathb { cursor: pointer; }
       <div class="pr-card" style="--pc:#C9B8FF"><span class="pr-num">3</span><div class="pr-txt"><h3>Probe-HÜ 3<span class="pr-lvl">Generalprobe</span></h3><p>Alles gemischt: Regeln ohne Wortkasten, Erkläre und Beschreibe.</p><p class="pr-status" data-ka-status="n3" hidden></p></div><div class="pr-acts"><button type="button" class="pr-open pr-tab" data-ka="n3">Probe-HÜ schreiben</button></div></div>
     </div>
   </section>
+</div>
+
+<div class="app view-wrap" id="relView" hidden>
+  <div class="backbar"><button type="button" class="btn small" data-go="home">← Start</button><span class="timepill" id="relTime"></span></div>
+  <header class="top">
+    <svg class="rel-icon" viewBox="0 0 64 64" aria-hidden="true"><path d="M8 18 Q20 13 32 19 Q44 13 56 18 V54 Q44 49 32 55 Q20 49 8 54 Z" fill="#FFF7EC" stroke="#1F2A44" stroke-width="2.5" stroke-linejoin="round"/><path d="M32 19 V55" stroke="#1F2A44" stroke-width="2.2"/><path d="M19 25 V43 M13 31 H25" stroke="#A8470C" stroke-width="4" stroke-linecap="round"/><path d="M38 27 H50 M38 33 H50 M38 39 H47 M38 45 H50" stroke="#1F2A44" stroke-width="2" stroke-linecap="round"/><path d="M45 8 Q48 3 51 8 Q51 12 48 12 Q45 12 45 8 Z" fill="#FFC928" stroke="#1F2A44" stroke-width="1.6"/></svg>
+    <div class="brand">
+      <h1>Glaubensbekenntnis</h1>
+      <p>Religion · auswendig lernen und aufschreiben können</p>
+    </div>
+  </header>
+  <div id="relMain"></div>
 </div>
 
 <div class="app view-wrap" id="ekView" hidden>
@@ -4275,7 +4339,7 @@ window.LU5 = (function () {
     logCache[k][subj] = (logCache[k][subj] || 0) + 1;
     if (view === 'voc') logCache[k].voc = (logCache[k].voc || 0) + 1;
     var goal = settings().goal * 60, v = logCache[k][subj];
-    if (v === goal) toast(subj === 'math' ? 'Mathe-Ziel geschafft! Super' + kidName(', ') + '!' : subj === 'de' ? 'Deutsch: ' + settings().goal + ' Minuten geschafft! Klasse' + kidName(', ') + '!' : subj === 'ek' ? 'Erdkunde: ' + settings().goal + ' Minuten geschafft! Stark' + kidName(', ') + '!' : subj === 'nw' ? 'NaWi: ' + settings().goal + ' Minuten geschafft! Spitze' + kidName(', ') + '!' : 'Englisch-Ziel geschafft! Well done' + kidName(', ') + '!');
+    if (v === goal) toast(subj === 'math' ? 'Mathe-Ziel geschafft! Super' + kidName(', ') + '!' : subj === 'de' ? 'Deutsch: ' + settings().goal + ' Minuten geschafft! Klasse' + kidName(', ') + '!' : subj === 'ek' ? 'Erdkunde: ' + settings().goal + ' Minuten geschafft! Stark' + kidName(', ') + '!' : subj === 'nw' ? 'NaWi: ' + settings().goal + ' Minuten geschafft! Spitze' + kidName(', ') + '!' : subj === 'rel' ? 'Religion: ' + settings().goal + ' Minuten geschafft! Toll' + kidName(', ') + '!' : 'Englisch-Ziel geschafft! Well done' + kidName(', ') + '!');
     if (v === 20 * 60 && goal < 1200) toast('20 Minuten! Du darfst jetzt aufhören.');
     if (++dirty >= 5) { flushLog(); }
     renderTimePills();
@@ -4303,7 +4367,7 @@ window.LU5 = (function () {
   function minText(s) { return Math.floor(s / 60) + ' Min'; }
   function renderTimePills() {
     var k = dayKey(), goal = settings().goal;
-    [['math', 'mathTime'], ['en', 'enTime'], ['en', 'vocTime'], ['de', 'deTime'], ['ek', 'ekTime'], ['nw', 'nwTime']].forEach(function (p) {
+    [['math', 'mathTime'], ['en', 'enTime'], ['en', 'vocTime'], ['de', 'deTime'], ['ek', 'ekTime'], ['nw', 'nwTime'], ['rel', 'relTime']].forEach(function (p) {
       var el = $(p[1]); if (!el) return;
       var s = (logCache[k] && logCache[k][p[0]]) || 0;
       el.innerHTML = CLOCK + '<span>' + Math.floor(s / 60) + ' / ' + goal + ' Min heute</span>';
@@ -4329,6 +4393,17 @@ window.LU5 = (function () {
       else if (days === 1) { $('nwNum').textContent = '1'; $('nwText').innerHTML = '<b>Morgen ist die NaWi-Überprüfung!</b> Heute nur noch das Häppchen und einmal den Merkzettel lesen.'; }
       else if (days === 0) { $('nwNum').textContent = '★'; $('nwText').innerHTML = '<b>Heute ist die NaWi-Überprüfung.</b> Viel Glück' + esc(kidName(', ')) + '! Fachwörter sauber schreiben: Objektträger mit ä.'; }
       else { $('nwNum').textContent = '✓'; $('nwText').innerHTML = '<b>Die NaWi-Überprüfung ist vorbei.</b> Neues Datum unten eintragen.'; }
+    })();
+    $('relDate').value = st.relDate || '';
+    (function () {
+      var box = $('relBox'); if (!box) return;
+      if (!st.relDate) { $('relNum').textContent = '?'; $('relText').innerHTML = '<b>Religion: Glaubensbekenntnis.</b> Termin noch offen. Ziel: sitzt bis Dienstag, 1. Dezember – jeden Tag eine Etappe.'; return; }
+      var d = new Date(st.relDate + 'T00:00:00'), t0 = new Date(now.getFullYear(), now.getMonth(), now.getDate()), days = Math.round((d - t0) / 86400000);
+      var when = d.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' });
+      if (days > 1) { $('relNum').textContent = days; $('relText').innerHTML = '<b>Tage bis zur Religion-Überprüfung</b> am ' + when + '. Glaubensbekenntnis auswendig aufschreiben.'; }
+      else if (days === 1) { $('relNum').textContent = '1'; $('relText').innerHTML = '<b>Morgen: Glaubensbekenntnis!</b> Heute einmal ganz aufschreiben und abends vor dem Einschlafen aufsagen.'; }
+      else if (days === 0) { $('relNum').textContent = '★'; $('relText').innerHTML = '<b>Heute: Glaubensbekenntnis.</b> Viel Glück' + esc(kidName(', ')) + '! Erst in Gedanken aufsagen, dann schreiben.'; }
+      else { $('relNum').textContent = '✓'; $('relText').innerHTML = '<b>Die Religion-Überprüfung ist vorbei.</b> Neues Datum unten eintragen.'; }
     })();
     if (st.dkaDate) $('dkaDate').value = st.dkaDate;
     if (st.dikDate) $('dikDate').value = st.dikDate;
@@ -4390,10 +4465,11 @@ window.LU5 = (function () {
     // Countdown: Vorbei oder ohne Datum ausblenden, das Nächste zuerst
     (function () {
       var t0 = new Date(now.getFullYear(), now.getMonth(), now.getDate()), any = false;
-      [['kaBox', st.kaDate], ['mhBox', st.mhDate], ['mkaBox', st.mkaDate], ['ekaBox', st.ekaDate], ['dkaBox', st.dkaDate], ['dikBox', st.dikDate], ['nwBox', st.nwDate]].forEach(function (b) {
+      [['kaBox', st.kaDate], ['mhBox', st.mhDate], ['mkaBox', st.mkaDate], ['ekaBox', st.ekaDate], ['dkaBox', st.dkaDate], ['dikBox', st.dikDate], ['nwBox', st.nwDate], ['relBox', st.relDate]].forEach(function (b) {
         var el = $(b[0]); if (!el) return;
         var dd = b[1] ? Math.round((new Date(b[1] + 'T00:00:00') - t0) / 86400000) : -1;
         if (b[0] === 'nwBox' && !b[1]) dd = 999;
+        if (b[0] === 'relBox' && !b[1]) dd = 998;
         el.style.display = dd < 0 ? 'none' : ''; el.style.order = String(Math.max(0, dd));
         if (dd >= 0) any = true;
       });
@@ -4419,7 +4495,7 @@ window.LU5 = (function () {
     var rows = '';
     for (var n = 0; n < 14; n++) {
       var d3 = new Date(now.getFullYear(), now.getMonth(), now.getDate() - n), k3 = dayKey(d3);
-      rows += '<tr><td>' + WD[d3.getDay()] + ', ' + d3.getDate() + '.' + (d3.getMonth() + 1) + '.</td><td>' + minText(secs(k3, 'math')) + '</td><td>' + minText(secs(k3, 'en')) + '</td><td>' + minText(secs(k3, 'de')) + '</td><td>' + minText(secs(k3, 'ek')) + '</td><td>' + minText(secs(k3, 'nw')) + '</td></tr>';
+      rows += '<tr><td>' + WD[d3.getDay()] + ', ' + d3.getDate() + '.' + (d3.getMonth() + 1) + '.</td><td>' + minText(secs(k3, 'math')) + '</td><td>' + minText(secs(k3, 'en')) + '</td><td>' + minText(secs(k3, 'de')) + '</td><td>' + minText(secs(k3, 'ek')) + '</td><td>' + minText(secs(k3, 'nw')) + '</td><td>' + minText(secs(k3, 'rel')) + '</td></tr>';
     }
     $('logTable').querySelector('tbody').innerHTML = rows;
     if (window.LU5Voc) window.LU5Voc.home();
@@ -4429,6 +4505,7 @@ window.LU5 = (function () {
     if ($('ekMin')) $('ekMin').textContent = minText(secs(k, 'ek')) + ' heute';
     if (window.LU5Ek) window.LU5Ek.home();
     if ($('nwMin')) $('nwMin').textContent = minText(secs(k, 'nw')) + ' heute';
+    if ($('relMin')) $('relMin').textContent = minText(secs(k, 'rel')) + ' heute';
     if (window.LU5Nw) window.LU5Nw.home();
     renderPlan();
   }
@@ -4443,8 +4520,8 @@ window.LU5 = (function () {
     math: { pre: 'a', n: 4, lv: ['Warm-up', 'Normal', 'Normal+', 'Generalprobe'], min: 45, max: 1, from: 8 },
     en: { pre: 'e', n: 6, lv: ['Warm-up', 'Normal', 'Normal', 'Profi', 'Generalprobe', 'Schwerpunkte'], min: 45, max: 1, from: 3 }
   };
-  var SUBJ_NAME = { nw: 'NaWi', dik: 'Deutsch', mh: 'Mathe', de: 'Deutsch', ek: 'Erdkunde', en: 'Englisch', math: 'Mathe', voc: 'Englisch' };
-  var TEST_NAME = { nw: 'NaWi-Überprüfung', dik: 'Übungsdiktat', mh: 'Mathe-HÜ', de: 'Deutsch-HÜ', ek: 'Erdkunde-HÜ', en: 'Englisch-Klassenarbeit', math: 'Mathe-Klassenarbeit' };
+  var SUBJ_NAME = { rel: 'Religion', nw: 'NaWi', dik: 'Deutsch', mh: 'Mathe', de: 'Deutsch', ek: 'Erdkunde', en: 'Englisch', math: 'Mathe', voc: 'Englisch' };
+  var TEST_NAME = { rel: 'Religion-Überprüfung', nw: 'NaWi-Überprüfung', dik: 'Übungsdiktat', mh: 'Mathe-HÜ', de: 'Deutsch-HÜ', ek: 'Erdkunde-HÜ', en: 'Englisch-Klassenarbeit', math: 'Mathe-Klassenarbeit' };
   var planActs = [];
   function kaRes() { try { var d = JSON.parse(localStorage.getItem('ka-tablet') || 'null'); return (d && d.res) || {}; } catch (e) { return {}; } }
   function daysTo(ds, now) { if (!ds) return null; var d = new Date(ds + 'T00:00:00'), t0 = new Date(now.getFullYear(), now.getMonth(), now.getDate()); return Math.round((d - t0) / 86400000); }
@@ -4480,7 +4557,7 @@ window.LU5 = (function () {
   function renderPlan() {
     var box = $('planList'); if (!box) return;
     var now = new Date(), k = dayKey(now), st = settings(), L = logCache[k] || {};
-    var T = [['de', st.dkaDate], ['dik', st.dikDate], ['ek', st.ekaDate], ['nw', st.nwDate], ['mh', st.mhDate], ['math', st.mkaDate], ['en', st.kaDate]].map(function (t) { return { s: t[0], d: daysTo(t[1], now), date: t[1] }; });
+    var T = [['de', st.dkaDate], ['dik', st.dikDate], ['ek', st.ekaDate], ['nw', st.nwDate], ['rel', st.relDate], ['mh', st.mhDate], ['math', st.mkaDate], ['en', st.kaDate]].map(function (t) { return { s: t[0], d: daysTo(t[1], now), date: t[1] }; });
     var up = T.filter(function (t) { return t.d !== null && t.d >= 1; }).sort(function (a, b) { return a.d - b.d; });
     var todayT = T.filter(function (t) { return t.d === 0; });
     var focus = up[0] || null, D = {}; T.forEach(function (t) { D[t.s] = t.d; });
@@ -4489,14 +4566,24 @@ window.LU5 = (function () {
     var busy = focus && focus.d <= 3;
     /* Fächer in der Reihenfolge der nächsten Termine */
     var order = up.map(function (t) { return t.s; });
-    ['en', 'math', 'de', 'dik', 'ek', 'mh', 'nw'].forEach(function (s) { if (order.indexOf(s) < 0) order.push(s); });
+    ['en', 'rel', 'math', 'de', 'dik', 'ek', 'mh', 'nw'].forEach(function (s) { if (order.indexOf(s) < 0) order.push(s); });
     order.forEach(function (s) {
       var n0 = items.length; planSubj(s);
       items.slice(n0).forEach(function (x) { x.ts = s; });
     });
     function planSubj(s) {
       var d = D[s];
-      if (s === 'nw') {
+      if (s === 'rel') {
+        /* Religion: Glaubensbekenntnis – eine Etappe pro Tag, dann Generalprobe (Ziel: sitzt nach 4–5 Tagen), danach kurz fit halten */
+        if (window.LU5Rel && (d === null || d >= 1)) {
+          var rp = LU5Rel.plan();
+          if (rp) {
+          rp.subj = 'rel'; rp.keep = rp.phase !== 'fit' || (near('rel') && d <= 7); rp.lock = rp.keep;
+          rp.act = function () { go('rel'); LU5Rel.go(); };
+          items.push(rp);
+          } else bonus.push(['Religion: Glaubensbekenntnis', 'rel']);
+        }
+      } else if (s === 'nw') {
         /* NaWi: jeden Tag ein kurzes Häppchen (ca. 5 Min). Mit Termin: ab 14 Tagen vorher dazu 10 Min üben, ab 4 Tagen eine Probe-HÜ.
            Ohne Termin und wenn morgen etwas anderes geschrieben wird, ist das Häppchen nur Bonus. */
         if (window.LU5Nw && (d === null || d >= 1)) {
@@ -4609,7 +4696,7 @@ window.LU5 = (function () {
        Nicht tauschbar: die erste (wichtigste) Aufgabe, die Vokabeln und alles für eine Arbeit/HÜ in den nächsten 7 Tagen. */
     var swap = store('plan-swap'); if (!swap || swap.day !== k) swap = null;
     function grp(sj) { return sj === 'voc' ? 'en' : sj === 'mh' ? 'math' : sj; }
-    function locked(x, i) { return i === 0 || x.subj === 'voc' || x.done || (x.ts && D[x.ts] !== null && D[x.ts] >= 1 && D[x.ts] <= 7); }
+    function locked(x, i) { return i === 0 || x.subj === 'voc' || x.done || x.lock || (x.ts && D[x.ts] !== null && D[x.ts] >= 1 && D[x.ts] <= 7); }
     var GNAME = { math: 'Mathe', en: 'Englisch', de: 'Deutsch', ek: 'Erdkunde', nw: 'NaWi' };
     var GACT = { math: function () { go('math'); if (window.LU5Math) LU5Math.topic(near('math') && D.math <= 7 ? 'fokus' : 'mix'); }, en: function () { go('en'); }, de: function () { go('de'); }, ek: function () { go('ek'); }, nw: function () { go('nw'); } };
     function swapOpts(from) {
@@ -4681,7 +4768,7 @@ window.LU5 = (function () {
     $('planBonus').innerHTML = bh; $('planBonus').hidden = !bh;
     if (all && !L.plan) { L.plan = 1; logCache[k] = L; flushLog(); toast('⭐ Tagesplan geschafft! Super' + kidName(', ') + '!'); renderWeek(); }
     /* Fächer-Karten: Termin-Hinweis und Reihenfolge */
-    var cards = { math: 'subjMath', en: 'subjEn', de: 'deTile', ek: 'ekTile', nw: 'nwTile' }, chips = { math: 'mathKa', en: 'enKa', de: 'deKa', ek: 'ekKa', nw: 'nwKa' };
+    var cards = { math: 'subjMath', en: 'subjEn', de: 'deTile', ek: 'ekTile', nw: 'nwTile', rel: 'relTile' }, chips = { math: 'mathKa', en: 'enKa', de: 'deKa', ek: 'ekKa', nw: 'nwKa', rel: 'relKa' };
     order.forEach(function (s, i) {
       if (s === 'mh' && !near('mh')) return;
       if (s === 'math' && near('mh')) return;
@@ -4732,6 +4819,7 @@ window.LU5 = (function () {
   }
   $('dikDate').addEventListener('change', function () { var s = settings(); s.dikDate = this.value || null; store(SET_KEY, s); renderHome(); });
   $('dkaDate').addEventListener('change', function () { var s = settings(); s.dkaDate = this.value || null; store(SET_KEY, s); renderHome(); });
+  $('relDate').addEventListener('change', function () { var s = settings(); s.relDate = this.value || null; store(SET_KEY, s); renderHome(); });
   $('nwDate').addEventListener('change', function () { var s = settings(); s.nwDate = this.value || null; store(SET_KEY, s); renderHome(); });
   $('ekaDate').addEventListener('change', function () { var s = settings(); s.ekaDate = this.value || null; store(SET_KEY, s); renderHome(); });
   $('mhDate').addEventListener('change', function () { var s = settings(); s.mhDate = this.value || null; store(SET_KEY, s); renderHome(); });
@@ -4751,6 +4839,8 @@ window.LU5 = (function () {
     $('ekView').hidden = v !== 'ek';
     if (v === 'ek' && window.LU5Ek) window.LU5Ek.open();
     $('nwView').hidden = v !== 'nw';
+    $('relView').hidden = v !== 'rel';
+    if (v === 'rel' && window.LU5Rel) window.LU5Rel.open();
     if (v === 'nw' && window.LU5Nw) window.LU5Nw.open();
     if (v === 'nw' && window.LU5Ka) window.LU5Ka.cards();
     if (v === 'ek' && window.LU5Ka) window.LU5Ka.cards();
@@ -6317,7 +6407,7 @@ window.LU5 = (function () {
    NEUE LISTE: unten in LISTS ergänzen und WEEKS auf ihre id(s) setzen (mehrere Wochenlisten möglich). */
 (function () {
   'use strict';
-  var WEEKS = ['u1c2', 'u1c3'], WEEK = WEEKS[0];
+  var WEEKS = ['u1s', 'u2a1', 'u2a2'], WEEK = WEEKS[0]; /* Liste vom 26.11.2026, sitzt bis Do 3.12. */
   function isWeek(lid) { return WEEKS.indexOf(lid) !== -1; }
   var LISTS = [
     { id: 'wel', unit: 'Welcome', short: 'Welcome', name: 'Welcome', pages: 'S. 225–230', words: [
@@ -6479,11 +6569,48 @@ window.LU5 = (function () {
       'the main topic|das Hauptthema|main topic', 'be good at football|gut in Fußball sein, gut Fußball können|good at football',
       'first|zuerst, als Erstes', 'speaker|der Sprecher / die Sprecherin',
       '4 pm|4 Uhr nachmittags / 16 Uhr|4pm;four pm', '4 am|4 Uhr morgens / vormittags|4am;four am'
+    ] },
+    { id: 'u1s', unit: 'Unit 1', short: 'Story – robot … toy', name: 'Unit 1 · Story (robot … toy)', pages: 'S. 240', words: [
+      'robot|der Roboter', 'Good night.|Gute Nacht.|Good night', 'complete|komplett, vollständig', 'dark|dunkel',
+      'box|der Kasten, die Kiste, das Kästchen', 'boxes|die Kisten, die Kästen (Plural von box)', 'scared|verängstigt',
+      'Well, …|Nun, … / Also, … / Na ja, …|Well', 'answer|antworten; beantworten (Verb)',
+      'It\'s magic.|Es ist Magie. / Es ist magisch.|It is magic.', 'ready|bereit, fertig',
+      'tell sb. about sth.|jemandem von etwas erzählen|tell somebody about something;tell someone about something',
+      'take|nehmen, mitnehmen; (weg-, hin)bringen – von mir weg', 'back|zurück', 'around …|um … (herum)|around',
+      'just|(einfach) nur, bloß', 'silly|albern; blöd', 'toy|das Spielzeug'
+    ] },
+    { id: 'u2a1', unit: 'Unit 2', short: 'Start & Part A (1)', name: 'Unit 2 · Start & Part A (1)', pages: 'S. 240–241', words: [
+      'want to do sth.|etwas tun wollen|want to do something;want to', 'at 9 o\'clock|um 9 Uhr / um 21 Uhr|at nine o\'clock',
+      'because|weil', 'half past eight|halb neun (08:30 / 20:30)', 'playground|der Schulhof; der Spielplatz',
+      'early|früh', 'always|immer', 'far|weit (entfernt)', 'bring|(mit-, her)bringen – zu mir her',
+      'every day|jeder Tag', 'every|jede(r, s) – z. B. jede Farbe, jedes Buch', 'before|bevor (Bindewort)', 'go to work|zur Arbeit gehen/fahren',
+      'walk|(zu Fuß) gehen', 'near|in der Nähe von, nahe (bei)', 'What\'s he like?|Wie ist er (so)?|What is he like?',
+      'love|lieben, sehr mögen', 'there|da, dort; dahin, dorthin', 'start|anfangen, beginnen', 'noise|das Geräusch; der Lärm',
+      'map|die Landkarte; der Stadtplan', 'helpful|hilfreich', 'grounds|das Gelände (Pluralwort!)',
+      'mail sth. to sb.|jemandem etwas per E-Mail senden|mail something to somebody;mail sth.;mail something;mail',
+      'lesson|die (Unterrichts-)Stunde', 'take a photo of sth.|etwas fotografieren, ein Foto von etwas machen|take a photo of something;take a photo',
+      'timetable|der Stundenplan', 'be in a hurry|es eilig haben|in a hurry', 'minute|die Minute', 'Off we go!|Los geht\'s!|Off we go',
+      'happy|glücklich, froh', 'secret|das Geheimnis', 'finish|enden', 'wait (for)|warten (auf)|wait;wait for',
+      'subject|das (Schul-)Fach|school subject'
+    ] },
+    { id: 'u2a2', unit: 'Unit 2', short: 'Schulfächer & Part A (2)', name: 'Unit 2 · Schulfächer & Part A (2)', pages: 'S. 242', words: [
+      'art|Kunst (Schulfach)', 'design and technology|Design und Technik (Schulfach)', 'drama|Schauspiel; darstellende Kunst (Schulfach)',
+      'French|Französisch (Schulfach)', 'geography|Geografie, Erdkunde (Schulfach)', 'history|Geschichte (Schulfach)',
+      'ICT|Informations- und Kommunikationstechnologie (Schulfach)', 'maths|Mathematik (Schulfach)', 'music|Musik (Schulfach)',
+      'PE|Sportunterricht, Turnen (Schulfach)|P.E.', 'religion|Religion (Schulfach)', 'science|Naturwissenschaft (Schulfach)',
+      'break|die Pause', 'lunch|das Mittagessen', 'except|außer, bis auf', 'gym|die Turnhalle', 'theatre|das Theater',
+      'sport|der Sport; die Sportart', 'do sport|Sport treiben', 'assembly hall|die Aula', 'canteen|die Kantine, die (Schul-)Mensa',
+      'block|der (Häuser-, Wohn-)Block', 'library|die Bibliothek, die Bücherei', 'libraries|die Bibliotheken (Plural von library)',
+      'third|dritte(r, s)', 'sound|das Geräusch; der Klang', 'sound|klingen, sich (gut usw.) anhören (Verb)',
+      'rhyme with sth.|sich mit etwas reimen|rhyme with something;rhyme with', 'group|die Gruppe', 'into the room|ins Zimmer (hinein)',
+      'out of …|aus … (heraus/hinaus)|out of', 'sit down|sich hinsetzen', 'find sth. out|etwas herausfinden|find something out;find out',
+      'clever|klug, schlau', 'man|der Mann', 'men|die Männer (Plural von man)', 'woman|die Frau', 'women|die Frauen (Plural von woman)',
+      'routine|die Routine', 'exact|genau', 'evening|der Abend'
     ] }
   ];
 
   var KEY = 'en-vokabeln', ROUND = 12, INT = [0, 1, 3, 7, 14, 30, 60], NEW_DAY = 24; /* höchstens so viele neue Wörter pro Tag – große Wochenlisten verteilen sich auf mehrere Tage */
-  var PROPER = /^(I|I'm|Mr|Mrs|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday|Germany|England|English|French|German|Brighton|Alice|Lily's|Simon|Lee)$/;
+  var PROPER = /^(I|I'm|Mr|Mrs|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday|Germany|England|English|French|German|Brighton|Alice|Lily's|Simon|Lee|ICT|PE)$/;
   var STOP = { der: 1, die: 1, das: 1, ein: 1, eine: 1, dich: 1, euch: 1, sie: 1, mit: 1, und: 1, oder: 1, auf: 1, von: 1, sich: 1, bei: 1, den: 1, dem: 1, plural: 1 };
   var SPK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"></path><path d="M16 8.5a4.5 4.5 0 0 1 0 7M18.5 6a8 8 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg>';
 
@@ -7784,6 +7911,7 @@ window.LU5 = (function () {
 <script src="klassenarbeiten/nw-daten.js?v=2"></script>
 <script src="klassenarbeiten/ka-tablet.js?v=7"></script>
 <script src="klassenarbeiten/nw.js?v=3"></script>
+<script src="klassenarbeiten/rel.js?v=1"></script>
 <script src="klassenarbeiten/morgen.js?v=1"></script>
 <script>
 (function () {
