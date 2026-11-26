@@ -1,6 +1,8 @@
 /* =====================================================================
    Level Up 5 · NaWi: Mikroskop-Profi
    Stoff: Buch S. 74, KV 18 + KV 48, „Regeln beim Mikroskopieren“, Heft „Lupen und Linsen“ (24.11.2026)
+   - Lernpfad (26.11.2026): 7 Etappen, jeweils erst Lernkarten lesen, dann Kurz-Check mit „Nachschauen“.
+     Abgefragt wird nur, was schon gelernt ist. Eine neue Etappe pro Tag im Tagesplan.
    - Tages-Häppchen: 10 kurze Aufgaben (ca. 5 Min), was noch nicht sitzt kommt öfter
    - Lückentexte mit und ohne Wortkasten, Beschriften, Reihenfolge, Karteikarten, Merkzettel
    - Lernstand in localStorage „nw-lernstand“ (wird mit sync.js mitsynchronisiert)
@@ -148,6 +150,75 @@
     ['k:l6', 'Wo findet man Sammellinsen?', 'Zum Beispiel in <b>Lupen</b>, <b>Kameras</b> und im <b>Mikroskop</b> (Objektiv).']
   ]);
 
+  /* ---------------- Lernpfad: erst lernen (wie im Heft), dann abfragen ----------------
+     7 Etappen. Jede Etappe: Lernkarten lesen → kurzer Check mit „Nachschauen“.
+     Häppchen, Lückentexte usw. fragen nur ab, was schon gelernt ist. */
+  var LENS_SVG = '<svg class="nw-svg" viewBox="0 0 340 160" role="img" aria-label="Sammellinse: Lichtstrahlen treffen sich im Brennpunkt"><rect width="340" height="160" rx="16" fill="#FFFFFF"/>' +
+    [45, 80, 115].map(function (y) { return '<line x1="20" y1="' + y + '" x2="150" y2="' + y + '" stroke="#E0A000" stroke-width="3"/><line x1="150" y1="' + y + '" x2="262" y2="80" stroke="#E0A000" stroke-width="3"/>'; }).join('') +
+    '<path d="M150 22 Q176 80 150 138 Q124 80 150 22 Z" fill="#CDEBFF" stroke="#1F2A44" stroke-width="2"/><circle cx="262" cy="80" r="6" fill="#5B2DBF"/>' +
+    '<text x="150" y="155" font-size="13" font-weight="700" fill="#1F2A44" text-anchor="middle" font-family="Trebuchet MS, Verdana, sans-serif">Sammellinse</text>' +
+    '<text x="262" y="108" font-size="13" font-weight="700" fill="#5B2DBF" text-anchor="middle" font-family="Trebuchet MS, Verdana, sans-serif">Brennpunkt</text>' +
+    '<text x="22" y="30" font-size="12" fill="#1F2A44" font-family="Trebuchet MS, Verdana, sans-serif">Lichtstrahlen</text></svg>';
+  var BILD_SVG = '<svg class="nw-svg" viewBox="0 0 340 160" role="img" aria-label="Das Bild steht auf dem Kopf"><rect width="340" height="160" rx="16" fill="#FFFFFF"/>' +
+    '<line x1="60" y1="115" x2="60" y2="45" stroke="#2E7D32" stroke-width="5"/><path d="M48 58 L60 38 L72 58 Z" fill="#2E7D32"/>' +
+    '<path d="M170 22 Q194 80 170 138 Q146 80 170 22 Z" fill="#CDEBFF" stroke="#1F2A44" stroke-width="2"/>' +
+    '<line x1="285" y1="45" x2="285" y2="105" stroke="#C62828" stroke-width="5"/><path d="M273 92 L285 112 L297 92 Z" fill="#C62828"/><line x1="315" y1="20" x2="315" y2="140" stroke="#8A93A6" stroke-width="4"/>' +
+    '<text x="60" y="140" font-size="13" font-weight="700" fill="#1F2A44" text-anchor="middle" font-family="Trebuchet MS, Verdana, sans-serif">Gegenstand</text>' +
+    '<text x="170" y="155" font-size="13" font-weight="700" fill="#1F2A44" text-anchor="middle" font-family="Trebuchet MS, Verdana, sans-serif">Linse</text>' +
+    '<text x="270" y="140" font-size="13" font-weight="700" fill="#C62828" text-anchor="middle" font-family="Trebuchet MS, Verdana, sans-serif">Bild</text>' +
+    '<text x="315" y="155" font-size="11" fill="#1F2A44" text-anchor="middle" font-family="Trebuchet MS, Verdana, sans-serif">Schirm</text></svg>';
+  var LESSONS = [
+    { id: 'e1', name: 'Bauteile oben', sub: 'Okular, Tubus, Objektivrevolver, Objektiv, Stativ',
+      parts: ['okular', 'tubus', 'revolver', 'objektiv', 'stativ'], ids: ['tf2', 'tf15'], cards: [
+      { t: 'Okular und Tubus', hi: [1, 2], x: '<b>1 · Okular:</b> Hier schaust du hinein. Es ist eine auswechselbare Linse und vergrößert wie eine Lupe.<br><b>2 · Tubus:</b> das Rohr, das das Okular hält.', tip: 'Eselsbrücke: <b>Ok</b>ular kommt von „oculus“, das ist Latein für <b>Auge</b>. Da ist dein Auge. Tubus schreibt man ohne r.' },
+      { t: 'Objektivrevolver und Objektiv', hi: [6, 7], x: '<b>7 · Objektiv:</b> sitzt unten, ganz nah am Objekt. Es enthält weitere Vergrößerungslinsen.<br><b>6 · Objektivrevolver:</b> ist drehbar und trägt mehrere Objektive mit unterschiedlicher Vergrößerung.', tip: 'Ob<b>jekt</b>iv ist nah am Ob<b>jekt</b>, Okular nah am Auge.' },
+      { t: 'Stativ', hi: [3], x: '<b>3 · Stativ:</b> verbindet alle Teile des Mikroskops miteinander und gibt festen Halt. Am Stativ trägst du das Mikroskop, es ist der <b>Handgriff</b> beim Transport.' }
+    ]},
+    { id: 'e2', name: 'Tisch und Triebe', sub: 'Objektträger, Objekttisch, Grobtrieb, Feintrieb',
+      parts: ['traeger', 'tisch', 'grob', 'fein'], ids: ['tf6', 'mc6'], cards: [
+      { t: 'Objekttisch und Objektträger', hi: [8, 9], x: '<b>9 · Objekttisch:</b> Darauf liegt der Objektträger. In der Mitte ist eine Öffnung für das Licht.<br><b>8 · Objektträger:</b> ein Glasplättchen mit dem Präparat. Er wird über die Öffnung des Objekttisches gelegt.', tip: 'Objekt<b>trä</b>ger mit ä, denn er <b>trä</b>gt das Präparat.' },
+      { t: 'Grobtrieb und Feintrieb', hi: [4, 5], x: 'Die beiden Räder bewegen den Objekttisch auf und ab. So wird das Bild scharf.<br><b>4 · Grobtrieb</b> (großes Rad): grob scharf stellen.<br><b>5 · Feintrieb</b> (kleines Rad): ganz wenig bewegen, also genau scharf stellen.', tip: 'Erst <b>grob</b>, dann <b>fein</b>.' }
+    ]},
+    { id: 'e3', name: 'Licht und Helligkeit', sub: 'Beleuchtung, Beleuchtungsregler, Kondensor, Blende',
+      parts: ['licht', 'regler', 'kondensor', 'blende'], ids: ['tf14'], texts: ['T1'], cards: [
+      { t: 'Beleuchtung und Beleuchtungsregler', hi: [12, 13], x: '<b>13 · Beleuchtung:</b> beleuchtet das Objekt von unten, mit einer Lampe oder einem beweglichen Spiegel.<br><b>12 · Beleuchtungsregler:</b> stellt die Helligkeit der Lampe ein.' },
+      { t: 'Kondensor und Blende', hi: [10, 11], x: 'Sie sitzen unter dem Objekttisch.<br><b>10 · Kondensor</b> und <b>11 · Blende</b> regeln zusammen die Helligkeit, damit das Bild <b>kontrastreich</b> wird.', tip: 'Kon<b>d</b>ensor mit d.' },
+      { t: 'Geschafft: alle 13 Bauteile', names: true, x: 'Schau dir das ganze Mikroskop noch einmal an. Ab jetzt kannst du auch „Mikroskop beschriften“ und den ersten Lückentext üben.' }
+    ]},
+    { id: 'e4', name: 'Vergrößerung', sub: 'Wozu ein Mikroskop? Wie entsteht das Bild? Rechnen',
+      ids: ['tf1', 'tf8', 'tf9', 'tf19', 'tf20', 'mc1', 'mc2', 'mc3', 'mc4', 'mc13', 'vg', 'k:v1', 'k:v2'], texts: ['T2'], cards: [
+      { t: 'Wozu ein Mikroskop?', x: 'Mit einem <b>Mikroskop</b> kannst du kleine Dinge viel stärker vergrößern als mit einer <b>Lupe</b>. Du erkennst damit Strukturen, die du mit dem bloßen Auge oder mit der Lupe nicht sehen kannst.' },
+      { t: 'So entsteht das Bild', hi: [7, 1], x: '1. Das <b>Objektiv</b> enthält mehrere <b>Sammellinsen</b>. Sie erzeugen ein vergrößertes Bild.<br>2. Das <b>Okular</b> vergrößert dieses Bild wie eine Lupe noch weiter.' },
+      { t: 'Vergrößerung berechnen', x: '<b>Okular × Objektiv</b>, also <b>mal</b> rechnen.<br>Okular 10-fach, Objektiv 40-fach: 10 × 40 = <b>400-fach</b>.<br>Okular 10-fach mit Objektiven 4-, 10- und 40-fach: 40-, 100- und 400-fach.', tip: 'Achtung, nicht plus! 10 × 10 = 100-fach, nicht 20.' }
+    ]},
+    { id: 'e5', name: 'Regeln beim Mikroskopieren', sub: 'Tragen, Aufbauen, Scharfstellen, Beenden',
+      ids: ['tf3', 'tf4', 'tf5', 'tf7', 'tf16', 'mc5', 'mc7', 'mc14', 'mc15', 'ord1', 'ord2', 'k:r1', 'k:r2', 'k:r3', 'k:r4', 'k:r5'], texts: ['T3'], cards: [
+      { t: '1. Tragen und Aufbauen', x: '<b>Tragen:</b> Am <b>Stativ</b> fest anfassen. Ein Mikroskop ist schwer!<br><b>Aufbauen:</b> Das <b>kleinste</b> Objektiv nach unten einstellen und den Tubus Richtung Stativ drehen. Dann das <b>Licht</b> einschalten.<br><b>Vorbereitung:</b> Den <b>Objektträger</b> am Objekttisch in die Halterung einspannen.' },
+      { t: '2. Scharf stellen', hi: [4, 5], x: 'Den Objekttisch mit dem <b>Grobtrieb</b> nach oben drehen. Das Objektiv darf den Objektträger dabei <b>nicht berühren</b> (Glasbruchgefahr!).<br>Dann durchs <b>Okular</b> schauen und mit dem Grobtrieb langsam nach <b>unten</b> drehen, also vom Objektiv weg, bis du etwas siehst.<br>Mit dem <b>Feintrieb</b> stellst du genau scharf.', tip: 'Beim Durchschauen immer nur vom Objektiv <b>weg</b> drehen.' },
+      { t: '3. Genauer hinschauen', hi: [6], x: 'Die Stelle, die du genauer sehen willst, schiebst du in die <b>Mitte</b> des Sichtfeldes. Dann drehst du den <b>Objektivrevolver</b> zur nächsten Vergrößerung.<br>Kontrolliere dabei von der <b>Seite</b>, dass das Objektiv nicht das Deckglas berührt.' },
+      { t: '4. Arbeit beenden', x: 'Licht <b>aus</b>, Objektträger reinigen, wieder die <b>kleinste</b> Vergrößerung einstellen und das Mikroskop am <b>Stativ</b> zurück in den Schrank tragen.', tip: 'Kleinstes Objektiv am Anfang <b>und</b> am Ende.' }
+    ]},
+    { id: 'e6', name: 'Linsen', sub: 'Linse, Sammellinse, Brennpunkt',
+      ids: ['tf10', 'tf11', 'tf17', 'tf18', 'mc8', 'mc9', 'mc10', 'k:l1', 'k:l2', 'k:l6'], cards: [
+      { t: 'Was ist eine Linse?', x: 'Eine <b>Linse</b> ist ein <b>durchsichtiges</b> Glas, das Lichtstrahlen <b>bricht</b>, also umlenkt. Mit Linsen kann man <b>Bilder</b> erzeugen.' },
+      { t: 'Die Sammellinse', svg: LENS_SVG, x: 'Eine <b>Sammellinse</b> (anderer Name: <b>Konvexlinse</b>) <b>sammelt</b> die Lichtstrahlen. Sie laufen hinter der Linse zusammen. Der Punkt, an dem sie sich treffen, heißt <b>Brennpunkt</b>.<br>Sammellinsen gibt es zum Beispiel in <b>Lupen</b>, <b>Kameras</b> und im Objektiv des Mikroskops.' }
+    ]},
+    { id: 'e7', name: 'Das Bild der Sammellinse', sub: 'Abstand, vergrößert/verkleinert, auf dem Kopf',
+      ids: ['tf12', 'tf13', 'mc11', 'mc12', 'k:l3', 'k:l4', 'k:l5'], texts: ['T4'], cards: [
+      { t: 'Groß oder klein?', x: 'Die Größe des Bildes hängt vom <b>Abstand</b> zwischen Gegenstand und Sammellinse ab.<br>Gegenstand <b>näher</b> an der Linse → <b>vergrößertes</b> Bild.<br>Gegenstand <b>weiter weg</b> → <b>verkleinertes</b> Bild.' },
+      { t: 'Das Bild steht Kopf', svg: BILD_SVG, x: 'Das Bild ist immer <b>seitenverkehrt</b> und steht auf dem <b>Kopf</b>.<br>Deutlich und scharf wird es nur, wenn der <b>Abstand</b> zwischen Gegenstand, Linse und <b>Schirm</b> stimmt.' }
+    ]}
+  ];
+  var LMAP = {};
+  LESSONS.forEach(function (L, i) {
+    L.i = i; L.nr = i + 1;
+    (L.parts || []).forEach(function (pid) { LMAP['lab:' + pid] = LMAP['fn:' + pid] = LMAP['k:' + pid] = i; });
+    (L.ids || []).forEach(function (id) { LMAP[id] = i; });
+    (L.texts || []).forEach(function (t) { LMAP['T:' + t] = i; });
+  });
+  function lessonOf(id) { if (id in LMAP) return LMAP[id]; var m = /^gap:(T\d):/.exec(id); if (m && ('T:' + m[1]) in LMAP) return LMAP['T:' + m[1]]; return LESSONS.length - 1; }
+  function plain(h) { return String(h).replace(/<[^>]+>/g, ' '); }
+
   /* ---------------- Aufgaben-Pool ---------------- */
   var POOL = [];
   BT.forEach(function (b) { POOL.push({ id: 'lab:' + b[0], k: 'lab', b: b }); });
@@ -167,7 +238,13 @@
 
   /* ---------------- Lernstand ---------------- */
   var KEY = 'nw-lernstand', DUE = [0, 1, 2, 4, 7];
-  function st() { var s = store(KEY); if (!s || typeof s !== 'object') s = {}; s.it = s.it || {}; s.c = s.c || {}; return s; }
+  function st() { var s = store(KEY); if (!s || typeof s !== 'object') s = {}; s.it = s.it || {}; s.c = s.c || {}; s.L = s.L || {}; return s; }
+  /* wie viele Etappen (der Reihe nach) schon gelernt sind */
+  function learnedN(S) { S = S || st(); var n = 0; while (n < LESSONS.length && S.L[LESSONS[n].id]) n++; return n; }
+  function unlocked(id, S) { return lessonOf(id) < learnedN(S); }
+  function lernedToday() { return store('nw-lern-day') === dayKey(); }
+  /* mit Nachschauen richtig: zählt nicht als falsch, macht die Aufgabe aber auch noch nicht „sicher“ */
+  function seen(id, S) { var x = S.it[id] || { b: 0, n: 0 }; x.n++; S.it[id] = x; }
   function save(s) { store(KEY, s); }
   function daysSince(d) { if (!d) return 999; return Math.round((new Date(dayKey() + 'T00:00:00') - new Date(d + 'T00:00:00')) / 86400000); }
   /* r: 1 richtig, 0.5 fast (Tippfehler), 0 falsch */
@@ -183,15 +260,17 @@
   function score(x) { return x ? Math.min(x.b || 0, 2) / 2 : 0; }
   function pct(S) { S = S || st(); var n = 0; POOL.forEach(function (p) { n += score(S.it[p.id]); }); return Math.round(n / POOL.length * 100); }
   function areaStats(S) {
-    var A = [['Bauteile benennen', function (p) { return p.k === 'lab' || p.k === 'fn' || (p.g && p.g.t === 'T1'); }],
-      ['Vergrößerung', function (p) { return stage(p) === 1; }],
-      ['Regeln beim Mikroskopieren', function (p) { return stage(p) === 2; }],
-      ['Lupen und Linsen', function (p) { return stage(p) === 3; }]];
+    var A = [['Bauteile benennen', function (p) { return lessonOf(p.id) <= 2; }],
+      ['Vergrößerung', function (p) { return lessonOf(p.id) === 3; }],
+      ['Regeln beim Mikroskopieren', function (p) { return lessonOf(p.id) === 4; }],
+      ['Lupen und Linsen', function (p) { return lessonOf(p.id) >= 5; }]];
     return A.map(function (a) { var L = POOL.filter(a[1]), n = 0; L.forEach(function (p) { n += score(S.it[p.id]); }); var seen = L.filter(function (p) { return S.it[p.id]; }).length; return { name: a[0], p: Math.round(n / L.length * 100), seen: seen, all: L.length }; });
   }
   function pickHappchen(S, n) {
-    var wrong = [], due = [], fresh = [];
-    POOL.forEach(function (p) {
+    var wrong = [], due = [], fresh = [], AV = POOL.filter(function (p) { return unlocked(p.id, S); });
+    if (!AV.length) AV = POOL.filter(function (p) { return lessonOf(p.id) === 0; });
+    n = Math.min(n, AV.length);
+    AV.forEach(function (p) {
       var x = S.it[p.id];
       if (!x) fresh.push(p);
       else if (x.b === 0) wrong.push(p);
@@ -201,7 +280,7 @@
     var out = shuffle(wrong).slice(0, 4);
     out = out.concat(shuffle(due).slice(0, Math.max(3, n - out.length - 4)));
     out = out.concat(fresh.slice(0, n - out.length));
-    if (out.length < n) out = out.concat(shuffle(POOL.filter(function (p) { return out.indexOf(p) < 0; })).slice(0, n - out.length));
+    if (out.length < n) out = out.concat(shuffle(AV.filter(function (p) { return out.indexOf(p) < 0; })).slice(0, n - out.length));
     /* höchstens eine Reihenfolge-Aufgabe, nicht zwei gleiche Arten hintereinander */
     var ords = out.filter(function (p) { return p.k === 'ord'; });
     if (ords.length > 1) out = out.filter(function (p) { return p.k !== 'ord' || p === ords[0]; });
@@ -232,33 +311,103 @@
   /* ---------------- Ansicht ---------------- */
   var host = $('nwMain'), mode = null, R = null;
   function header(t, sub) { return '<div class="nw-head"><button type="button" class="btn small" data-nw="home">← NaWi-Start</button><span class="nw-ttl">' + t + (sub ? '<small>' + sub + '</small>' : '') + '</span></div>'; }
+  function lockBtn(cls, act, label, need, ln, extra) {
+    if (need < ln) return '<button type="button" class="btn ' + cls + '" data-nw="' + act + '"' + (extra || '') + '>' + label + '</button>';
+    return '<button type="button" class="btn ' + cls + ' nw-locked" disabled>' + label + '<small>🔒 nach Etappe ' + (need + 1) + '</small></button>';
+  }
   function home() {
-    var S = st(), p = pct(S), today = store('nw-hap-day') === dayKey(), areas = areaStats(S);
+    var S = st(), p = pct(S), today = store('nw-hap-day') === dayKey(), areas = areaStats(S), ln = learnedN(S), nextL = LESSONS[ln], lt = lernedToday(), all = ln >= LESSONS.length;
     mode = null;
+    /* Lernpfad */
     var h = '<section class="card voc-card nw-card">';
-    h += '<p class="voc-eyebrow">Mikroskop, Lupen und Linsen</p>';
-    h += '<div class="nw-prog"><span class="nw-ring" style="--p:' + p + '"><b>' + p + ' %</b></span><span><b>' + (p >= 90 ? 'Fast alles sitzt – stark!' : p >= 50 ? 'Mehr als die Hälfte klappt schon!' : p > 0 ? 'Klappt schon: ' + p + ' %' : 'Los geht\'s mit dem ersten Häppchen!') + '</b><br><span class="nw-small">Einmal richtig zählt halb. Ganz sicher ist eine Aufgabe, wenn sie an zwei verschiedenen Tagen richtig war.</span></span></div>';
-    h += '<button type="button" class="btn primary nw-big" data-nw="hap">' + (today ? '✅ Häppchen heute geschafft · nochmal?' : '🔬 Tages-Häppchen · 10 Aufgaben · ca. 5 Min') + '</button>';
+    h += '<p class="voc-eyebrow">Lernpfad · ' + ln + ' von ' + LESSONS.length + ' Etappen gelernt</p>';
+    if (nextL) h += '<button type="button" class="btn ' + (lt ? '' : 'primary ') + 'nw-big" data-nw="lesson" data-i="' + ln + '">' + (lt ? '➕ Schon die nächste Etappe? (Bonus)<br><small>' : '📖 Neu lernen: ') + 'Etappe ' + nextL.nr + ' · ' + nextL.name + (lt ? '</small>' : ' · ca. 5 Min') + '</button>';
+    else h += '<p class="nw-say">🌟 Du hast alle Etappen gelernt! Jetzt hilft das Tages-Häppchen, dass alles im Kopf bleibt.</p>';
+    if (lt && nextL) h += '<p class="nw-small">✅ Heute hast du schon eine Etappe gelernt. Morgen geht es weiter mit „' + nextL.name + '“.</p>';
+    h += '<ol class="nw-path">' + LESSONS.map(function (L, i) {
+      var done = i < ln, now = i === ln;
+      var inner = '<span class="nw-pi">' + (done ? '✅' : now ? '▶️' : '🔒') + '</span><span class="nw-pt"><b>' + L.nr + '. ' + L.name + '</b><small>' + L.sub + (done ? ' · zum Nachlesen antippen' : '') + '</small></span>';
+      return '<li class="' + (done ? 'done' : now ? 'now' : 'lock') + '">' + (done ? '<button type="button" class="nw-pathb" data-nw="lread" data-i="' + i + '">' + inner + '</button>' : '<span class="nw-pathb">' + inner + '</span>') + '</li>';
+    }).join('') + '</ol></section>';
+    /* Abfragen */
+    h += '<section class="card voc-card nw-card">';
+    h += '<p class="voc-eyebrow">Wiederholen: Was sitzt schon?</p>';
+    h += '<div class="nw-prog"><span class="nw-ring" style="--p:' + p + '"><b>' + p + ' %</b></span><span><b>' + (p >= 90 ? 'Fast alles sitzt – stark!' : p >= 50 ? 'Mehr als die Hälfte klappt schon!' : p > 0 ? 'Klappt schon: ' + p + ' %' : 'Hier siehst du bald, was schon klappt.') + '</b><br><span class="nw-small">Abgefragt wird nur, was du schon gelernt hast. Ganz sicher ist eine Aufgabe, wenn sie an zwei verschiedenen Tagen richtig war.</span></span></div>';
+    if (ln > 0) h += '<button type="button" class="btn ' + (all && !today ? 'primary ' : '') + 'nw-big" data-nw="hap">' + (today ? '✅ Häppchen heute geschafft · nochmal?' : '🔬 Tages-Häppchen · ' + Math.min(10, POOL.filter(function (x) { return unlocked(x.id, S); }).length) + ' Aufgaben · ca. 5 Min') + '</button>';
+    else h += '<p class="nw-small">Das Tages-Häppchen startet, sobald du die erste Etappe gelernt hast.</p>';
     h += '<ul class="nw-areas">' + areas.map(function (a) { return '<li><span>' + a.name + '</span><span class="nw-bar"><i style="width:' + a.p + '%"></i></span><b>' + a.p + ' %</b></li>'; }).join('') + '</ul>';
     h += '</section>';
     h += '<section class="card voc-card nw-card"><p class="voc-eyebrow">Gezielt üben</p><div class="nw-grid">';
-    h += '<button type="button" class="btn" data-nw="lab">🔬 Mikroskop beschriften</button>';
-    h += '<button type="button" class="btn" data-nw="cards">🗂️ Karteikarten</button>';
-    h += '<button type="button" class="btn" data-nw="ord">🔢 Reihenfolge</button>';
-    h += '<button type="button" class="btn" data-nw="vg">✖️ Vergrößerung rechnen</button>';
+    h += lockBtn('nw-txt', 'lab', '🔬 Mikroskop beschriften', 2, ln);
+    h += lockBtn('nw-txt', 'cards', '🗂️ Karteikarten', 0, ln);
+    h += lockBtn('nw-txt', 'ord', '🔢 Reihenfolge', 4, ln);
+    h += lockBtn('nw-txt', 'vg', '✖️ Vergrößerung rechnen', 3, ln);
     h += '</div><p class="voc-eyebrow">Lückentexte</p><div class="nw-grid">';
-    TEXTS.forEach(function (T) { var c = S.c[T.id]; h += '<button type="button" class="btn nw-txt" data-nw="text" data-t="' + T.id + '"><span>📝 ' + T.name + '</span><small>' + T.src + (c ? ' · zuletzt ' + c + ' %' : '') + '</small></button>'; });
-    h += '</div><p class="nw-small">Erst mit Wortkasten, dann ohne (wie in der Überprüfung). Achte auf die Rechtschreibung der Fachwörter.</p></section>';
+    TEXTS.forEach(function (T) { var c = S.c[T.id], need = LMAP['T:' + T.id]; h += lockBtn('nw-txt', 'text', '<span>📝 ' + T.name + '</span>' + (need < ln ? '<small>' + T.src + (c ? ' · zuletzt ' + c + ' %' : '') + '</small>' : ''), need, ln, ' data-t="' + T.id + '"'); });
+    h += '</div><p class="nw-small">Erst mit Wortkasten, dann ohne (wie in der Überprüfung). Achte auf die Rechtschreibung der Fachwörter.' + (all ? '' : ' Die Probe-HÜs unten passen am besten, wenn alle Etappen gelernt sind.') + '</p></section>';
     h += '<details class="levels"><summary><span class="lv-title">Merkzettel</span><span class="lv-sum">Bauteile, Regeln, Linsen</span></summary><div class="lv-body nw-rules"><div class="nw-fig">' + SVG(0, true) + '</div>';
     h += '<table class="nw-tab"><tbody>' + BT.map(function (b) { return '<tr><td><b>' + b[3] + '. ' + b[1] + '</b></td><td>' + b[2] + '</td></tr>'; }).join('') + '</tbody></table>';
     h += RULES.map(function (r) { return '<p><b>' + r[0] + '</b><br>' + r[1] + '</p>'; }).join('') + '</div></details>';
     host.innerHTML = h; probe(true);
   }
+
+  /* ---------- Etappe lernen ---------- */
+  function figOf(c) { return c.svg || (c.names ? SVG(0, true) : c.hi ? SVG(c.hi) : ''); }
+  function cardHtml(c) {
+    var f = figOf(c);
+    return '<div class="nw-lcard"><p class="nw-lt">' + c.t + '</p>' + (f ? '<div class="nw-fig">' + f + '</div>' : '') + '<p class="nw-lx">' + c.x + '</p>' + (c.tip ? '<p class="nw-tip">💡 ' + c.tip + '</p>' : '') + '</div>';
+  }
+  function startLesson(i, readOnly) {
+    var ln = learnedN();
+    if (!readOnly && i > ln) i = ln;
+    if (i >= LESSONS.length) { home(); return; }
+    R = { L: LESSONS[i], ci: 0, read: !!readOnly || i < ln }; mode = 'lesson'; probe(false); drawLesson();
+  }
+  function drawLesson() {
+    var L = R.L, n = L.cards.length, c = L.cards[R.ci], last = R.ci === n - 1;
+    var h = header('Etappe ' + L.nr + ': ' + L.name, 'Lernkarte ' + (R.ci + 1) + ' von ' + n + (R.read ? ' · nachlesen' : ', danach ein kurzer Check'));
+    h += '<section class="card voc-card nw-card"><span class="nw-bar nw-top"><i style="width:' + ((R.ci + 1) / (n + (R.read ? 0 : 1)) * 100) + '%"></i></span>';
+    if (R.ci === 0 && !R.read) h += '<p class="nw-small">Lies jede Karte in Ruhe, wie im Heft. Danach kommen ein paar kurze Fragen. Dabei darfst du jederzeit nachschauen.</p>';
+    h += cardHtml(c);
+    h += '<div class="nw-row2">' + (R.ci > 0 ? '<button type="button" class="btn" data-nw="lprev">← Zurück</button>' : '<span></span>') + '<button type="button" class="btn primary" data-nw="lnext">' + (last ? (R.read ? 'Fertig ✓' : 'Verstanden – zum Check ✓') : 'Weiter →') + '</button></div></section>';
+    host.innerHTML = h; window.scrollTo(0, 0);
+  }
+  function lessonNext() {
+    if (R.ci < R.L.cards.length - 1) { R.ci++; drawLesson(); return; }
+    if (R.read) { home(); return; }
+    startLessonCheck(R.L);
+  }
+  function startLessonCheck(L) {
+    var S = st(), ln = learnedN(S), by = {}, out = [];
+    var mine = shuffle(POOL.filter(function (p) { return lessonOf(p.id) === L.i && /^(fn|lab|tf|mc|vg)$/.test(p.k); }));
+    mine.forEach(function (p) { by[p.k] = (by[p.k] || 0) + 1; if (by[p.k] <= 2 && out.length < 6) out.push(p); });
+    mine.forEach(function (p) { if (out.length < 5 && out.indexOf(p) < 0) out.push(p); });
+    /* 2 Aufgaben aus früheren Etappen zum Wiederholen (am liebsten, was noch nicht sitzt) */
+    var old = shuffle(POOL.filter(function (p) { return lessonOf(p.id) < Math.min(L.i, ln) && /^(fn|lab|tf|mc|vg)$/.test(p.k); }));
+    old.sort(function (a, b) { var xa = S.it[a.id], xb = S.it[b.id]; return (xa ? xa.b : 0) - (xb ? xb.b : 0); });
+    startRound(shuffle(out).concat(old.slice(0, 2)), 'Etappe ' + L.nr + ': Kurz-Check', false);
+    R.lesson = L;
+  }
+  function peekCards(p) {
+    var li = lessonOf(p.id), cs = [];
+    for (var i = 0; i <= li; i++) cs = cs.concat(LESSONS[i].cards);
+    var f = [];
+    if (p.b) f = cs.filter(function (c) { return c.hi && c.hi.indexOf(p.b[3]) >= 0; });
+    else if (p.k === 'gap') { var w = p.g.ans.split('|')[0].toLowerCase(); f = cs.filter(function (c) { return plain(c.x + ' ' + c.t).toLowerCase().indexOf(w) >= 0; }); }
+    return f.length ? f.slice(0, 2) : LESSONS[li].cards;
+  }
+  function peek() {
+    var p = cur(), box = $('nwPeek'); if (!box) return;
+    if (!box.hidden) { box.hidden = true; return; }
+    if (!R.answered) R.peeked[p.id] = 1;
+    box.innerHTML = '<p class="nw-small"><b>📖 Nachschauen</b> – zählt nicht als Fehler.</p>' + peekCards(p).map(cardHtml).join('');
+    box.hidden = false;
+  }
   function probe(on) { var pb = $('nwProbe'); if (pb) pb.hidden = !on; }
 
   /* ---------- Häppchen / Einzelrunden ---------- */
   function startRound(items, name, isHap) {
-    R = { items: items.slice(), i: 0, name: name, hap: isHap, ok: 0, first: {}, again: [], before: {}, S: st() };
+    R = { items: items.slice(), i: 0, name: name, hap: isHap, ok: 0, first: {}, again: [], before: {}, peeked: {}, S: st() };
     items.forEach(function (p) { var x = R.S.it[p.id]; R.before[p.id] = x ? x.b : -1; });
     mode = 'round'; probe(false); renderQ();
   }
@@ -268,7 +417,9 @@
     if (p.k === 'lab') {
       h += '<p class="nw-q">Wie heißt das Bauteil mit der <b>Nummer ' + p.b[3] + '</b>?</p><div class="nw-fig">' + SVG(p.b[3]) + '</div>' + inputH();
     } else if (p.k === 'fn') {
-      var opts = shuffle([p.b].concat(shuffle(BT.filter(function (x) { return x !== p.b; })).slice(0, 3)));
+      var lim = Math.max(lessonOf(p.id), learnedN() - 1), oth = BT.filter(function (x) { return x !== p.b && lessonOf('fn:' + x[0]) <= lim; });
+      if (oth.length < 3) oth = BT.filter(function (x) { return x !== p.b; });
+      var opts = shuffle([p.b].concat(shuffle(oth).slice(0, 3)));
       R.opts = opts.map(function (o) { return o[1]; });
       h += '<p class="nw-q">Welches Bauteil ist das?</p><p class="nw-say">' + esc(p.b[2]) + '</p>' + optsH(R.opts);
     } else if (p.k === 'gap') {
@@ -292,9 +443,9 @@
   function inputH() { return '<input class="nw-in" id="nwIn" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="done" aria-label="Antwort"><button type="button" class="btn primary" data-nw="check">Prüfen</button>'; }
   function optsH(o) { return '<div class="nw-opts">' + o.map(function (x, i) { return '<button type="button" class="nw-opt" data-nwo="' + i + '">' + esc(x) + '</button>'; }).join('') + '</div>'; }
   function renderQ() {
-    var p = cur(); R.vg = null; R.answered = false;
+    var p = cur(); R.vg = null; R.answered = false; delete R.peeked[p.id];
     var n = R.items.length, h = header(R.name, 'Aufgabe ' + Math.min(R.i + 1, n) + ' von ' + n);
-    h += '<section class="card voc-card nw-card"><span class="nw-bar nw-top"><i style="width:' + (R.i / n * 100) + '%"></i></span>' + qHtml(p) + '<div id="nwFb" class="nw-fb" hidden></div></section>';
+    h += '<section class="card voc-card nw-card"><span class="nw-bar nw-top"><i style="width:' + (R.i / n * 100) + '%"></i></span>' + qHtml(p) + (p.k !== 'ord' ? '<button type="button" class="btn small nw-peekb" data-nw="peek">📖 Nachschauen</button>' : '') + '<div id="nwPeek" class="nw-peek" hidden></div><div id="nwFb" class="nw-fb" hidden></div></section>';
     host.innerHTML = h;
     if (p.k === 'ord') drawOrd();
     var inp = $('nwIn'); if (inp) { inp.focus({ preventScroll: true }); inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); if (R.answered) next(); else check(); } }); }
@@ -330,21 +481,33 @@
     else res = { r: R.opts[chosen] === solution(p) ? 1 : 0, note: '' };
     R.answered = true;
     var firstTime = !(p.id in R.first);
-    if (firstTime) { R.first[p.id] = res.r; rate(p.id, res.r, R.S); save(R.S); if (res.r >= 1) R.ok++; }
-    if (res.r < 1 && firstTime) R.items.push(p); /* kommt am Ende der Runde noch einmal */
+    var peeked = !!R.peeked[p.id];
+    if (firstTime) { R.first[p.id] = res.r; if (peeked && res.r >= 1) seen(p.id, R.S); else rate(p.id, res.r, R.S); save(R.S); if (res.r >= 1) R.ok++; }
+    if ((res.r < 1 || peeked) && firstTime) R.items.push(p); /* kommt am Ende der Runde noch einmal */
     document.querySelectorAll('[data-nwo]').forEach(function (b) { b.disabled = true; if (R.opts && R.opts[+b.getAttribute('data-nwo')] === solution(p)) b.classList.add('ok'); else if (+b.getAttribute('data-nwo') === chosen) b.classList.add('bad'); });
     if ($('nwIn')) { $('nwIn').readOnly = true; $('nwIn').classList.add(res.r >= 1 ? 'ok' : res.r > 0 ? 'half' : 'bad'); }
     var cb = document.querySelector('[data-nw="check"]'); if (cb) cb.hidden = true;
     var fb = $('nwFb'), sol = solution(p), ex = explain(p);
     var head = res.r >= 1 ? pick(['Richtig! ✓', 'Super! ✓', 'Genau! ✓', 'Stark! ✓']) : res.r > 0 ? 'Fast!' : 'Noch nicht.';
     fb.className = 'nw-fb ' + (res.r >= 1 ? 'ok' : res.r > 0 ? 'half' : 'bad');
-    fb.innerHTML = '<b>' + head + '</b>' + (res.note ? ' ' + esc(res.note) + '.' : '') + (res.r < 1 && sol && !res.note ? ' Richtig ist: <b>' + esc(sol) + '</b>.' : '') + (ex && (res.r < 1 || p.k === 'vg') ? '<br><span class="nw-small">' + esc(ex) + '</span>' : '') + (res.r < 1 && firstTime ? '<br><span class="nw-small">Die Aufgabe kommt am Ende noch einmal.</span>' : '') + '<br><button type="button" class="btn primary" data-nw="next">Weiter</button>';
+    fb.innerHTML = '<b>' + head + '</b>' + (res.note ? ' ' + esc(res.note) + '.' : '') + (res.r < 1 && sol && !res.note ? ' Richtig ist: <b>' + esc(sol) + '</b>.' : '') + (ex && (res.r < 1 || p.k === 'vg') ? '<br><span class="nw-small">' + esc(ex) + '</span>' : '') + (res.r < 1 && firstTime ? '<br><span class="nw-small">Die Aufgabe kommt am Ende noch einmal.</span>' : peeked && firstTime ? '<br><span class="nw-small">Mit Nachschauen geschafft 👍 Am Ende kommt sie noch einmal – dann schaffst du sie ohne.</span>' : '') + '<br><button type="button" class="btn primary" data-nw="next">Weiter</button>';
     fb.hidden = false;
     var nb = fb.querySelector('[data-nw="next"]'); if (nb) nb.focus({ preventScroll: true });
   }
   function next() { R.i++; if (R.i >= R.items.length) end(); else renderQ(); }
   function end() {
+    if (R.lesson) { var S0 = st(); if (!S0.L[R.lesson.id]) S0.L[R.lesson.id] = dayKey(); save(S0); store('nw-lern-day', dayKey()); }
     var S = st(), n = Object.keys(R.first).length, up = [];
+    if (R.lesson) {
+      var L = R.lesson, nx = LESSONS[L.i + 1], hl = header('Etappe ' + L.nr + ': ' + L.name, 'gelernt');
+      hl += '<section class="card voc-card nw-card nw-end"><p class="nw-big-txt">🎉 Etappe ' + L.nr + ' gelernt' + esc(kidName(', ')) + '!</p>';
+      hl += '<p>' + (R.ok === n ? '🌟 Alle ' + n + ' Fragen beim ersten Mal richtig.' : '✅ ' + R.ok + ' von ' + n + ' Fragen beim ersten Mal richtig.') + ' Ab jetzt kommt „' + esc(L.name) + '“ im Tages-Häppchen dran, damit es im Kopf bleibt.</p>';
+      hl += '<button type="button" class="btn primary" data-nw="home">Fertig</button>' + (nx ? '<button type="button" class="btn small" data-nw="lesson" data-i="' + (L.i + 1) + '">Schon die nächste Etappe? (Bonus)</button>' : '') + '</section>';
+      host.innerHTML = hl; mode = 'end';
+      toast('📖 Etappe ' + L.nr + ' geschafft! Super' + kidName(', ') + '!');
+      if (window.LU5Plan) window.LU5Plan();
+      return;
+    }
     if (R.hap) { store('nw-hap-day', dayKey()); }
     Object.keys(R.first).forEach(function (id) { var x = S.it[id]; if (x && x.b >= 2 && R.before[id] < 2) up.push(id); });
     var p = pct(S), h = header(R.name, 'geschafft');
@@ -418,8 +581,9 @@
   /* ---------- Karteikarten ---------- */
   function startCards() {
     var S = st(), k = dayKey();
-    var due = CARDS.filter(function (c) { var x = S.it[c[0]]; return !x || x.b === 0 || daysSince(x.d) >= DUE[x.b]; });
-    if (!due.length) due = shuffle(CARDS).slice(0, 8);
+    var AVC = CARDS.filter(function (c) { return unlocked(c[0], S); }); if (!AVC.length) AVC = CARDS.filter(function (c) { return lessonOf(c[0]) === 0; });
+    var due = AVC.filter(function (c) { var x = S.it[c[0]]; return !x || x.b === 0 || daysSince(x.d) >= DUE[x.b]; });
+    if (!due.length) due = shuffle(AVC).slice(0, 8);
     R = { cards: shuffle(due).slice(0, 12), i: 0, flip: false, ok: 0 }; mode = 'cards'; probe(false); drawCard();
   }
   function drawCard() {
@@ -449,6 +613,11 @@
     var b = e.target.closest('[data-nw]'); if (!b) return;
     var a = b.getAttribute('data-nw');
     if (a === 'home') home();
+    else if (a === 'lesson') startLesson(+b.getAttribute('data-i'), false);
+    else if (a === 'lread') startLesson(+b.getAttribute('data-i'), true);
+    else if (a === 'lnext') lessonNext();
+    else if (a === 'lprev') { if (R.ci > 0) { R.ci--; drawLesson(); } }
+    else if (a === 'peek') peek();
     else if (a === 'hap') startRound(pickHappchen(st(), 10), 'Tages-Häppchen', true);
     else if (a === 'check') check();
     else if (a === 'next') next();
@@ -466,14 +635,23 @@
 
   function homeTile() {
     var el = $('nwTileState'); if (!el) return;
-    var p = pct(), today = store('nw-hap-day') === dayKey();
-    el.textContent = 'Klappt schon: ' + p + ' %' + (today ? ' · Häppchen heute ✓' : '');
+    var p = pct(), today = store('nw-hap-day') === dayKey() || lernedToday(), ln = learnedN();
+    el.textContent = (ln < LESSONS.length ? 'Etappe ' + ln + '/' + LESSONS.length + ' · ' : '') + 'Klappt schon: ' + p + ' %' + (today ? ' · heute ✓' : '');
   }
   window.LU5Nw = {
-    open: function () { if (mode !== 'round' && mode !== 'text' && mode !== 'lab' && mode !== 'cards') home(); },
+    open: function () { if (mode !== 'round' && mode !== 'text' && mode !== 'lab' && mode !== 'cards' && mode !== 'lesson') home(); },
+    /* Tagesplan: solange es neue Etappen gibt, steht dort „Neu lernen“ (eine Etappe pro Tag), danach das Häppchen */
+    plan: function () {
+      var ln = learnedN(), L = LESSONS[ln];
+      if (!L) return null;
+      if (lernedToday()) return { title: 'NaWi: Etappe gelernt ✓', sub: ln + ' von ' + LESSONS.length + ' Etappen · morgen: „' + LESSONS[ln].name + '“', done: true, btn: 'Ansehen' };
+      return { title: 'NaWi: Neu lernen – ' + L.name, sub: 'Etappe ' + L.nr + ' von ' + LESSONS.length + ' · erst lesen, dann kurze Fragen · ca. 5 Min', done: false, btn: 'Los' };
+    },
+    learn: function () { if (lernedToday() || learnedN() >= LESSONS.length) home(); else startLesson(learnedN(), false); },
+    learned: function () { return learnedN(); },
     home: homeTile,
     hap: function () { startRound(pickHappchen(st(), 10), 'Tages-Häppchen', true); },
-    doneToday: function () { return store('nw-hap-day') === dayKey(); },
+    doneToday: function () { return store('nw-hap-day') === dayKey() || lernedToday(); },
     pct: function () { return pct(); },
     topic: function (t) {
       if (/^gap(T\d)$/.test(t)) startText(t.slice(3), true);

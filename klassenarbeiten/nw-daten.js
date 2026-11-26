@@ -58,7 +58,7 @@
     s += '</g>';
     /* Beschriftung */
     PARTS.forEach(function (p) {
-      var on = hi === p[0], L = p[2] === 'L';
+      var on = (hi && hi.indexOf) ? hi.indexOf(p[0]) >= 0 : hi === p[0], L = p[2] === 'L';
       var cx = L ? 22 : (names ? 418 : 318), tx = p[4] + dx;
       if (names) cx = L ? 52 : 388;
       s += '<line x1="' + (L ? cx + 11 : cx - 11) + '" y1="' + p[3] + '" x2="' + tx + '" y2="' + p[5] + '" stroke="' + (on ? '#7A4FD6' : '#1F2A44') + '" stroke-width="' + (on ? 3 : 1.4) + '"/>';

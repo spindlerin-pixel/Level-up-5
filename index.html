@@ -919,6 +919,22 @@ body { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: m
 .nw-lablist { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
 @media (max-width: 420px) { .nw-lablist { grid-template-columns: 1fr; } }
 .nw-lablist li { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; color: var(--ink); } .nw-lablist b { min-width: 1.6em; } .nw-lablist .nw-gin { flex: 1 1 120px; }
+.nw-path { list-style: none; margin: 4px 0 0; padding: 0; display: grid; gap: 6px; }
+.nw-pathb { font: inherit; width: 100%; display: flex; align-items: center; gap: 10px; text-align: left; padding: 10px 12px; border-radius: 14px; border: 2px solid #D9CCFF; background: var(--surface); color: var(--ink); box-sizing: border-box; }
+button.nw-pathb { cursor: pointer; }
+.nw-path li.done .nw-pathb { background: var(--good-fill); border-color: var(--good); }
+.nw-path li.now .nw-pathb { border-color: #6A3FC9; border-width: 3px; }
+.nw-path li.lock .nw-pathb { color: var(--ink-soft); }
+.nw-pi { font-size: 1.2rem; flex-shrink: 0; }
+.nw-pt { display: flex; flex-direction: column; line-height: 1.25; } .nw-pt small { font-size: 0.82rem; color: var(--ink-soft); }
+.nw-lcard { display: grid; gap: 10px; color: var(--ink); }
+.nw-lt { font-family: var(--font-display); font-weight: 700; font-size: 1.25rem; margin: 0; color: var(--ink); }
+.nw-lx { font-size: 1.1rem; line-height: 1.6; margin: 0; color: var(--ink); }
+.nw-tip { margin: 0; padding: 10px 12px; border-radius: 12px; background: var(--tip-fill); color: var(--ink); line-height: 1.45; }
+.nw-peekb { justify-self: start; }
+.nw-peek { display: grid; gap: 14px; padding: 12px; border-radius: 14px; border: 2px dashed #A893E0; background: var(--surface); color: var(--ink); }
+.nw-locked { opacity: 0.6; cursor: default; display: flex; flex-direction: column; align-items: flex-start; gap: 2px; text-align: left; }
+.nw-locked small { font-size: 0.8rem; font-weight: 400; color: var(--ink); }
 .nw-flash { font: inherit; min-height: 180px; border-radius: 18px; border: 2.5px solid #C9B8FF; background: var(--surface); color: var(--ink); display: flex; flex-direction: column; justify-content: center; gap: 10px; padding: 18px; cursor: pointer; text-align: center; }
 .nw-fq { font-size: 1.2rem; line-height: 1.45; }
 .nw-big-txt { font-family: var(--font-display); font-size: 1.3rem; font-weight: 700; color: var(--ink); margin: 0; }
@@ -4485,7 +4501,10 @@ window.LU5 = (function () {
            Ohne Termin und wenn morgen etwas anderes geschrieben wird, ist das Häppchen nur Bonus. */
         if (window.LU5Nw && (d === null || d >= 1)) {
           var hDone = LU5Nw.doneToday(), tmw = up.some(function (t) { return t.d === 1 && t.s !== 'nw'; });
-          items.push({ subj: 'nw', title: 'NaWi: Mikroskop-Häppchen', sub: '10 kurze Aufgaben · ca. 5 Min · klappt schon ' + LU5Nw.pct() + ' %', min: 5, done: hDone, keep: !tmw || near('nw'), btn: hDone ? 'Nochmal' : 'Los', act: function () { go('nw'); LU5Nw.hap(); } });
+          /* Erst lernen, dann abfragen: solange es neue Etappen gibt, steht hier „Neu lernen“ (eine pro Tag) */
+          var nwL = LU5Nw.plan ? LU5Nw.plan() : null;
+          if (nwL) items.push({ subj: 'nw', title: nwL.title, sub: nwL.sub, min: 5, done: nwL.done, keep: !tmw || near('nw'), btn: nwL.btn, act: function () { go('nw'); LU5Nw.learn(); } });
+          else items.push({ subj: 'nw', title: 'NaWi: Mikroskop-Häppchen', sub: '10 kurze Aufgaben · ca. 5 Min · klappt schon ' + LU5Nw.pct() + ' %', min: 5, done: hDone, keep: !tmw || near('nw'), btn: hDone ? 'Nochmal' : 'Los', act: function () { go('nw'); LU5Nw.hap(); } });
           if (near('nw') && d <= PROBES.nw.from) items = items.concat(probeItems('nw', d, k));
           else if (near('nw') && d <= 14) items.push(minItem('nw', 'NaWi üben', 'Lückentexte, Beschriften, Karteikarten', 10, L.nw || 0, function () { go('nw'); }));
         }
@@ -7730,9 +7749,9 @@ window.LU5 = (function () {
 <script src="klassenarbeiten/diktat-player.js?v=4"></script>
 <script src="klassenarbeiten/ma-daten.js?v=1"></script>
 <script src="klassenarbeiten/mka-daten.js?v=2"></script>
-<script src="klassenarbeiten/nw-daten.js?v=1"></script>
+<script src="klassenarbeiten/nw-daten.js?v=2"></script>
 <script src="klassenarbeiten/ka-tablet.js?v=7"></script>
-<script src="klassenarbeiten/nw.js?v=2"></script>
+<script src="klassenarbeiten/nw.js?v=3"></script>
 <script src="klassenarbeiten/morgen.js?v=1"></script>
 <script>
 (function () {
