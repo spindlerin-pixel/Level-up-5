@@ -6407,7 +6407,7 @@ window.LU5 = (function () {
    NEUE LISTE: unten in LISTS ergänzen und WEEKS auf ihre id(s) setzen (mehrere Wochenlisten möglich). */
 (function () {
   'use strict';
-  var WEEKS = ['u1s', 'u2a1', 'u2a2'], WEEK = WEEKS[0]; /* Liste vom 26.11.2026, sitzt bis Do 3.12. */
+  var WEEKS = ['u2w1'], WEEK = WEEKS[0]; /* Liste vom 26.11.2026, sitzt bis Do 3.12. */
   function isWeek(lid) { return WEEKS.indexOf(lid) !== -1; }
   var LISTS = [
     { id: 'wel', unit: 'Welcome', short: 'Welcome', name: 'Welcome', pages: 'S. 225–230', words: [
@@ -6570,16 +6570,14 @@ window.LU5 = (function () {
       'first|zuerst, als Erstes', 'speaker|der Sprecher / die Sprecherin',
       '4 pm|4 Uhr nachmittags / 16 Uhr|4pm;four pm', '4 am|4 Uhr morgens / vormittags|4am;four am'
     ] },
-    { id: 'u1s', unit: 'Unit 1', short: 'Story – robot … toy', name: 'Unit 1 · Story (robot … toy)', pages: 'S. 240', words: [
+    { id: 'u2w1', unit: 'Unit 2', short: 'S. 240–242 · Story-Ende, Unit 2 Start & Part A', name: 'S. 240–242 · Story-Ende (Unit 1), Unit 2 Start & Part A', pages: 'S. 240–242', words: [
       'robot|der Roboter', 'Good night.|Gute Nacht.|Good night', 'complete|komplett, vollständig', 'dark|dunkel',
       'box|der Kasten, die Kiste, das Kästchen', 'boxes|die Kisten, die Kästen (Plural von box)', 'scared|verängstigt',
       'Well, …|Nun, … / Also, … / Na ja, …|Well', 'answer|antworten; beantworten (Verb)',
       'It\'s magic.|Es ist Magie. / Es ist magisch.|It is magic.', 'ready|bereit, fertig',
       'tell sb. about sth.|jemandem von etwas erzählen|tell somebody about something;tell someone about something',
       'take|nehmen, mitnehmen; (weg-, hin)bringen – von mir weg', 'back|zurück', 'around …|um … (herum)|around',
-      'just|(einfach) nur, bloß', 'silly|albern; blöd', 'toy|das Spielzeug'
-    ] },
-    { id: 'u2a1', unit: 'Unit 2', short: 'Start & Part A (1)', name: 'Unit 2 · Start & Part A (1)', pages: 'S. 240–241', words: [
+      'just|(einfach) nur, bloß', 'silly|albern; blöd', 'toy|das Spielzeug',
       'want to do sth.|etwas tun wollen|want to do something;want to', 'at 9 o\'clock|um 9 Uhr / um 21 Uhr|at nine o\'clock',
       'because|weil', 'half past eight|halb neun (08:30 / 20:30)', 'playground|der Schulhof; der Spielplatz',
       'early|früh', 'always|immer', 'far|weit (entfernt)', 'bring|(mit-, her)bringen – zu mir her',
@@ -6591,9 +6589,7 @@ window.LU5 = (function () {
       'lesson|die (Unterrichts-)Stunde', 'take a photo of sth.|etwas fotografieren, ein Foto von etwas machen|take a photo of something;take a photo',
       'timetable|der Stundenplan', 'be in a hurry|es eilig haben|in a hurry', 'minute|die Minute', 'Off we go!|Los geht\'s!|Off we go',
       'happy|glücklich, froh', 'secret|das Geheimnis', 'finish|enden', 'wait (for)|warten (auf)|wait;wait for',
-      'subject|das (Schul-)Fach|school subject'
-    ] },
-    { id: 'u2a2', unit: 'Unit 2', short: 'Schulfächer & Part A (2)', name: 'Unit 2 · Schulfächer & Part A (2)', pages: 'S. 242', words: [
+      'subject|das (Schul-)Fach|school subject',
       'art|Kunst (Schulfach)', 'design and technology|Design und Technik (Schulfach)', 'drama|Schauspiel; darstellende Kunst (Schulfach)',
       'French|Französisch (Schulfach)', 'geography|Geografie, Erdkunde (Schulfach)', 'history|Geschichte (Schulfach)',
       'ICT|Informations- und Kommunikationstechnologie (Schulfach)', 'maths|Mathematik (Schulfach)', 'music|Musik (Schulfach)',
@@ -6776,7 +6772,7 @@ window.LU5 = (function () {
   var CH = '<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>';
   function selLabel() {
     var S = sel();
-    if (S.length === 1) { var L = listOf(S[0]); return (isWeek(L.id) ? 'Diese Woche: ' : '') + L.name; }
+    if (S.length === 1) { var L = listOf(S[0]); return isWeek(L.id) ? 'Diese Woche: ' + L.pages + ' (' + BYLIST[L.id].length + ' Wörter)' : L.name; }
     if (S.length === WEEKS.length && S.every(isWeek)) return 'Diese Woche: ' + WEEKS.map(function (id) { return listOf(id).pages; }).join(' + ');
     var units = {}; S.forEach(function (id) { units[listOf(id).unit] = 1; });
     var u = Object.keys(units);
