@@ -6407,7 +6407,8 @@ window.LU5 = (function () {
    NEUE LISTE: unten in LISTS ergänzen und WEEKS auf ihre id(s) setzen (mehrere Wochenlisten möglich). */
 (function () {
   'use strict';
-  var WEEKS = ['u2w1'], WEEK = WEEKS[0]; /* Liste vom 26.11.2026, sitzt bis Do 3.12. */
+  var CARRY = ['u1c2', 'u1c3']; /* Wochenlisten von letzter Woche, die noch nicht sitzen: bleiben mit drin */
+  var WEEKS = ['u2w1'].concat(CARRY), WEEK = WEEKS[0]; /* Liste vom 26.11.2026, sitzt bis Do 3.12. */
   function isWeek(lid) { return WEEKS.indexOf(lid) !== -1; }
   var LISTS = [
     { id: 'wel', unit: 'Welcome', short: 'Welcome', name: 'Welcome', pages: 'S. 225–230', words: [
@@ -6723,7 +6724,8 @@ window.LU5 = (function () {
     if (S.length > 1) fresh = shuffle(fresh);
     other.sort(function (a, b) { return st(a).d - st(b).d; });
     fresh = fresh.slice(0, freshLeft());
-    add(seen); add(fresh); add(other);
+    /* Alte fällige Wörter und neue Wörter mischen: höchstens die halbe Runde Wiederholung, solange es neue gibt */
+    add(seen.slice(0, fresh.length ? ROUND / 2 : ROUND)); add(fresh); add(seen); add(other);
     /* Rest auffüllen: schwächste Wörter der Auswahl */
     add(idsOf(S).sort(function (a, b) { var sa = st(a), sb = st(b); return (sa ? sa.l : -1) - (sb ? sb.l : -1) || (sa ? sa.d : 0) - (sb ? sb.d : 0); }));
     return shuffle(out);
@@ -6773,7 +6775,7 @@ window.LU5 = (function () {
   function selLabel() {
     var S = sel();
     if (S.length === 1) { var L = listOf(S[0]); return isWeek(L.id) ? 'Diese Woche: ' + L.pages + ' (' + BYLIST[L.id].length + ' Wörter)' : L.name; }
-    if (S.length === WEEKS.length && S.every(isWeek)) return 'Diese Woche: ' + WEEKS.map(function (id) { return listOf(id).pages; }).join(' + ');
+    if (S.length === WEEKS.length && S.every(isWeek)) return 'Diese Woche: ' + listOf(WEEKS[0]).pages + (CARRY.length ? ' + Rest von letzter Woche' : '');
     var units = {}; S.forEach(function (id) { units[listOf(id).unit] = 1; });
     var u = Object.keys(units);
     if (u.length === 1 && LISTS.filter(function (L) { return L.unit === u[0]; }).length === S.length) return 'Ganze ' + u[0];
@@ -6788,7 +6790,7 @@ window.LU5 = (function () {
       return '<div class="chip-group"><h3>' + esc(g.u) + (g.l.length > 1 ? ' <button type="button" class="voc-unit" data-vunit="' + esc(g.u) + '" aria-pressed="' + all + '">' + (all ? '✓ ganze Unit' : 'ganze Unit') + '</button>' : '') + '</h3><div class="voc-opts">' +
         g.l.slice().reverse().map(function (L) {
           var p = klappt([L.id]), on = S.indexOf(L.id) !== -1;
-          return '<button type="button" class="vopt" data-vlist="' + L.id + '" aria-pressed="' + on + '"><span class="vopt-top"><span class="vopt-box" aria-hidden="true">' + (on ? '✓' : '') + '</span><span class="vopt-name">' + esc(L.short) + (isWeek(L.id) ? ' <span class="vopt-star">diese Woche</span>' : '') + '</span><span class="vopt-pct">' + p + ' %</span></span>' +
+          return '<button type="button" class="vopt" data-vlist="' + L.id + '" aria-pressed="' + on + '"><span class="vopt-top"><span class="vopt-box" aria-hidden="true">' + (on ? '✓' : '') + '</span><span class="vopt-name">' + esc(L.short) + (isWeek(L.id) ? ' <span class="vopt-star">' + (CARRY.indexOf(L.id) !== -1 ? 'noch von letzter Woche' : 'diese Woche') + '</span>' : '') + '</span><span class="vopt-pct">' + p + ' %</span></span>' +
             '<span class="goalbar voc-bar' + (p >= 100 ? ' done' : '') + '"><i style="width:' + p + '%"></i></span><span class="vopt-pages">' + esc(L.pages) + ' · ' + BYLIST[L.id].length + ' Wörter</span></button>';
         }).join('') + '</div></div>';
     }).join('') + '<button type="button" class="btn primary" id="vocPickDone">Fertig</button>';
